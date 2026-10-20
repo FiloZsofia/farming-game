@@ -25,6 +25,16 @@ Elfogadott hangulati referencia: [tavaszi farm-látványterv](concepts/farm-spri
 
 Verandával kiegészített változat: [tavaszi farm verandával és naplóasztallal](concepts/farm-spring-veranda-concept.png). Az eredeti képet összehasonlításhoz megőrizzük.
 
+## Alap főhős megjelenése
+
+- Felnőtt nő, vékony, természetes testalkattal és barátságos arccal.
+- Világos bőr, de nem túl sápadt tónussal.
+- Lófarokba kötött, egyelőre szőkés haj; a pontos hajárnyalat később választandó ki.
+- Egyszerű vidéki munkaruha: törtfehér ing, mohazöld nadrág és barna bakancs.
+- Természetes arányú, a környezethez illő részletes 2D pixelgrafika.
+- A farm koncepcióképein szereplő alak helykitöltő, nem a végleges karakterterv.
+- Személyre szabható karakterválasztóról még nincs döntés.
+
 ## Helyszín és birtok
 
 - Általános vidéki környezet, konkrét ország vagy régió nélkül.
