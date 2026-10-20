@@ -15,3 +15,7 @@ A dekoratív kerítések és fák még nem teljes ütközési rendszer részei. 
 ## Még nincs megvalósítva
 
 Termesztés, eszközhasználat, stamina, idő múlása, napzárás, eladás, katalógus, készlet, tárolás, építés és mentés. A jelenetben megjelenő ágyások csak dekorációk. Az évszak és napszak felirata jelenleg rögzített.
+
+## Felületfrissítés
+
+A játék most az egész ablakot használja, a kamera méretváltásra alkalmazkodik és követi a karaktert. A történet, irányítás és helyszínszövegek a játéktér fölött jelennek meg. A bevezető megnyitása nem mentett állapot: jelenleg minden betöltéskor megjelenik. A párbeszéd leállítja a mozgást, és bezáráskor törli a beragadt iránybemeneteket. A képernyőgombok és a billentyűzet továbbra is használhatók.

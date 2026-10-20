@@ -1,2 +1,14 @@
 <!doctype html>
-<html lang="hu"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#253c30"><title>Erdőszéli birtok · mozgáspróba</title></head><body><div id="app"><header><div><span class="eyebrow">EGY ÚJ KEZDET</span><h1>Erdőszéli birtok</h1></div><span class="badge">Mozgáspróba · 0.1</span></header><main><div id="game" aria-label="Farm, billentyűzettel vagy az iránygombokkal bejárható"></div><aside><div><span class="eyebrow">TAVASZI DÉLELŐTT</span><h2>Üdv itthon.</h2><p>A ház ajtajától indulva járd be a birtokot. A tó és a régi melléképület már a helyén vár.</p></div><p id="status" role="status">Lépj a verandáról az ösvényre.</p><button id="home">Vissza a házhoz</button><p class="help">Mozgás: WASD / nyilak vagy az alábbi gombok.<br>A termelés, idő és mentés még nincs bekötve.</p><div id="controls" aria-label="Mozgásvezérlés"><button data-dir="up" aria-label="Fel">↑</button><button data-dir="left" aria-label="Balra">←</button><button data-dir="down" aria-label="Le">↓</button><button data-dir="right" aria-label="Jobbra">→</button></div></aside></main><footer>Saját, ideiglenes grafika · A végleges pixelgrafikai részletesség később készül.</footer></div><script type="module" src="/src/main.ts"></script></body></html>
+<html lang="hu">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#253c30"><title>Erdőszéli birtok · farmjáték</title></head>
+<body>
+<main id="app" aria-label="Erdőszéli birtok">
+  <div id="game" aria-label="Bejárható farm"></div>
+  <header class="hud"><div class="title-plaque"><span class="eyebrow">EGY ÚJ KEZDET</span><h1>Erdőszéli birtok</h1></div><div class="season">Tavasz <span>Délelőtt</span></div></header>
+  <div class="actions"><button id="story" aria-label="A főhős története">Történet</button><button id="help">Irányítás</button><button id="home">Házhoz</button></div>
+  <p id="status" role="status"></p>
+  <div id="controls" aria-label="Mozgásvezérlés"><button data-dir="up" aria-label="Fel">↑</button><button data-dir="left" aria-label="Balra">←</button><button data-dir="down" aria-label="Le">↓</button><button data-dir="right" aria-label="Jobbra">→</button></div>
+  <dialog id="dialogue" aria-labelledby="dialogue-title"><form method="dialog"><span class="eyebrow" id="dialogue-label">EGY ÚJ KEZDET</span><h2 id="dialogue-title">Végre megérkeztem.</h2><p id="dialogue-text"></p><button id="dialogue-close" autofocus>Folytatás</button></form></dialog>
+</main>
+<script type="module" src="/src/main.ts"></script>
+</body></html>

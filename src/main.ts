@@ -1,6 +1,17 @@
 import Phaser from 'phaser';
 import './style.css';
 import { move, START } from './movement';
+const dialogue=document.querySelector<HTMLDialogElement>('#dialogue')!;
+const story='A kutatólaborban mindig akadt egy újabb feladat. Szerettem a munkámat, de elfáradtam. Változásra volt szükségem.\n\nMost itt vagyok. A ház előtt gaz nő, a kerítés javításra vár. Nem kell mindent ma rendbe hoznom. Ez egy új kezdet.';
+function showDialogue(title:string,text:string,label='A BIRTOKON'){
+ release();
+ document.querySelector('#dialogue-title')!.textContent=title;
+ document.querySelector('#dialogue-text')!.textContent=text;
+ document.querySelector('#dialogue-label')!.textContent=label;
+ if(!dialogue.open)dialogue.showModal();
+}
+document.querySelector('#story')!.addEventListener('click',()=>showDialogue('Végre megérkeztem.',story,'EGY ÚJ KEZDET'));
+document.querySelector('#help')!.addEventListener('click',()=>showDialogue('Lassan, a saját tempódban.','Mozgás: WASD, nyilak vagy a képernyő iránygombjai.\n\nA háznál, tónál és melléképületnél az E billentyűvel vagy a megjelenő jelzésre kattintva nézhetsz körül. A Házhoz gomb visszavisz a verandára.\n\nEz még mozgáspróba: a kertészkedés, a játékidő és a mentés később készül el.','IRÁNYÍTÁS'));
 const held=new Set<string>();
 function release(){held.clear();document.querySelectorAll('.active').forEach(el=>el.classList.remove('active'));}
 window.addEventListener('blur',release);document.addEventListener('visibilitychange',()=>{if(document.hidden)release();});
@@ -14,6 +25,8 @@ class Farm extends Phaser.Scene {
  private keys!:Record<string,Phaser.Input.Keyboard.Key>;
  private hair!:Phaser.GameObjects.Rectangle;
  private facing=1;
+ private bubble!:Phaser.GameObjects.Text;
+ private nearby='';
  create(){
   const g=this.add.graphics();
   const rect=(x:number,y:number,w:number,h:number,c:number)=>{g.fillStyle(c);g.fillRect(x,y,w,h);};
@@ -60,12 +73,30 @@ class Farm extends Phaser.Scene {
   part(0,-26,13,15,0xe6dfc5);part(-9,-25,4,13,0xe9c49c);part(9,-25,4,13,0xe9c49c);
   part(0,-39,11,12,0xe9c49c);part(0,-45,13,5,0xc7a256);part(-5,-41,3,7,0xc7a256);
   this.hair=part(8,-38,5,12,0xc7a256);part(3,-39,2,2,0x4b4334);
+  this.bubble=this.add.text(0,0,'', {fontFamily:'Georgia',fontSize:'20px',color:'#fff4cf',backgroundColor:'#293e30',padding:{x:9,y:4}}).setOrigin(.5,1).setDepth(101).setInteractive({useHandCursor:true});
+  const inspect=()=>{
+    if(dialogue.open)return;
+    if(this.nearby==='house')showDialogue('Az első este még várhat.','Itt, a verandán fogom vezetni a naplómat. Most előbb körülnézek.');
+    if(this.nearby==='pond')showDialogue('Egy kis tó.','Jó lesz itt megpihenni. Később az öntözőkannát is itt tölthetem újra.');
+    if(this.nearby==='shed')showDialogue('?','');
+  };
+  this.bubble.on('pointerdown',inspect);
+  this.input.keyboard!.on('keydown-E',inspect);
+  const resize=()=>{
+    const {width,height}=this.scale;
+    this.cameras.main.setZoom(Math.max(width/800,height/600)).setBounds(0,0,800,600).startFollow(this.actor,true,1,1);
+  };
+  resize();this.scale.on('resize',resize);
+  this.events.once('shutdown',()=>this.scale.off('resize',resize));
+  dialogue.addEventListener('close',()=>{this.input.keyboard?.resetKeys();release();});
+  showDialogue('Végre megérkeztem.',story,'EGY ÚJ KEZDET');
   this.keys=this.input.keyboard!.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT') as Record<string,Phaser.Input.Keyboard.Key>;
   document.querySelector('#home')!.addEventListener('click',()=>{this.actor.setPosition(START.x,START.y);release();});
  }
  private tree(g:Phaser.GameObjects.Graphics,x:number,y:number){g.fillStyle(0x6d5739);g.fillRect(x-3,y,7,24);g.fillStyle(0x45693f);g.fillCircle(x,y-10,23);g.fillStyle(0x628348);g.fillCircle(x-7,y-18,18);g.fillStyle(0x799650);g.fillCircle(x-10,y-23,11);}
  update(time:number,delta:number){
   if(!this.actor)return;
+  if(dialogue.open){this.input.keyboard?.resetKeys();return;}
   const k=this.keys;
   const dx=Number(k.D.isDown||k.RIGHT.isDown||held.has('right'))-Number(k.A.isDown||k.LEFT.isDown||held.has('left'));
   const dy=Number(k.S.isDown||k.DOWN.isDown||held.has('down'))-Number(k.W.isDown||k.UP.isDown||held.has('up'));
@@ -75,7 +106,9 @@ class Farm extends Phaser.Scene {
   const walking=next.x!==before.x||next.y!==before.y;
   this.actor.setScale(1,walking?1+Math.sin(time/85)*0.025:1);
   const near=(x:number,y:number,d:number)=>Phaser.Math.Distance.Between(next.x,next.y,x,y)<d;
-  document.querySelector('#status')!.textContent=near(657,206,66)?'A melléképület zárva van. Vajon mit rejt?':near(555,450,65)?'A kis tó. Később itt töltheted újra a kannát.':near(250,244,55)?'A verandán lesz az esti napló helye.':'A birtok a tiéd. Járd be a kertet és az erdőszélt.';
+  this.nearby=near(657,206,66)?'shed':near(555,450,65)?'pond':near(250,244,55)?'house':'';
+  this.bubble.setPosition(next.x,next.y-54).setText(this.nearby==='shed'?'?':this.nearby?'…':'').setVisible(Boolean(this.nearby));
+  document.querySelector('#status')!.textContent=this.nearby==='shed'?'?':this.nearby==='house'?'Veranda · E / koppints a buborékra':this.nearby==='pond'?'Tópart · E / koppints a buborékra':'';
  }
 }
-new Phaser.Game({type:Phaser.AUTO,parent:'game',width:800,height:600,pixelArt:true,backgroundColor:'#8da85e',scene:Farm,scale:{mode:Phaser.Scale.FIT,autoCenter:Phaser.Scale.CENTER_BOTH},input:{keyboard:true}});
+new Phaser.Game({type:Phaser.AUTO,parent:'game',width:800,height:600,pixelArt:true,backgroundColor:'#8da85e',scene:Farm,scale:{mode:Phaser.Scale.RESIZE,autoCenter:Phaser.Scale.CENTER_BOTH},input:{keyboard:true}});

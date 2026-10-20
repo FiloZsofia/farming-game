@@ -2,17 +2,22 @@
 
 Ez a dokumentum a tervezés során elfogadott döntéseket rögzíti. A nyitott kérdések és későbbi ötletek nem végleges követelmények. A játék címe még nincs kiválasztva.
 
+Az „Erdőszéli birtok” csak munkacím. Felmerült címjavaslatok: Új gyökerek, Vadvirág, Lombok alatt; még egyik sem elfogadott.
+
 ## Alapélmény és platform
 
 - Nyugodt kertészkedés és egy barátságosan elhanyagolt birtok fokozatos újjáélesztése.
 - Böngészőben futó játék, GitHub Pagesen megnyitható változattal.
 - Később telefonon, érintéssel is kényelmesen használható legyen.
 - Irányítható karakter, aki odasétál a tevékenység helyéhez.
+- Az első prototípus karakterének méretét és mozgási sebességét a felhasználó megfelelőnek találta.
 - A karakter a játék kezdetén a háza ajtajából indul.
 - Tartós mentés szükséges. Bezáráskor megáll a játékidő; nincs távolléti növekedés.
 - Az idő, növekedés, árak és egyéb egyensúlyi értékek menet közben, közös egyeztetéssel alakulnak ki.
 
 ## Vizuális irány
+
+- A játék töltse ki a böngészőablakot, külön szöveges oldalsáv nélkül. A háttértörténet és egyéb szövegek a játéktér fölötti párbeszédablakokban jelenjenek meg. Párbeszéd alatt a karakter nem mozog.
 
 - Részletes 2D pixelgrafika, háromnegyedes felülnézettel: látható épületoldalak és tetők.
 - A Chef RPG vizuális referencia, saját megjelenítéssel és világgal.

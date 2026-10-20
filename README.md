@@ -48,3 +48,12 @@ Chromium szükséges, vagy válassz más telepített böngészőt a Cypress para
 Az első felhőkörnyezeti ellenőrzéskor a 6 Vitest-teszt és a build sikeres volt. Valódi headless Chromiumban a jelenet indulása, a billentyűzetes mozgás, a házhoz visszatérés és a mobilos vízszintes túlcsordulás hiánya ellenőrizve lett. A Cypress-csomag települt, de a futtató bináris nem volt elérhető; a letöltési végpont HTTP 403 választ adott, ezért a Cypress-tesztek itt még nem futottak le.
 
 [A tényleges prototípus képernyőképe](docs/concepts/farm-prototype.png)
+
+## Teljes ablakos nézet
+
+A farm kitölti az ablakot; keskeny képernyőn a kamera követi a karaktert. Az oldalsáv megszűnt. A laboros bevezető a játéktér fölötti párbeszédablakban jelenik meg. Bezárás: Folytatás vagy Escape. Később a Történet gombbal újra megnyitható. A közeli helyszínek buborékára kattintva/koppintva vagy az E billentyűvel megjelenik a hozzájuk tartozó szöveg; a lezárt épületnél csak kérdőjel látható. Párbeszéd alatt a karakter nem mozog.
+
+- [Teljes ablakos prototípus](docs/concepts/farm-fullscreen-prototype.png)
+- [Mobilos bevezető](docs/concepts/farm-mobile-dialogue.png)
+
+Az „Erdőszéli birtok” munkacím; a végleges cím még egyeztetés alatt áll.
