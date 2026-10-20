@@ -21,7 +21,7 @@ npm run preview
 
 Korlátozott környezetben, ha a Cypress binárisa nem tölthető le: `CYPRESS_INSTALL_BINARY=0 CYPRESS_CACHE_FOLDER=/tmp/farming-cypress npm ci --cache /tmp/farming-npm-cache`. Ez a böngészős tesztfuttatót kihagyja, az alkalmazást és az egységteszteket nem. Később azonos cache-be telepíthető: `CYPRESS_CACHE_FOLDER=/tmp/farming-cypress npx cypress install`.
 
-Ez még nem a végleges grafika. A stamina és eladás még nincs bekötve; a növekedés és betakarítás már működik. A játékidő, esti napló, napváltás és böngészőbeli automatikus mentés már működik.
+Ez még nem a végleges grafika. A stamina és magkatalógus még nincs bekötve; a növekedés és betakarítás már működik. A játékidő, esti napló, napváltás és böngészőbeli automatikus mentés már működik.
 
 ## GitHub Pages
 
@@ -81,10 +81,20 @@ A kert, magmennyiség, helyzet és idő IndexedDB-be mentődik. A jobb felső sa
 
 ## Növények és termények
 
-Retek: 3, burgonya: 5, borsó: 6 megöntözött nap az első termésig. A borsó 3 öntözött naponta újra terem. Öntözés nélkül nincs fejlődés, de nincs pusztulás sem. Érett növény: **6 / Szedés → kattintás vagy F / Művelet**. A leszedett termények a **Termények** gombbal nézhetők meg; eladás még nincs.
+Retek: 3, burgonya: 5, borsó: 6 megöntözött nap az első termésig. A borsó 3 öntözött naponta újra terem. Öntözés nélkül nincs fejlődés, de nincs pusztulás sem. Érett növény: **6 / Szedés → kattintás vagy F / Művelet**. A leszedett termények a **Termények** gombbal nézhetők meg, az eladóládába téve másnap reggel goldot érnek.
 
 A fejlődési állapot és terménykészlet is mentődik. A korábbi mentések automatikusan frissülnek, megtartva a farmot. Az első három nappali perc **Délelőtt**, a következő három **Délután**.
 
 - [Növekedés és érett növények](docs/concepts/farm-growth-prototype.png)
 - [Mobilos felület](docs/concepts/farm-growth-mobile.png)
 - [Magasabb ugrás](docs/concepts/farm-dynamic-jump.png)
+
+## Eladóláda és bevétel
+
+A veranda bal oldalán lévő ládához sétálva **E / kattintás / Eladóláda** nyitja az eladási felületet. Retek: **15**, burgonya: **30**, borsó: **12 gold/db**. Egyesével vagy mindet beteheted, napzárásig visszaveheted. A várható bevétel rögtön látható; a pénz reggel érkezik meg, naplós pihenés vagy éjszakai összeesés után is.
+
+A gold, függőben lévő áru és az utolsó elszámolás mentődik. A **Bevétel** gomb újra megmutatja az utolsó napi összesítést. A korábbi mentések automatikusan frissülnek, a már betakarított termények megmaradnak. A magkatalógus és a gold elköltése a következő lépés.
+
+- [Eladóláda felülete](docs/concepts/farm-shipping-prototype.png)
+- [Reggeli elszámolás](docs/concepts/farm-sales-receipt.png)
+- [Mobilos eladóláda](docs/concepts/farm-shipping-mobile.png)

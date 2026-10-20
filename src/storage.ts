@@ -1,16 +1,19 @@
 import { cultivable, targetTile, tileKey, type Garden, type Plot } from './gardening';
 import { blocked } from './movement';
 import type { Clock } from './clock';
+import { createEconomy, validEconomy, type Economy } from './economy';
+import { farmLayout } from './layout';
 export const DB_NAME='erdoszeli-birtok';
-export type Snapshot={version:2;produce:Garden['produce'];player:{x:number;y:number};clock:Clock;seeds:Garden['seeds'];plots:[string,Plot][]};
-export function snapshot(player:{x:number;y:number},clock:Clock,garden:Garden):Snapshot{
- return structuredClone({version:2,produce:garden.produce,player:{x:player.x,y:player.y},clock,seeds:garden.seeds,plots:[...garden.plots]});
+export type Snapshot={version:3;economy:Economy;produce:Garden['produce'];player:{x:number;y:number};clock:Clock;seeds:Garden['seeds'];plots:[string,Plot][]};
+export function snapshot(player:{x:number;y:number},clock:Clock,garden:Garden,economy:Economy=createEconomy()):Snapshot{
+ return structuredClone({version:3,economy,produce:garden.produce,player:{x:player.x,y:player.y},clock,seeds:garden.seeds,plots:[...garden.plots]});
 }
 const finite=(n:unknown):n is number=>typeof n==='number'&&Number.isFinite(n);
 export function validSnapshot(value:unknown):value is Snapshot{
  if(!value||typeof value!=='object')return false;
  const v=value as Snapshot;
- if(v.version!==2||!v.player||!finite(v.player.x)||!finite(v.player.y)||blocked(v.player.x,v.player.y))return false;
+ if(v.version!==3||!v.player||!finite(v.player.x)||!finite(v.player.y)||blocked(v.player.x,v.player.y))return false;
+ if(!validEconomy(v.economy)||v.economy.lastSale&&v.economy.lastSale.day>=v.clock?.day)return false;
  const c=v.clock;
  if(!c||!Number.isSafeInteger(c.day)||c.day<1||!finite(c.elapsed)||!finite(c.collapseAt)||c.elapsed<0||c.elapsed>c.collapseAt||c.collapseAt<570||c.collapseAt>=600)return false;
  if(!v.seeds||!['radish','potato','pea'].every(k=>{const n=v.seeds[k as keyof Garden['seeds']];return Number.isSafeInteger(n)&&n>=0&&n<=4;}))return false;
@@ -28,13 +31,18 @@ export function validSnapshot(value:unknown):value is Snapshot{
  }
  return true;
 }
-// Keep the original v1 object as backup until the upgraded v2 transaction commits.
+// Migrate known formats without discarding the original backup until a v3 write succeeds.
 export function decodeSnapshot(value:unknown):Snapshot|null{
  if(validSnapshot(value))return structuredClone(value);
- if(!value||typeof value!=='object'||!('version' in value)||value.version!==1)return null;
- const legacy=value as {plots?:unknown};
+ if(!value||typeof value!=='object'||!('version' in value)||(value.version!==1&&value.version!==2))return null;
+ const legacy=value as {version:number;plots?:unknown;player?:{x:number;y:number}};
  if(!Array.isArray(legacy.plots)||legacy.plots.some(row=>!Array.isArray(row)||row.length!==2||!row[1]||typeof row[1]!=='object'))return null;
- const migrated={...value,version:2,produce:{radish:0,potato:0,pea:0},plots:legacy.plots.map(([key,p])=>[key,{...p,growth:0,regrowing:false}])};
+ let player=legacy.player;
+ const box=farmLayout.shipping;
+ // Only relocate an old player if the newly introduced crate occupies their saved spot.
+ if(player&&Number.isFinite(player.x)&&Number.isFinite(player.y)&&player.x+7>box.x&&player.x-7<box.x+box.w&&player.y+3>box.y&&player.y-4<box.y+box.h)player={x:player.x,y:box.y+box.h+8};
+ const migrated={...value,version:3,economy:createEconomy(),player,
+  ...(legacy.version===1?{produce:{radish:0,potato:0,pea:0},plots:legacy.plots.map(([key,p])=>[key,{...p,growth:0,regrowing:false}])}:{})};
  return validSnapshot(migrated)?migrated:null;
 }
 export class SaveStore{
@@ -58,7 +66,7 @@ export class SaveStore{
   const decoded=decodeSnapshot(active);
   if(decoded){this.last=active;this.writable=true;return {data:decoded,recovered:false};}
   // An unknown version might belong to a newer game; never overwrite it with a backup.
-  if(active&&typeof active==='object'&&'version' in active&&active.version!==1&&active.version!==2)throw new Error('Ez a mentés másik játékverzióhoz tartozik. Megőriztem, nem írtam felül.');
+  if(active&&typeof active==='object'&&'version' in active&&active.version!==1&&active.version!==2&&active.version!==3)throw new Error('Ez a mentés másik játékverzióhoz tartozik. Megőriztem, nem írtam felül.');
   const previous=decodeSnapshot(backup);
   if(previous){this.last=backup;this.writable=true;return {data:previous,recovered:true};}
   throw new Error('A mentés nem olvasható. Megőriztem az eredetit; nem indítok rá új játékot.');

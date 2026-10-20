@@ -2,6 +2,7 @@ import { farmLayout } from './layout';
 export type Box = { x: number; y: number; w: number; h: number };
 export const START = { x: 250, y: 242 };
 export const obstacles: Box[] = [
+  farmLayout.shipping,
   {x:132,y:110,w:215,h:113}, {x:601+farmLayout.shedOffset.x,y:112+farmLayout.shedOffset.y,w:118,h:89},
   {x:0,y:0,w:800,h:65}, {x:0,y:0,w:30,h:600}, {x:775,y:0,w:25,h:600},
   {x:74,y:353,w:24,h:18}, {x:518,y:280,w:24,h:18}, {x:440,y:491,w:24,h:18}

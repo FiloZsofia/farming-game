@@ -96,13 +96,13 @@ Tavaszi kezdés, összesen 12 elültethető növénnyel:
 | Növény | Induló mennyiség | Tervezett szerep |
 | --- | --- | --- |
 | Retek | 4 mag | 3 megöntözött nap után betakarítható |
-| Burgonya | 4 vetőgumó | 5 megöntözött nap után betakarítható; ár még nyitott |
+| Burgonya | 4 vetőgumó | 5 megöntözött nap után betakarítható |
 | Borsó | 4 mag | Először 6, majd 3 megöntözött nap után szedhető |
 
 - Földművelés, vetés, öntözés és betakarítás.
 - Ha kimarad az öntözés, a növény aznap nem fejlődik, de nem pusztul el.
 - Eső általi öntözés felmerült javaslatként; az időjárás szabályai még nincsenek véglegesítve.
-- A 3 / 5 / 6 napos, borsónál 3 napos újratermési idő az elfogadott első próba. Hozamok, árak és szezonhatárok később hangolandók. A prototípus egy terményt ad betakarításonként; az érett növény nem rohad el.
+- A 3 / 5 / 6 napos, borsónál 3 napos újratermési idő az elfogadott első próba. Hozamok és szezonhatárok később hangolandók; az elfogadott induló eladási árakat lent rögzítjük. A prototípus egy terményt ad betakarításonként; az érett növény nem rohad el.
 
 ## Beszerzés és eladás
 
@@ -118,6 +118,9 @@ Tavaszi kezdés, összesen 12 elültethető növénnyel:
 - A birtokon lévő eladóládába napközben bármikor betehető, amit el szeretnénk adni.
 - A nap lezárásáig a tárgyak visszavehetők.
 - Másnap reggel megérkezik a gold és egy rövid elszámolás.
+- Elfogadott induló eladási árak: retek 15, burgonya 30, borsó 12 gold/darab. A borsó újravetés nélküli újratermése megmarad.
+- A prototípus eladóládája a veranda bal oldalán áll. Közelről E, kattintás vagy az Eladóláda gomb nyitja. Egyesével vagy minden darab egyszerre betehető/visszavehető.
+- A gold és a függőben lévő eladás mentődik; az önkéntes és kényszerű napváltás ugyanazt az egyszeri elszámolást használja.
 - Nem tervezünk rendelőtáblát vagy kötelező terményrendeléseket az alapváltozatba.
 
 ## Eszközök, alapanyagok és tárolás

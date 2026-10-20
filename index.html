@@ -4,8 +4,8 @@
 <body>
 <main id="app" aria-label="Erdőszéli birtok">
   <div id="game" aria-label="Bejárható farm"></div>
-  <header class="hud"><div class="title-plaque"><span class="eyebrow">EGY ÚJ KEZDET</span><h1>Erdőszéli birtok</h1></div><div class="season">Tavasz · <b id="day-number">1.</b> nap<span id="clock-label">Délelőtt · 0:00</span><span id="save-state" role="status">Mentés betöltése…</span></div></header>
-  <div class="actions"><button id="story" aria-label="A főhős története">Történet</button><button id="help">Irányítás</button><button id="produce">Termények</button><button id="journal">Napló</button><button id="home">Házhoz</button></div>
+  <header class="hud"><div class="title-plaque"><span class="eyebrow">EGY ÚJ KEZDET</span><h1>Erdőszéli birtok</h1></div><div class="season">Tavasz · <b id="day-number">1.</b> nap<span id="clock-label">Délelőtt · 0:00</span><span class="gold-line"><b id="gold">0</b> gold</span><span id="save-state" role="status">Mentés betöltése…</span></div></header>
+  <div class="actions"><button id="story" aria-label="A főhős története">Történet</button><button id="help">Irányítás</button><button id="produce">Termények</button><button id="shipping">Eladóláda</button><button id="receipt">Bevétel</button><button id="journal">Napló</button><button id="home">Házhoz</button></div>
   <section id="toolbar" aria-label="Eszközök és ültetőanyagok">
     <button data-tool="hoe" aria-pressed="true"><span>⌁</span>Kapa<small>1</small></button>
     <button data-tool="water" aria-pressed="false"><span>♧</span>Öntözés<small>2</small></button>
@@ -24,7 +24,7 @@
   <div id="sleep-shade" aria-hidden="true"></div>
   <p id="status" role="status"></p>
   <div id="controls" aria-label="Mozgásvezérlés"><button data-dir="up" aria-label="Fel">↑</button><button data-dir="left" aria-label="Balra">←</button><button data-dir="down" aria-label="Le">↓</button><button data-dir="right" aria-label="Jobbra">→</button></div>
-  <dialog id="dialogue" aria-labelledby="dialogue-title"><form method="dialog"><span class="eyebrow" id="dialogue-label">EGY ÚJ KEZDET</span><h2 id="dialogue-title">Végre megérkeztem.</h2><p id="dialogue-text"></p><button id="sleep" type="button" hidden>Pihenés reggelig</button><button id="export-save" type="button" hidden>Mentés letöltése</button><button id="dialogue-close" autofocus>Folytatás</button></form></dialog>
+  <dialog id="dialogue" aria-labelledby="dialogue-title"><form method="dialog"><span class="eyebrow" id="dialogue-label">EGY ÚJ KEZDET</span><h2 id="dialogue-title">Végre megérkeztem.</h2><p id="dialogue-text"></p><section id="shipping-panel" hidden><div id="shipping-rows"></div><p id="shipping-total"></p></section><button id="sleep" type="button" hidden>Pihenés reggelig</button><button id="export-save" type="button" hidden>Mentés letöltése</button><button id="dialogue-close" autofocus>Folytatás</button></form></dialog>
 </main>
 <script type="module" src="/src/main.ts"></script>
 </body></html>

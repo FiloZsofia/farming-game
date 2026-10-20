@@ -92,3 +92,25 @@ describe('Space jump, Shift run and crop growth',()=>{
   cy.get('#save-state').should('contain','Mentve');cy.reload();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-produce','1').and('have.attr','data-planted','0');
  });
 });
+
+describe('Shipping crate and morning revenue',()=>{
+ it('saves pending goods, supports withdrawal and credits one morning payout',()=>{
+  cy.visit('/',{onBeforeLoad(win){
+   win.indexedDB.deleteDatabase('erdoszeli-birtok');
+   const request=win.indexedDB.open('erdoszeli-birtok',1);
+   request.onupgradeneeded=()=>request.result.createObjectStore('saves');
+   request.onsuccess=()=>{
+    const tx=request.result.transaction('saves','readwrite');
+    tx.objectStore('saves').put({version:2,player:{x:210,y:280},clock:{day:1,elapsed:0,collapseAt:580},seeds:{radish:4,potato:4,pea:4},produce:{radish:3,potato:2,pea:4},plots:[]},'active');
+    tx.oncomplete=()=>request.result.close();
+   };
+  }});
+  cy.get('#game').should('have.attr','data-ready','true');cy.get('#shipping').click();
+  cy.get('[data-transfer=radish-deposit-all]').click();cy.get('[data-transfer=potato-deposit-one]').click();cy.get('[data-transfer=pea-deposit-all]').click();cy.get('[data-transfer=radish-withdraw-one]').click();
+  cy.get('#shipping-total').should('contain','108 gold');cy.get('#gold').should('have.text','0');
+  cy.get('#save-state').should('contain','Mentve');cy.reload();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-shipping','108');
+  cy.get('#home').click();cy.get('#journal').click();cy.get('#sleep').click();
+  cy.get('#game').should('have.attr','data-day','2').and('have.attr','data-gold','108').and('have.attr','data-shipping','0');
+  cy.get('#dialogue-text').should('contain','Bevétel: 108 gold');cy.reload();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-gold','108');
+ });
+});

@@ -3,6 +3,7 @@ import {IDBFactory} from 'fake-indexeddb';
 import {SaveStore,snapshot,validSnapshot,decodeSnapshot,DB_NAME} from './storage';
 import {createGarden,targetTile,work} from './gardening';
 import {createClock} from './clock';
+import {createEconomy,settleSales} from './economy';
 import {START} from './movement';
 const fresh=()=>snapshot(START,createClock(1,()=>.5),createGarden());
 async function put(factory:IDBFactory,key:string,value:unknown){
@@ -60,7 +61,7 @@ describe('persistent farm state',()=>{
   const data=fresh();data.player={x:337,y:282};data.clock.day=12;data.seeds.radish=3;
   const legacy={...data,version:1,plots:[['353,280',{crop:'radish',watered:true}]]};
   await put(factory,'active',legacy);const reader=new SaveStore(factory);const loaded=await reader.load();
-  expect(loaded.data).toMatchObject({version:2,clock:{day:12},player:{x:337,y:282},seeds:{radish:3},produce:{radish:0,potato:0,pea:0}});
+  expect(loaded.data).toMatchObject({version:3,clock:{day:12},player:{x:337,y:282},seeds:{radish:3},produce:{radish:0,potato:0,pea:0}});
   expect(loaded.data?.plots).toEqual([['353,280',{crop:'radish',watered:true,growth:0,regrowing:false}]]);
   await reader.save(loaded.data!);reader.close();const reread=new SaveStore(factory);expect((await reread.load()).data).toEqual(loaded.data);reread.close();
  });
@@ -73,6 +74,22 @@ describe('persistent farm state',()=>{
   const factory=new IDBFactory(),writer=new SaveStore(factory);await writer.load();const data=fresh();
   data.produce.pea=2;data.plots=[['353,280',{crop:'pea',watered:true,growth:2,regrowing:true}],['369,280',{crop:'radish',watered:false,growth:3,regrowing:false}]];
   await writer.save(data);writer.close();const reader=new SaveStore(factory);expect((await reader.load()).data).toEqual(data);reader.close();
+ });
+
+ it('upgrades v2 while retaining crops, produce and growth and initializing an empty wallet',async()=>{
+  const factory=new IDBFactory(),writer=new SaveStore(factory);await writer.load();writer.close();
+  const old={...fresh(),version:2,produce:{radish:5,potato:2,pea:7},plots:[['353,280',{crop:'pea',watered:true,growth:2,regrowing:true}]]};
+  await put(factory,'active',old);const reader=new SaveStore(factory);const data=(await reader.load()).data!;
+  expect(data.version).toBe(3);expect(data.produce).toEqual(old.produce);expect(data.plots).toEqual(old.plots);expect(data.economy).toEqual(createEconomy());reader.close();
+ });
+ it('moves old players out of the newly introduced crate without losing their farm',()=>{
+  const old={...fresh(),version:2,player:{x:174,y:256}};const upgraded=decodeSnapshot(old)!;expect(upgraded.player).toEqual({x:174,y:276});expect(upgraded.seeds).toEqual(old.seeds);
+ });
+ it('restores a pending crate and a paid morning without crediting sales twice',async()=>{
+  const factory=new IDBFactory(),writer=new SaveStore(factory);await writer.load();const garden=createGarden(),e=createEconomy();e.gold=25;e.shipping.pea=3;
+  await writer.save(snapshot(START,createClock(1),garden,e));writer.close();const reader=new SaveStore(factory);const pending=(await reader.load()).data!;expect(pending.economy.shipping.pea).toBe(3);expect(pending.economy.gold).toBe(25);
+  const morning=snapshot(START,createClock(2),garden,settleSales(pending.economy,1));await reader.save(morning);reader.close();
+  const final=new SaveStore(factory);const loaded=(await final.load()).data!;expect(loaded.economy.gold).toBe(61);expect(loaded.economy.shipping.pea).toBe(0);expect(loaded.economy.lastSale?.total).toBe(36);final.close();
  });
 
 });
