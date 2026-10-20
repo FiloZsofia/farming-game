@@ -12,6 +12,7 @@ Az „Erdőszéli birtok” csak munkacím. Felmerült címjavaslatok: Új gyök
 - Irányítható karakter, aki odasétál a tevékenység helyéhez.
 - Az első prototípus karakterének méretét és mozgási sebességét a felhasználó megfelelőnek találta.
 - A karakter a játék kezdetén a háza ajtajából indul.
+- A karakter ugrani is tud; mozgás közben az ugrás kis sebességlöketet ad. A prototípusban Shift vagy külön Ugrás gomb indítja.
 - Tartós mentés szükséges. Bezáráskor megáll a játékidő; nincs távolléti növekedés.
 - Az idő, növekedés, árak és egyéb egyensúlyi értékek menet közben, közös egyeztetéssel alakulnak ki.
 

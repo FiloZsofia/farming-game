@@ -12,9 +12,9 @@ export function blocked(x:number,y:number):boolean {
   const inWater=((x-pond.x)/(pond.rx+7))**2+((y-pond.y)/(pond.ry+4))**2<1;
   return (inWater&&!onDock)||x<12||x>788||y<12||y>588||obstacles.some(b=>x+7>b.x&&x-7<b.x+b.w&&y+3>b.y&&y-4<b.y+b.h);
 }
-export function move(x:number,y:number,dx:number,dy:number,seconds:number){
+export function move(x:number,y:number,dx:number,dy:number,seconds:number,speedMultiplier=1){
   const length=Math.hypot(dx,dy); if(!length)return {x,y};
-  const distance=95*Math.min(Math.max(seconds,0),0.05), steps=Math.max(1,Math.ceil(distance/2));
+  const distance=95*speedMultiplier*Math.min(Math.max(seconds,0),0.05), steps=Math.max(1,Math.ceil(distance/2));
   for(let i=0;i<steps;i++){
     const nx=x+dx/length*distance/steps;
     if(!blocked(nx,y))x=nx;

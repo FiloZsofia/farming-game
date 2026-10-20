@@ -21,7 +21,7 @@ npm run preview
 
 Korlátozott környezetben, ha a Cypress binárisa nem tölthető le: `CYPRESS_INSTALL_BINARY=0 CYPRESS_CACHE_FOLDER=/tmp/farming-cypress npm ci --cache /tmp/farming-npm-cache`. Ez a böngészős tesztfuttatót kihagyja, az alkalmazást és az egységteszteket nem. Később azonos cache-be telepíthető: `CYPRESS_CACHE_FOLDER=/tmp/farming-cypress npx cypress install`.
 
-Ez még nem a végleges grafika. Nincs növekedés, betakarítás, működő napló, játékidő, stamina vagy mentés; az újratöltés visszaállítja a jelenetet. Az esti napló és a többi rendszer későbbi lépés.
+Ez még nem a végleges grafika. A növekedés, betakarítás és stamina még nincs bekötve. A játékidő, esti napló, napváltás és böngészőbeli automatikus mentés már működik.
 
 ## GitHub Pages
 
@@ -62,7 +62,19 @@ Az „Erdőszéli birtok” munkacím; a végleges cím még egyeztetés alatt �
 
 Eszközválasztás: alsó sáv vagy 1–5 (kapa, öntözés, retek, burgonya, borsó). Kattintás/koppintás egy közeli kockára végrehajtja a kiválasztott műveletet. Szóköz vagy a Művelet gomb a haladási irányban előtted lévő kockára hat. A világos keret elérhető, művelhető talajt, a vörös keret nem használható célt jelez.
 
-Előbb ásd fel a földet, majd ültesd el az ültetőanyagot és öntözd meg. Induláskor mindháromból 4 darab van. A három meglévő ágyásban és két tiszta rétfolton (bal oldalt, illetve a kert alatti réten) lehet dolgozni; út, víz, ház és ágyásszegély védett. A prototípusban nincs vízfogyás, stamina, növekedés vagy mentés. Újratöltéskor az induló állapot tér vissza.
+Előbb ásd fel a földet, majd ültesd el az ültetőanyagot és öntözd meg. Induláskor mindháromból 4 darab van. A három meglévő ágyásban és két tiszta rétfolton (bal oldalt, illetve a kert alatti réten) lehet dolgozni; út, víz, ház és ágyásszegély védett. A prototípusban nincs vízfogyás, stamina vagy növekedés. Újratöltéskor az utolsó mentés folytatódik.
 
 - [Kertészkedés képernyőképe](docs/concepts/farm-gardening-prototype.png)
 - [Mobilos kertészkedés](docs/concepts/farm-gardening-mobile.png)
+
+## Ugrás, idő és napló
+
+Ugrás: **Shift** vagy **Ugrás** gomb. Mozgás közben rövid lendület, álló helyben függőleges ugrás; a házon és vízen nem lehet átugrani. Szóköz továbbra is a kertészkedés.
+
+6 perc aktív nappal után éjszaka lesz. Az éjszaka 2. és 3. percében figyelmeztetés érkezik; 3:30–4:00 között az elfáradt főhős összeesik, majd másnap reggel a háznál ébred, készletveszteség nélkül. A verandán **E / Napló → Pihenés reggelig** korábban is lezárja a napot. Párbeszéd, háttérbe tett lap és bezárt játék alatt az idő megáll. A növények még nem fejlődnek; az öntözést minden új napon ismételni kell.
+
+A kert, magmennyiség, helyzet és idő IndexedDB-be mentődik. A jobb felső sarok mutatja az írás állapotát. A naplóból JSON-másolat tölthető le; importálás még nincs. A mentés helyi, nem szinkronizál más böngészővel vagy eszközzel. Részletek: [mentés és helyreállítás](docs/mentes.md).
+
+- [Ugrás képernyőképe](docs/concepts/farm-jump-prototype.png)
+- [Éjszakai figyelmeztetés](docs/concepts/farm-night-prototype.png)
+- [Mobilos idő- és ugrásvezérlés](docs/concepts/farm-clock-mobile.png)

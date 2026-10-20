@@ -1,15 +1,34 @@
-# Mentési terv
+# Mentés és helyreállítás
 
-**A kertészkedési prototípus még nem ment.** Újratöltéskor a karakter visszatér a házhoz, a megművelt föld és ültetés törlődik, a kezdő magmennyiségek visszaállnak. A verandán látható napló még nem használható.
+A játék natív IndexedDB-be ment, `erdoszeli-birtok` adatbázisban. A mentési formátum verziója 1. Nincs felhőszinkron: másik böngésző vagy eszköz külön farmot használ.
 
-## Elfogadott viselkedés
+## Mentett állapot
 
-- Tartós, automatikus mentés, a nap lezárásától függetlenül is.
-- Az esti napló lezárja a napot, és a következő reggelhez tartozó mentést is elkészíti.
-- Bezárás után nem telik a játékidő és nem fejlődnek a növények.
+- Karakter talajon mért helyzete.
+- Napszám, az adott napon eltelt aktív másodpercek és az előre kisorsolt éjszakai összeesési időpont.
+- A három ültetőanyag mennyisége.
+- Felásott földkockák, elültetett növényfajták és öntözési állapot.
 
-## Tervezett, még kidolgozandó megoldás
+Ugrásanimációt és megnyitott párbeszédet nem mentünk. A még nem létező staminát, goldot, általános készletet, eladóládát és rendeléseket később kell a sémához adni migrációval.
 
-IndexedDB, szükség esetén Dexie.js-szel; verziózott formátum és export/import. A mentendő állapot legalább a karakterhelyzetet, játékidőt, staminát, goldot, készleteket, parcellákat, növényeket, rendeléseket és eladóláda-tartalmat érinti majd.
+## Mikor mentünk?
 
-Implementálás előtt meghatározandó: automatikus mentés kiváltói, hibajelzés, sémaellenőrzés, verzióváltás, atomi napváltás, sérült mentés helyreállítása és több böngészőlap kezelése. Import előtt megőrzendő az előző érvényes állapot. Mentési hibát nem szabad sikeres mentésként jelezni. A helyi adatokat a böngészőadatok törlése eltávolíthatja; felhőszinkron még nincs kiválasztva.
+- Sikeres kapálás, vetés és öntözés után.
+- Öt aktív másodpercenként, hogy a mozgás és a játékidő is megmaradjon.
+- Ablakváltáskor, a lap háttérbe kerülésekor és bezárásakor is megkíséreljük a mentést.
+- A naplóval lezárt nap és az éjszakai összeesés után a következő reggel teljes állapotát egy tranzakcióban írjuk. Csak sikeres mentés után lépünk az új napba.
+
+A „Mentve ebben a böngészőben” jelzés csak a legutolsó kért mentés sikeres tranzakciója után jelenik meg. Hiba esetén a felület hibát mutat, és az automatikus mentés később újrapróbálja. Hirtelen folyamatleállításkor az utolsó sikeres mentés utáni változások elveszhetnek; az aszinkron bezáráskori írás nem garantált.
+
+## Adatvédelem hibák ellen
+
+- Mentés előtt és betöltéskor ellenőrizzük a sémát, a számokat, a helyzetet, az ültetőanyagot és a parcellákat.
+- Az írások sorban futnak, így régebbi mentés nem előzheti meg az újabbat.
+- Az előző érvényes állapot külön biztonsági példányként, az újjal közös tranzakcióban tárolódik.
+- Sérült elsődleges mentés esetén az előző érvényes példányból folytatjuk, és jelezzük a helyreállítást.
+- Ismeretlen verziót vagy helyreállíthatatlan mentést nem írunk felül üres farmmal. Ilyenkor a játék nem indul el a mentésre.
+- Web Locks biztosítja, hogy ugyanazt a farmot egyszerre egy böngészőlap módosíthassa. A második lap figyelmeztet; az első bezárása után frissíthető.
+
+A napló párbeszédében a **Mentés letöltése** gomb JSON-másolatot készít. Fájlból importálás és jövőbeli verziók migrációja még nincs megvalósítva. A böngészőadatok törlése a helyi mentést és a helyi biztonsági példányt is eltávolítja.
+
+Bezáráskor, háttérben, másik ablakra váltáskor és párbeszéd alatt nem halad a játékidő; betöltéskor nincs offline előreszámítás.
