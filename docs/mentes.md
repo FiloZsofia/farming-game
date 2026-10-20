@@ -1,6 +1,6 @@
 # Mentési terv
 
-**A mozgásprototípus még nem ment.** Újratöltéskor a karakter visszatér a házhoz. A verandán látható napló még nem használható.
+**A kertészkedési prototípus még nem ment.** Újratöltéskor a karakter visszatér a házhoz, a megművelt föld és ültetés törlődik, a kezdő magmennyiségek visszaállnak. A verandán látható napló még nem használható.
 
 ## Elfogadott viselkedés
 

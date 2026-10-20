@@ -21,3 +21,22 @@ describe('Full-screen farm',()=>{
   cy.get('#home').click();cy.get('#status').should('contain','Veranda');
  });
 });
+
+describe('Gardening',()=>{
+ it('tills, plants and waters with the screen action button',()=>{
+  cy.visit('/');cy.get('#dialogue-close').click();
+  const walk=(dir:string,axis:string,minimum:number)=>{
+   cy.get(`[data-dir="${dir}"]`).trigger('pointerdown',{pointerId:1});
+   cy.get('#game',{timeout:15000}).should(el=>expect(Number(el.attr(`data-player-${axis}`))).to.be.at.least(minimum));
+   cy.get(`[data-dir="${dir}"]`).trigger('pointerup',{pointerId:1});
+  };
+  walk('down','y',287);walk('right','x',334);
+  cy.get('[data-tool="hoe"]').click();cy.get('#work').click();cy.get('#game').should('have.attr','data-plots','1');
+  cy.get('[data-tool="radish"]').click();cy.get('#work').click();cy.get('[data-count="radish"]').should('have.text','3');
+  cy.get('[data-tool="water"]').click();cy.get('#work').click();cy.get('#game').should('have.attr','data-watered','1');
+ });
+ it('does not spend seeds for an invalid or distant plot',()=>{
+  cy.visit('/');cy.get('#dialogue-close').click();cy.get('[data-tool="radish"]').click();cy.get('#work').click();
+  cy.get('[data-count="radish"]').should('have.text','4');cy.get('#game').should('have.attr','data-planted','0');
+ });
+});

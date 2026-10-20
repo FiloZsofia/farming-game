@@ -6,6 +6,15 @@
   <div id="game" aria-label="Bejárható farm"></div>
   <header class="hud"><div class="title-plaque"><span class="eyebrow">EGY ÚJ KEZDET</span><h1>Erdőszéli birtok</h1></div><div class="season">Tavasz <span>Délelőtt</span></div></header>
   <div class="actions"><button id="story" aria-label="A főhős története">Történet</button><button id="help">Irányítás</button><button id="home">Házhoz</button></div>
+  <section id="toolbar" aria-label="Eszközök és ültetőanyagok">
+    <button data-tool="hoe" aria-pressed="true"><span>⌁</span>Kapa<small>1</small></button>
+    <button data-tool="water" aria-pressed="false"><span>♧</span>Öntözés<small>2</small></button>
+    <button data-tool="radish" aria-pressed="false"><span>Retek</span><b data-count="radish">4</b><small>3</small></button>
+    <button data-tool="potato" aria-pressed="false"><span>Burgonya</span><b data-count="potato">4</b><small>4</small></button>
+    <button data-tool="pea" aria-pressed="false"><span>Borsó</span><b data-count="pea">4</b><small>5</small></button>
+  </section>
+  <button id="work" aria-label="Kiválasztott művelet végrehajtása">Művelet</button>
+  <p id="feedback" role="status" aria-live="polite">Kertészkedési próba · még nincs mentés</p>
   <p id="status" role="status"></p>
   <div id="controls" aria-label="Mozgásvezérlés"><button data-dir="up" aria-label="Fel">↑</button><button data-dir="left" aria-label="Balra">←</button><button data-dir="down" aria-label="Le">↓</button><button data-dir="right" aria-label="Jobbra">→</button></div>
   <dialog id="dialogue" aria-labelledby="dialogue-title"><form method="dialog"><span class="eyebrow" id="dialogue-label">EGY ÚJ KEZDET</span><h2 id="dialogue-title">Végre megérkeztem.</h2><p id="dialogue-text"></p><button id="dialogue-close" autofocus>Folytatás</button></form></dialog>

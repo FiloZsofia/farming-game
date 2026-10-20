@@ -1,6 +1,6 @@
 # Erdőszéli birtok
 
-Nyugodt, böngészős farmjáték. Jelenleg az első mozgáspróba: saját ideiglenes grafikával, bejárható farmmal, ütközésekkel és verandáról induló főhőssel.
+Nyugodt, böngészős farmjáték. Jelenleg kertészkedési prototípus: saját ideiglenes grafikával, bejárható farmmal, kapálással, vetéssel és öntözéssel.
 
 ## Futtatás
 
@@ -21,7 +21,7 @@ npm run preview
 
 Korlátozott környezetben, ha a Cypress binárisa nem tölthető le: `CYPRESS_INSTALL_BINARY=0 CYPRESS_CACHE_FOLDER=/tmp/farming-cypress npm ci --cache /tmp/farming-npm-cache`. Ez a böngészős tesztfuttatót kihagyja, az alkalmazást és az egységteszteket nem. Később azonos cache-be telepíthető: `CYPRESS_CACHE_FOLDER=/tmp/farming-cypress npx cypress install`.
 
-Ez még nem a végleges grafika. Nincs termelés, működő napló, játékidő, stamina vagy mentés; az újratöltés visszaállítja a jelenetet. Az esti napló és a többi rendszer későbbi lépés.
+Ez még nem a végleges grafika. Nincs növekedés, betakarítás, működő napló, játékidő, stamina vagy mentés; az újratöltés visszaállítja a jelenetet. Az esti napló és a többi rendszer későbbi lépés.
 
 ## GitHub Pages
 
@@ -57,3 +57,12 @@ A farm kitölti az ablakot; keskeny képernyőn a kamera követi a karaktert. Az
 - [Mobilos bevezető](docs/concepts/farm-mobile-dialogue.png)
 
 Az „Erdőszéli birtok” munkacím; a végleges cím még egyeztetés alatt áll.
+
+## Kertészkedési próba
+
+Eszközválasztás: alsó sáv vagy 1–5 (kapa, öntözés, retek, burgonya, borsó). Kattintás/koppintás egy közeli kockára végrehajtja a kiválasztott műveletet. Szóköz vagy a Művelet gomb a haladási irányban előtted lévő kockára hat. A világos keret elérhető, művelhető talajt, a vörös keret nem használható célt jelez.
+
+Előbb ásd fel a földet, majd ültesd el az ültetőanyagot és öntözd meg. Induláskor mindháromból 4 darab van. A három meglévő ágyásban és két tiszta rétfolton (bal oldalt, illetve a kert alatti réten) lehet dolgozni; út, víz, ház és ágyásszegély védett. A prototípusban nincs vízfogyás, stamina, növekedés vagy mentés. Újratöltéskor az induló állapot tér vissza.
+
+- [Kertészkedés képernyőképe](docs/concepts/farm-gardening-prototype.png)
+- [Mobilos kertészkedés](docs/concepts/farm-gardening-mobile.png)

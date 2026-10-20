@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import './style.css';
 import { move, START } from './movement';
 import { farmLayout } from './layout';
+import { createGarden, targetTile, cultivable, reachable, tileKey, work, TILE, type Tile, type Tool } from './gardening';
 const dialogue=document.querySelector<HTMLDialogElement>('#dialogue')!;
 const story='A kutatólaborban mindig akadt egy újabb feladat. Szerettem a munkámat, de elfáradtam. Változásra volt szükségem.\n\nMost itt vagyok. A ház előtt gaz nő, a kerítés javításra vár. Nem kell mindent ma rendbe hoznom. Ez egy új kezdet.';
 function showDialogue(title:string,text:string,label='A BIRTOKON'){
@@ -12,7 +13,7 @@ function showDialogue(title:string,text:string,label='A BIRTOKON'){
  if(!dialogue.open)dialogue.showModal();
 }
 document.querySelector('#story')!.addEventListener('click',()=>showDialogue('Végre megérkeztem.',story,'EGY ÚJ KEZDET'));
-document.querySelector('#help')!.addEventListener('click',()=>showDialogue('Lassan, a saját tempódban.','Mozgás: WASD, nyilak vagy a képernyő iránygombjai.\n\nA háznál, tónál és melléképületnél az E billentyűvel vagy a megjelenő jelzésre kattintva nézhetsz körül. A Házhoz gomb visszavisz a verandára.\n\nEz még mozgáspróba: a kertészkedés, a játékidő és a mentés később készül el.','IRÁNYÍTÁS'));
+document.querySelector('#help')!.addEventListener('click',()=>showDialogue('Lassan, a saját tempódban.','Mozgás: WASD, nyilak vagy a képernyő iránygombjai.\n\nA háznál, tónál és melléképületnél az E billentyűvel vagy a megjelenő jelzésre kattintva nézhetsz körül. A Házhoz gomb visszavisz a verandára.\n\nKertészkedés: 1–5 vagy az alsó eszközsáv. Kattints egy közeli földkockára, vagy használd a Szóközt / Művelet gombot az előtted lévő kockán. Kapa → ültetőanyag → öntözés. A három ágyásban és a szabad rétfoltokon dolgozhatsz.\n\nA növekedés, stamina és mentés még nincs bekötve; újratöltéskor a kert visszaáll.','IRÁNYÍTÁS'));
 const held=new Set<string>();
 function release(){held.clear();document.querySelectorAll('.active').forEach(el=>el.classList.remove('active'));}
 window.addEventListener('blur',release);document.addEventListener('visibilitychange',()=>{if(document.hidden)release();});
@@ -28,6 +29,38 @@ class Farm extends Phaser.Scene {
  private facing=1;
  private bubble!:Phaser.GameObjects.Text;
  private nearby='';
+ private garden=createGarden();
+ private tool:Tool='hoe';
+ private target:Tile|null=null;
+ private planted!:Phaser.GameObjects.Graphics;
+ private selection!:Phaser.GameObjects.Graphics;
+ private direction={x:0,y:1};
+ private feedbackUntil=0;
+ private selectTool(tool:Tool){
+  this.tool=tool;
+  document.querySelectorAll<HTMLButtonElement>('[data-tool]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.tool===tool)));
+ }
+ private drawGarden(){
+  const g=this.planted;g.clear();
+  for(const [key,plot] of this.garden.plots){
+   const [x,y]=key.split(',').map(Number);
+   g.fillStyle(plot.watered?0x493f31:0x88603f);g.fillRect(x+1,y+1,TILE-2,TILE-2);
+   g.lineStyle(1,plot.watered?0x635b43:0xa17b51);for(let row=4;row<TILE;row+=4)g.lineBetween(x+3,y+row,x+TILE-3,y+row);
+   if(plot.crop){const colors={radish:0xc16c7e,potato:0xc5a363,pea:0x9db56a};g.fillStyle(colors[plot.crop]);g.fillRect(x+6,y+7,4,4);g.fillStyle(0x619449);g.fillRect(x+4,y+4,4,3);g.fillRect(x+9,y+3,3,4);}
+   if(plot.watered){g.fillStyle(0x83b8c5);g.fillRect(x+TILE-4,y+3,2,3);}
+  }
+  const surface=document.querySelector<HTMLElement>('#game')!;
+  surface.dataset.plots=String(this.garden.plots.size);surface.dataset.planted=String([...this.garden.plots.values()].filter(p=>p.crop).length);surface.dataset.watered=String([...this.garden.plots.values()].filter(p=>p.watered).length);
+  for(const crop of ['radish','potato','pea'] as const)document.querySelector(`[data-count="${crop}"]`)!.textContent=String(this.garden.seeds[crop]);
+ }
+ private doWork(){
+  if(dialogue.open||!this.target)return;
+  const result=work(this.garden,this.tool,this.target,this.actor);
+  const feedback=document.querySelector<HTMLElement>('#feedback')!;
+  feedback.textContent=result.message;feedback.dataset.result=result.ok?'success':'error';this.feedbackUntil=this.time.now+4000;
+  this.drawGarden();
+ }
+
  create(){
   const g=this.add.graphics();
   const rect=(x:number,y:number,w:number,h:number,c:number)=>{g.fillStyle(c);g.fillRect(x,y,w,h);};
@@ -72,7 +105,7 @@ class Farm extends Phaser.Scene {
   for(let x=dock.x+2;x<dock.x+dock.w;x+=8)rect(x,dock.y+2,6,dock.h-4,0xb18c59);
   for(const x of [dock.x,dock.x+dock.w-5]){rect(x,dock.y-5,5,11,0x735337);rect(x,dock.y+dock.h-6,5,11,0x735337);}
   // Beds are grouped to the right of the veranda, away from all path edges.
-  for(const bed of farmLayout.beds){const {x,y,w,h}=bed;rect(x,y,w,h,0xb69b64);rect(x+3,y+3,w-6,h-6,0x755b3e);for(let i=0;i<5;i++)rect(x+8+i*9,y+10+i%2*12,3,7,0x668046);}
+  for(const bed of farmLayout.beds){const {x,y,w,h}=bed;rect(x,y,w,h,0xb69b64);rect(x+3,y+3,w-6,h-6,0x755b3e);}
   for(const [x,y] of [[74,353],[518,280],[440,491]]){rect(x,y,24,18,0x80877a);rect(x+3,y,15,5,0xa4a998);}
   const fence=(x:number,y:number,count:number)=>{rect(x,y+7,count*25,4,0x846c45);rect(x,y+16,count*25,3,0x9c8050);for(let i=0;i<=count;i++)rect(x+i*25,y,5,27,0x765f3e);};
   fence(28,499,4);fence(211,515,9);fence(433,176,4);fence(691,221,3);
@@ -81,6 +114,26 @@ class Farm extends Phaser.Scene {
   // Open gate on the lower-left path.
   rect(132,492,6,37,0x715436);rect(201,505,6,37,0x715436);rect(121,504,4,25,0x947348);
   for(let i=0;i<100;i++){const x=45+random()*710,y=275+random()*265;if(Math.abs(x-215)<65||x>480&&y>340||x>325&&x<495&&y<380)continue;rect(x,y,2,4,0x668344);if(i%3===0)rect(x-1,y-2,4,3,i%2?0xe9d7a1:0xb7a3ba);}
+  this.planted=this.add.graphics().setDepth(1);
+  this.selection=this.add.graphics().setDepth(2);
+  this.drawGarden();
+  const tools:Tool[]=['hoe','water','radish','potato','pea'];
+  document.querySelectorAll<HTMLButtonElement>('[data-tool]').forEach(button=>button.addEventListener('click',(event)=>{this.selectTool(button.dataset.tool as Tool);if(event.detail>0)button.blur();}));
+  document.querySelector('#work')!.addEventListener('click',()=>{this.aimAhead();this.doWork();});
+  document.querySelectorAll<HTMLButtonElement>('#toolbar button,#work').forEach(b=>b.addEventListener('keydown',e=>{if(e.code==='Space')e.stopPropagation();}));
+  this.input.keyboard!.on('keydown', (event:KeyboardEvent)=>{
+    if(dialogue.open)return;
+    if(event.key>='1'&&event.key<='5')this.selectTool(tools[Number(event.key)-1]);
+    if(event.code==='Space'&&!event.repeat&&!(event.target as HTMLElement)?.closest('button')){event.preventDefault();this.aimAhead();this.doWork();}
+  });
+  this.input.on('pointermove',(pointer:Phaser.Input.Pointer)=>{
+    if(dialogue.open||pointer.wasTouch)return;
+    const point=this.cameras.main.getWorldPoint(pointer.x,pointer.y);this.target=targetTile(point.x,point.y);
+  });
+  this.input.on('pointerdown',(pointer:Phaser.Input.Pointer)=>{
+    if(dialogue.open||pointer.button!==0)return;
+    const point=this.cameras.main.getWorldPoint(pointer.x,pointer.y);this.target=targetTile(point.x,point.y);this.doWork();
+  });
   this.actor=this.add.container(START.x,START.y).setDepth(100);
   const part=(x:number,y:number,w:number,h:number,color:number)=>{const r=this.add.rectangle(x,y,w,h,color);this.actor.add(r);return r;};
   this.actor.add(this.add.ellipse(0,0,20,7,0x35442e,0.25));
@@ -107,17 +160,29 @@ class Farm extends Phaser.Scene {
   dialogue.addEventListener('close',()=>{this.input.keyboard?.resetKeys();release();});
   showDialogue('Végre megérkeztem.',story,'EGY ÚJ KEZDET');
   this.keys=this.input.keyboard!.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT') as Record<string,Phaser.Input.Keyboard.Key>;
-  document.querySelector('#home')!.addEventListener('click',()=>{this.actor.setPosition(START.x,START.y);release();});
+  document.querySelector('#home')!.addEventListener('click',()=>{this.actor.setPosition(START.x,START.y);release();this.aimAhead();});
  }
+ private aimAhead(){this.target=targetTile(this.actor.x+this.direction.x*22,this.actor.y+this.direction.y*22);}
  private tree(g:Phaser.GameObjects.Graphics,x:number,y:number){g.fillStyle(0x6d5739);g.fillRect(x-3,y,7,24);g.fillStyle(0x45693f);g.fillCircle(x,y-10,23);g.fillStyle(0x628348);g.fillCircle(x-7,y-18,18);g.fillStyle(0x799650);g.fillCircle(x-10,y-23,11);}
  update(time:number,delta:number){
   if(!this.actor)return;
-  if(dialogue.open){this.input.keyboard?.resetKeys();return;}
+  if(dialogue.open){this.input.keyboard?.resetKeys();this.selection.setVisible(false);return;}
+  this.selection.setVisible(true);
   const k=this.keys;
   const dx=Number(k.D.isDown||k.RIGHT.isDown||held.has('right'))-Number(k.A.isDown||k.LEFT.isDown||held.has('left'));
   const dy=Number(k.S.isDown||k.DOWN.isDown||held.has('down'))-Number(k.W.isDown||k.UP.isDown||held.has('up'));
   const before={x:this.actor.x,y:this.actor.y};const next=move(before.x,before.y,dx,dy,delta/1000);this.actor.setPosition(next.x,next.y);
+  const surface=document.querySelector<HTMLElement>('#game')!;surface.dataset.playerX=String(Math.round(next.x));surface.dataset.playerY=String(Math.round(next.y));
   if(dx)this.facing=dx>0?1:-1;
+  if(dx||dy){this.direction={x:dx,y:dy};this.aimAhead();}
+  if(!this.target)this.aimAhead();
+  this.selection.clear();
+  if(this.target){
+    const valid=cultivable(this.target)&&reachable(this.target,this.actor);
+    this.selection.lineStyle(1,valid?0xf1df9e:0xd69077,1).strokeRect(this.target.x,this.target.y,TILE,TILE);
+    this.selection.fillStyle(valid?0xf1df9e:0xd69077,.12).fillRect(this.target.x,this.target.y,TILE,TILE);
+  }
+  if(this.time.now>this.feedbackUntil){const feedback=document.querySelector<HTMLElement>('#feedback')!;feedback.textContent='Kattints közeli földre · Szóköz: művelet előtted';delete feedback.dataset.result;}
   this.hair.x=this.facing*8;
   const walking=next.x!==before.x||next.y!==before.y;
   this.actor.setScale(1,walking?1+Math.sin(time/85)*0.025:1);
