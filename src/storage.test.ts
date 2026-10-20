@@ -4,6 +4,7 @@ import {SaveStore,snapshot,validSnapshot,decodeSnapshot,DB_NAME} from './storage
 import {createGarden,targetTile,work} from './gardening';
 import {createClock} from './clock';
 import {createEconomy,settleSales} from './economy';
+import {createOrders,deliverOrders,collectPackage} from './orders';
 import {START} from './movement';
 const fresh=()=>snapshot(START,createClock(1,()=>.5),createGarden());
 async function put(factory:IDBFactory,key:string,value:unknown){
@@ -61,7 +62,7 @@ describe('persistent farm state',()=>{
   const data=fresh();data.player={x:337,y:282};data.clock.day=12;data.seeds.radish=3;
   const legacy={...data,version:1,plots:[['353,280',{crop:'radish',watered:true}]]};
   await put(factory,'active',legacy);const reader=new SaveStore(factory);const loaded=await reader.load();
-  expect(loaded.data).toMatchObject({version:3,clock:{day:12},player:{x:337,y:282},seeds:{radish:3},produce:{radish:0,potato:0,pea:0}});
+  expect(loaded.data).toMatchObject({version:4,clock:{day:12},player:{x:337,y:282},seeds:{radish:3},produce:{radish:0,potato:0,pea:0}});
   expect(loaded.data?.plots).toEqual([['353,280',{crop:'radish',watered:true,growth:0,regrowing:false}]]);
   await reader.save(loaded.data!);reader.close();const reread=new SaveStore(factory);expect((await reread.load()).data).toEqual(loaded.data);reread.close();
  });
@@ -80,7 +81,7 @@ describe('persistent farm state',()=>{
   const factory=new IDBFactory(),writer=new SaveStore(factory);await writer.load();writer.close();
   const old={...fresh(),version:2,produce:{radish:5,potato:2,pea:7},plots:[['353,280',{crop:'pea',watered:true,growth:2,regrowing:true}]]};
   await put(factory,'active',old);const reader=new SaveStore(factory);const data=(await reader.load()).data!;
-  expect(data.version).toBe(3);expect(data.produce).toEqual(old.produce);expect(data.plots).toEqual(old.plots);expect(data.economy).toEqual(createEconomy());reader.close();
+  expect(data.version).toBe(4);expect(data.produce).toEqual(old.produce);expect(data.plots).toEqual(old.plots);expect(data.economy).toEqual(createEconomy());reader.close();
  });
  it('moves old players out of the newly introduced crate without losing their farm',()=>{
   const old={...fresh(),version:2,player:{x:174,y:256}};const upgraded=decodeSnapshot(old)!;expect(upgraded.player).toEqual({x:174,y:276});expect(upgraded.seeds).toEqual(old.seeds);
@@ -90,6 +91,23 @@ describe('persistent farm state',()=>{
   await writer.save(snapshot(START,createClock(1),garden,e));writer.close();const reader=new SaveStore(factory);const pending=(await reader.load()).data!;expect(pending.economy.shipping.pea).toBe(3);expect(pending.economy.gold).toBe(25);
   const morning=snapshot(START,createClock(2),garden,settleSales(pending.economy,1));await reader.save(morning);reader.close();
   const final=new SaveStore(factory);const loaded=(await final.load()).data!;expect(loaded.economy.gold).toBe(61);expect(loaded.economy.shipping.pea).toBe(0);expect(loaded.economy.lastSale?.total).toBe(36);final.close();
+ });
+
+ it('upgrades v3 while preserving money, shipping and receipts without sharing mutable backup data',()=>{
+  const economy=createEconomy();economy.gold=123;economy.shipping.pea=2;
+  const old={...fresh(),version:3,economy,produce:{radish:2,potato:0,pea:1}};const decoded=decodeSnapshot(old)!;
+  expect(decoded.version).toBe(4);expect(decoded.economy).toEqual(economy);expect(decoded.orders).toEqual(createOrders());expect(decoded.produce).toEqual(old.produce);
+  decoded.economy.gold=0;decoded.produce.radish=0;expect(old.economy.gold).toBe(123);expect(old.produce.radish).toBe(2);
+ });
+ it('restores pending orders, delivered parcels and collected seed counts separately',async()=>{
+  const factory=new IDBFactory(),writer=new SaveStore(factory);await writer.load();const garden=createGarden(),e=createEconomy(),o=createOrders();e.gold=65;o.pending.radish=3;
+  await writer.save(snapshot(START,createClock(1),garden,e,o));writer.close();const reader=new SaveStore(factory);const pending=(await reader.load()).data!;expect(pending.orders.pending.radish).toBe(3);
+  const arrived=deliverOrders(pending.orders);const morning=snapshot(START,createClock(2),garden,e,arrived);await reader.save(morning);reader.close();const mailbox=new SaveStore(factory);const delivered=(await mailbox.load()).data!;expect(delivered.orders.mailbox.radish).toBe(3);expect(delivered.orders.pending.radish).toBe(0);
+  const taken=collectPackage(garden,delivered.orders)!;await mailbox.save(snapshot(START,delivered.clock,taken.garden,e,taken.orders));mailbox.close();const final=new SaveStore(factory);const state=(await final.load()).data!;expect(state.seeds.radish).toBe(7);expect(state.orders.mailbox.radish).toBe(0);expect(state.economy.gold).toBe(65);final.close();
+ });
+ it('rejects corrupt mail or totals exceeding a safe seed stack',()=>{
+  const data=fresh();data.orders.pending.pea=-1;expect(validSnapshot(data)).toBe(false);
+  const full=fresh();full.seeds.pea=999999;full.orders.mailbox.pea=1;expect(validSnapshot(full)).toBe(false);
  });
 
 });

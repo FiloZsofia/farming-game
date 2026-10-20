@@ -12,11 +12,16 @@ Az „Erdőszéli birtok” csak munkacím. Felmerült címjavaslatok: Új gyök
 - Irányítható karakter, aki odasétál a tevékenység helyéhez.
 - Az első prototípus karakterének méretét és mozgási sebességét a felhasználó megfelelőnek találta.
 - A karakter a játék kezdetén a háza ajtajából indul.
-- A karakter ugrani is tud; mozgás közben az ugrás kis sebességlöketet ad. A prototípusban Space vagy külön Ugrás gomb indítja; futás Shift lenyomásával vagy a Futás gombbal.
+- A karakter ugrani is tud; mozgás közben az ugrás kis sebességlöketet ad. A prototípusban Space vagy külön Ugrás gomb indítja; futás Shift lenyomásával.
 - Tartós mentés szükséges. Bezáráskor megáll a játékidő; nincs távolléti növekedés.
 - Az idő, növekedés, árak és egyéb egyensúlyi értékek menet közben, közös egyeztetéssel alakulnak ki.
 
 ## Vizuális irány
+
+- Kevés állandó képernyőgomb: a korábbi Napló, Eladóláda, Bevétel és jobb alsó Művelet/Ugrás/Futás gombok megszűnnek. A házhoz teleportáló próbagombot is eltávolítjuk.
+- A tárgyakat közelről E-vel vagy kattintással/koppintással használjuk. Egyetlen Menü mögött van a történet, irányítás és készlet.
+- Készletnyitás Tab-bal, bezárás Escape-pel; külön termény- és ültetőanyag-mennyiségek. Betakarítás után a termény itt azonnal látható.
+- A gyakran nézett napszak- és goldfelirat nagyobb, hangsúlyos szöveg legyen, mobilon is.
 
 - A játék töltse ki a böngészőablakot, külön szöveges oldalsáv nélkül. A háttértörténet és egyéb szövegek a játéktér fölötti párbeszédablakokban jelenjenek meg. Párbeszéd alatt a karakter nem mozog.
 
@@ -111,6 +116,8 @@ Tavaszi kezdés, összesen 12 elültethető növénnyel:
 - A házban elérhető katalógusból rendelhetők magok.
 - Fizetéskor levonjuk a goldot.
 - A csomag másnap reggel érkezik a postaládába.
+- Elfogadott induló darabárak: retekmag 5, burgonya-vetőgumó 10, borsómag 15 gold.
+- A csomagot a kapu bal oldalán lévő postaládából kézzel vesszük át. Az át nem vett csomag megmarad; több rendelés összeadódhat.
 - Kezdéskor nem szükséges külön bolt vagy falutérkép.
 
 ### Eladóláda
@@ -119,7 +126,7 @@ Tavaszi kezdés, összesen 12 elültethető növénnyel:
 - A nap lezárásáig a tárgyak visszavehetők.
 - Másnap reggel megérkezik a gold és egy rövid elszámolás.
 - Elfogadott induló eladási árak: retek 15, burgonya 30, borsó 12 gold/darab. A borsó újravetés nélküli újratermése megmarad.
-- A prototípus eladóládája a veranda bal oldalán áll. Közelről E, kattintás vagy az Eladóláda gomb nyitja. Egyesével vagy minden darab egyszerre betehető/visszavehető.
+- A prototípus eladóládája a veranda bal oldalán áll. Közelről E vagy kattintás nyitja. Egyesével vagy minden darab egyszerre betehető/visszavehető.
 - A gold és a függőben lévő eladás mentődik; az önkéntes és kényszerű napváltás ugyanazt az egyszeri elszámolást használja.
 - Nem tervezünk rendelőtáblát vagy kötelező terményrendeléseket az alapváltozatba.
 
@@ -148,7 +155,7 @@ Tavaszi kezdés, összesen 12 elültethető növénnyel:
 - Javasolt, még nem telepített alap: TypeScript, Phaser és Vite; publikálás GitHub Pagesre.
 - Böngészős folyamatok teszteléséhez Cypress a felhasználó választása, Playwright helyett.
 - Játékszabályokhoz Vitest a javasolt egységtesztelő eszköz.
-- Helyi mentéshez IndexedDB és Dexie.js, fájlos export/import, valamint verziózott mentési formátum a javasolt megoldás. A pontos mentési terv még kidolgozandó.
+- Helyi mentés natív IndexedDB-vel és verziózott mentési formátummal működik; JSON-export elérhető, import még nincs. Részletek a mentési leírásban.
 - Az eszközök közötti felhős szinkron nem része az eldöntött alapváltozatnak.
 - Elkészítendő dokumentumok: AGENTS.md fejlesztési szabályokkal, vizuális útmutató, részletes játékszabályok és mentési szabályok.
 - Fejlesztés közben folyamatos egyeztetés és kérdések szükségesek a még nyitott döntésekről.

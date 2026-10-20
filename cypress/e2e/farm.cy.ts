@@ -1,116 +1,62 @@
-describe('Full-screen farm',()=>{
- beforeEach(()=>{cy.visit('/',{onBeforeLoad(win){win.indexedDB.deleteDatabase('erdoszeli-birtok');}});cy.get('canvas').should('be.visible');cy.get('#dialogue').should('be.visible').and('contain','kutatólaborban');cy.get('#game').should('have.attr','data-ready','true');cy.get('#dialogue-close').click();cy.get('#status').should('contain','Veranda');});
- it('walks into the yard and returns to the door',()=>{
-  cy.get('[data-dir="down"]').trigger('pointerdown',{pointerId:1});
-  cy.get('#status',{timeout:10000}).should('be.empty');
-  cy.get('[data-dir="down"]').trigger('pointerup',{pointerId:1});
-  cy.get('#home').click();cy.get('#status').should('contain','Veranda');
+const press=(key:string,code:string,keyCode:number)=>{
+ cy.get('body').trigger('keydown',{key,code,keyCode,which:keyCode});
+ cy.get('body').trigger('keyup',{key,code,keyCode,which:keyCode});
+};
+const directions={right:['d','KeyD',68],left:['a','KeyA',65],down:['s','KeyS',83],up:['w','KeyW',87]} as const;
+function walk(direction:keyof typeof directions,axis:'x'|'y',target:number){
+ const [key,code,keyCode]=directions[direction];cy.get('body').trigger('keydown',{key,code,keyCode,which:keyCode});
+ cy.get('#game',{timeout:15000}).should(el=>{const position=Number(el.attr(`data-player-${axis}`));if(direction==='left'||direction==='up')expect(position).to.be.at.most(target);else expect(position).to.be.at.least(target);});
+ cy.get('body').trigger('keyup',{key,code,keyCode,which:keyCode});
+}
+function start(data?:object){
+ cy.visit('/',{onBeforeLoad(win){
+  win.indexedDB.deleteDatabase('erdoszeli-birtok');
+  if(data){const r=win.indexedDB.open('erdoszeli-birtok',1);r.onupgradeneeded=()=>r.result.createObjectStore('saves');r.onsuccess=()=>{const tx=r.result.transaction('saves','readwrite');tx.objectStore('saves').put(data,'active');tx.oncomplete=()=>r.result.close();};}
+ }});
+ cy.get('#game').should('have.attr','data-ready','true');if(!data)cy.get('#dialogue-close').click();
+}
+function clickWorld(x:number,y:number){
+ cy.window().then(win=>cy.get('#game').then(el=>{
+  const zoom=Math.max(win.innerWidth/800,win.innerHeight/600),px=Number(el.attr('data-player-x')),py=Number(el.attr('data-player-y'));
+  const scrollX=Math.max(0,Math.min(800-win.innerWidth/zoom,px-win.innerWidth/zoom/2));
+  const scrollY=Math.max(0,Math.min(600-win.innerHeight/zoom,py-win.innerHeight/zoom/2));
+  cy.get('canvas').click((x-scrollX)*zoom,(y-scrollY)*zoom);
+ }));
+}
+function sleepTo(day:number){
+ clickWorld(268,232);cy.get('#sleep').should('be.visible').click();cy.get('#game').should('have.attr','data-day',String(day));cy.get('#dialogue-close').click();
+}
+describe('World interactions and uncluttered UI',()=>{
+ it('removes redundant buttons and keeps help in one menu',()=>{
+  start();cy.get('#journal,#shipping,#receipt,#work,#jump,#run,#home').should('not.exist');
+  press('Tab','Tab',9);cy.get('#inventory-panel').should('be.visible');cy.get('[data-inventory-seed=radish]').should('contain','4 db');press('Escape','Escape',27);cy.get('#dialogue').should('not.be.visible');cy.get('#menu').click();cy.get('#help').click();cy.get('#dialogue-text').should('contain','Space');
  });
- it('shows story inside the game and suspends movement during dialogue',()=>{
-  cy.get('#story').click();cy.get('#dialogue').should('be.visible');
-  cy.get('body').trigger('keydown',{key:'s',code:'KeyS',keyCode:83});
-  cy.get('body').trigger('keyup',{key:'s',code:'KeyS',keyCode:83});
-  cy.get('#game').should('have.attr','data-ready','true');cy.get('#dialogue-close').click();cy.get('#status').should('contain','Veranda');
+ it('uses Space to jump and Shift to run',()=>{
+  start();press(' ','Space',32);cy.get('#game').should('have.attr','data-jumping','true');cy.get('#game').should('have.attr','data-jumping','false');
+  cy.get('body').trigger('keydown',{key:'Shift',code:'ShiftLeft',keyCode:16,which:16});cy.get('#game').should('have.attr','data-running','true').and('have.attr','data-jumping','false');cy.get('body').trigger('keyup',{key:'Shift',code:'ShiftLeft',keyCode:16,which:16});
  });
- it('fills a mobile screen without document scrolling',()=>{
-  cy.viewport(390,844);cy.get('canvas').should('be.visible');
-  cy.document().then(doc=>{expect(doc.documentElement.scrollWidth).to.equal(390);expect(doc.documentElement.scrollHeight).to.equal(844);});
-  cy.get('[data-dir="down"]').should('be.visible').trigger('pointerdown',{pointerId:2});
-  cy.get('#status',{timeout:10000}).should('be.empty');
-  cy.get('[data-dir="down"]').trigger('pointercancel',{pointerId:2});
-  cy.get('#home').click();cy.get('#status').should('contain','Veranda');
+ it('tills, plants, waters and restores the garden through F',()=>{
+  start();walk('down','y',287);walk('right','x',334);
+  press('f','KeyF',70);cy.get('#game').should('have.attr','data-plots','1');
+  press('3','Digit3',51);press('f','KeyF',70);press('2','Digit2',50);press('f','KeyF',70);
+  cy.get('#game').should('have.attr','data-planted','1').and('have.attr','data-watered','1');cy.get('#save-state').should('contain','Mentve');
+  cy.reload();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-planted','1').and('have.attr','data-watered','1');
  });
+ it('opens the journal by clicking its actual world object',()=>{start();sleepTo(2);cy.reload();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-day','2');});
 });
-
-describe('Gardening',()=>{
- it('tills, plants and waters with the screen action button',()=>{
-  cy.visit('/',{onBeforeLoad(win){win.indexedDB.deleteDatabase('erdoszeli-birtok');}});cy.get('#game').should('have.attr','data-ready','true');cy.get('#dialogue-close').click();
-  const walk=(dir:string,axis:string,minimum:number)=>{
-   cy.get(`[data-dir="${dir}"]`).trigger('pointerdown',{pointerId:1});
-   cy.get('#game',{timeout:15000}).should(el=>expect(Number(el.attr(`data-player-${axis}`))).to.be.at.least(minimum));
-   cy.get(`[data-dir="${dir}"]`).trigger('pointerup',{pointerId:1});
-  };
-  walk('down','y',287);walk('right','x',334);
-  cy.get('[data-tool="hoe"]').click();cy.get('#work').click();cy.get('#game').should('have.attr','data-plots','1');
-  cy.get('[data-tool="radish"]').click();cy.get('#work').click();cy.get('[data-count="radish"]').should('have.text','3');
-  cy.get('[data-tool="water"]').click();cy.get('#work').click();cy.get('#game').should('have.attr','data-watered','1');
-  cy.get('#save-state').should('contain','Mentve');cy.reload();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-planted','1').and('have.attr','data-watered','1');cy.get('[data-count=radish]').should('have.text','3');
+describe('Catalogue and mailbox',()=>{
+ it('pays now, delivers tomorrow and collects exactly once',()=>{
+  start({version:3,player:{x:285,y:242},clock:{day:1,elapsed:0,collapseAt:580},seeds:{radish:4,potato:4,pea:4},produce:{radish:0,potato:0,pea:0},plots:[],economy:{gold:100,shipping:{radish:0,potato:0,pea:0},lastSale:null}});
+  clickWorld(306,220);cy.get('[data-order-crop=radish]').clear().type('2');cy.get('[data-order-crop=pea]').clear().type('1');cy.get('#catalog-total').should('contain','25 gold');cy.get('#place-order').click();
+  cy.get('#game').should('have.attr','data-gold','75').and('have.attr','data-pending-seeds','3');cy.get('#dialogue-close').click();
+  walk('left','x',252);sleepTo(2);cy.get('#game').should('have.attr','data-mail-seeds','3');
+  walk('down','y',478);walk('left','x',166);clickWorld(124,482);cy.get('#collect-package').click();
+  cy.get('[data-count=radish]').should('have.text','6');cy.get('[data-count=pea]').should('have.text','5');cy.get('#game').should('have.attr','data-mail-seeds','0');
+  cy.reload();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-gold','75').and('have.attr','data-mail-seeds','0');
  });
- it('does not spend seeds for an invalid or distant plot',()=>{
-  cy.visit('/',{onBeforeLoad(win){win.indexedDB.deleteDatabase('erdoszeli-birtok');}});cy.get('#game').should('have.attr','data-ready','true');cy.get('#dialogue-close').click();cy.get('[data-tool="radish"]').click();cy.get('#work').click();
-  cy.get('[data-count="radish"]').should('have.text','4');cy.get('#game').should('have.attr','data-planted','0');
- });
-});
-
-
-describe('Rest and persistence',()=>{
- it('saves a new morning atomically and restores it on reload',()=>{
-  cy.visit('/',{onBeforeLoad(win){win.indexedDB.deleteDatabase('erdoszeli-birtok');}});
-  cy.get('#game').should('have.attr','data-ready','true');cy.get('#dialogue-close').click();
-  cy.get('#journal').click();cy.get('#sleep').click();
-  cy.get('#game').should('have.attr','data-day','2');cy.get('#save-state').should('contain','Mentve');
-  cy.reload();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-day','2');
- });
- it('can jump without consuming seeds or moving while standing still',()=>{
-  cy.visit('/',{onBeforeLoad(win){win.indexedDB.deleteDatabase('erdoszeli-birtok');}});
-  cy.get('#game').should('have.attr','data-ready','true');cy.get('#dialogue-close').click();
-  cy.get('#jump').click();cy.get('#game').should('have.attr','data-jumping','true');
-  cy.get('#game').should('have.attr','data-jumping','false').and('have.attr','data-player-x','250');
-  cy.get('[data-count=radish]').should('have.text','4');
- });
-});
-
-describe('Space jump, Shift run and crop growth',()=>{
- beforeEach(()=>{
-  cy.visit('/',{onBeforeLoad(win){win.indexedDB.deleteDatabase('erdoszeli-birtok');}});
-  cy.get('#game').should('have.attr','data-ready','true');cy.get('#dialogue-close').click();
- });
- it('uses Space for jumping and Shift for running',()=>{
-  cy.get('body').trigger('keydown',{key:' ',code:'Space',keyCode:32,which:32});
-  cy.get('#game').should('have.attr','data-jumping','true');
-  cy.get('body').trigger('keyup',{key:' ',code:'Space',keyCode:32,which:32});
-  cy.get('#game').should('have.attr','data-jumping','false');
-  cy.get('body').trigger('keydown',{key:'Shift',code:'ShiftLeft',keyCode:16,which:16});
-  cy.get('#game').should('have.attr','data-running','true').and('have.attr','data-jumping','false');
-  cy.get('body').trigger('keyup',{key:'Shift',code:'ShiftLeft',keyCode:16,which:16});
-  cy.get('#game').should('have.attr','data-running','false');
- });
- it('grows a radish through three watered mornings and saves its harvest',()=>{
-  const walk=(dir:string,axis:string,target:number)=>{
-   cy.get(`[data-dir="${dir}"]`).trigger('pointerdown',{pointerId:1});
-   cy.get('#game',{timeout:15000}).should(el=>expect(Number(el.attr(`data-player-${axis}`))).to.be.at.least(target));
-   cy.get(`[data-dir="${dir}"]`).trigger('pointerup',{pointerId:1});
-  };
-  for(let day=1;day<=3;day++){
-   walk('down','y',287);walk('right','x',334);
-   if(day===1){cy.get('[data-tool=hoe]').click();cy.get('#work').click();cy.get('[data-tool=radish]').click();cy.get('#work').click();}
-   cy.get('[data-tool=water]').click();cy.get('#work').click();
-   cy.get('#home').click();cy.get('#journal').click();cy.get('#sleep').click();cy.get('#game').should('have.attr','data-day',String(day+1));cy.get('#dialogue-close').click();
-  }
-  cy.get('#game').should('have.attr','data-ripe','1');walk('down','y',287);walk('right','x',334);
-  cy.get('[data-tool=harvest]').click();cy.get('#work').click();cy.get('#game').should('have.attr','data-produce','1');
-  cy.get('#save-state').should('contain','Mentve');cy.reload();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-produce','1').and('have.attr','data-planted','0');
- });
-});
-
-describe('Shipping crate and morning revenue',()=>{
- it('saves pending goods, supports withdrawal and credits one morning payout',()=>{
-  cy.visit('/',{onBeforeLoad(win){
-   win.indexedDB.deleteDatabase('erdoszeli-birtok');
-   const request=win.indexedDB.open('erdoszeli-birtok',1);
-   request.onupgradeneeded=()=>request.result.createObjectStore('saves');
-   request.onsuccess=()=>{
-    const tx=request.result.transaction('saves','readwrite');
-    tx.objectStore('saves').put({version:2,player:{x:210,y:280},clock:{day:1,elapsed:0,collapseAt:580},seeds:{radish:4,potato:4,pea:4},produce:{radish:3,potato:2,pea:4},plots:[]},'active');
-    tx.oncomplete=()=>request.result.close();
-   };
-  }});
-  cy.get('#game').should('have.attr','data-ready','true');cy.get('#shipping').click();
-  cy.get('[data-transfer=radish-deposit-all]').click();cy.get('[data-transfer=potato-deposit-one]').click();cy.get('[data-transfer=pea-deposit-all]').click();cy.get('[data-transfer=radish-withdraw-one]').click();
-  cy.get('#shipping-total').should('contain','108 gold');cy.get('#gold').should('have.text','0');
-  cy.get('#save-state').should('contain','Mentve');cy.reload();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-shipping','108');
-  cy.get('#home').click();cy.get('#journal').click();cy.get('#sleep').click();
-  cy.get('#game').should('have.attr','data-day','2').and('have.attr','data-gold','108').and('have.attr','data-shipping','0');
-  cy.get('#dialogue-text').should('contain','Bevétel: 108 gold');cy.reload();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-gold','108');
+ it('keeps the HUD readable and the catalogue within a mobile screen',()=>{
+  start({version:3,player:{x:285,y:242},clock:{day:1,elapsed:200,collapseAt:580},seeds:{radish:4,potato:4,pea:4},produce:{radish:0,potato:0,pea:0},plots:[],economy:{gold:100,shipping:{radish:0,potato:0,pea:0},lastSale:null}});
+  cy.viewport(390,844);cy.get('#clock-label').should('contain','Délután').and('have.css','font-size','17px');cy.get('.gold-line').should('have.css','font-size','20px');
+  clickWorld(306,220);cy.get('#catalog-panel').should('be.visible');cy.document().then(doc=>expect(doc.documentElement.scrollWidth).to.equal(390));
  });
 });

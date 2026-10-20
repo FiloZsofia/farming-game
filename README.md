@@ -11,7 +11,7 @@ npm ci
 npm run dev
 ```
 
-Nyisd meg a Vite által kiírt címet. Mozgás: WASD, nyilak vagy érintőgombok. A „Vissza a házhoz” gomb visszaállítja a kezdőpozíciót.
+Nyisd meg a Vite által kiírt címet. Mozgás: WASD, nyilak vagy érintőgombok. Ugrás: Space; futás: Shift; művelet: F vagy kattintás; készlet: Tab; tárgyhasználat: közelről E vagy kattintás.
 
 ```sh
 npm test
@@ -21,7 +21,7 @@ npm run preview
 
 Korlátozott környezetben, ha a Cypress binárisa nem tölthető le: `CYPRESS_INSTALL_BINARY=0 CYPRESS_CACHE_FOLDER=/tmp/farming-cypress npm ci --cache /tmp/farming-npm-cache`. Ez a böngészős tesztfuttatót kihagyja, az alkalmazást és az egységteszteket nem. Később azonos cache-be telepíthető: `CYPRESS_CACHE_FOLDER=/tmp/farming-cypress npx cypress install`.
 
-Ez még nem a végleges grafika. A stamina és magkatalógus még nincs bekötve; a növekedés és betakarítás már működik. A játékidő, esti napló, napváltás és böngészőbeli automatikus mentés már működik.
+Ez még nem a végleges grafika. A stamina még nincs bekötve; a növekedés és betakarítás már működik. A játékidő, esti napló, napváltás és böngészőbeli automatikus mentés már működik.
 
 ## GitHub Pages
 
@@ -43,7 +43,7 @@ npx cypress install
 npm run test:e2e
 ```
 
-Chromium szükséges, vagy válassz más telepített böngészőt a Cypress parancsában. A tesztek a jelenet indulását, a képernyőgombos mozgást, a házhoz visszatérést és a mobilos felületet ellenőrzik. A Cypress bináris letöltéséhez a `download.cypress.io` és átirányításainak elérése szükséges.
+Chromium szükséges, vagy válassz más telepített böngészőt a Cypress parancsában. A tesztek a letisztított felületet, a Tab-os készletet, a billentyűs mozgást, a világban kattintható naplót, a rendelést, kézbesítést, átvételt és a mobilos megjelenítést ellenőrzik. A Cypress bináris letöltéséhez a `download.cypress.io` és átirányításainak elérése szükséges.
 
 Az első felhőkörnyezeti ellenőrzéskor a 6 Vitest-teszt és a build sikeres volt. Valódi headless Chromiumban a jelenet indulása, a billentyűzetes mozgás, a házhoz visszatérés és a mobilos vízszintes túlcsordulás hiánya ellenőrizve lett. A Cypress-csomag települt, de a futtató bináris nem volt elérhető; a letöltési végpont HTTP 403 választ adott, ezért a Cypress-tesztek itt még nem futottak le.
 
@@ -51,7 +51,7 @@ Az első felhőkörnyezeti ellenőrzéskor a 6 Vitest-teszt és a build sikeres 
 
 ## Teljes ablakos nézet
 
-A farm kitölti az ablakot; keskeny képernyőn a kamera követi a karaktert. Az oldalsáv megszűnt. A laboros bevezető a játéktér fölötti párbeszédablakban jelenik meg. Bezárás: Folytatás vagy Escape. Később a Történet gombbal újra megnyitható. A közeli helyszínek buborékára kattintva/koppintva vagy az E billentyűvel megjelenik a hozzájuk tartozó szöveg; a lezárt épületnél csak kérdőjel látható. Párbeszéd alatt a karakter nem mozog.
+A farm kitölti az ablakot; keskeny képernyőn a kamera követi a karaktert. Az oldalsáv megszűnt. A laboros bevezető a játéktér fölötti párbeszédablakban jelenik meg. Bezárás: Folytatás vagy Escape. Később a Menü → Történet pontban újra megnyitható. A közeli helyszínek buborékára kattintva/koppintva vagy az E billentyűvel megjelenik a hozzájuk tartozó szöveg; a lezárt épületnél csak kérdőjel látható. Párbeszéd alatt a karakter nem mozog.
 
 - [Teljes ablakos prototípus](docs/concepts/farm-fullscreen-prototype.png)
 - [Mobilos bevezető](docs/concepts/farm-mobile-dialogue.png)
@@ -60,7 +60,7 @@ Az „Erdőszéli birtok” munkacím; a végleges cím még egyeztetés alatt �
 
 ## Kertészkedési próba
 
-Eszközválasztás: alsó sáv vagy 1–6 (kapa, öntözés, retek, burgonya, borsó, szedés). Kattintás/koppintás egy közeli kockára végrehajtja a kiválasztott műveletet. F vagy a Művelet gomb a haladási irányban előtted lévő kockára hat. A világos keret elérhető, művelhető talajt, a vörös keret nem használható célt jelez.
+Eszközválasztás: alsó sáv vagy 1–6 (kapa, öntözés, retek, burgonya, borsó, szedés). Kattintás/koppintás egy közeli kockára végrehajtja a kiválasztott műveletet. F a haladási irányban előtted lévő kockára hat. A világos keret elérhető, művelhető talajt, a vörös keret nem használható célt jelez.
 
 Előbb ásd fel a földet, majd ültesd el az ültetőanyagot és öntözd meg. Induláskor mindháromból 4 darab van. A három meglévő ágyásban és két tiszta rétfolton (bal oldalt, illetve a kert alatti réten) lehet dolgozni; út, víz, ház és ágyásszegély védett. A prototípusban nincs vízfogyás, stamina. Újratöltéskor az utolsó mentés folytatódik.
 
@@ -69,9 +69,9 @@ Előbb ásd fel a földet, majd ültesd el az ültetőanyagot és öntözd meg. 
 
 ## Ugrás, idő és napló
 
-Ugrás: **Space** vagy **Ugrás** gomb. Futás: **Shift** nyomva tartásával vagy a **Futás** képernyőgomb bekapcsolásával. Mozgás közben rövid lendület, álló helyben függőleges ugrás; a házon és vízen nem lehet átugrani. A kertészkedés billentyűje **F**.
+Ugrás: **Space**. Futás: **Shift** nyomva tartásával. Mozgás közben rövid lendület, álló helyben függőleges ugrás; a házon és vízen nem lehet átugrani. A kertészkedés billentyűje **F**.
 
-6 perc aktív nappal után éjszaka lesz. Az éjszaka 2. és 3. percében figyelmeztetés érkezik; 3:30–4:00 között az elfáradt főhős összeesik, majd másnap reggel a háznál ébred, készletveszteség nélkül. A verandán **E / Napló → Pihenés reggelig** korábban is lezárja a napot. Párbeszéd, háttérbe tett lap és bezárt játék alatt az idő megáll. Az öntözött növények reggel fejlődnek; az öntözést minden új napon ismételni kell.
+6 perc aktív nappal után éjszaka lesz. Az éjszaka 2. és 3. percében figyelmeztetés érkezik; 3:30–4:00 között az elfáradt főhős összeesik, majd másnap reggel a háznál ébred, készletveszteség nélkül. A verandán a naplóra kattintás vagy közelről **E → Pihenés reggelig** korábban is lezárja a napot. Párbeszéd, háttérbe tett lap és bezárt játék alatt az idő megáll. Az öntözött növények reggel fejlődnek; az öntözést minden új napon ismételni kell.
 
 A kert, magmennyiség, helyzet és idő IndexedDB-be mentődik. A jobb felső sarok mutatja az írás állapotát. A naplóból JSON-másolat tölthető le; importálás még nincs. A mentés helyi, nem szinkronizál más böngészővel vagy eszközzel. Részletek: [mentés és helyreállítás](docs/mentes.md).
 
@@ -81,7 +81,7 @@ A kert, magmennyiség, helyzet és idő IndexedDB-be mentődik. A jobb felső sa
 
 ## Növények és termények
 
-Retek: 3, burgonya: 5, borsó: 6 megöntözött nap az első termésig. A borsó 3 öntözött naponta újra terem. Öntözés nélkül nincs fejlődés, de nincs pusztulás sem. Érett növény: **6 / Szedés → kattintás vagy F / Művelet**. A leszedett termények a **Termények** gombbal nézhetők meg, az eladóládába téve másnap reggel goldot érnek.
+Retek: 3, burgonya: 5, borsó: 6 megöntözött nap az első termésig. A borsó 3 öntözött naponta újra terem. Öntözés nélkül nincs fejlődés, de nincs pusztulás sem. Érett növény: **6 / Szedés → kattintás vagy F**. A leszedett termények **Tab-bal** vagy a **Menü → Készlet** pontban nézhetők meg, az eladóládába téve másnap reggel goldot érnek.
 
 A fejlődési állapot és terménykészlet is mentődik. A korábbi mentések automatikusan frissülnek, megtartva a farmot. Az első három nappali perc **Délelőtt**, a következő három **Délután**.
 
@@ -91,10 +91,24 @@ A fejlődési állapot és terménykészlet is mentődik. A korábbi mentések a
 
 ## Eladóláda és bevétel
 
-A veranda bal oldalán lévő ládához sétálva **E / kattintás / Eladóláda** nyitja az eladási felületet. Retek: **15**, burgonya: **30**, borsó: **12 gold/db**. Egyesével vagy mindet beteheted, napzárásig visszaveheted. A várható bevétel rögtön látható; a pénz reggel érkezik meg, naplós pihenés vagy éjszakai összeesés után is.
+A veranda bal oldalán lévő ládához sétálva **E / kattintás** nyitja az eladási felületet. Retek: **15**, burgonya: **30**, borsó: **12 gold/db**. Egyesével vagy mindet beteheted, napzárásig visszaveheted. A várható bevétel rögtön látható; a pénz reggel érkezik meg, naplós pihenés vagy éjszakai összeesés után is.
 
-A gold, függőben lévő áru és az utolsó elszámolás mentődik. A **Bevétel** gomb újra megmutatja az utolsó napi összesítést. A korábbi mentések automatikusan frissülnek, a már betakarított termények megmaradnak. A magkatalógus és a gold elköltése a következő lépés.
+A gold, függőben lévő áru és az utolsó elszámolás mentődik. A reggeli párbeszéd mutatja a tételes összesítést. A korábbi mentések automatikusan frissülnek, a már betakarított termények megmaradnak. A háznál lévő magkatalógusban már el lehet költeni a goldot.
 
 - [Eladóláda felülete](docs/concepts/farm-shipping-prototype.png)
 - [Reggeli elszámolás](docs/concepts/farm-sales-receipt.png)
 - [Mobilos eladóláda](docs/concepts/farm-shipping-mobile.png)
+
+## Aktuális felület, készlet és magkatalógus
+
+A korábbi képek történeti prototípusokat mutatnak. Az aktuális nézetben nincs Napló, Eladóláda, Bevétel, Házhoz, Művelet, Ugrás vagy Futás képernyőgomb. A kertben a tárgyakat használjuk; csak a Menü és az eszközsáv marad, érintőképernyőn iránygombokkal. A napszak 19 px, a gold 22 px; mobilon 17 és 20 px.
+
+**Készlet: Tab**, bezárás: **Escape**. Külön kártyákon látszanak a leszedett termények és az ültetőanyagok, darabszámmal. Érintőképernyőn a Menü → Készlet nyitja meg. Betakarítás után a visszajelzés is mutatja a Tab gyorsbillentyűt.
+
+A ház jobb oldali ablaka melletti katalóguskönyvre kattintva vagy közelről E-vel rendelhetünk: retekmag **5**, burgonya-vetőgumó **10**, borsómag **15 gold/db**. A rendelés és fizetés együtt mentődik. A csomag másnap reggel a kapu bal oldalán lévő postaládába érkezik; a sárga zászló jelzi az átvehető küldeményt. Odasétálva E/kattintás, majd **Átveszem a csomagot**. A rendelés, a kézbesítés és az átvétel mentődik; nincs újrafizetés vagy dupla csomag újratöltéskor.
+
+- [Letisztult játékfelület, nagyobb napszak és gold](docs/concepts/farm-clean-hud.png)
+- [Tab-bal nyitható készlet](docs/concepts/farm-inventory.png)
+- [Magkatalógus](docs/concepts/farm-catalogue.png)
+- [Aktuális mobilnézet](docs/concepts/farm-clean-mobile.png)
+- [Mobilos katalógus](docs/concepts/farm-catalogue-mobile.png)

@@ -1,5 +1,8 @@
 // Shared world-space layout: drawing, collision and proximity prompts use the same anchors.
 export const farmLayout = {
+  catalog:{x:297,y:214,w:18,h:12},
+  journal:{x:259,y:226,w:18,h:13},
+  mailbox:{x:112,y:474,w:24,h:16},
   shipping: {x:158,y:244,w:32,h:24},
   pond: { x: 638, y: 464, rx: 153, ry: 113 },
   shedOffset: { x: -25, y: -20 },
