@@ -8,6 +8,7 @@ Ez a dokumentum a tervezés során elfogadott döntéseket rögzíti. A nyitott 
 - Böngészőben futó játék, GitHub Pagesen megnyitható változattal.
 - Később telefonon, érintéssel is kényelmesen használható legyen.
 - Irányítható karakter, aki odasétál a tevékenység helyéhez.
+- A karakter a játék kezdetén a háza ajtajából indul.
 - Tartós mentés szükséges. Bezáráskor megáll a játékidő; nincs távolléti növekedés.
 - Az idő, növekedés, árak és egyéb egyensúlyi értékek menet közben, közös egyeztetéssel alakulnak ki.
 
@@ -22,12 +23,16 @@ Ez a dokumentum a tervezés során elfogadott döntéseket rögzíti. A nyitott 
 
 Elfogadott hangulati referencia: [tavaszi farm-látványterv](concepts/farm-spring-concept.png). Ez generált koncepciókép, nem kész, elemekre bontott játékasset vagy végleges pályaterv. A felhasználható assetcsomagokat és licenceket még ki kell választani, illetve ellenőrizni. A fejlesztés során képi mintákat és képernyőképeket is mutatunk; a GitHubra feltöltött koncepciókép a felhasználónál megnyitható volt, a chaten belüli képmegjelenítés nem működött.
 
+Verandával kiegészített változat: [tavaszi farm verandával és naplóasztallal](concepts/farm-spring-veranda-concept.png). Az eredeti képet összehasonlításhoz megőrizzük.
+
 ## Helyszín és birtok
 
 - Általános vidéki környezet, konkrét ország vagy régió nélkül.
 - Erdőszéli birtok lankás, rétes vidéken, kis tóval.
 - A farm biztonságos otthon marad.
 - A ház, a tó és a történethez kötődő lezárt épület helye rögzített.
+- A hangulatterven látható elrendezés elfogadott: ház bal felül, lezárt melléképület jobb felül, tó jobb alul. Az új veranda miatt ezeket nem helyezzük át.
+- A ház bejáratánál kis veranda legyen, asztallal, székkel és az esti napló helyével.
 - A többi terület szabadon berendezhető: termőföldek, ösvények, kerítések, dekorációk és későbbi gazdasági épületek.
 - Elhelyezéshez háttérben működő négyzetrács, amely építéskor és földműveléskor látszik; a karakter szabadon mozog.
 - A birtok nagy része kezdettől bejárható. Gaz, kövek és kidőlt ágak eltakarításával fokozatosan válik használhatóvá.
@@ -50,6 +55,7 @@ Nem elfogadott történeti tény a korábbi gazda személye, a birtok megszerzé
 - Fokozatos fényváltás jelzi az estét.
 - A napot a verandán vezetett esti naplóval zárjuk, majd másnap reggel folytatjuk.
 - Az automatikus mentés a nap lezárásától függetlenül is működjön.
+- A verandán lévő napló a napzárás és az ahhoz kapcsolódó mentés helye; az automatikus mentéshez nem kell odasétálni.
 - A napló pontos kezelése és bejegyzéseinek tartalma még tervezendő.
 
 ## Stamina
