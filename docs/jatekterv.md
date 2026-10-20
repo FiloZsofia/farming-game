@@ -64,11 +64,16 @@ Nem elfogadott történeti tény a korábbi gazda személye, a birtok megszerzé
 ## Idő és napi ritmus
 
 - Nappal–éjszaka ciklus és évszakok a tervezett játék részei.
-- Hosszabb, nyugodt napok; pontos hosszukat próbajáték alapján választjuk ki.
+- Egy teljes ciklus legfeljebb 10 perc aktív játékidő: 6 perc nappal és legfeljebb 4 perc éjszaka.
+- Az éjszaka kezdetétől számított 2. percben figyelmeztetés a pihenésre, a 3. percben újabb, határozottabb figyelmeztetés jelenik meg.
+- Ha a játékos nem zárja le önként a napot, az éjszaka 3 perc 30 másodperce és 4 perce közötti véletlenszerű időpontban a főhős összeesik a fáradtságtól, majd másnap reggel otthon ébred.
+- Az éjszakai összeesés nem jár gold- vagy tárgyvesztéssel. Nem indul automatikusan új reggel az összeesés vagy az önkéntes napzárás nélkül.
+- Az éjszakai kialvatlanság külön rendszer a staminától: a nulla stamina önmagában nem okoz ájulást.
 - Nem kell minden feladatot minden nap elvégezni.
 - Menük és párbeszédek alatt megáll az idő.
 - Fokozatos fényváltás jelzi az estét.
 - A napot a verandán vezetett esti naplóval zárjuk, majd másnap reggel folytatjuk.
+- Az esti naplóval korábban is önként lezárható a nap.
 - Az automatikus mentés a nap lezárásától függetlenül is működjön.
 - A verandán lévő napló a napzárás és az ahhoz kapcsolódó mentés helye; az automatikus mentéshez nem kell odasétálni.
 - A napló pontos kezelése és bejegyzéseinek tartalma még tervezendő.

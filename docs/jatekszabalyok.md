@@ -1,5 +1,11 @@
 # Játékszabályok és megvalósítási állapot
 
+## Elfogadott időszabályok – még nem megvalósítva
+
+6 perc nappalt legfeljebb 4 perc éjszaka követ, aktív játékidőben mérve. Az éjszaka 2. percében figyelmeztetés, a 3. percben újabb figyelmeztetés érkezik. Ha nem történik önkéntes napzárás, az éjszaka 3:30 és 4:00 közötti véletlenszerű időpontjában a főhős összeesik, majd otthon, másnap reggel ébred. Goldot és tárgyat nem veszít. Ez független a staminától: annak elfogyása nem okoz ájulást. A verandán lévő naplóval korábban is lezárható a nap. Menük, párbeszédek és bezárt játék alatt nem telik az idő.
+
+A növények konkrét növekedési idői még nincsenek elfogadva. A korábban javasolt értékek nem végleges szabályok.
+
 Az elfogadott játékmenet teljes leírása a [játéktervben](jatekterv.md) található. Növekedési időt, árat, hozamot, napidőt és staminaköltséget csak közös egyeztetés után véglegesítünk.
 
 ## Mozgáspróba – megvalósítva
