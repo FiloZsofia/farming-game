@@ -1,0 +1,136 @@
+# Farmjáték – közös játékterv
+
+Ez a dokumentum a tervezés során elfogadott döntéseket rögzíti. A nyitott kérdések és későbbi ötletek nem végleges követelmények. A játék címe még nincs kiválasztva.
+
+## Alapélmény és platform
+
+- Nyugodt kertészkedés és egy barátságosan elhanyagolt birtok fokozatos újjáélesztése.
+- Böngészőben futó játék, GitHub Pagesen megnyitható változattal.
+- Később telefonon, érintéssel is kényelmesen használható legyen.
+- Irányítható karakter, aki odasétál a tevékenység helyéhez.
+- Tartós mentés szükséges. Bezáráskor megáll a játékidő; nincs távolléti növekedés.
+- Az idő, növekedés, árak és egyéb egyensúlyi értékek menet közben, közös egyeztetéssel alakulnak ki.
+
+## Vizuális irány
+
+- Részletes 2D pixelgrafika, háromnegyedes felülnézettel: látható épületoldalak és tetők.
+- A Chef RPG vizuális referencia, saját megjelenítéssel és világgal.
+- Természetesebb karakter- és tárgyarányok; kerülendők a nagy fejű karakterek és túlzottan rajzfilmes formák.
+- Gazdag, akár élénk színek a természetesség határain belül.
+- Otthonos, meleg fények, kopott fa, változatos növényzet, vidéki anyagfelületek.
+- A játék legyen egyszerűbb és áttekinthetőbb a hangulattervnél: ritkább díszítés, felismerhető növekedési állapotok, elkülönülő járható és használható területek.
+
+Elfogadott hangulati referencia: [tavaszi farm-látványterv](concepts/farm-spring-concept.png). Ez generált koncepciókép, nem kész, elemekre bontott játékasset vagy végleges pályaterv. A felhasználható assetcsomagokat és licenceket még ki kell választani, illetve ellenőrizni. A fejlesztés során képi mintákat és képernyőképeket is mutatunk; a GitHubra feltöltött koncepciókép a felhasználónál megnyitható volt, a chaten belüli képmegjelenítés nem működött.
+
+## Helyszín és birtok
+
+- Általános vidéki környezet, konkrét ország vagy régió nélkül.
+- Erdőszéli birtok lankás, rétes vidéken, kis tóval.
+- A farm biztonságos otthon marad.
+- A ház, a tó és a történethez kötődő lezárt épület helye rögzített.
+- A többi terület szabadon berendezhető: termőföldek, ösvények, kerítések, dekorációk és későbbi gazdasági épületek.
+- Elhelyezéshez háttérben működő négyzetrács, amely építéskor és földműveléskor látszik; a karakter szabadon mozog.
+- A birtok nagy része kezdettől bejárható. Gaz, kövek és kidőlt ágak eltakarításával fokozatosan válik használhatóvá.
+- A ház közelében kevés munkával kialakítható az első veteményes.
+
+## Történet
+
+A játékos már a kezdéskor megtudja, hogy a főhős kutatólaborban dolgozott, elfáradt, és vidéken szeretne új életet kezdeni. A birtok barátságosan elhanyagolt, a kezdésben nincs zombi- vagy horrorhangulat.
+
+A lezárt épülethez odasétálva egyelőre csak kérdőjeles gondolatbuborék jelenik meg; belépni nem lehet. A feloldás időzítése és az épület tartalma még nyitott.
+
+Nem elfogadott történeti tény a korábbi gazda személye, a birtok megszerzésének módja vagy egy konkrét nyitószöveg. A beszélgetésben felmerült ilyen részletek csak javaslatok.
+
+## Idő és napi ritmus
+
+- Nappal–éjszaka ciklus és évszakok a tervezett játék részei.
+- Hosszabb, nyugodt napok; pontos hosszukat próbajáték alapján választjuk ki.
+- Nem kell minden feladatot minden nap elvégezni.
+- Menük és párbeszédek alatt megáll az idő.
+- Fokozatos fényváltás jelzi az estét.
+- A napot a verandán vezetett esti naplóval zárjuk, majd másnap reggel folytatjuk.
+- Az automatikus mentés a nap lezárásától függetlenül is működjön.
+- A napló pontos kezelése és bejegyzéseinek tartalma még tervezendő.
+
+## Stamina
+
+- A fizikai munka, például ásás, favágás és öntözés energiát fogyaszt.
+- A séta és a rendezgetés nem fogyaszt energiát.
+- Pihenéssel vagy étellel visszanyerhető a stamina.
+- Nulla staminával a karakter tovább sétálhat és rendezgethet, de fizikai munkához előbb energiát kell visszanyernie.
+- Nincs ájulás vagy pénzbüntetés a stamina elfogyása miatt.
+- A fogyasztás, visszatöltés és pihenés pontos szabályai még nyitottak.
+
+## Növények és kezdőcsomag
+
+Tavaszi kezdés, összesen 12 elültethető növénnyel:
+
+| Növény | Induló mennyiség | Tervezett szerep |
+| --- | --- | --- |
+| Retek | 4 mag | Gyors első betakarítás |
+| Burgonya | 4 vetőgumó | Lassabb, nagyobb értékű termés |
+| Borsó | 4 mag | Első érés után többször szedhető |
+
+- Földművelés, vetés, öntözés és betakarítás.
+- Ha kimarad az öntözés, a növény aznap nem fejlődik, de nem pusztul el.
+- Eső általi öntözés felmerült javaslatként; az időjárás szabályai még nincsenek véglegesítve.
+- Növekedési idők, hozamok, árak, szezonhatárok és érett termények viselkedése még egyeztetendők.
+
+## Beszerzés és eladás
+
+### Magkatalógus
+
+- A házban elérhető katalógusból rendelhetők magok.
+- Fizetéskor levonjuk a goldot.
+- A csomag másnap reggel érkezik a postaládába.
+- Kezdéskor nem szükséges külön bolt vagy falutérkép.
+
+### Eladóláda
+
+- A birtokon lévő eladóládába napközben bármikor betehető, amit el szeretnénk adni.
+- A nap lezárásáig a tárgyak visszavehetők.
+- Másnap reggel megérkezik a gold és egy rövid elszámolás.
+- Nem tervezünk rendelőtáblát vagy kötelező terményrendeléseket az alapváltozatba.
+
+## Eszközök, alapanyagok és tárolás
+
+- Induló eszközök: kapa, öntözőkanna, fejsze és csákány.
+- Az öntözőkanna a kis tónál újratölthető.
+- A gaz kézzel kiszedhető; ágakhoz és fákhoz fejsze, kövekhez csákány kell.
+- Fák és ágak fát, feltört kövek követ adnak.
+- Ezek később kerítésekhez, ösvényekhez és építkezéshez használhatók.
+- Külön tárolóláda az alapanyagoknak és magoknak, az eladóládától jól megkülönböztetve.
+- Kezdetben korlátozott, később bővíthető tárolókapacitás.
+- A férőhelyek száma, a halmozhatóság korlátai, a bővítési költségek és a hordozható készlet mérete még nyitott.
+
+## Későbbi ötletek – nem az első változat követelményei
+
+- Sok virág beporzókat vonz, amelyek növelik más növények hozamát.
+- Madárodú vagy kis kerti tó madarakat vonz, amelyek csökkentik a kártevőket. A díszletként jelen lévő kezdő tó önmagában még nem jelent működő ökológiai rendszert.
+- Lezárt épület kulcsának megszerzése, például az első évszak végén; időzítése nem eldöntött.
+- Főzetkészítés üsttel és receptkönyvvel, vagy hibrid növények létrehozása egy géppel; egyik irány sincs kiválasztva.
+- Ló vagy jármű használata.
+- A laboros múlthoz kapcsolódó apokalipszis-történetszál csak lehetőség. A farm biztonságos marad; a harc szükségessége és helyszíne nyitott.
+
+## Technikai irány és fejlesztési dokumentumok
+
+- Javasolt, még nem telepített alap: TypeScript, Phaser és Vite; publikálás GitHub Pagesre.
+- Böngészős folyamatok teszteléséhez Cypress a felhasználó választása, Playwright helyett.
+- Játékszabályokhoz Vitest a javasolt egységtesztelő eszköz.
+- Helyi mentéshez IndexedDB és Dexie.js, fájlos export/import, valamint verziózott mentési formátum a javasolt megoldás. A pontos mentési terv még kidolgozandó.
+- Az eszközök közötti felhős szinkron nem része az eldöntött alapváltozatnak.
+- Elkészítendő dokumentumok: AGENTS.md fejlesztési szabályokkal, vizuális útmutató, részletes játékszabályok és mentési szabályok.
+- Fejlesztés közben folyamatos egyeztetés és kérdések szükségesek a még nyitott döntésekről.
+
+## Az első játszható változat javasolt határa
+
+Ez munkajavaslat, nem véglegesített megvalósítási ütemterv:
+
+1. A farm bejárása és karaktermozgatás.
+2. Területtisztítás és az alapanyagok gyűjtése.
+3. Az induló három növény termesztése és stamina.
+4. Eladóláda, gold, magkatalógus és másnapi kézbesítés.
+5. Nap–éj ciklus, esti napló és helyi mentés/visszatöltés.
+6. Korlátozott kapacitású tárolóláda.
+
+Az évszakváltás, építkezés és tárolóbővítés pontos ütemezése külön döntést igényel. A kezdeti látványterv elfogadása nem jelenti az összes rajta látható tárgy és mechanika vállalását.
