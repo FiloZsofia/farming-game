@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import './style.css';
 import { move, START } from './movement';
+import { farmLayout } from './layout';
 const dialogue=document.querySelector<HTMLDialogElement>('#dialogue')!;
 const story='A kutatólaborban mindig akadt egy újabb feladat. Szerettem a munkámat, de elfáradtam. Változásra volt szükségem.\n\nMost itt vagyok. A ház előtt gaz nő, a kerítés javításra vár. Nem kell mindent ma rendbe hoznom. Ez egy új kezdet.';
 function showDialogue(title:string,text:string,label='A BIRTOKON'){
@@ -34,8 +35,11 @@ class Farm extends Phaser.Scene {
   // Deterministic decoration keeps the prototype reproducible.
   let seed=71;const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
   for(let i=0;i<1100;i++){const x=random()*800,y=random()*600;rect(x,y,2,random()*4+1,[0x79944e,0x9cb96a,0xb1bf77][i%3]);}
-  g.lineStyle(38,0xc5b481);g.beginPath();g.moveTo(180,600);g.lineTo(190,440);g.lineTo(246,335);g.lineTo(250,242);g.strokePath();
-  g.lineStyle(24,0xc5b481);g.beginPath();g.moveTo(246,335);g.lineTo(425,335);g.lineTo(655,240);g.strokePath();
+  for(const path of farmLayout.paths){
+    g.lineStyle(path.width,0xc5b481);g.beginPath();
+    path.points.forEach(([x,y],i)=>i===0?g.moveTo(x,y):g.lineTo(x,y));g.strokePath();
+    g.fillStyle(0xc5b481);for(const [x,y] of path.points)g.fillCircle(x,y,path.width/2);
+  }
   for(let i=0;i<70;i++){const x=random()*800,y=random()*600;if(y<65||x<35||x>765)this.tree(g,x,y);}
   // Cottage and covered veranda.
   rect(140,142,215,89,0x53643f);rect(132,128,215,95,0xd5c6a3);rect(132,211,215,12,0x9a8767);
@@ -49,22 +53,34 @@ class Farm extends Phaser.Scene {
   rect(190,184,5,65,0x74513a);rect(280,184,5,65,0x74513a);
   g.fillStyle(0x955b40);g.fillTriangle(179,190,295,190,237,153);
   rect(260,229,16,10,0x5e4632);rect(261,226,13,5,0xe8dcaf);rect(267,226,1,5,0x977f51);
-  // Locked outbuilding.
-  rect(607,152,117,55,0x57623b);rect(601,133,118,68,0x92744c);
-  for(let x=604;x<719;x+=12)rect(x,137,2,63,0x79603f);
-  rect(636,151,43,50,0x6e5137);rect(656,151,3,50,0x392f26);rect(651,172,12,5,0xa8a18c);rect(655,175,5,7,0xc3b16f);
-  g.fillStyle(0x77553b);g.fillTriangle(587,141,735,141,710,104);g.fillTriangle(587,141,710,104,617,104);
-  // Pond banks and water, matching collision bounds approximately.
-  g.fillStyle(0x71884d);g.fillEllipse(666,461,242,163);g.fillStyle(0xb7ae7a);g.fillEllipse(666,459,224,149);g.fillStyle(0x568b91);g.fillEllipse(666,458,207,132);
-  for(let i=0;i<27;i++){const x=592+random()*135,y=417+random()*78;rect(x,y,9+random()*9,2,0x7aa9a6);}
-  for(const [x,y] of [[588,442],[730,465],[646,502]]){g.fillStyle(0x739659);g.fillEllipse(x,y,15,7);rect(x+3,y-4,3,3,0xe5d8b7);}
-  for(let i=0;i<16;i++){const x=581+i*9;rect(x,399-Math.sin(i)*6,2,14,0x596f3a);}
-  // Old beds, stones, and fences.
-  for(const [x,y] of [[329,301],[399,301],[329,365]]){rect(x,y,56,39,0xb69b64);rect(x+3,y+3,50,33,0x755b3e);for(let i=0;i<5;i++)rect(x+8+i*9,y+10+i%2*12,3,7,0x668046);}
-  for(const [x,y] of [[74,353],[478,280],[527,543]]){rect(x,y,24,18,0x80877a);rect(x+3,y,15,5,0xa4a998);}
+  // Locked outbuilding, closer to the garden as in the reference.
+  const shedRect=(x:number,y:number,w:number,h:number,c:number)=>rect(x+farmLayout.shedOffset.x,y+farmLayout.shedOffset.y,w,h,c);
+  shedRect(607,152,117,55,0x57623b);shedRect(601,133,118,68,0x92744c);
+  for(let x=604;x<719;x+=12)shedRect(x,137,2,63,0x79603f);
+  shedRect(636,151,43,50,0x6e5137);shedRect(656,151,3,50,0x392f26);shedRect(651,172,12,5,0xa8a18c);shedRect(655,175,5,7,0xc3b16f);
+  g.fillStyle(0x77553b);g.fillTriangle(562,121,710,121,685,84);g.fillTriangle(562,121,685,84,592,84);
+  // A larger, irregular-looking pond and short dock echo the reference's lower-right shoreline.
+  const pond=farmLayout.pond;
+  g.fillStyle(0x71884d);g.fillEllipse(pond.x,pond.y,pond.rx*2+22,pond.ry*2+22);
+  g.fillStyle(0xb7ae7a);g.fillEllipse(pond.x,pond.y,pond.rx*2+10,pond.ry*2+10);
+  g.fillStyle(0x568b91);g.fillEllipse(pond.x,pond.y,pond.rx*2,pond.ry*2);
+  for(let i=0;i<48;i++){const x=pond.x-pond.rx+random()*pond.rx*2,y=pond.y-pond.ry+random()*pond.ry*2;if(((x-pond.x)/pond.rx)**2+((y-pond.y)/pond.ry)**2<.8)rect(x,y,9+random()*9,2,0x7aa9a6);}
+  for(const [x,y] of [[570,443],[731,480],[620,540]]){g.fillStyle(0x739659);g.fillEllipse(x,y,15,7);rect(x+3,y-4,3,3,0xe5d8b7);}
+  for(let i=0;i<20;i++){const x=560+i*8;rect(x,350-Math.sin(i)*6,2,17,0x596f3a);}
+  const dock=farmLayout.dock;
+  rect(dock.x,dock.y,dock.w,dock.h,0x77573c);
+  for(let x=dock.x+2;x<dock.x+dock.w;x+=8)rect(x,dock.y+2,6,dock.h-4,0xb18c59);
+  for(const x of [dock.x,dock.x+dock.w-5]){rect(x,dock.y-5,5,11,0x735337);rect(x,dock.y+dock.h-6,5,11,0x735337);}
+  // Beds are grouped to the right of the veranda, away from all path edges.
+  for(const bed of farmLayout.beds){const {x,y,w,h}=bed;rect(x,y,w,h,0xb69b64);rect(x+3,y+3,w-6,h-6,0x755b3e);for(let i=0;i<5;i++)rect(x+8+i*9,y+10+i%2*12,3,7,0x668046);}
+  for(const [x,y] of [[74,353],[518,280],[440,491]]){rect(x,y,24,18,0x80877a);rect(x+3,y,15,5,0xa4a998);}
   const fence=(x:number,y:number,count:number)=>{rect(x,y+7,count*25,4,0x846c45);rect(x,y+16,count*25,3,0x9c8050);for(let i=0;i<=count;i++)rect(x+i*25,y,5,27,0x765f3e);};
-  fence(38,555,5);fence(246,555,11);fence(433,181,5);fence(711,240,2);
-  for(let i=0;i<100;i++){const x=45+random()*710,y=275+random()*265;if(Math.abs(x-215)<50||x>550&&y>385)continue;rect(x,y,2,4,0x668344);if(i%3===0)rect(x-1,y-2,4,3,i%2?0xe9d7a1:0xb7a3ba);}
+  fence(28,499,4);fence(211,515,9);fence(433,176,4);fence(691,221,3);
+  rect(490,249,3,94,0x846c45);rect(498,249,3,94,0x9c8050);
+  for(let y=249;y<=343;y+=23)rect(487,y,16,5,0x765f3e);
+  // Open gate on the lower-left path.
+  rect(132,492,6,37,0x715436);rect(201,505,6,37,0x715436);rect(121,504,4,25,0x947348);
+  for(let i=0;i<100;i++){const x=45+random()*710,y=275+random()*265;if(Math.abs(x-215)<65||x>480&&y>340||x>325&&x<495&&y<380)continue;rect(x,y,2,4,0x668344);if(i%3===0)rect(x-1,y-2,4,3,i%2?0xe9d7a1:0xb7a3ba);}
   this.actor=this.add.container(START.x,START.y).setDepth(100);
   const part=(x:number,y:number,w:number,h:number,color:number)=>{const r=this.add.rectangle(x,y,w,h,color);this.actor.add(r);return r;};
   this.actor.add(this.add.ellipse(0,0,20,7,0x35442e,0.25));
@@ -106,7 +122,7 @@ class Farm extends Phaser.Scene {
   const walking=next.x!==before.x||next.y!==before.y;
   this.actor.setScale(1,walking?1+Math.sin(time/85)*0.025:1);
   const near=(x:number,y:number,d:number)=>Phaser.Math.Distance.Between(next.x,next.y,x,y)<d;
-  this.nearby=near(657,206,66)?'shed':near(555,450,65)?'pond':near(250,244,55)?'house':'';
+  this.nearby=near(657+farmLayout.shedOffset.x,206+farmLayout.shedOffset.y,66)?'shed':near(farmLayout.dock.x+25,farmLayout.dock.y+10,60)?'pond':near(250,244,55)?'house':'';
   this.bubble.setPosition(next.x,next.y-54).setText(this.nearby==='shed'?'?':this.nearby?'…':'').setVisible(Boolean(this.nearby));
   document.querySelector('#status')!.textContent=this.nearby==='shed'?'?':this.nearby==='house'?'Veranda · E / koppints a buborékra':this.nearby==='pond'?'Tópart · E / koppints a buborékra':'';
  }
