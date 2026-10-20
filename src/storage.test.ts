@@ -1,6 +1,6 @@
 import {describe,it,expect,vi} from 'vitest';
 import {IDBFactory} from 'fake-indexeddb';
-import {SaveStore,snapshot,validSnapshot,DB_NAME} from './storage';
+import {SaveStore,snapshot,validSnapshot,decodeSnapshot,DB_NAME} from './storage';
 import {createGarden,targetTile,work} from './gardening';
 import {createClock} from './clock';
 import {START} from './movement';
@@ -39,7 +39,7 @@ describe('persistent farm state',()=>{
   const a=fresh();a.seeds.pea=-1;expect(validSnapshot(a)).toBe(false);
   const b=fresh();b.player={x:638,y:464};expect(validSnapshot(b)).toBe(false);
   const c=fresh();c.clock.elapsed=601;expect(validSnapshot(c)).toBe(false);
-  const d=fresh();d.plots=[['353,280',{crop:null,watered:false}],['353,280',{crop:null,watered:false}]];expect(validSnapshot(d)).toBe(false);
+  const d=fresh();d.plots=[['353,280',{crop:null,watered:false,growth:0,regrowing:false}],['353,280',{crop:null,watered:false,growth:0,regrowing:false}]];expect(validSnapshot(d)).toBe(false);
  });
  it('refuses writes after its connection is closed',async()=>{
   const factory=new IDBFactory(),store=new SaveStore(factory);await store.load();store.close();await expect(store.save(fresh())).rejects.toThrow();
@@ -53,6 +53,26 @@ describe('persistent farm state',()=>{
   });
   const changed=fresh();changed.clock.day=9;await expect(store.save(changed)).rejects.toThrow();spy.mockRestore();store.close();
   const reader=new SaveStore(factory);expect((await reader.load()).data).toEqual(good);reader.close();
+ });
+
+ it('upgrades v1 without losing position, day, seeds, plants or water',async()=>{
+  const factory=new IDBFactory(),writer=new SaveStore(factory);await writer.load();writer.close();
+  const data=fresh();data.player={x:337,y:282};data.clock.day=12;data.seeds.radish=3;
+  const legacy={...data,version:1,plots:[['353,280',{crop:'radish',watered:true}]]};
+  await put(factory,'active',legacy);const reader=new SaveStore(factory);const loaded=await reader.load();
+  expect(loaded.data).toMatchObject({version:2,clock:{day:12},player:{x:337,y:282},seeds:{radish:3},produce:{radish:0,potato:0,pea:0}});
+  expect(loaded.data?.plots).toEqual([['353,280',{crop:'radish',watered:true,growth:0,regrowing:false}]]);
+  await reader.save(loaded.data!);reader.close();const reread=new SaveStore(factory);expect((await reread.load()).data).toEqual(loaded.data);reread.close();
+ });
+ it('rejects broken legacy plots and invalid growth or harvested totals',()=>{
+  expect(decodeSnapshot({...fresh(),version:1,plots:[['353,280',{crop:'unknown',watered:true}]]})).toBeNull();
+  const data=fresh();data.produce.radish=-1;expect(validSnapshot(data)).toBe(false);
+  const bad=fresh();bad.plots=[['353,280',{crop:'radish',watered:true,growth:-1,regrowing:false}]];expect(validSnapshot(bad)).toBe(false);
+ });
+ it('preserves maturity, pea regrowth and harvested produce across reload',async()=>{
+  const factory=new IDBFactory(),writer=new SaveStore(factory);await writer.load();const data=fresh();
+  data.produce.pea=2;data.plots=[['353,280',{crop:'pea',watered:true,growth:2,regrowing:true}],['369,280',{crop:'radish',watered:false,growth:3,regrowing:false}]];
+  await writer.save(data);writer.close();const reader=new SaveStore(factory);expect((await reader.load()).data).toEqual(data);reader.close();
  });
 
 });

@@ -21,7 +21,7 @@ npm run preview
 
 Korlátozott környezetben, ha a Cypress binárisa nem tölthető le: `CYPRESS_INSTALL_BINARY=0 CYPRESS_CACHE_FOLDER=/tmp/farming-cypress npm ci --cache /tmp/farming-npm-cache`. Ez a böngészős tesztfuttatót kihagyja, az alkalmazást és az egységteszteket nem. Később azonos cache-be telepíthető: `CYPRESS_CACHE_FOLDER=/tmp/farming-cypress npx cypress install`.
 
-Ez még nem a végleges grafika. A növekedés, betakarítás és stamina még nincs bekötve. A játékidő, esti napló, napváltás és böngészőbeli automatikus mentés már működik.
+Ez még nem a végleges grafika. A stamina és eladás még nincs bekötve; a növekedés és betakarítás már működik. A játékidő, esti napló, napváltás és böngészőbeli automatikus mentés már működik.
 
 ## GitHub Pages
 
@@ -60,21 +60,31 @@ Az „Erdőszéli birtok” munkacím; a végleges cím még egyeztetés alatt �
 
 ## Kertészkedési próba
 
-Eszközválasztás: alsó sáv vagy 1–5 (kapa, öntözés, retek, burgonya, borsó). Kattintás/koppintás egy közeli kockára végrehajtja a kiválasztott műveletet. Szóköz vagy a Művelet gomb a haladási irányban előtted lévő kockára hat. A világos keret elérhető, művelhető talajt, a vörös keret nem használható célt jelez.
+Eszközválasztás: alsó sáv vagy 1–6 (kapa, öntözés, retek, burgonya, borsó, szedés). Kattintás/koppintás egy közeli kockára végrehajtja a kiválasztott műveletet. F vagy a Művelet gomb a haladási irányban előtted lévő kockára hat. A világos keret elérhető, művelhető talajt, a vörös keret nem használható célt jelez.
 
-Előbb ásd fel a földet, majd ültesd el az ültetőanyagot és öntözd meg. Induláskor mindháromból 4 darab van. A három meglévő ágyásban és két tiszta rétfolton (bal oldalt, illetve a kert alatti réten) lehet dolgozni; út, víz, ház és ágyásszegély védett. A prototípusban nincs vízfogyás, stamina vagy növekedés. Újratöltéskor az utolsó mentés folytatódik.
+Előbb ásd fel a földet, majd ültesd el az ültetőanyagot és öntözd meg. Induláskor mindháromból 4 darab van. A három meglévő ágyásban és két tiszta rétfolton (bal oldalt, illetve a kert alatti réten) lehet dolgozni; út, víz, ház és ágyásszegély védett. A prototípusban nincs vízfogyás, stamina. Újratöltéskor az utolsó mentés folytatódik.
 
 - [Kertészkedés képernyőképe](docs/concepts/farm-gardening-prototype.png)
 - [Mobilos kertészkedés](docs/concepts/farm-gardening-mobile.png)
 
 ## Ugrás, idő és napló
 
-Ugrás: **Shift** vagy **Ugrás** gomb. Mozgás közben rövid lendület, álló helyben függőleges ugrás; a házon és vízen nem lehet átugrani. Szóköz továbbra is a kertészkedés.
+Ugrás: **Space** vagy **Ugrás** gomb. Futás: **Shift** nyomva tartásával vagy a **Futás** képernyőgomb bekapcsolásával. Mozgás közben rövid lendület, álló helyben függőleges ugrás; a házon és vízen nem lehet átugrani. A kertészkedés billentyűje **F**.
 
-6 perc aktív nappal után éjszaka lesz. Az éjszaka 2. és 3. percében figyelmeztetés érkezik; 3:30–4:00 között az elfáradt főhős összeesik, majd másnap reggel a háznál ébred, készletveszteség nélkül. A verandán **E / Napló → Pihenés reggelig** korábban is lezárja a napot. Párbeszéd, háttérbe tett lap és bezárt játék alatt az idő megáll. A növények még nem fejlődnek; az öntözést minden új napon ismételni kell.
+6 perc aktív nappal után éjszaka lesz. Az éjszaka 2. és 3. percében figyelmeztetés érkezik; 3:30–4:00 között az elfáradt főhős összeesik, majd másnap reggel a háznál ébred, készletveszteség nélkül. A verandán **E / Napló → Pihenés reggelig** korábban is lezárja a napot. Párbeszéd, háttérbe tett lap és bezárt játék alatt az idő megáll. Az öntözött növények reggel fejlődnek; az öntözést minden új napon ismételni kell.
 
 A kert, magmennyiség, helyzet és idő IndexedDB-be mentődik. A jobb felső sarok mutatja az írás állapotát. A naplóból JSON-másolat tölthető le; importálás még nincs. A mentés helyi, nem szinkronizál más böngészővel vagy eszközzel. Részletek: [mentés és helyreállítás](docs/mentes.md).
 
 - [Ugrás képernyőképe](docs/concepts/farm-jump-prototype.png)
 - [Éjszakai figyelmeztetés](docs/concepts/farm-night-prototype.png)
 - [Mobilos idő- és ugrásvezérlés](docs/concepts/farm-clock-mobile.png)
+
+## Növények és termények
+
+Retek: 3, burgonya: 5, borsó: 6 megöntözött nap az első termésig. A borsó 3 öntözött naponta újra terem. Öntözés nélkül nincs fejlődés, de nincs pusztulás sem. Érett növény: **6 / Szedés → kattintás vagy F / Művelet**. A leszedett termények a **Termények** gombbal nézhetők meg; eladás még nincs.
+
+A fejlődési állapot és terménykészlet is mentődik. A korábbi mentések automatikusan frissülnek, megtartva a farmot. Az első három nappali perc **Délelőtt**, a következő három **Délután**.
+
+- [Növekedés és érett növények](docs/concepts/farm-growth-prototype.png)
+- [Mobilos felület](docs/concepts/farm-growth-mobile.png)
+- [Magasabb ugrás](docs/concepts/farm-dynamic-jump.png)

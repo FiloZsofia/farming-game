@@ -12,7 +12,7 @@ Az „Erdőszéli birtok” csak munkacím. Felmerült címjavaslatok: Új gyök
 - Irányítható karakter, aki odasétál a tevékenység helyéhez.
 - Az első prototípus karakterének méretét és mozgási sebességét a felhasználó megfelelőnek találta.
 - A karakter a játék kezdetén a háza ajtajából indul.
-- A karakter ugrani is tud; mozgás közben az ugrás kis sebességlöketet ad. A prototípusban Shift vagy külön Ugrás gomb indítja.
+- A karakter ugrani is tud; mozgás közben az ugrás kis sebességlöketet ad. A prototípusban Space vagy külön Ugrás gomb indítja; futás Shift lenyomásával vagy a Futás gombbal.
 - Tartós mentés szükséges. Bezáráskor megáll a játékidő; nincs távolléti növekedés.
 - Az idő, növekedés, árak és egyéb egyensúlyi értékek menet közben, közös egyeztetéssel alakulnak ki.
 
@@ -65,6 +65,7 @@ Nem elfogadott történeti tény a korábbi gazda személye, a birtok megszerzé
 ## Idő és napi ritmus
 
 - Nappal–éjszaka ciklus és évszakok a tervezett játék részei.
+- A nappal első 3 percében Délelőtt, második 3 percében Délután felirat jelenik meg.
 - Egy teljes ciklus legfeljebb 10 perc aktív játékidő: 6 perc nappal és legfeljebb 4 perc éjszaka.
 - Az éjszaka kezdetétől számított 2. percben figyelmeztetés a pihenésre, a 3. percben újabb, határozottabb figyelmeztetés jelenik meg.
 - Ha a játékos nem zárja le önként a napot, az éjszaka 3 perc 30 másodperce és 4 perce közötti véletlenszerű időpontban a főhős összeesik a fáradtságtól, majd másnap reggel otthon ébred.
@@ -94,14 +95,14 @@ Tavaszi kezdés, összesen 12 elültethető növénnyel:
 
 | Növény | Induló mennyiség | Tervezett szerep |
 | --- | --- | --- |
-| Retek | 4 mag | Gyors első betakarítás |
-| Burgonya | 4 vetőgumó | Lassabb, nagyobb értékű termés |
-| Borsó | 4 mag | Első érés után többször szedhető |
+| Retek | 4 mag | 3 megöntözött nap után betakarítható |
+| Burgonya | 4 vetőgumó | 5 megöntözött nap után betakarítható; ár még nyitott |
+| Borsó | 4 mag | Először 6, majd 3 megöntözött nap után szedhető |
 
 - Földművelés, vetés, öntözés és betakarítás.
 - Ha kimarad az öntözés, a növény aznap nem fejlődik, de nem pusztul el.
 - Eső általi öntözés felmerült javaslatként; az időjárás szabályai még nincsenek véglegesítve.
-- Növekedési idők, hozamok, árak, szezonhatárok és érett termények viselkedése még egyeztetendők.
+- A 3 / 5 / 6 napos, borsónál 3 napos újratermési idő az elfogadott első próba. Hozamok, árak és szezonhatárok később hangolandók. A prototípus egy terményt ad betakarításonként; az érett növény nem rohad el.
 
 ## Beszerzés és eladás
 

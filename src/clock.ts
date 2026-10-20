@@ -11,5 +11,5 @@ export const nightOpacity=(clock:Clock)=>Math.min(.55,Math.max(0,(clock.elapsed-
 export function clockLabel(clock:Clock){
  const night=clock.elapsed>=DAY_SECONDS;
  const seconds=Math.floor(night?clock.elapsed-DAY_SECONDS:clock.elapsed);
- return `${night?'Éjszaka':'Nappal'} · ${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`;
+ return `${night?'Éjszaka':clock.elapsed<180?'Délelőtt':'Délután'} · ${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`;
 }

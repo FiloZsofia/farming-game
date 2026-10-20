@@ -1,11 +1,11 @@
 import {describe,it,expect} from 'vitest';
-import {createGarden,targetTile,tileKey,work,cultivable} from './gardening';
+import {createGarden,targetTile,tileKey,work,cultivable,nextDayGarden,isRipe,growthRules,type Crop} from './gardening';
 const tile=targetTile(360,286),player={x:337,y:282};
 describe('gardening actions',()=>{
  it('starts with four of every crop',()=>expect(createGarden().seeds).toEqual({radish:4,potato:4,pea:4}));
  it('supports till, sow and water in the same plot',()=>{
   const g=createGarden();expect(work(g,'hoe',tile,player).ok).toBe(true);expect(work(g,'radish',tile,player).ok).toBe(true);expect(work(g,'water',tile,player).ok).toBe(true);
-  expect(g.plots.get(tileKey(tile))).toEqual({crop:'radish',watered:true});expect(g.seeds.radish).toBe(3);
+  expect(g.plots.get(tileKey(tile))).toEqual({crop:'radish',watered:true,growth:0,regrowing:false});expect(g.seeds.radish).toBe(3);
  });
  it('does not consume seeds when soil is untilled, occupied or out of reach',()=>{
   const g=createGarden();expect(work(g,'pea',tile,player).ok).toBe(false);
@@ -16,7 +16,7 @@ describe('gardening actions',()=>{
  it('does not erase crops or moisture when hoeing or watering twice',()=>{
   const g=createGarden();work(g,'hoe',tile,player);work(g,'water',tile,player);work(g,'pea',tile,player);
   expect(work(g,'hoe',tile,player).ok).toBe(false);expect(work(g,'water',tile,player).ok).toBe(false);
-  expect(g.plots.get(tileKey(tile))).toEqual({crop:'pea',watered:true});
+  expect(g.plots.get(tileKey(tile))).toEqual({crop:'pea',watered:true,growth:0,regrowing:false});
  });
  it('rejects a fifth seed without creating a crop',()=>{
   const g=createGarden();for(let i=0;i<5;i++){const t={x:353+(i%3)*16,y:280+Math.floor(i/3)*16};const p={x:t.x,y:t.y};work(g,'hoe',t,p);const result=work(g,'radish',t,p);expect(result.ok).toBe(i<4);}
@@ -28,5 +28,40 @@ describe('gardening actions',()=>{
  it('keeps adjacent bed cells distinct and allows meadow soil',()=>{
   expect(tileKey(targetTile(360,286))).not.toBe(tileKey(targetTile(376,286)));
   expect(cultivable(targetTile(290,430))).toBe(true);
+ });
+});
+
+describe('growth and harvest',()=>{
+ const planted=(crop:Crop)=>{const g=createGarden();work(g,'hoe',tile,player);work(g,crop,tile,player);return g;};
+ it('advances only on watered days and keeps dry crops alive',()=>{
+  let g=planted('radish');g=nextDayGarden(g);expect(g.plots.get(tileKey(tile))?.growth).toBe(0);
+  work(g,'water',tile,player);g=nextDayGarden(g);expect(g.plots.get(tileKey(tile))).toMatchObject({crop:'radish',growth:1,watered:false});
+  g=nextDayGarden(g);expect(g.plots.get(tileKey(tile))?.growth).toBe(1);
+ });
+ it.each([['radish',3],['potato',5],['pea',6]] as const)('ripens %s after %i watered days', (crop,days)=>{
+  let g=planted(crop);
+  for(let i=0;i<days;i++){expect(isRipe(g.plots.get(tileKey(tile))!)).toBe(false);work(g,'water',tile,player);g=nextDayGarden(g);}
+  expect(isRipe(g.plots.get(tileKey(tile))!)).toBe(true);
+  expect(growthRules[crop]).toBe(days);
+ });
+ it('harvests a root crop exactly once and leaves reusable soil',()=>{
+  let g=planted('radish');for(let i=0;i<3;i++){work(g,'water',tile,player);g=nextDayGarden(g);}
+  expect(work(g,'harvest',tile,player).ok).toBe(true);expect(work(g,'harvest',tile,player).ok).toBe(false);
+  expect(g.produce.radish).toBe(1);expect(g.plots.get(tileKey(tile))).toMatchObject({crop:null,growth:0});expect(work(g,'potato',tile,player).ok).toBe(true);
+ });
+ it('keeps peas planted and regrows in three watered days without spending seeds',()=>{
+  let g=planted('pea');for(let i=0;i<6;i++){work(g,'water',tile,player);g=nextDayGarden(g);}
+  work(g,'harvest',tile,player);expect(g.produce.pea).toBe(1);expect(g.plots.get(tileKey(tile))).toMatchObject({crop:'pea',regrowing:true,growth:0});
+  for(let i=0;i<3;i++){expect(work(g,'harvest',tile,player).ok).toBe(false);work(g,'water',tile,player);g=nextDayGarden(g);}
+  expect(work(g,'harvest',tile,player).ok).toBe(true);expect(g.produce.pea).toBe(2);expect(g.seeds.pea).toBe(3);
+ });
+ it('does not mutate the original garden before the new morning is saved',()=>{
+  const g=planted('potato');work(g,'water',tile,player);const next=nextDayGarden(g);expect(g.plots.get(tileKey(tile))?.growth).toBe(0);expect(g.plots.get(tileKey(tile))?.watered).toBe(true);expect(next.plots.get(tileKey(tile))?.growth).toBe(1);next.produce.pea=2;expect(g.produce.pea).toBe(0);
+ });
+ it('cannot harvest immature or remote plants and does not rot a ripe plant',()=>{
+  let g=planted('radish');expect(work(g,'harvest',tile,player).ok).toBe(false);
+  for(let i=0;i<3;i++){work(g,'water',tile,player);g=nextDayGarden(g);}
+  for(let i=0;i<10;i++)g=nextDayGarden(g);
+  expect(isRipe(g.plots.get(tileKey(tile))!)).toBe(true);expect(work(g,'harvest',tile,{x:250,y:242}).ok).toBe(false);expect(g.produce.radish).toBe(0);
  });
 });

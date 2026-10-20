@@ -3,11 +3,13 @@ import { blocked } from './movement';
 export const TILE=16;
 export const cropNames={radish:'Retek',potato:'Burgonya',pea:'Borsó'} as const;
 export type Crop=keyof typeof cropNames;
-export type Tool='hoe'|'water'|Crop;
+export type Tool='hoe'|'water'|'harvest'|Crop;
+// Agreed initial playtest values; revisit after playing.
+export const growthRules={radish:3,potato:5,pea:6,peaRegrowth:3};
 export type Tile={x:number;y:number};
-export type Plot={watered:boolean;crop:Crop|null};
-export type Garden={plots:Map<string,Plot>;seeds:Record<Crop,number>};
-export const createGarden=():Garden=>({plots:new Map(),seeds:{radish:4,potato:4,pea:4}});
+export type Plot={watered:boolean;crop:Crop|null;growth:number;regrowing:boolean};
+export type Garden={plots:Map<string,Plot>;seeds:Record<Crop,number>;produce:Record<Crop,number>};
+export const createGarden=():Garden=>({plots:new Map(),seeds:{radish:4,potato:4,pea:4},produce:{radish:0,potato:0,pea:0}});
 export const tileKey=(tile:Tile)=>`${tile.x},${tile.y}`;
 export function targetTile(x:number,y:number):Tile{
  for(const b of farmLayout.beds){
@@ -39,9 +41,19 @@ export function work(garden:Garden,tool:Tool,tile:Tile,player:{x:number;y:number
  if(!reachable(tile,player))return {ok:false,message:'Sétálj közelebb a kijelölt földkockához.'};
  if(!cultivable(tile))return {ok:false,message:'Itt nem művelhető a talaj. Próbáld az ágyásokat vagy a szabad rétet.'};
  const key=tileKey(tile),plot=garden.plots.get(key);
+ if(tool==='harvest'){
+  if(!plot?.crop)return {ok:false,message:'Itt még nincs betakarítható növény.'};
+  if(!isRipe(plot))return {ok:false,message:'Ez a növény még fejlődik.'};
+  const crop=plot.crop;
+  if(garden.produce[crop]>=999999)return {ok:false,message:'A terménytároló megtelt.'};
+  garden.produce[crop]++;plot.growth=0;
+  if(crop==='pea')plot.regrowing=true;
+  else {plot.crop=null;plot.regrowing=false;}
+  return {ok:true,message:`Betakarítva: ${cropNames[crop]}.`};
+ }
  if(tool==='hoe'){
   if(plot)return {ok:false,message:'Ez a föld már fel van ásva.'};
-  garden.plots.set(key,{watered:false,crop:null});return {ok:true,message:'A föld készen áll a vetésre.'};
+  garden.plots.set(key,{watered:false,crop:null,growth:0,regrowing:false});return {ok:true,message:'A föld készen áll a vetésre.'};
  }
  if(!plot)return {ok:false,message:'Előbb ásd fel a földet a kapával.'};
  if(tool==='water'){
@@ -50,5 +62,14 @@ export function work(garden:Garden,tool:Tool,tile:Tile,player:{x:number;y:number
  }
  if(plot.crop)return {ok:false,message:'Ide már ültettél. Válassz egy üres földkockát.'};
  if(garden.seeds[tool]<=0)return {ok:false,message:'Ebből elfogyott az ültetőanyag.'};
- plot.crop=tool;garden.seeds[tool]--;return {ok:true,message:`Elültetve: ${cropNames[tool]}.`};
+ plot.crop=tool;plot.growth=0;plot.regrowing=false;garden.seeds[tool]--;return {ok:true,message:`Elültetve: ${cropNames[tool]}.`};
+}
+
+export function growthTarget(plot:Plot,rules=growthRules){return plot.crop?(plot.regrowing&&plot.crop==='pea'?rules.peaRegrowth:rules[plot.crop]):0;}
+export function isRipe(plot:Plot,rules=growthRules){return Boolean(plot.crop&&plot.growth>=growthTarget(plot,rules));}
+export function nextDayGarden(garden:Garden,rules=growthRules):Garden{
+ return {seeds:{...garden.seeds},produce:{...garden.produce},plots:new Map([...garden.plots].map(([key,p])=>{
+  const plot={...p};if(plot.crop&&plot.watered&&!isRipe(plot,rules))plot.growth=Math.min(growthTarget(plot,rules),plot.growth+1);
+  plot.watered=false;return [key,plot];
+ }))};
 }

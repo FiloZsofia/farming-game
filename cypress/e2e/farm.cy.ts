@@ -59,3 +59,36 @@ describe('Rest and persistence',()=>{
   cy.get('[data-count=radish]').should('have.text','4');
  });
 });
+
+describe('Space jump, Shift run and crop growth',()=>{
+ beforeEach(()=>{
+  cy.visit('/',{onBeforeLoad(win){win.indexedDB.deleteDatabase('erdoszeli-birtok');}});
+  cy.get('#game').should('have.attr','data-ready','true');cy.get('#dialogue-close').click();
+ });
+ it('uses Space for jumping and Shift for running',()=>{
+  cy.get('body').trigger('keydown',{key:' ',code:'Space',keyCode:32,which:32});
+  cy.get('#game').should('have.attr','data-jumping','true');
+  cy.get('body').trigger('keyup',{key:' ',code:'Space',keyCode:32,which:32});
+  cy.get('#game').should('have.attr','data-jumping','false');
+  cy.get('body').trigger('keydown',{key:'Shift',code:'ShiftLeft',keyCode:16,which:16});
+  cy.get('#game').should('have.attr','data-running','true').and('have.attr','data-jumping','false');
+  cy.get('body').trigger('keyup',{key:'Shift',code:'ShiftLeft',keyCode:16,which:16});
+  cy.get('#game').should('have.attr','data-running','false');
+ });
+ it('grows a radish through three watered mornings and saves its harvest',()=>{
+  const walk=(dir:string,axis:string,target:number)=>{
+   cy.get(`[data-dir="${dir}"]`).trigger('pointerdown',{pointerId:1});
+   cy.get('#game',{timeout:15000}).should(el=>expect(Number(el.attr(`data-player-${axis}`))).to.be.at.least(target));
+   cy.get(`[data-dir="${dir}"]`).trigger('pointerup',{pointerId:1});
+  };
+  for(let day=1;day<=3;day++){
+   walk('down','y',287);walk('right','x',334);
+   if(day===1){cy.get('[data-tool=hoe]').click();cy.get('#work').click();cy.get('[data-tool=radish]').click();cy.get('#work').click();}
+   cy.get('[data-tool=water]').click();cy.get('#work').click();
+   cy.get('#home').click();cy.get('#journal').click();cy.get('#sleep').click();cy.get('#game').should('have.attr','data-day',String(day+1));cy.get('#dialogue-close').click();
+  }
+  cy.get('#game').should('have.attr','data-ripe','1');walk('down','y',287);walk('right','x',334);
+  cy.get('[data-tool=harvest]').click();cy.get('#work').click();cy.get('#game').should('have.attr','data-produce','1');
+  cy.get('#save-state').should('contain','Mentve');cy.reload();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-produce','1').and('have.attr','data-planted','0');
+ });
+});
