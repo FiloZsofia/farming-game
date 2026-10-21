@@ -62,15 +62,6 @@ export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),g
  for(const x of [j.x-2,j.x+21]){rect(x,j.y+8,3,13,0x523e2c);rect(x,j.y+9,1,10,0xb59460);}
  poly([j.x-4,j.y+1,j.x+20,j.y+1,j.x+25,j.y+8,j.x+1,j.y+8],0xbaa074);
  rect(j.x-4,j.y+8,29,3,0x6c4c33);line(j.x-2,j.y+8,j.x+23,j.y+8,0xe0bf86);
- // A cushioned wooden chair tucked beside the desk leaves the porch centre clear.
- const chairX=j.x-3,chairY=j.y+11;
- oval(chairX+6,chairY+14,20,6,0x273c32,.26);
- for(const dx of [0,12]){rect(chairX+dx,chairY+4,2,12,0x644831);rect(chairX+dx,chairY-8,2,13,0x8d6945);}
- poly([chairX-1,chairY-9,chairX+13,chairY-9,chairX+14,chairY,chairX,chairY+1],0x6e5138);
- rect(chairX+1,chairY-7,10,5,0xa3a46c);line(chairX+2,chairY-7,chairX+10,chairY-7,0xd2c796);
- poly([chairX-2,chairY+2,chairX+11,chairY+1,chairX+16,chairY+6,chairX+1,chairY+8],0x684c33);
- poly([chairX-1,chairY+1,chairX+10,chairY,chairX+14,chairY+4,chairX+1,chairY+6],0xadb27a);
- line(chairX,chairY+1,chairX+10,chairY,0xd6d5a1);line(chairX+1,chairY+6,chairX+13,chairY+4,0x7d8958);
  // Dark leather cover peeks out around the warm, individually shaded pages.
  poly([j.x-1,j.y,j.x+8,j.y-2,j.x+18,j.y,j.x+19,j.y+9,j.x+9,j.y+8,j.x,j.y+10],0x714634);
  poly([j.x,j.y,j.x+8,j.y-1,j.x+9,j.y+7,j.x+1,j.y+8],0xffedc0);

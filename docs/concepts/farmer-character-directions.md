@@ -10,6 +10,8 @@ Közös alap: barna, magas lófarok, világos bőr, törtfehér munkásing, moha
 
 Saját kérésre generált koncepciók, külső assetcsomag nélkül. Ezek nem elfogadott végleges grafikák vagy beépíthető animációs sprite-ok. A kisméretű figurák a vizuális irányt szemléltetik, nem a játék pontos pixelméretét. Az elfogadott tervből külön, az aktuális játékmérethez és nézőponthoz igazított figura, majd mozgásfázisok szükségesek.
 
-A B változatból készült első játékbeli figura már beépült. A kiválasztásnál az arc, haj és testarányok különböző oszlopokból is kombinálhatók.
+A játékbeli karakter változatlan. A kiválasztásnál az arc, haj és testarányok különböző oszlopokból is kombinálhatók.
 
-**Felhasználói döntés:** a B változat az elfogadott kiindulás. A játékba illő figura elöl-, hátul- és oldalnézettel, lépésfázisokkal beépült; a mozgások később tovább finomíthatók.
+**Felhasználói döntés:** a B változat az elfogadott kiindulás. A játékba illő kis méretű figura és az animációk még elkészítendők.
+
+A B tervből készített első játékbeli sprite-ot a felhasználó környezetidegennek találta, ezért visszavontuk. A játék ismét a korábbi karaktert használja; új megvalósítást külön kell egyeztetni.
