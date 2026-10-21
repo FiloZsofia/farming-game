@@ -4,7 +4,7 @@ import { move, START,blocked } from './movement';
 import { farmLayout } from './layout';
 import {findSeeds,unlockedSeeds} from './seed-find';
 import {FarmMusic} from './music';
-import {createGardenSkill,gainGardening,LEVEL_TWO_XP,LEVEL_THREE_XP,gardeningLevel,gardeningTarget,levelThreeSeeds,type LevelThreeSeed,rewardFruits,type RewardFruit} from './gardening-skill';
+import {createGardenSkill,gainGardening,LEVEL_TWO_XP,LEVEL_THREE_XP,gardeningLevel,gardeningTarget,gardeningProgress,gardeningCredit,levelThreeSeeds,type LevelThreeSeed,rewardFruits,type RewardFruit} from './gardening-skill';
 import {FarmerArt,anniePortrait} from './character';
 import {Wildlife} from './wildlife';
 import {createStory,type FarmStory} from './story-events';
@@ -196,9 +196,10 @@ class Farm extends Phaser.Scene {
   const card=document.createElement('article');card.className='skill-card';card.dataset.skill='gardening';
   const heading=document.createElement('h3');heading.append(itemIcon('hoe'),document.createTextNode('Kertészkedés'));
   const level=document.createElement('strong');level.className='skill-card-level';level.textContent=`${gardeningLevel(this.skill)}. szint`;
-  const meter=document.createElement('progress');meter.max=gardeningTarget(this.skill);meter.value=this.skill.xp;meter.setAttribute('aria-label',`Kertészkedés: haladás a ${this.skill.rewarded?3:2}. szintig`);
-  const progress=document.createElement('p');progress.dataset.skillProgress='gardening';progress.textContent=this.skill.levelThreeRewarded?'Elérted a jelenleg elérhető legmagasabb, 3. szintet.':`${this.skill.xp} / ${gardeningTarget(this.skill)} tapasztalatpont · Még ${gardeningTarget(this.skill)-this.skill.xp} pont a ${this.skill.rewarded?3:2}. szintig.`;
-  const info=document.createElement('p');info.textContent='Új föld felásásával, növények öntözésével, betakarítással és kézi gazszedéssel fejlődsz.';
+  const {current,required}=gardeningProgress(this.skill);
+  const meter=document.createElement('progress');meter.max=required;meter.value=current;meter.setAttribute('aria-label',`Kertészkedés: haladás a ${this.skill.rewarded?3:2}. szintig`);
+  const progress=document.createElement('p');progress.dataset.skillProgress='gardening';progress.textContent=this.skill.levelThreeRewarded?'Elérted a jelenleg elérhető legmagasabb, 3. szintet.':`${current} / ${required} tapasztalatpont · Még ${gardeningTarget(this.skill)-this.skill.xp} pont a ${this.skill.rewarded?3:2}. szintig.`;
+  const info=document.createElement('p');info.textContent='Új föld felásásával, ültetéssel, üres vagy beültetett föld öntözésével, betakarítással és kézi gazszedéssel fejlődsz.';
   const reward=document.createElement('p');reward.textContent='A 2. szint jutalma: 4 eperpalánta, 4 mézbogyócsemete és 4 áfonyacsemete; az ültetőanyagok a katalógusban is elérhetővé válnak.';
   const replay=document.createElement('button');replay.type='button';replay.id='replay-gardening';replay.textContent=this.skill.rewarded?'2. szint ünneplésének újranézése':'2. szint előnézete';replay.addEventListener('click',()=>this.showGardeningCelebration(true));
   const third=document.createElement('p');third.textContent='A 3. szint jutalma: 4 sárgarépamag, 4 salátamag és 4 hagymamag; vásárolhatók és gazszedéskor is megtalálhatók.';const replayThird=document.createElement('button');replayThird.type='button';replayThird.id='replay-gardening-three';replayThird.textContent=this.skill.levelThreeRewarded?'3. szint ünneplésének újranézése':'3. szint előnézete';replayThird.addEventListener('click',()=>this.showGardeningCelebration(true,3));
@@ -390,10 +391,21 @@ class Farm extends Phaser.Scene {
  }
  private showGardening(previous:number){
   this.skillUntil=performance.now()+5000;document.querySelector<HTMLElement>('#gardening-skill')!.hidden=false;
-  document.querySelector<HTMLElement>('#skill-fill')!.style.height=`${this.skill.xp/gardeningTarget(this.skill)*100}%`;
-  document.querySelector('.skill-track')!.setAttribute('aria-valuenow',String(this.skill.xp));document.querySelector('.skill-track')!.setAttribute('aria-valuemax',String(gardeningTarget(this.skill)));document.querySelector('.skill-track')!.setAttribute('aria-label',`Haladás a ${this.skill.rewarded?3:2}. szint felé`);
+  const {current,required}=gardeningProgress(this.skill);
+  const fill=document.querySelector<HTMLElement>('#skill-fill')!,track=document.querySelector<HTMLElement>('.skill-track')!,count=document.querySelector<HTMLElement>('#skill-xp')!,gain=document.querySelector<HTMLElement>('#skill-gain')!;
+  fill.style.height=`${current/required*100}%`;
+  track.setAttribute('aria-valuenow',String(current));track.setAttribute('aria-valuemax',String(required));track.setAttribute('aria-label',this.skill.levelThreeRewarded?'Kertészkedés: a 3. szint elérve':`Haladás a ${this.skill.rewarded?3:2}. szint felé`);
   document.querySelector('#skill-level')!.textContent=`${gardeningLevel(this.skill)}. szint`;
-  document.querySelector('#skill-xp')!.textContent=`${this.skill.xp} / ${gardeningTarget(this.skill)}`;
+  count.textContent=`${current} / ${required}`;
+  for(const element of [count,track,gain])for(const animation of element.getAnimations())animation.cancel();
+  gain.hidden=true;
+  if(this.skill.xp>previous){
+   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+   count.animate(reduced?[{opacity:.5},{opacity:1}]:[{transform:'translateY(0) scale(1)'},{transform:'translateY(-4px) scale(1.25)',offset:.4},{transform:'translateY(0) scale(1)'}],{duration:460,easing:'ease-out'});
+   if(!reduced)track.animate([{transform:'translateX(0)'},{transform:'translateX(-2px)'},{transform:'translateX(2px)'},{transform:'translateX(-1px)'},{transform:'translateX(0)'}],{duration:300});
+   gain.hidden=false;gain.textContent=`+${this.skill.xp-previous}`;
+   const animation=gain.animate(reduced?[{opacity:1},{opacity:0}]:[{opacity:1,transform:'translateY(0)'},{opacity:0,transform:'translateY(-14px)'}],{duration:1000,fill:'forwards'});void animation.finished.then(()=>{gain.hidden=true;}).catch(()=>{});
+  }
   if(previous<LEVEL_TWO_XP&&this.skill.xp===LEVEL_TWO_XP)this.showGardeningCelebration();
   if(previous<LEVEL_THREE_XP&&this.skill.xp===LEVEL_THREE_XP)this.showGardeningCelebration(false,3);
  }
@@ -455,7 +467,7 @@ class Farm extends Phaser.Scene {
   const result=work(nextGarden,usedTool,target,this.actor);
   if(!result.ok){this.notice(result.message);return;}
   const tileKey=`${target.x},${target.y}`;
-  const credit=usedTool==='hoe'&&!before?`hoe:${tileKey}`:usedTool==='water'&&before?.crop?`water:${this.clock.day}:${tileKey}`:usedTool==='harvest'?`harvest:${this.clock.day}:${tileKey}`:null;
+  const credit=gardeningCredit(usedTool,tileKey,this.clock.day,before);
   const nextSkill=credit?gainGardening(this.skill,credit)??this.skill:this.skill;
   if(!this.skill.rewarded&&nextSkill.rewarded)for(const fruit of Object.keys(rewardFruits) as RewardFruit[])nextGarden.seeds[fruit]+=4;
   if(!this.skill.levelThreeRewarded&&nextSkill.levelThreeRewarded)for(const crop of Object.keys(levelThreeSeeds) as LevelThreeSeed[])nextGarden.seeds[crop]+=4;
@@ -463,7 +475,7 @@ class Farm extends Phaser.Scene {
   try{
    await this.store.save(snapshot(this.actor,this.clock,nextGarden,this.economy,this.orders,this.farmName,this.clearing,this.story,nextSkill));
    const previous=this.skill.xp;this.garden=nextGarden;this.skill=nextSkill;this.drawGarden();if(usedTool==='hoe')this.redrawScenery();this.avatar.use(target.x+8-this.actor.x,target.y+8-this.actor.y,usedTool);this.notice(result.message+(usedTool==='harvest'?' Készlet: Tab.':''));document.querySelector('#save-state')!.textContent='Mentve ebben a böngészőben';
-   if(['hoe','water','harvest'].includes(usedTool))this.showGardening(previous);
+   if(credit)this.showGardening(previous);
   }catch{this.notice('Nem sikerült menteni. A kert és a jártasság változatlan; próbáld újra.');}
   finally{this.transitioning=false;this.lastTick=performance.now();}
 

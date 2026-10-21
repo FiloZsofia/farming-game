@@ -219,7 +219,7 @@ Az évszakváltás, építkezés és tárolóbővítés pontos ütemezése kül�
 - Az üres, felásott föld újabb kapálással visszaegyengethető. A növényt a kapa megóvja; visszavonáskor magot és fejlődési pontot nem adunk.
 - A szomszéd neve Annie; bemutatkozó cím: „Egy kedves szomszéd, Annie.” Az inventory Készlet és Ismerősök fület kap; az ajándék átvétele után Annie portréval és rövid leírással megjelenik. Régi mentésben is megmarad az ismeretség.
 - A kertészkedés 2. szintje 36 érdemi művelet után érhető el, a kezdő kert rendes gondozásával körülbelül 2–3 nap alatt. Művelet közben öt másodpercre megjelenik a jobb alsó függőleges zöld csík.
-- Új föld felásása helyenként egyszer, beültetett föld öntözése és betakarítása naponta/helyenként egyszer, kézi gazszedés naponta/objektumonként egyszer ad pontot. Ugyanannak a helynek a ki-be kapálása nem fejleszt. Vetés, fejszés és csákányos munka nem része ennek a négy kertészkedési pontforrásnak.
+- Új föld felásása helyenként egyszer, ültetés, üres vagy beültetett föld öntözése és betakarítás naponta/helyenként egyszer, kézi gazszedés naponta/objektumonként egyszer ad pontot. Az öntözés ültetés előtt is fejleszt; az ugyanazon a napon és helyen ismételt azonos művelet, illetve a ki-be kapálás nem ad ismét pontot. A fejszés és csákányos munka nem része a kertészkedésnek.
 - A 2. szint jutalma egyszeri 4 eperpalánta, 4 mézbogyócsemete, 4 áfonyacsemete. Ekkor válik elérhetővé a katalógusban a három ültetőanyag; nem csak a jutalom gyümölcse, hanem a saját termés is eladható.
 
 | Növény | Ültetőanyag ára | Termény eladási ára | Első termés, öntözött nap | Újratermés |
@@ -263,3 +263,5 @@ Az évszakváltás, építkezés és tárolóbővítés pontos ütemezése kül�
 - A visszaállított, első barna hajú főhős ingujja keskenyebb, vállvonala lejtős; arca és haja megmarad.
 
 Nyitott javaslatok, még nem elfogadott követelmények: külön farmmentéseket kezelő Folytatás / Új játék menü; kapun túli gyűjtögetős rét; fa és gaz felhasználásával komposztáló készítése; később falusi faiskola és tyúkól.
+
+- A fejlődési jelző mindig az aktuális szinten szerzett pontokat mutatja: a 2. szint elérésekor 0/36-ról indul a 3. szint felé. A mentett összes pont változatlan, korábbi haladás nem vész el. A szám a függőleges csík fölött nagy, világos felirat; pontszerzéskor megugrik és +1 visszajelzés kíséri, a csík finoman megrezdül. Csökkentett mozgás beállításánál nincs ugrás vagy remegés. A Jártasságok fül ugyanezt a szintenkénti haladást és az ültetést is tartalmazó leírást mutatja.

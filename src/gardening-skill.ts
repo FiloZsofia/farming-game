@@ -1,3 +1,4 @@
+import type {Plot,Tool} from './gardening';
 export const LEVEL_TWO_XP=36;
 export const LEVEL_THREE_XP=72;
 export const levelThreeSeeds={carrot:'Sárgarépa',lettuce:'Saláta',onion:'Hagyma'} as const;
@@ -20,3 +21,15 @@ export function validGardenSkill(value:unknown):value is GardenSkill{
 
 export const gardeningLevel=(skill:GardenSkill)=>skill.levelThreeRewarded?3:skill.rewarded?2:1;
 export const gardeningTarget=(skill:GardenSkill)=>skill.rewarded?LEVEL_THREE_XP:LEVEL_TWO_XP;
+
+// Stored XP stays cumulative; the UI shows only the current 36-point interval.
+export function gardeningProgress(skill:GardenSkill){
+ const start=skill.rewarded?LEVEL_TWO_XP:0;
+ return {current:Math.min(LEVEL_TWO_XP,Math.max(0,skill.xp-start)),required:LEVEL_TWO_XP};
+}
+export function gardeningCredit(tool:Tool,tile:string,day:number,before:Plot|undefined){
+ if(tool==='hoe')return before?null:`hoe:${tile}`;
+ if(tool==='water')return `water:${day}:${tile}`;
+ if(tool==='harvest')return `harvest:${day}:${tile}`;
+ return `plant:${day}:${tile}`;
+}
