@@ -57,3 +57,5 @@ A rendelés fizetését és a függő rendelést közös tranzakció menti, és 
 A magmennyiség a kezdő 4 darab fölé nőhet. Az aktuális játékban egy fajtából a készlet + úton lévő + postaládás mennyiség legfeljebb 999999 lehet; ez technikai tárolási korlát, nem a később tervezett hátizsák-kapacitás. A Tab-os készlet ugyanazokat a mentett számokat mutatja, nincs külön másolat vagy külön számláló.
 
 Az ajándék, az odú elhelyezése és a reggeli gondolat megjelölése előtt mentünk; sikertelen íráskor újra próbálható. Régi farmnál a szomszéd a következő nappali látogatási lehetőségnél hozza az ajándékot. A repülő állatok és a karakter animációjának pillanatnyi képkockái nem mentett állapotok.
+
+Az odú fejszés visszavétele ugyanazt a mentett ajándékot helyezi vissza a készletbe (a pozíció null lesz); nem keletkezik új példány. A mentési séma változatlanul 7-es.

@@ -40,7 +40,7 @@ Verandával kiegészített változat: [tavaszi farm verandával és naplóasztal
 
 - Felnőtt nő, vékony, természetes testalkattal és barátságos arccal.
 - Világos bőr, de nem túl sápadt tónussal.
-- Lófarokba kötött, egyelőre szőkés haj; a pontos hajárnyalat később választandó ki.
+- Barna haj, a fej tetején induló, magasra kötött lófarok.
 - Egyszerű vidéki munkaruha: törtfehér ing, mohazöld nadrág és barna bakancs.
 - Természetes arányú, a környezethez illő részletes 2D pixelgrafika.
 - A farm koncepcióképein szereplő alak helykitöltő, nem a végleges karakterterv.
@@ -198,6 +198,15 @@ Az évszakváltás, építkezés és tárolóbővítés pontos ütemezése kül�
 - Az ajándék egyetlen példányban kerül a készletbe. Tab → Alapanyagok → Madárodú → Elhelyezem; közeli, szabad helyre kattintva kerül ki. A növényeket és az épületeket nem lehet vele lefedni; a visszatérő gaz/ág/kő nem jelenik meg az odú alatt.
 - A szomszéd tanácsa a madarak későbbi kártevővédő szerepét vezeti be; tényleges kártevőrendszert és hozammódosítást még nem adunk hozzá.
 - A második reggelen egyszer jelenik meg a főhős kedves gondolatbuboréka; ha az odú még készletben van, elhelyezésre bátorít. A második naptól ritkán madarak repülnek át, nappal időnként színes pillangó is. Ezek nem gyűjthető, nem akadályozó hangulati elemek.
-- Részletesebb, barátságos arcú női karakter, szőkés lófarokkal, törtfehér ingben és mohazöld nadrágban. Külön mozgó lábak, karok és lófarok; futáskor gyorsabb léptek. Az éppen választott kertészkedő eszköz a kézben látszik, sikeres munka közben mozog, öntözéskor vízcseppekkel.
+- Részletesebb, barátságos arcú női karakter, barna, magasra kötött lófarokkal, törtfehér ingben és mohazöld nadrágban. Külön mozgó lábak, karok és lófarok; futáskor gyorsabb léptek. Az éppen választott kertészkedő eszköz a kézben látszik, sikeres munka közben mozog, öntözéskor vízcseppekkel.
 - A gaz külön alapanyag a készletben és a mentésben; felhasználása továbbra is nyitott.
 - A tó szabálytalan, kisebb öblökkel tagolt partvonalat kap, a víz ütközési határa ugyanazt az alakot követi.
+
+### Karakter, használati irány és készlet finomítása – 2026-10-21
+
+- Kerekebb fej és test, barna magas lófarok, kedves, csukott szájú mosoly. A karakter mérete és mozgási sebessége nem változik.
+- A munkamozdulat a tényleges célpont irányába fordul; a tükrözést és a kéz helyzetét figyelembe vesszük. Az utolsó mag elvetésekor a mozdulat még a magtasakot mutatja, utána a kapa válik aktívvá.
+- Kisebb, rövidebb szövegű gondolatbuborék.
+- A készlet csak pozitív mennyiségű tárgyakat mutat; az elhelyezett madárodú nem foglal benne kártyát. Az elfogyott mag eltűnik az alsó sávból; átvételkor újra megjelenik. A gyorsbillentyűk számai nem változnak.
+- Az odú közelről fejszés kattintással vagy F-fel épségben visszavehető, majd a készletből újra elhelyezhető. A visszavétel előbb mentődik, és csak sikeres írás után tűnik el a világból.
+- Éjszaka finoman pulzáló, fénylő szentjánosbogarak repülnek át. Nappal néha madár repül a kihelyezett odúhoz, megpihen a bejáratánál, majd rövid bebújás után ismét kirepül. Az odú eltávolítása vagy az éjszaka megszakítja ezt a hangulati jelenetet.

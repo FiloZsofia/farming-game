@@ -98,3 +98,13 @@ describe('Neighbor, birdhouse and weeds',()=>{
   start({...base,player:{x:137,y:300},story:{giftReceived:true,morningSeen:true,birdhouse:null}});press('7','Digit7',55);clickWorld(112,300);cy.get('#game').should('have.attr','data-cleared','1');press('Tab','Tab',9);cy.get('[data-material=weed]').should('contain','1 db');press('Escape','Escape',27);cy.reload();cy.get('#game').should('have.attr','data-ready','true');press('Tab','Tab',9);cy.get('[data-material=weed]').should('contain','1 db');
  });
 });
+
+describe('Inventory visibility and movable birdhouse',()=>{
+ const base={version:7,farmName:'Tesztfarm',player:{x:280,y:326},clock:{day:2,elapsed:0,collapseAt:580},seeds:{radish:0,potato:0,pea:0},produce:{radish:2,potato:0,pea:0},plots:[],economy:{gold:0,shipping:{radish:0,potato:0,pea:0},lastSale:null},orders:{pending:{radish:0,potato:0,pea:0},mailbox:{radish:0,potato:0,pea:0}},clearing:{removed:{},wood:1,stone:0,weed:0},story:{giftReceived:true,morningSeen:true,birdhouse:{x:280,y:296}}};
+ it('hides zero quantities in inventory and the seed toolbar',()=>{
+  start(base);cy.get('#toolbar [data-tool=radish]').should('not.be.visible');cy.get('#toolbar [data-tool=potato]').should('not.be.visible');cy.get('#toolbar [data-tool=pea]').should('not.be.visible');press('Tab','Tab',9);cy.get('#inventory-produce .inventory-card').should('have.length',1);cy.get('#inventory-seeds .inventory-card').should('not.exist');cy.get('#inventory-materials .inventory-card').should('have.length',1);
+ });
+ it('picks up the same birdhouse with an axe and saves its new position',()=>{
+  start(base);press('8','Digit8',56);clickWorld(280,296);cy.get('#game').should('have.attr','data-birdhouse','false');cy.reload();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-birdhouse','false');press('Tab','Tab',9);cy.get('#inventory-materials [data-birdhouse] button').click();clickWorld(304,352);cy.get('#game').should('have.attr','data-birdhouse','true');cy.reload();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-birdhouse','true');
+ });
+});
