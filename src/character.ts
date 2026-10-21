@@ -9,6 +9,28 @@ export class FarmerArt{
  private tool:Phaser.GameObjects.Graphics;private action=0;private phase=0;private equipped='hoe';private actionTool='hoe';private aim={x:0,y:1};
  constructor(scene:Phaser.Scene,neighbor=false){
   this.root=scene.add.container(0,0);
+  if(!neighbor){
+   // First brown-haired appearance, restored from 8d40544.
+   this.armX=8;this.armY=-30;
+  const part=(parent:Phaser.GameObjects.Container,x:number,y:number,w:number,h:number,c:number)=>{const p=scene.add.graphics();p.fillStyle(c);p.fillRoundedRect(x-w/2,y-h/2,w,h,Math.min(w,h)*.4);parent.add(p);return p;};
+  const leg=(x:number)=>{const c=scene.add.container(x,-16);this.root.add(c);part(c,0,5,5,12,neighbor?0x596b78:0x526c43);part(c,-1,5,1,10,0x7c925d);part(c,0,13,6,5,0x654d39);part(c,1,15,6,2,0x3c3d30);return c;};
+  this.leftLeg=leg(-3.5);this.rightLeg=leg(3.5);
+  part(this.root,0,-24,14,17,neighbor?0x9b7654:0xf0e7cc);part(this.root,-6,-24,2,13,neighbor?0x73563d:0xc9c9ac);part(this.root,1,-20,1,9,0xc3bb96);part(this.root,0,-16,13,3,0x777548);part(this.root,1,-16,3,2,0xcbb477);
+  const arm=(x:number)=>{const c=scene.add.container(x,-30);this.root.add(c);part(c,0,4,5,8,neighbor?0x9b7654:0xeae1c6);part(c,0,8,5,2,0xb9b99d);part(c,0,11,4,6,0xe0ae83);part(c,-1,10,1,4,0xf4cba0);return c;};
+  this.leftArm=arm(-8);this.rightArm=arm(8);
+  this.pony=scene.add.container(3,-48);this.root.add(this.pony);
+  const tail=scene.add.graphics();tail.fillStyle(0x61422e);tail.fillEllipse(3,-3,8,8);tail.fillEllipse(7,3,7,12);tail.fillStyle(0x96683f);tail.fillEllipse(3,-4,5,5);tail.fillEllipse(6,2,3,8);tail.fillStyle(0x6d864f);tail.fillRoundedRect(0,-5,5,3,1);this.pony.add(tail);this.pony.visible=!neighbor;
+  this.head=scene.add.container(0,-40);this.root.add(this.head);
+  const face=scene.add.graphics();this.head.add(face);
+  face.fillStyle(0x624631);face.fillEllipse(0,-1,15,16);
+  face.fillStyle(0xe8b68d);face.fillEllipse(0,1,13,14);face.fillStyle(0xf3cba4);face.fillEllipse(-1,2,11,11);
+  face.fillStyle(0x725035);face.fillEllipse(0,-6,14,7);face.fillEllipse(-5,-2,4,9);face.fillStyle(0x997047);face.fillEllipse(-1,-7,10,3);
+  for(const x of [-3,3]){face.fillStyle(0x414536);face.fillEllipse(x,1,1.6,2.5);face.fillStyle(0xf7e7cb);face.fillCircle(x-.25,.4,.45);face.fillStyle(0xd99483,.7);face.fillEllipse(x*1.35,4,2.5,1.5);}
+  face.lineStyle(.8,0xa56455);face.beginPath();face.moveTo(-2,4.8);face.lineTo(-.6,5.6);face.lineTo(.7,5.6);face.lineTo(2,4.8);face.strokePath();
+  if(neighbor){part(this.head,0,-9,15,5,0xbba171);part(this.head,0,-6,20,2,0x827450);}
+  this.tool=scene.add.graphics();this.rightArm.add(this.tool);this.equip('hoe');
+   return;
+  }
   const part=(parent:Phaser.GameObjects.Container,x:number,y:number,w:number,h:number,c:number)=>{const p=scene.add.graphics();p.fillStyle(c);p.fillEllipse(x,y,w,h);parent.add(p);return p;};
   const leg=(x:number)=>{const c=scene.add.container(x,-16);this.root.add(c);part(c,0,5,6,12,neighbor?0x596b78:0x526c43);part(c,-1,5,1,10,0x7c925d);part(c,0,13,6,5,0x654d39);part(c,1,15,6,2,0x3c3d30);return c;};
   this.leftLeg=leg(-3.5);this.rightLeg=leg(3.5);

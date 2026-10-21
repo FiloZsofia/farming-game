@@ -38,7 +38,7 @@ Verandával kiegészített változat: [tavaszi farm verandával és naplóasztal
 
 ## Alap főhős megjelenése
 
-- Elfogadott látványirány: a [három karakterterv](concepts/farmer-character-directions-abc.png) **B változata**, lágyan stilizált arányokkal és barátságos, kifejező arccal. A B tervből készült első játékbeli megvalósítást a felhasználó elutasította, mert nem illik a környezethez; azt visszavontuk. A B koncepció nem jelent jóváhagyást az elutasított sprite-ra. Egyelőre a korábbi játékbeli karakter marad.
+- Aktuális felhasználói döntés: az első barna hajú főhős külsejének visszaállítása (`8d40544`), a későbbi arc- és testarány-változtatások nélkül. Az eredeti barna haj, magas lófarok, arc, öltözék és testforma tér vissza; a mostani mozgás és eszközhasználat megmarad. A B tervből készült játékbeli változat elutasítva.
 
 - Felnőtt nő, vékony, természetes testalkattal és barátságos arccal.
 - Világos bőr, de nem túl sápadt tónussal.
