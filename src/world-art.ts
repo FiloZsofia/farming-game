@@ -56,9 +56,49 @@ export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),g
  rect(215,251,48,7,0x927858);rect(221,258,36,5,0xae9771);line(215,251,263,251,0xcabb92);
  for(const x of [190,280]){rect(x,184,5,65,0x65513c);rect(x,185,2,62,0xb29467);rect(x-2,245,9,5,0x70664f);}
  poly([179,190,237,153,295,190],0x704d39);poly([183,187,237,155,291,187],0xa16e4a);for(let y=169;y<188;y+=6){const d=(y-153)*1.56;line(237-d,y,237+d,y,0x6c4b37);}
- rect(260,229,16,10,0x5e4632);rect(261,226,13,5,0xe8dcaf);rect(267,226,1,5,0x977f51);
- const box=layout.shipping;oval(box.x+17,box.y+24,39,11,0x273c32,.25);rect(box.x,box.y,box.w,box.h,0x574a35);rect(box.x+2,box.y+2,box.w-4,8,0xb29260);for(let y=box.y+12;y<box.y+24;y+=5)rect(box.x+2,y,box.w-4,4,0x967447);for(const x of [box.x+5,box.x+25])rect(x,box.y,2,box.h,0x534e40);rect(box.x+14,box.y+7,5,12,0xc2ad72);
- const c=layout.catalog;rect(c.x-3,c.y+c.h,24,4,0x836341);rect(c.x,c.y,c.w,c.h,0x4c7059);rect(c.x+3,c.y+2,12,8,0xe8dfb9);rect(c.x+8,c.y+2,1,8,0x867958);
+ // Porch journal: a real open book on a small writing desk, with a ribbon and pen.
+ const j=layout.journal;
+ oval(j.x+11,j.y+15,31,7,0x283c2e,.3);
+ for(const x of [j.x-2,j.x+21]){rect(x,j.y+8,3,13,0x523e2c);rect(x,j.y+9,1,10,0xb59460);}
+ poly([j.x-4,j.y+1,j.x+20,j.y+1,j.x+25,j.y+8,j.x+1,j.y+8],0xbaa074);
+ rect(j.x-4,j.y+8,29,3,0x6c4c33);line(j.x-2,j.y+8,j.x+23,j.y+8,0xe0bf86);
+ // Dark leather cover peeks out around the warm, individually shaded pages.
+ poly([j.x-1,j.y,j.x+8,j.y-2,j.x+18,j.y,j.x+19,j.y+9,j.x+9,j.y+8,j.x,j.y+10],0x714634);
+ poly([j.x,j.y,j.x+8,j.y-1,j.x+9,j.y+7,j.x+1,j.y+8],0xffedc0);
+ poly([j.x+9,j.y-1,j.x+17,j.y,j.x+18,j.y+7,j.x+10,j.y+7],0xe6cea0);
+ line(j.x+8,j.y,j.x+9,j.y+7,0x9c7950);
+ for(let y=2;y<=5;y+=2){line(j.x+2,j.y+y,j.x+6,j.y+y-1,0xb9a67f);line(j.x+11,j.y+y-1,j.x+15,j.y+y,0xb09b74);}
+ poly([j.x+11,j.y+5,j.x+13,j.y+5,j.x+14,j.y+12,j.x+12,j.y+11,j.x+11,j.y+12],0xad5a4a);
+ line(j.x+21,j.y+2,j.x+24,j.y+6,0x374d4c,1.5);rect(j.x+20,j.y+1,2,2,0xe8d2a2);
+ // Shipping crate: open dark interior, thick rim, separate front/side boards and ironwork.
+ const box=layout.shipping,x=box.x,y=box.y;
+ oval(x+18,y+25,41,11,0x273c32,.3);
+ poly([x,y+5,x+25,y+2,x+32,y+8,x+32,y+23,x+7,y+27,x,y+21],0x4a382a);
+ poly([x+25,y+5,x+32,y+9,x+32,y+23,x+25,y+20],0x745133);
+ poly([x+2,y+7,x+24,y+4,x+29,y+8,x+7,y+11],0x302e23);
+ line(x+1,y+5,x+25,y+2,0xe3bd7d,3);line(x+25,y+2,x+32,y+8,0xa58352,3);
+ poly([x+1,y+9,x+26,y+7,x+26,y+24,x+1,y+23],0xae7f49);
+ for(let row=0;row<3;row++){line(x+3,y+12+row*5,x+24,y+10+row*5,0x6e4e31);line(x+4,y+13+row*5,x+23,y+11+row*5,0xc49b61);}
+ line(x+1,y+9,x+26,y+7,0xf0cd8c,2);line(x+26,y+7,x+32,y+8,0xc5a16a,2);
+ for(const dx of [2,23]){rect(x+dx,y+9,2,14,0x52605a);rect(x+dx,y+10,1,2,0xc1c2a5);rect(x+dx,y+20,1,2,0xc1c2a5);}
+ // Cut-out side handle and a small produce emblem identify this as the harvest crate.
+ line(x+28,y+13,x+30,y+14,0x302c24,2);
+ rect(x+9,y+13,11,8,0xf0dfb0);line(x+10,y+20,x+18,y+20,0xbda16d);
+ oval(x+14,y+17,5,4,0xba6054);line(x+14,y+15,x+12,y+12,0x527346,1.5);line(x+14,y+15,x+17,y+12,0x527346,1.5);
+ // Seed catalogue: an upright green illustrated cover, cream page edges and wooden stand.
+ const c=layout.catalog;
+ oval(c.x+9,c.y+14,30,6,0x283c2e,.25);
+ rect(c.x-3,c.y+11,3,9,0x684b32);rect(c.x+19,c.y+11,3,9,0x684b32);
+ poly([c.x-5,c.y+10,c.x+19,c.y+8,c.x+25,c.y+14,c.x-1,c.y+16],0xa78552);
+ line(c.x-4,c.y+11,c.x+19,c.y+9,0xd6b47a);
+ poly([c.x-2,c.y-5,c.x+17,c.y-5,c.x+20,c.y+10,c.x,c.y+12],0x294b3e);
+ poly([c.x+1,c.y-5,c.x+17,c.y-5,c.x+19,c.y+9,c.x+3,c.y+11],0x6b8b55);
+ line(c.x+1,c.y-4,c.x+3,c.y+10,0xb9bf83);
+ line(c.x+4,c.y+11,c.x+19,c.y+9,0xe8d9b0,2);
+ poly([c.x+5,c.y-2,c.x+14,c.y-2,c.x+16,c.y+6,c.x+6,c.y+7],0xf2e4bd);
+ line(c.x+11,c.y+5,c.x+10,c.y,0x597847);
+ oval(c.x+8,c.y+1,4,2,0x6c9651);oval(c.x+12,c.y,4,2,0x81a75a);
+ rect(c.x+7,c.y+8,6,1,0xe4cb88);
  const m=layout.mailbox;rect(m.x+10,m.y+m.h,5,20,0x80613e);rect(m.x,m.y,m.w,m.h,0x536e72);rect(m.x+2,m.y+2,m.w-4,4,0x94a7a2);rect(m.x+8,m.y+9,8,2,0x273f40);
  const ox=layout.shedOffset.x,oy=layout.shedOffset.y;
  poly([601+ox,183+oy,719+ox,183+oy,741+ox,218+oy,620+ox,224+oy],0x284936,.3);oval(662+ox,205+oy,137,21,0x273c32,.25);rect(601+ox,133+oy,118,68,0x9b8662);for(let x=604;x<719;x+=9){line(x+ox,136+oy,x+ox,200+oy,0x61553f,2);line(x+ox+3,140+oy,x+ox+3,194+oy,0xb39b71);}

@@ -38,6 +38,8 @@ Verandával kiegészített változat: [tavaszi farm verandával és naplóasztal
 
 ## Alap főhős megjelenése
 
+- Elfogadott látványirány: a [három karakterterv](concepts/farmer-character-directions-abc.png) **B változata**, lágyan stilizált arányokkal és barátságos, kifejező arccal. Ebből kell elkészíteni a játék méretéhez és nézőpontjához illő figurát; a jelenlegi játékbeli alak még nem ennek a megvalósítása.
+
 - Felnőtt nő, vékony, természetes testalkattal és barátságos arccal.
 - Világos bőr, de nem túl sápadt tónussal.
 - Barna haj, a fej tetején induló, magasra kötött lófarok.
@@ -239,3 +241,5 @@ Az évszakváltás, építkezés és tárolóbővítés pontos ütemezése kül�
 - A főhős további megjelenésbeli módosítása előtt külön karakterterven kell megegyezni; a jelenlegi alak nem elfogadott végleges grafika.
 
 - A készlet harmadik füle a Jártasságok. A Kertészkedés kártyán az aktuális szint, haladási sáv és a 2. szintig hiányzó tapasztalatpont látható; 2. szinten jelezzük, hogy a további szintek még nincsenek kidolgozva. A fejlődést adó munkákat és a jutalmat is ismerteti. A szintlépés ünneplése előnézetként bármikor megnyitható, jutalom és haladásmódosítás nélkül; onnan vissza lehet térni a Jártasságok fülre. A három fül nyilakkal, Home/End billentyűkkel is kezelhető.
+
+- A három verandaközeli tárgy felismerhetőbb saját rajzot kapott: az eladóláda nyitott belsővel, vastag peremmel, deszkázattal, vasalattal és terményjelzéssel; a magkatalógus növénymintás zöld borítóval és faállvánnyal; a napló nyitott lapokkal, könyvjelzőszalaggal és tollal az íróasztalon. Az interakciós helyek és a működés változatlan.
