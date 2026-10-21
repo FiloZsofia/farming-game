@@ -12,7 +12,7 @@ export class FarmMusic{
  async activate(){if(!this.enabled)return;try{await this.resume();}catch{/* Audio remains optional if this browser cannot start it. */}}
  async toggle(){this.enabled=!this.enabled;try{localStorage.setItem('farm-music',this.enabled?'on':'off');}catch{}if(this.enabled)await this.activate();else{await this.context?.suspend();document.querySelector<HTMLElement>('#app')!.dataset.music='off';}}
  private async resume(){
-  if(!this.context){this.context=new AudioContext();this.output=this.context.createGain();this.output.gain.value=.14;const compressor=this.context.createDynamicsCompressor();this.output.connect(compressor);compressor.connect(this.context.destination);}
+  if(!this.context){this.context=new AudioContext();this.output=this.context.createGain();this.output.gain.value=.21;const compressor=this.context.createDynamicsCompressor();this.output.connect(compressor);compressor.connect(this.context.destination);}
   if(this.context.state!=='running'||!this.timer){await this.context.resume();this.next=this.context.currentTime+.08;}
   document.querySelector<HTMLElement>('#app')!.dataset.music=this.context.state;
   if(!this.timer)this.timer=setInterval(()=>this.schedule(),100);

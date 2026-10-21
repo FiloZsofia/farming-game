@@ -232,3 +232,5 @@ Az évszakváltás, építkezés és tárolóbővítés pontos ütemezése kül�
 - A két éjszakai figyelmeztetés 8 másodperces jelenetet kap: rövid olvasási idő után felfelé úszik, a képernyő tetején elhalványul és eltűnik. Új figyelmeztetés újraindítja, napváltás megszakítja; az éjszaka játékmeneti időpontjai nem változnak.
 
 - A visszatérő gaz, ágak és kövek helyét véletlenszerűen választjuk ki, az előző helytől legalább 52 világegységre. A művelt föld, ágyások, ösvények, épületek, tó, kerítés, más tárgyak és a madárodú környezete védett. Az új pozíciók a reggeli mentés részei; betöltéskor nem sorsoljuk újra őket. A kövek ütközése az aktuális helyüket követi, eltakarítás után nem marad láthatatlan akadály.
+
+- A zene alaphangereje kissé erősebb. A menü készletgombja egyszerűen „Készlet”; a Tab gyorsbillentyű megmarad. Annie ismerősök közötti képe ugyanazzal a karakterrajzolóval készül, mint a farmon látható alakja, kalappal és barna kabáttal. A főhős ingének lejtős válla és beszűkülő dereka van, arca keskenyebb, ovális, szeme világos szemfehérjével, íriszével és fényfolttal készül.

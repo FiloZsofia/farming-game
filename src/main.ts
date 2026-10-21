@@ -4,7 +4,7 @@ import { move, START,blocked } from './movement';
 import { farmLayout } from './layout';
 import {FarmMusic} from './music';
 import {createGardenSkill,gainGardening,LEVEL_TWO_XP,rewardFruits,type RewardFruit} from './gardening-skill';
-import {FarmerArt} from './character';
+import {FarmerArt,anniePortrait} from './character';
 import {Wildlife} from './wildlife';
 import {createStory,type FarmStory} from './story-events';
 import {drawFarm} from './world-art';
@@ -206,7 +206,7 @@ class Farm extends Phaser.Scene {
   for(const id of ['inventory-produce','inventory-seeds','inventory-materials']){const grid=document.querySelector<HTMLElement>(`#${id}`)!;if(!grid.children.length){const empty=document.createElement('p');empty.className='inventory-empty';empty.textContent='Ebből most nincs nálad.';grid.append(empty);}}
   this.inventoryTab(false);
   const people=document.querySelector<HTMLElement>('#people-page')!;people.replaceChildren();
-  if(this.story.giftReceived){const card=document.createElement('article');card.className='person-card';card.dataset.person='annie';const text=document.createElement('div');const name=document.createElement('h3');name.textContent='Annie';const description=document.createElement('p');description.textContent='A kedves szomszéd, akitől a madárodút kaptad.';text.append(name,description);card.append(itemIcon('annie'),text);people.append(card);}else people.textContent='Hamarosan megismered a szomszédaidat.';
+  if(this.story.giftReceived){const card=document.createElement('article');card.className='person-card';card.dataset.person='annie';const text=document.createElement('div');const name=document.createElement('h3');name.textContent='Annie';const description=document.createElement('p');description.textContent='A kedves szomszéd, akitől a madárodút kaptad.';text.append(name,description);card.append(anniePortrait(this),text);people.append(card);}else people.textContent='Hamarosan megismered a szomszédaidat.';
   document.querySelector<HTMLElement>('#inventory-panel')!.hidden=false;document.querySelector('#dialogue-close')!.textContent='Vissza a kertbe';
  }
  private drawMailFlag(){
