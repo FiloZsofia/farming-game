@@ -184,11 +184,25 @@ class Farm extends Phaser.Scene {
   }finally{this.transitioning=false;this.lastTick=performance.now();}
  }
 
- private inventoryTab(people:boolean){
-  document.querySelector('#dialogue-title')!.textContent=people?'Ismerősök':'Készlet';document.querySelector('#dialogue-text')!.textContent=people?'Akikkel a birtokon megismerkedtél.':'A leszedett termények és a nálad lévő ültetőanyagok.';
-  for(const [id,selected]of [['people',people],['items',!people]] as const){document.querySelector<HTMLElement>(`#${id}-page`)!.hidden=!selected;const tab=document.querySelector<HTMLButtonElement>(`#${id}-tab`)!;tab.setAttribute('aria-selected',String(selected));tab.tabIndex=selected?0:-1;}
+ private inventoryTab(selected:'items'|'people'|'skills'){
+  const descriptions={items:['Készlet','A leszedett termények és a nálad lévő ültetőanyagok.'],people:['Ismerősök','Akikkel a birtokon megismerkedtél.'],skills:['Jártasságok','Amit a birtokon töltött napok során megtanultál.']};
+  document.querySelector('#dialogue-title')!.textContent=descriptions[selected][0];document.querySelector('#dialogue-text')!.textContent=descriptions[selected][1];
+  for(const id of ['items','people','skills']){document.querySelector<HTMLElement>(`#${id}-page`)!.hidden=id!==selected;const tab=document.querySelector<HTMLButtonElement>(`#${id}-tab`)!;tab.setAttribute('aria-selected',String(id===selected));tab.tabIndex=id===selected?0:-1;}
  }
- private openInventory(){
+ private drawSkills(){
+  const page=document.querySelector<HTMLElement>('#skills-page')!;page.replaceChildren();
+  const card=document.createElement('article');card.className='skill-card';card.dataset.skill='gardening';
+  const heading=document.createElement('h3');heading.append(itemIcon('hoe'),document.createTextNode('Kertészkedés'));
+  const level=document.createElement('strong');level.className='skill-card-level';level.textContent=`${this.skill.rewarded?2:1}. szint`;
+  const meter=document.createElement('progress');meter.max=LEVEL_TWO_XP;meter.value=this.skill.xp;meter.setAttribute('aria-label','Kertészkedés: haladás a 2. szintig');
+  const progress=document.createElement('p');progress.dataset.skillProgress='gardening';progress.textContent=this.skill.rewarded?'Elérted a jelenleg elérhető legmagasabb szintet. A 3. szint még nincs kidolgozva.':`${this.skill.xp} / ${LEVEL_TWO_XP} tapasztalatpont · Még ${LEVEL_TWO_XP-this.skill.xp} pont a 2. szintig.`;
+  const info=document.createElement('p');info.textContent='Új föld felásásával, növények öntözésével, betakarítással és kézi gazszedéssel fejlődsz.';
+  const reward=document.createElement('p');reward.textContent='A 2. szint jutalma: 4 eperpalánta, 4 mézbogyócsemete és 4 áfonyacsemete; az ültetőanyagok a katalógusban is elérhetővé válnak.';
+  const replay=document.createElement('button');replay.type='button';replay.id='replay-gardening';replay.textContent=this.skill.rewarded?'Ünneplés újranézése':'Szintlépés előnézete';replay.addEventListener('click',()=>this.showGardeningCelebration(true));
+  const note=document.createElement('small');note.textContent='Az előnézet nem ad jutalmat és nem módosítja a haladásodat.';
+  card.append(heading,level,meter,progress,info,reward,replay,note);page.append(card);
+ }
+ private openInventory(tab:'items'|'people'|'skills'='items'){
   if(!this.ready||this.transitioning||this.collapseRemaining>0)return;
   showDialogue('Készlet','A leszedett termények és a nálad lévő ültetőanyagok.','NÁLAD VAN');
   for(const [selector,items,seeds] of [['inventory-produce',this.garden.produce,false],['inventory-seeds',this.garden.seeds,true]] as const){
@@ -204,7 +218,7 @@ class Farm extends Phaser.Scene {
   for(const [key,name]of [['wood','Fa'],['stone','Kő'],['weed','Gaz']] as const){if(this.clearing[key]===0)continue;const card=document.createElement('div');card.className='inventory-card';card.dataset.material=key;const label=document.createElement('span');label.textContent=name;const count=document.createElement('strong');count.textContent=`${this.clearing[key]} db`;card.append(itemIcon(key),label,count);materials.append(card);}
   if(this.story.giftReceived&&!this.story.birdhouse){const card=document.createElement('div');card.className='inventory-card';card.dataset.birdhouse='true';const label=document.createElement('span');label.textContent=this.story.birdhouse?'Madárodú · elhelyezve':'Madárodú · 1 db';card.append(itemIcon('birdhouse'),label);if(!this.story.birdhouse){const place=document.createElement('button');place.type='button';place.textContent='Elhelyezem';place.addEventListener('click',()=>{dialogue.close();this.selectTool('birdhouse');this.notice('Válassz egy közeli, szabad füves helyet, és kattints.');});card.append(place);}materials.append(card);}
   for(const id of ['inventory-produce','inventory-seeds','inventory-materials']){const grid=document.querySelector<HTMLElement>(`#${id}`)!;if(!grid.children.length){const empty=document.createElement('p');empty.className='inventory-empty';empty.textContent='Ebből most nincs nálad.';grid.append(empty);}}
-  this.inventoryTab(false);
+  this.drawSkills();this.inventoryTab(tab);
   const people=document.querySelector<HTMLElement>('#people-page')!;people.replaceChildren();
   if(this.story.giftReceived){const card=document.createElement('article');card.className='person-card';card.dataset.person='annie';const text=document.createElement('div');const name=document.createElement('h3');name.textContent='Annie';const description=document.createElement('p');description.textContent='A kedves szomszéd, akitől a madárodút kaptad.';text.append(name,description);card.append(anniePortrait(this),text);people.append(card);}else people.textContent='Hamarosan megismered a szomszédaidat.';
   document.querySelector<HTMLElement>('#inventory-panel')!.hidden=false;document.querySelector('#dialogue-close')!.textContent='Vissza a kertbe';
@@ -377,7 +391,9 @@ class Farm extends Phaser.Scene {
   document.querySelector('.skill-track')!.setAttribute('aria-valuenow',String(this.skill.xp));
   document.querySelector('#skill-level')!.textContent=`${this.skill.xp>=LEVEL_TWO_XP?2:1}. szint`;
   document.querySelector('#skill-xp')!.textContent=`${this.skill.xp} / ${LEVEL_TWO_XP}`;
-  if(previous<LEVEL_TWO_XP&&this.skill.xp===LEVEL_TWO_XP){
+  if(previous<LEVEL_TWO_XP&&this.skill.xp===LEVEL_TWO_XP)this.showGardeningCelebration();
+ }
+ private showGardeningCelebration(preview=false){
    showDialogue('Kertészkedés · 2. szint','A gondoskodásod meghozta a gyümölcsét! Új növényekkel gazdagíthatod a kertedet.','SZINTET LÉPTÉL!');
    const panel=document.querySelector<HTMLElement>('#level-reward-panel')!;panel.replaceChildren();panel.hidden=false;
    const petals=document.createElement('div');petals.className='reward-petals';petals.setAttribute('aria-hidden','true');
@@ -386,6 +402,12 @@ class Farm extends Phaser.Scene {
    for(const fruit of Object.keys(rewardFruits) as RewardFruit[]){const gift=document.createElement('div');gift.append(seedIcon(fruit));const label=document.createElement('strong');label.textContent=`4 × ${rewardFruits[fruit]}`;const kind=document.createElement('span');kind.textContent=this.materialName(fruit);gift.append(label,kind);gifts.append(gift);}panel.append(gifts);
    const hint=document.createElement('p');hint.textContent='Az ültetőanyagokat már kiválaszthatod az alsó eszközsoron. A magkatalógusból is rendelhetsz belőlük.';panel.append(hint);
    document.querySelector('#dialogue-close')!.textContent='Irány a kert!';
+
+  if(preview){
+   document.querySelector('#dialogue-label')!.textContent='ELŐNÉZET · A HALADÁSOD VÁLTOZATLAN';
+   hint.textContent='Ez az ünneplés előnézete. Új jutalmat nem kapsz, a készleted és a jártasságod változatlan marad.';
+   const back=document.createElement('button');back.type='button';back.id='reward-preview-back';back.textContent='Vissza a jártasságokhoz';back.addEventListener('click',()=>this.openInventory('skills'));panel.append(back);
+   document.querySelector('#dialogue-close')!.textContent='Vissza a kertbe';
   }
  }
  private redrawScenery(){this.scenery?.destroy();this.scenery=drawFarm(this,this.clearing,this.garden,this.story.birdhouse).setDepth(-1);}
@@ -501,7 +523,8 @@ class Farm extends Phaser.Scene {
   showDialogue('Végre megérkeztem.',story,'EGY ÚJ KEZDET');
   void this.initStorage();
   this.keys=this.input.keyboard!.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT,SHIFT',false) as Record<string,Phaser.Input.Keyboard.Key>;
-  for(const id of ['items','people']){const tab=document.querySelector<HTMLButtonElement>(`#${id}-tab`)!;tab.addEventListener('click',()=>this.inventoryTab(id==='people'));tab.addEventListener('keydown',event=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(event.key)){event.preventDefault();const people=event.key==='Home'?false:event.key==='End'?true:id!=='people';this.inventoryTab(people);document.querySelector<HTMLButtonElement>(people?'#people-tab':'#items-tab')!.focus();}});}
+  const inventoryTabs=['items','people','skills'] as const;
+  for(const [index,id] of inventoryTabs.entries()){const tab=document.querySelector<HTMLButtonElement>(`#${id}-tab`)!;tab.addEventListener('click',()=>this.inventoryTab(id));tab.addEventListener('keydown',event=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(event.key)){event.preventDefault();const next=event.key==='Home'?0:event.key==='End'?inventoryTabs.length-1:(index+(event.key==='ArrowRight'?1:-1)+inventoryTabs.length)%inventoryTabs.length;this.inventoryTab(inventoryTabs[next]);document.querySelector<HTMLButtonElement>(`#${inventoryTabs[next]}-tab`)!.focus();}});}
   document.querySelector('#produce')!.addEventListener('click',()=>this.openInventory());
   window.addEventListener('keydown',event=>{
    if(event.code==='Escape'&&dialogue.open){event.preventDefault();if(!this.naming)dialogue.close();return;}

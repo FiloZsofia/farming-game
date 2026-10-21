@@ -237,3 +237,5 @@ Az évszakváltás, építkezés és tárolóbővítés pontos ütemezése kül�
 
 - A kertészkedés 2. szintjét középre rendezett, nagy betűs jutalomablak ünnepli hulló virágszirmokkal; a játék az elolvasásáig szünetel. A kapott ültetőanyag azonnal kiválasztható az eszközsoron. A v10 mentésre váltás a korábban tévesen terményként adott jutalom mellé egyszer hozzáadja a hiányzó ültetőanyagot, a meglévő készlet megtartásával. Annie avatarképe az arcát és kalapját mutatja.
 - A főhős további megjelenésbeli módosítása előtt külön karakterterven kell megegyezni; a jelenlegi alak nem elfogadott végleges grafika.
+
+- A készlet harmadik füle a Jártasságok. A Kertészkedés kártyán az aktuális szint, haladási sáv és a 2. szintig hiányzó tapasztalatpont látható; 2. szinten jelezzük, hogy a további szintek még nincsenek kidolgozva. A fejlődést adó munkákat és a jutalmat is ismerteti. A szintlépés ünneplése előnézetként bármikor megnyitható, jutalom és haladásmódosítás nélkül; onnan vissza lehet térni a Jártasságok fülre. A három fül nyilakkal, Home/End billentyűkkel is kezelhető.
