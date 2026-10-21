@@ -189,7 +189,7 @@ Az évszakváltás, építkezés és tárolóbővítés pontos ütemezése kül�
 - Magok/vetőgumók külön tasakikont kapnak a növény képével, a készletben, eszközsávon, katalógusban és a postaládában. A termények eredeti ikonja megmarad.
 - Kéz (7): gaz; Fejsze (8): lehullott ág; Csákány (9): kő. Közelről kattintás vagy F. A fák kivágása még későbbi feladat.
 - Egy ág egy fát, egy kő egy követ ad a készlet Alapanyagok részébe; a gaz a Gaz alapanyag halomba kerül. Az erőforrások felhasználása még nincs bekötve.
-- Elfogadott visszatérés: minden eltakarított gaz, ág és kő két nap után visszatér eredeti helyére, kivéve ha ott művelt föld van. A régi mentésekben már meglévő föld is védett. Az elhalasztott visszatérés későbbi reggeleken újra ellenőrizhető.
+- Elfogadott visszatérés: minden eltakarított gaz, ág és kő két nap után egy véletlenszerű, szabad helyen tér vissza. A régi mentésekben már meglévő föld is védett. Ha nincs alkalmas hely, későbbi reggeleken újra próbáljuk.
 - Mobilon az eszközsáv vízszintesen görgethető; számbillentyűs választáskor a kiválasztott eszközhöz görget.
 
 ### Szomszéd, madárodú és élőbb farm – 2026-10-21
@@ -210,3 +210,25 @@ Az évszakváltás, építkezés és tárolóbővítés pontos ütemezése kül�
 - A készlet csak pozitív mennyiségű tárgyakat mutat; az elhelyezett madárodú nem foglal benne kártyát. Az elfogyott mag eltűnik az alsó sávból; átvételkor újra megjelenik. A gyorsbillentyűk számai nem változnak.
 - Az odú közelről fejszés kattintással vagy F-fel épségben visszavehető, majd a készletből újra elhelyezhető. A visszavétel előbb mentődik, és csak sikeres írás után tűnik el a világból.
 - Éjszaka finoman pulzáló, fénylő szentjánosbogarak repülnek át. Nappal néha madár repül a kihelyezett odúhoz, megpihen a bejáratánál, majd rövid bebújás után ismét kirepül. Az odú eltávolítása vagy az éjszaka megszakítja ezt a hangulati jelenetet.
+
+### Annie, kertészkedési jártasság és saját zene – 2026-10-21
+
+- A főhős puhább, enyhén rajzfilmes testformákat kap. Barna magas lófarka szabadon hagyja a szemét; zöld hajdísz nincs.
+- Az üres, felásott föld újabb kapálással visszaegyengethető. A növényt a kapa megóvja; visszavonáskor magot és fejlődési pontot nem adunk.
+- A szomszéd neve Annie; bemutatkozó cím: „Egy kedves szomszéd, Annie.” Az inventory Készlet és Ismerősök fület kap; az ajándék átvétele után Annie portréval és rövid leírással megjelenik. Régi mentésben is megmarad az ismeretség.
+- A kertészkedés 2. szintje 36 érdemi művelet után érhető el, a kezdő kert rendes gondozásával körülbelül 2–3 nap alatt. Művelet közben öt másodpercre megjelenik a jobb alsó függőleges zöld csík.
+- Új föld felásása helyenként egyszer, beültetett föld öntözése és betakarítása naponta/helyenként egyszer, kézi gazszedés naponta/objektumonként egyszer ad pontot. Ugyanannak a helynek a ki-be kapálása nem fejleszt. Vetés, fejszés és csákányos munka nem része ennek a négy kertészkedési pontforrásnak.
+- A 2. szint jutalma egyszeri 4 eper, 4 mézbogyó, 4 áfonya. Ekkor válik elérhetővé a katalógusban a három ültetőanyag; nem csak a jutalom gyümölcse, hanem a saját termés is eladható.
+
+| Növény | Ültetőanyag ára | Termény eladási ára | Első termés, öntözött nap | Újratermés |
+| --- | --- | --- | --- | --- |
+| Eper | 20 gold / palánta | 14 gold | 4 | 2 nap |
+| Mézbogyó | 25 gold / csemete | 16 gold | 5 | 2 nap |
+| Áfonya | 45 gold / csemete | 30 gold | 6 | 2 nap |
+
+- A palánták és csemeték a korábbi magokkal azonos rendelési, másnapi kézbesítési és ültetési folyamatot használják. A bokrok és az eper betakarítás után megmaradnak; öntözés nélkül nincs fejlődés. Az induló zöldségárak nem változnak.
+- A zene saját, Web Audio hangszintézissel megszólaló instrumentális kompozíció, pengetős és lágy billentyűs hangokkal, külső hangfelvétel nélkül. Az első felhasználói művelet indítja, Menü → Zene kapcsolja, a beállítás helyben megmarad. Háttérbe kerülő lapon szünetel. A hangzás egyelőre kipróbálandó prototípus.
+
+- A két éjszakai figyelmeztetés 8 másodperces jelenetet kap: rövid olvasási idő után felfelé úszik, a képernyő tetején elhalványul és eltűnik. Új figyelmeztetés újraindítja, napváltás megszakítja; az éjszaka játékmeneti időpontjai nem változnak.
+
+- A visszatérő gaz, ágak és kövek helyét véletlenszerűen választjuk ki, az előző helytől legalább 52 világegységre. A művelt föld, ágyások, ösvények, épületek, tó, kerítés, más tárgyak és a madárodú környezete védett. Az új pozíciók a reggeli mentés részei; betöltéskor nem sorsoljuk újra őket. A kövek ütközése az aktuális helyüket követi, eltakarítás után nem marad láthatatlan akadály.

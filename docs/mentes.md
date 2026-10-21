@@ -1,21 +1,21 @@
 # Mentés és helyreállítás
 
-A játék natív IndexedDB-be ment, `erdoszeli-birtok` adatbázisban. A mentési formátum verziója 7 (az IndexedDB adatbázisszerkezeti verziója továbbra is 1). A korábbi 1-es, 2-es, 3-as, 4-es, 5-ös és 6-os formátumú mentést automatikusan frissítjük. Nincs felhőszinkron: másik böngésző vagy eszköz külön farmot használ.
+A játék natív IndexedDB-be ment, `erdoszeli-birtok` adatbázisban. A mentési formátum verziója 9 (az IndexedDB adatbázisszerkezeti verziója továbbra is 1). A korábbi 1-es, 2-es, 3-as, 4-es, 5-ös, 6-os, 7-es és 8-as formátumú mentést automatikusan frissítjük. Nincs felhőszinkron: másik böngésző vagy eszköz külön farmot használ.
 
 ## Mentett állapot
 
-- Farmnév (névadás előtt null); a 6 → 7 migráció a nevet és minden korábbi adatot megőriz.
-- Eltakarított gaz, ágak és kövek azonosítója és eltakarítási napja; összegyűjtött fa, kő és gaz mennyisége. A második reggelen, művelt földön kívül visszatérnek.
+- Farmnév (névadás előtt null); a 8 → 9 migráció a nevet és minden korábbi adatot megőriz.
+- Eltakarított gaz, ágak és kövek azonosítója és eltakarítási napja; összegyűjtött fa, kő és gaz mennyisége. A második reggelen, véletlenszerű szabad helyen visszatérnek.
 - A szomszéd ajándékának átvétele, a madárodú elhelyezett pozíciója (vagy készletben tartása), a második reggeli gondolat megjelenése.
 - Karakter talajon mért helyzete.
 - Napszám, az adott napon eltelt aktív másodpercek és az előre kisorsolt éjszakai összeesési időpont.
-- A három ültetőanyag mennyisége.
+- A hat növény magjának, palántájának vagy csemetéjének mennyisége.
 - Felásott földkockák, növényfajták, megöntözött fejlődési napok, borsó újratermési állapot és öntözés.
-- A betakarított retek, burgonya és borsó mennyisége.
+- A betakarított retek, burgonya, borsó, eper, mézbogyó és áfonya mennyisége.
 - Gold, az eladóládába tett termények és az utolsó reggeli tételes elszámolás.
 - A kifizetett, még úton lévő magok és az átvehető postaládás csomag mennyisége.
 
-Ugrásanimációt és megnyitott párbeszédet nem mentünk. A még nem létező staminát, általános készletet és rendeléseket később kell a sémához adni migrációval.
+Ugrásanimációt és megnyitott párbeszédet nem mentünk. A még nem létező staminát és általános barkácsolást később kell a sémához adni migrációval.
 
 ## Mikor mentünk?
 
@@ -43,7 +43,7 @@ Bezáráskor, háttérben, másik ablakra váltáskor és párbeszéd alatt nem 
 
 ## 3-as mentési formátum
 
-A korábbi 1-es, 2-es, 3-as, 4-es, 5-ös és 6-os mentésből közvetlenül 3-as készül; a betakarított termények, növekedés és borsó-újratermés a 2-esből megmarad. A korábban nem létező pénztárca 0 golddal, az eladóláda üresen indul. A láda új ütközési területe miatt csak akkor igazítjuk a korábbi karakterhelyzetet, ha éppen a láda helyén állt: ilyenkor közvetlenül elé kerül. Más helyzetet és a farmot nem változtatjuk meg.
+A korábbi 1-es, 2-es, 3-as, 4-es, 5-ös, 6-os, 7-es és 8-as mentésből közvetlenül 3-as készül; a betakarított termények, növekedés és borsó-újratermés a 2-esből megmarad. A korábban nem létező pénztárca 0 golddal, az eladóláda üresen indul. A láda új ütközési területe miatt csak akkor igazítjuk a korábbi karakterhelyzetet, ha éppen a láda helyén állt: ilyenkor közvetlenül elé kerül. Más helyzetet és a farmot nem változtatjuk meg.
 
 Az eladási bevételt nem betöltéskor számoljuk újra: a mentett goldot állítjuk vissza, így újratöltéssel nem fizetjük ki még egyszer ugyanazt a szállítmányt. Az ismeretlen vagy sérült 3-as gazdasági adatok nem alakulnak át üres pénztárcává. A biztonsági mentés és az írások sorrendje az eddigi módon működik.
 
@@ -58,4 +58,10 @@ A magmennyiség a kezdő 4 darab fölé nőhet. Az aktuális játékban egy fajt
 
 Az ajándék, az odú elhelyezése és a reggeli gondolat megjelölése előtt mentünk; sikertelen íráskor újra próbálható. Régi farmnál a szomszéd a következő nappali látogatási lehetőségnél hozza az ajándékot. A repülő állatok és a karakter animációjának pillanatnyi képkockái nem mentett állapotok.
 
-Az odú fejszés visszavétele ugyanazt a mentett ajándékot helyezi vissza a készletbe (a pozíció null lesz); nem keletkezik új példány. A mentési séma változatlanul 7-es.
+Az odú fejszés visszavétele ugyanazt a mentett ajándékot helyezi vissza a készletbe (a pozíció null lesz); nem keletkezik új példány. Az odú állapotához nincs szükség új mezőre.
+
+A 8-as séma a hat növény mag-/ültetőanyag-, termény-, eladóláda- és rendelési mennyiségét tárolja. A régi mentésekben az új gyümölcsök készlete nulla lesz, az összes meglévő mennyiség és elszámolás megmarad. A kertészkedési pont, a már jóváírt műveletek kulcsai és a 2. szint egyszeri jutalmának nyugtája is mentődik. A jutalom tényleges készlete a közös terménykészletben van; a nyugta eladás után is megakadályozza az újraosztást.
+
+Sikeres kertészkedéskor a kert, a pont és az esetleges három gyümölcsjutalom egy tranzakcióban íródik; csak siker után változik a képernyőn megjelenő állapot. A 36 pontos szintlépés a katalógust is feloldja. Annie ismeretsége a már mentett szomszédi ajándék átvételéből származik. A zene be/ki preferenciája külön helyi beállítás; a zene nem része a farm állapotának.
+
+A 9-es sémában az újrasorsolt gaz-, ág- és kőpozíciók is mentettek. A 8 → 9 migráció a már megszerzett jártasságot és gyümölcsöket is megőrzi; a régi díszlethelyek az első új visszatérésig megmaradnak.

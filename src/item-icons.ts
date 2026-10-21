@@ -1,7 +1,11 @@
 import type {Crop} from './gardening';
-export type IconName=Crop|'hoe'|'water'|'harvest'|'axe'|'pickaxe'|'hand'|'wood'|'stone'|'weed'|'birdhouse';
+export type IconName=Crop|'hoe'|'water'|'harvest'|'axe'|'pickaxe'|'hand'|'wood'|'stone'|'weed'|'birdhouse'|'annie'|'strawberry'|'honeyberry'|'blueberry';
 // Original, locally drawn interface icons; no external asset dependency.
 const artwork:Record<IconName,string>={
+ strawberry:'<path fill="#ad4442" d="M6 12Q18 3 30 12 32 23 18 34 4 23 6 12z"/><path fill="#e96d66" d="M8 13Q16 8 24 13 25 23 18 30 8 23 8 13z"/><path fill="#57884a" d="m18 12-11-6 8 1 4-7 2 8 9-1-9 7z"/><path fill="#f2ce8a" d="m11 17 1 3m6-4v3m6-1-1 3m-8 2 1 3m5-2-1 3" stroke="#f2ce8a" stroke-width="1.5"/>',
+ honeyberry:'<ellipse fill="#3a436c" cx="13" cy="22" rx="6" ry="13" transform="rotate(-25 13 22)"/><ellipse fill="#6878a2" cx="12" cy="20" rx="3" ry="9" transform="rotate(-25 12 20)"/><ellipse fill="#4b527d" cx="24" cy="19" rx="6" ry="12" transform="rotate(15 24 19)"/><ellipse fill="#8090b8" cx="22" cy="17" rx="2" ry="8"/><path fill="#648b4a" d="M18 10Q10 0 6 3q0 8 12 7zm0-2Q23-1 30 2q-1 9-12 8z"/>',
+ blueberry:'<path stroke="#648b4a" stroke-width="2" d="M18 15V3"/><path fill="#719354" d="M18 9Q4-2 5 6q3 7 13 3z"/><circle fill="#475178" cx="11" cy="24" r="9"/><circle fill="#657baa" cx="23" cy="22" r="10"/><circle fill="#8498bb" cx="20" cy="19" r="5"/><path fill="#3c4b72" d="m23 15 2 3 4-1-2 4 1 3-4-1-3 2v-4l-3-2 4-1z"/>',
+ annie:'<ellipse cx="18" cy="28" rx="11" ry="9" fill="#9b7654"/><ellipse cx="18" cy="15" rx="9" ry="10" fill="#e9bd93"/><path d="M9 12Q18 2 27 12V8Q18-1 9 8z" fill="#75543a"/><path d="M8 7Q18 1 28 7v3H8z" fill="#bba171"/><path d="M4 10h28v3H4z" fill="#827450"/><ellipse cx="14" cy="16" rx="1" ry="1.5" fill="#414536"/><ellipse cx="22" cy="16" rx="1" ry="1.5" fill="#414536"/><path d="M15 21q3 3 6 0" fill="none" stroke="#a56455" stroke-width="1"/>',
  weed:'<path fill="#557a3a" d="m14 29-9-8-3-9 8 3 3 8-2-19 7 4 1 16 8-16 5 1-5 16-8 7z"/><path fill="#92ae57" d="m14 28-7-8-2-5 7 4zm4 0-3-17 3 4zm3-1 7-13-1 8z"/><path fill="#9d824d" d="m13 30 9-2 5 3-8 3-8-1z"/>',
  birdhouse:'<path fill="#886440" d="M16 25h4v10h-4z"/><path fill="#cba26b" d="M7 12h23v17H7z"/><path fill="#71513b" d="m3 14 15-13 16 13-3 3-13-10L6 17z"/><circle cx="18" cy="18" r="5" fill="#354d3d"/><path fill="#efce8f" d="M17 25h3v4h-3z"/>',
  hand:'<path fill="#d9af82" d="m8 20-3-6 3-2 4 5V6l3-1 1 11V3l4 1v12l2-10 3 1-1 11 4-6 3 2-5 15-6 5-10-5z"/><path fill="#f0c99b" d="m10 21 7-2 6 3-4 8-7-3z"/>',
@@ -22,6 +26,7 @@ export function itemIcon(crop:IconName){
 
 export function seedIcon(crop:Crop){
  const icon=itemIcon(crop);icon.classList.add('seed-icon');
+ if(['strawberry','honeyberry','blueberry'].includes(crop)){icon.innerHTML='<path fill="#a27148" d="m7 19 23 0-4 15H11z"/><path fill="#c49b6c" d="M5 17h27v5H5z"/><path stroke="#6f944e" stroke-width="3" d="M18 18V5"/><path fill="#8ead5a" d="M18 12Q4 3 6 10q4 7 12 4zm0-4Q30-3 29 7q-3 8-11 4z"/><g transform="translate(12 20) scale(.32)">'+artwork[crop]+'</g>';return icon;}
  icon.innerHTML='<path fill="#775d3e" d="M6 2h24v32H6z"/><path fill="#ddc795" d="M7 3h22v30H7z"/><path fill="#b29a6b" d="M7 3h22v5H7z"/><path fill="#f2e5bd" d="M9 10h18v16H9z"/><g transform="translate(10 10) scale(.45)">'+artwork[crop]+'</g><path fill="#775436" d="m11 29 2-2 2 1-1 2zm6-1 2-1 2 2-2 2zm7 0 2-1 1 2-2 1z"/>';
  return icon;
 }

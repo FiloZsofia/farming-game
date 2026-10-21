@@ -108,3 +108,29 @@ describe('Inventory visibility and movable birdhouse',()=>{
   start(base);press('8','Digit8',56);clickWorld(280,296);cy.get('#game').should('have.attr','data-birdhouse','false');cy.reload();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-birdhouse','false');press('Tab','Tab',9);cy.get('#inventory-materials [data-birdhouse] button').click();clickWorld(304,352);cy.get('#game').should('have.attr','data-birdhouse','true');cy.reload();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-birdhouse','true');
  });
 });
+
+describe('Gardening level two and Annie',()=>{
+ const zero={radish:0,potato:0,pea:0,strawberry:0,honeyberry:0,blueberry:0};
+ const base={version:8,farmName:'Tesztfarm',player:{x:338,y:288},clock:{day:2,elapsed:0,collapseAt:580},seeds:{...zero,radish:4,potato:4,pea:4},produce:{...zero},plots:[],economy:{gold:200,shipping:{...zero},lastSale:null},orders:{pending:{...zero},mailbox:{...zero}},clearing:{removed:{},wood:0,stone:0,weed:0},story:{giftReceived:true,morningSeen:true,birdhouse:null},skill:{xp:0,credited:[] as string[],rewarded:false,fruits:{}}};
+ it('undoes empty soil without farming repeat XP and protects plants',()=>{
+  start(base);walk('right','x',339);press('f','KeyF',70);cy.get('#game').should('have.attr','data-plots','1').and('have.attr','data-gardening-xp','1');press('f','KeyF',70);cy.get('#game').should('have.attr','data-plots','0');press('f','KeyF',70);cy.get('#game').should('have.attr','data-plots','1').and('have.attr','data-gardening-xp','1');press('3','Digit3',51);press('f','KeyF',70);cy.get('#game').should('have.attr','data-planted','1');press('1','Digit1',49);press('f','KeyF',70);cy.get('#game').should('have.attr','data-planted','1');
+ });
+ it('shows Annie in her own inventory tab and retains it on reload',()=>{
+  start(base);press('Tab','Tab',9);cy.get('#people-tab').click();cy.get('[data-person=annie]').should('contain','Annie');cy.get('#items-page').should('not.be.visible');press('Escape','Escape',27);cy.reload();cy.get('#game').should('have.attr','data-ready','true');press('Tab','Tab',9);cy.get('#people-tab').click();cy.get('[data-person=annie]').should('be.visible');
+ });
+ it('awards four of each fruit once and unlocks all three planting materials',()=>{
+  start({...base,skill:{xp:35,credited:Array.from({length:35},(_,i)=>`hoe:old${i}`),rewarded:false,fruits:{}}});walk('right','x',339);press('f','KeyF',70);cy.get('#game').should('have.attr','data-gardening-xp','36').and('have.attr','data-gardening-reward','true');cy.get('#gardening-skill').should('be.visible');press('Tab','Tab',9);cy.get('[data-inventory-fruit]').should('have.length',3);cy.get('[data-inventory-fruit] strong').each(el=>expect(el.text()).to.equal('4 db'));press('Escape','Escape',27);cy.reload();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-gardening-xp','36');press('Tab','Tab',9);cy.get('[data-inventory-fruit] strong').each(el=>expect(el.text()).to.equal('4 db'));
+ });
+});
+
+describe('Floating night warnings and random renewal',()=>{
+ const zero={radish:0,potato:0,pea:0,strawberry:0,honeyberry:0,blueberry:0};
+ const base={version:8,farmName:'Tesztfarm',player:{x:250,y:242},clock:{day:2,elapsed:479.5,collapseAt:580},seeds:{...zero},produce:{...zero},plots:[],economy:{gold:0,shipping:{...zero},lastSale:null},orders:{pending:{...zero},mailbox:{...zero}},clearing:{removed:{},wood:0,stone:0,weed:0},story:{giftReceived:true,morningSeen:true,birdhouse:null},skill:{xp:0,credited:[] as string[],rewarded:false,fruits:{}}};
+ for(const elapsed of [479.5,539.5])it(`floats and removes the warning after ${elapsed} active seconds`,()=>{
+  start({...base,clock:{...base.clock,elapsed}});cy.get('#night-warning').should('be.visible').then(el=>{el[0].getAnimations()[0].currentTime=6000;});cy.get('#night-warning').should(el=>expect(el[0].getBoundingClientRect().top).to.be.lessThan(160)).then(el=>el[0].getAnimations()[0].finish());cy.get('#night-warning').should('not.be.visible');
+ });
+ it('stores new scattered positions instead of returning to the old locations',()=>{
+  start({...base,clock:{...base.clock,elapsed:0},clearing:{removed:{'rock-a':1,'branch-a':1,'weed-a':1},wood:1,stone:1,weed:1}});sleepTo(3);cy.get('#game').should('have.attr','data-cleared','0');
+  cy.window().then(win=>new Cypress.Promise<any>(resolve=>{const request=win.indexedDB.open('erdoszeli-birtok',1);request.onsuccess=()=>{const tx=request.result.transaction('saves');const read=tx.objectStore('saves').get('active');read.onsuccess=()=>resolve(read.result.clearing.positions);tx.oncomplete=()=>request.result.close();};})).then(positions=>{expect(Object.keys(positions)).to.have.length(3);expect(Math.hypot(positions['rock-a'].x-86,positions['rock-a'].y-365)).to.be.at.least(52);});
+ });
+});

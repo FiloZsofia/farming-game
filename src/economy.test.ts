@@ -2,7 +2,7 @@ import {describe,it,expect} from 'vitest';
 import {createGarden} from './gardening';
 import {createEconomy,salePrices,shippingValue,transferProduce,settleSales,validEconomy} from './economy';
 describe('shipping and gold',()=>{
- it('uses agreed unit prices',()=>expect(salePrices).toEqual({radish:15,potato:30,pea:12}));
+ it('uses agreed unit prices',()=>expect(salePrices).toEqual({radish:15,potato:30,pea:12,strawberry:14,honeyberry:16,blueberry:30}));
  it('moves produce into the crate without paying before morning',()=>{
   const garden=createGarden(),economy=createEconomy();garden.produce.radish=4;
   expect(transferProduce(garden,economy,'radish',3,'deposit')).toBe(true);expect(garden.produce.radish).toBe(1);expect(economy.shipping.radish).toBe(3);expect(economy.gold).toBe(0);expect(shippingValue(economy.shipping)).toBe(45);
@@ -18,10 +18,13 @@ describe('shipping and gold',()=>{
   e.shipping.potato=999999;expect(transferProduce(g,e,'potato',1,'deposit')).toBe(false);
  });
  it('settles all crops together and records an itemized receipt without mutating the old state',()=>{
-  const e=createEconomy();e.gold=10;e.shipping={radish:2,potato:1,pea:4};const next=settleSales(e,5);
-  expect(next.gold).toBe(118);expect(next.shipping).toEqual({radish:0,potato:0,pea:0});expect(next.lastSale).toEqual({day:5,items:{radish:2,potato:1,pea:4},total:108});
+  const e=createEconomy();e.gold=10;e.shipping={radish:2,potato:1,pea:4,strawberry:0,honeyberry:0,blueberry:0};const next=settleSales(e,5);
+  expect(next.gold).toBe(118);expect(next.shipping).toEqual({radish:0,potato:0,pea:0,strawberry:0,honeyberry:0,blueberry:0});expect(next.lastSale).toEqual({day:5,items:{radish:2,potato:1,pea:4,strawberry:0,honeyberry:0,blueberry:0},total:108});
   expect(e.gold).toBe(10);expect(e.shipping.pea).toBe(4);expect(settleSales(next,6).gold).toBe(118);
  });
  it('refuses unsafe gold values instead of silently rounding money',()=>{const e=createEconomy();e.gold=Number.MAX_SAFE_INTEGER;e.shipping.radish=1;expect(()=>settleSales(e,1)).toThrow();});
  it('validates balances, shipping and receipt totals',()=>{const e=createEconomy();expect(validEconomy(e)).toBe(true);e.gold=-1;expect(validEconomy(e)).toBe(false);const next=settleSales(createEconomy(),1);next.lastSale!.total=1;expect(validEconomy(next)).toBe(false);});
+});
+describe('spring fruit sales',()=>{
+ it('sells the three similar-value berries with vegetables in one morning',()=>{const garden=createGarden(),economy=createEconomy();for(const crop of ['strawberry','honeyberry','blueberry'] as const){garden.produce[crop]=1;expect(transferProduce(garden,economy,crop,1,'deposit')).toBe(true);}expect(settleSales(economy,1).gold).toBe(60);});
 });
