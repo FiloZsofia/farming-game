@@ -2,7 +2,7 @@ import {describe,it,expect} from 'vitest';
 import {createGarden,targetTile,tileKey,work,cultivable,nextDayGarden,isRipe,growthRules,type Crop} from './gardening';
 const tile=targetTile(360,286),player={x:337,y:282};
 describe('gardening actions',()=>{
- it('starts with four of the original crops and no fruit planting material',()=>expect(createGarden().seeds).toEqual({radish:4,potato:4,pea:4,strawberry:0,honeyberry:0,blueberry:0}));
+ it('starts with four of the original crops and no fruit planting material',()=>expect(createGarden().seeds).toEqual({radish:4,potato:4,pea:4,strawberry:0,honeyberry:0,blueberry:0,carrot:0,lettuce:0,onion:0}));
  it('supports till, sow and water in the same plot',()=>{
   const g=createGarden();expect(work(g,'hoe',tile,player).ok).toBe(true);expect(work(g,'radish',tile,player).ok).toBe(true);expect(work(g,'water',tile,player).ok).toBe(true);
   expect(g.plots.get(tileKey(tile))).toEqual({crop:'radish',watered:true,growth:0,regrowing:false});expect(g.seeds.radish).toBe(3);
@@ -11,7 +11,7 @@ describe('gardening actions',()=>{
   const g=createGarden();expect(work(g,'pea',tile,player).ok).toBe(false);
   expect(work(g,'hoe',tile,{x:250,y:242}).ok).toBe(false);
   work(g,'hoe',tile,player);work(g,'potato',tile,player);expect(work(g,'pea',tile,player).ok).toBe(false);
-  expect(g.seeds).toEqual({radish:4,potato:3,pea:4,strawberry:0,honeyberry:0,blueberry:0});
+  expect(g.seeds).toEqual({radish:4,potato:3,pea:4,strawberry:0,honeyberry:0,blueberry:0,carrot:0,lettuce:0,onion:0});
  });
  it('does not erase crops or moisture when hoeing or watering twice',()=>{
   const g=createGarden();work(g,'hoe',tile,player);work(g,'water',tile,player);work(g,'pea',tile,player);
@@ -78,5 +78,14 @@ describe('unlocked spring berries',()=>{
   for(let day=0;day<days;day++){expect(isRipe(garden.plots.get(tileKey(tile))!)).toBe(false);work(garden,'water',tile,player);garden=nextDayGarden(garden);}
   expect(work(garden,'harvest',tile,player).ok).toBe(true);expect(garden.produce[crop]).toBe(1);expect(garden.plots.get(tileKey(tile))!.regrowing).toBe(true);expect(garden.seeds[crop]).toBe(0);
   for(let day=0;day<2;day++){work(garden,'water',tile,player);garden=nextDayGarden(garden);}expect(work(garden,'harvest',tile,player).ok).toBe(true);expect(garden.produce[crop]).toBe(2);
+ });
+});
+
+describe('level-three single-harvest vegetables',()=>{
+ for(const [crop,days]of [['carrot',4],['lettuce',2],['onion',5]] as const)it(`${crop} needs ${days} watered days and must be replanted`,()=>{
+  let garden=createGarden();const tile={x:353,y:280},player={x:353,y:280};garden.seeds[crop]=4;
+  expect(work(garden,'hoe',tile,player).ok).toBe(true);expect(work(garden,crop,tile,player).ok).toBe(true);expect(garden.seeds[crop]).toBe(3);
+  for(let day=0;day<days;day++){expect(isRipe(garden.plots.get('353,280')!)).toBe(false);expect(work(garden,'water',tile,player).ok).toBe(true);garden=nextDayGarden(garden);}
+  expect(isRipe(garden.plots.get('353,280')!)).toBe(true);expect(work(garden,'harvest',tile,player).ok).toBe(true);expect(garden.produce[crop]).toBe(1);expect(garden.plots.get('353,280')!.crop).toBeNull();expect(work(garden,'harvest',tile,player).ok).toBe(false);
  });
 });

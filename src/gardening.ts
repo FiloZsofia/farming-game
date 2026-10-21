@@ -1,15 +1,15 @@
 import { farmLayout } from './layout';
 import { blocked } from './movement';
 export const TILE=16;
-export const cropNames={radish:'Retek',potato:'Burgonya',pea:'Borsó',strawberry:'Eper',honeyberry:'Mézbogyó',blueberry:'Áfonya'} as const;
+export const cropNames={radish:'Retek',potato:'Burgonya',pea:'Borsó',strawberry:'Eper',honeyberry:'Mézbogyó',blueberry:'Áfonya',carrot:'Sárgarépa',lettuce:'Saláta',onion:'Hagyma'} as const;
 export type Crop=keyof typeof cropNames;
 export type Tool='hoe'|'water'|'harvest'|Crop;
 // Agreed initial playtest values; revisit after playing.
-export const growthRules={radish:3,potato:5,pea:6,peaRegrowth:3,strawberry:4,honeyberry:5,blueberry:6,fruitRegrowth:2};
+export const growthRules={radish:3,potato:5,pea:6,peaRegrowth:3,strawberry:4,honeyberry:5,blueberry:6,fruitRegrowth:2,carrot:4,lettuce:2,onion:5};
 export type Tile={x:number;y:number};
 export type Plot={watered:boolean;crop:Crop|null;growth:number;regrowing:boolean};
 export type Garden={plots:Map<string,Plot>;seeds:Record<Crop,number>;produce:Record<Crop,number>};
-export const createGarden=():Garden=>({plots:new Map(),seeds:{radish:4,potato:4,pea:4,strawberry:0,honeyberry:0,blueberry:0},produce:{radish:0,potato:0,pea:0,strawberry:0,honeyberry:0,blueberry:0}});
+export const createGarden=():Garden=>({plots:new Map(),seeds:{radish:4,potato:4,pea:4,strawberry:0,honeyberry:0,blueberry:0,carrot:0,lettuce:0,onion:0},produce:{radish:0,potato:0,pea:0,strawberry:0,honeyberry:0,blueberry:0,carrot:0,lettuce:0,onion:0}});
 export const tileKey=(tile:Tile)=>`${tile.x},${tile.y}`;
 export function targetTile(x:number,y:number):Tile{
  for(const b of farmLayout.beds){

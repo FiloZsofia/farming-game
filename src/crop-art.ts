@@ -9,6 +9,12 @@ export function drawCrop(g:Phaser.GameObjects.Graphics,x:number,y:number,plot:Pl
  if(stage<.3){g.lineStyle(1,0x497043);g.lineBetween(cx,cy+2,cx,cy-4);leaf(cx-2,cy-4,5,3,0x7eab5b);leaf(cx+2,cy-5,4,3,0xa5bc72);return;}
  if(['strawberry','honeyberry','blueberry'].includes(plot.crop)){
   const bush=plot.crop!=='strawberry',size=bush?12:9;leaf(cx,cy-4,size,8,0x4d8446);leaf(cx-4,cy-6,6,5,0x82a857);leaf(cx+3,cy-8,6,5,0x649b4e);if(isRipe(plot)){for(const [dx,dy]of [[-3,-2],[3,-5],[0,1]])leaf(cx+dx,cy+dy,plot.crop==='honeyberry'?2.5:3,plot.crop==='honeyberry'?5:3,plot.crop==='strawberry'?0xd86f67:plot.crop==='honeyberry'?0x6c78aa:0x849ac5);}
+ }else if(plot.crop==='lettuce'){
+  leaf(cx,cy-2,stage<.65?8:13,stage<.65?6:10,0x4e873f);leaf(cx-3,cy-4,7,6,0x86b456);leaf(cx+3,cy-3,7,6,0x9ac36d);leaf(cx,cy-2,6,6,0xc1d98b);
+ }else if(plot.crop==='carrot'){
+  g.lineStyle(1.5,0x508642);for(const dx of [-4,-1,3]){g.lineBetween(cx,cy+1,cx+dx,cy-9);leaf(cx+dx,cy-8,3,5,0x83b65e);}if(isRipe(plot)){g.fillStyle(0xe59948);g.fillTriangle(cx-3,cy,cx+3,cy,cx,cy+6);}
+ }else if(plot.crop==='onion'){
+  for(const dx of [-4,0,3]){g.lineStyle(1.5,dx?0x5a914c:0x96b76b);g.lineBetween(cx,cy+2,cx+dx,cy-11);}if(isRipe(plot)){leaf(cx,cy+2,8,7,0xc89d62);leaf(cx-1,cy+1,4,5,0xe8c58a);}
  }else if(plot.crop==='pea'){
   g.lineStyle(1,0x806c4d);for(const dx of [-4,4])g.lineBetween(cx+dx,cy+4,cx+dx,cy-15);g.lineBetween(cx-4,cy-12,cx+4,cy-12);
   g.lineStyle(1,0x4c793f);g.lineBetween(cx,cy+3,cx-2,cy-12);

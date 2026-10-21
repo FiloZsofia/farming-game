@@ -138,3 +138,14 @@ describe('Floating night warnings and random renewal',()=>{
   cy.window().then(win=>new Cypress.Promise<any>(resolve=>{const request=win.indexedDB.open('erdoszeli-birtok',1);request.onsuccess=()=>{const tx=request.result.transaction('saves');const read=tx.objectStore('saves').get('active');read.onsuccess=()=>resolve(read.result.clearing.positions);tx.oncomplete=()=>request.result.close();};})).then(positions=>{expect(Object.keys(positions)).to.have.length(3);expect(Math.hypot(positions['rock-a'].x-86,positions['rock-a'].y-365)).to.be.at.least(52);});
  });
 });
+
+describe('Level three and starting money',()=>{
+ const zero={radish:0,potato:0,pea:0,strawberry:0,honeyberry:0,blueberry:0,carrot:0,lettuce:0,onion:0};
+ const base={version:11,farmName:'Tesztfarm',player:{x:338,y:288},clock:{day:2,elapsed:0,collapseAt:580},seeds:{...zero},produce:{...zero},plots:[],economy:{gold:37,shipping:{...zero},lastSale:null},orders:{pending:{...zero},mailbox:{...zero}},clearing:{removed:{},positions:{},wood:0,stone:0,weed:0},story:{giftReceived:true,morningSeen:true,birdhouse:null},skill:{xp:71,credited:Array.from({length:71},(_,i)=>`hoe:old${i}`),rewarded:true,levelThreeRewarded:false,fruits:{strawberry:4,honeyberry:4,blueberry:4}}};
+ it('starts new farms with 100 gold while preserving existing balances',()=>{start();cy.get('#game').should('have.attr','data-gold','100');start(base);cy.get('#game').should('have.attr','data-gold','37');});
+ it('awards and unlocks three new plantable vegetables at 72 XP exactly once',()=>{
+  start(base);walk('right','x',339);press('f','KeyF',70);cy.get('#game').should('have.attr','data-gardening-xp','72');cy.get('#dialogue-title').should('contain','3. szint');cy.get('#dialogue-close').click();
+  for(const crop of ['carrot','lettuce','onion']){cy.get(`#toolbar [data-tool=${crop}]`).should('be.visible');cy.get(`[data-count=${crop}]`).should('have.text','4');}
+  cy.get('#toolbar [data-tool=carrot]').click();press('f','KeyF',70);cy.get('[data-count=carrot]').should('have.text','3');cy.reload();cy.get('#game').should('have.attr','data-ready','true');cy.get('[data-count=carrot]').should('have.text','3');cy.get('[data-count=onion]').should('have.text','4');press('Tab','Tab',9);cy.get('#skills-tab').click();cy.get('.skill-card-level').should('have.text','3. szint');cy.get('#replay-gardening-three').click();cy.get('#dialogue-title').should('contain','3. szint');cy.get('#reward-preview-back').click();cy.get('[data-count=carrot]').should('have.text','3');
+ });
+});

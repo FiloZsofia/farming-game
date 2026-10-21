@@ -1,10 +1,10 @@
 import type {Crop,Garden} from './gardening';
-export const salePrices:Record<Crop,number>={radish:15,potato:30,pea:12,strawberry:14,honeyberry:16,blueberry:30};
-export const crops:Crop[]=['radish','potato','pea','strawberry','honeyberry','blueberry'];
+export const salePrices:Record<Crop,number>={radish:15,potato:30,pea:12,strawberry:14,honeyberry:16,blueberry:30,carrot:22,lettuce:12,onion:32};
+export const crops:Crop[]=['radish','potato','pea','strawberry','honeyberry','blueberry','carrot','lettuce','onion'];
 export type Quantities=Record<Crop,number>;
 export type Receipt={day:number;items:Quantities;total:number};
 export type Economy={gold:number;shipping:Quantities;lastSale:Receipt|null};
-export const emptyQuantities=():Quantities=>({radish:0,potato:0,pea:0,strawberry:0,honeyberry:0,blueberry:0});
+export const emptyQuantities=():Quantities=>({radish:0,potato:0,pea:0,strawberry:0,honeyberry:0,blueberry:0,carrot:0,lettuce:0,onion:0});
 export const createEconomy=():Economy=>({gold:0,shipping:emptyQuantities(),lastSale:null});
 export const shippingValue=(items:Quantities)=>crops.reduce((sum,crop)=>sum+items[crop]*salePrices[crop],0);
 export function transferProduce(garden:Garden,economy:Economy,crop:Crop,amount:number,direction:'deposit'|'withdraw'){

@@ -240,8 +240,26 @@ Az évszakváltás, építkezés és tárolóbővítés pontos ütemezése kül�
 - A kertészkedés 2. szintjét középre rendezett, nagy betűs jutalomablak ünnepli hulló virágszirmokkal; a játék az elolvasásáig szünetel. A kapott ültetőanyag azonnal kiválasztható az eszközsoron. A v10 mentésre váltás a korábban tévesen terményként adott jutalom mellé egyszer hozzáadja a hiányzó ültetőanyagot, a meglévő készlet megtartásával. Annie avatarképe az arcát és kalapját mutatja.
 - A főhős további megjelenésbeli módosítása előtt külön karakterterven kell megegyezni; a jelenlegi alak nem elfogadott végleges grafika.
 
-- A készlet harmadik füle a Jártasságok. A Kertészkedés kártyán az aktuális szint, haladási sáv és a 2. szintig hiányzó tapasztalatpont látható; 2. szinten jelezzük, hogy a további szintek még nincsenek kidolgozva. A fejlődést adó munkákat és a jutalmat is ismerteti. A szintlépés ünneplése előnézetként bármikor megnyitható, jutalom és haladásmódosítás nélkül; onnan vissza lehet térni a Jártasságok fülre. A három fül nyilakkal, Home/End billentyűkkel is kezelhető.
+- A készlet harmadik füle a Jártasságok. A Kertészkedés kártyán az aktuális szint, haladási sáv és a 2. szintig hiányzó tapasztalatpont látható; 2. szinten a 3. szintig hiányzó pontokat mutatjuk; jelenleg a 3. szint a legmagasabb. A fejlődést adó munkákat és a jutalmat is ismerteti. A szintlépés ünneplése előnézetként bármikor megnyitható, jutalom és haladásmódosítás nélkül; onnan vissza lehet térni a Jártasságok fülre. A három fül nyilakkal, Home/End billentyűkkel is kezelhető.
 
 - A három verandaközeli tárgy felismerhetőbb saját rajzot kapott: az eladóláda nyitott belsővel, vastag peremmel, deszkázattal, vasalattal és terményjelzéssel; a magkatalógus növénymintás zöld borítóval és faállvánnyal; a napló nyitott lapokkal, könyvjelzőszalaggal és tollal az íróasztalon. Az interakciós helyek és a működés változatlan.
 
 - Felhasználói kérésre visszavontuk a B főhős első játékbeli változatát, a verandaszéket és a kézben tartott kosár legutóbbi módosítását. A korábban elfogadott eladóláda, magkatalógus és napló részletes rajza megmarad.
+
+
+## Kertészkedés 3. szint és ültetőanyag-utánpótlás
+
+- Új farm indításakor 100 gold jár. A már létező mentések pénzét nem írjuk át.
+- A 3. kertészkedési szint további 36 érdemi művelet, összesen 72 tapasztalatpont után érhető el. Egyszeri jutalma 4 sárgarépamag, 4 salátamag és 4 hagymamag. Mindhárom azonnal kiválasztható az alsó eszközsoron, és rendelhető a katalógusból. A szintlépés középen ünnepelhető és a Jártasságok fülről előnézetként újranézhető, jutalomismétlés nélkül.
+
+| Növény | Vétel, gold/db | Eladás, gold/db | Öntözött nap az érésig | Újraterem |
+| --- | --- | --- | --- | --- |
+| Sárgarépa | 10 | 22 | 4 | Nem |
+| Saláta | 5 | 12 | 2 | Nem |
+| Hagyma | 15 | 32 | 5 | Nem |
+
+- Minden sikeresen kiszedett gaz 25% eséllyel ad egy véletlenszerű, eddig feloldott ültetőanyagból 1–3 darabot. A régebben feloldott növények később is a találati készletben maradnak: induláskor 3, a 2. szinten 6, a 3. szinten 9 típus közül sorsolunk. A tele készlethalmazokat a tárolási korlát miatt kihagyjuk. A találat külön, kicsi, ikonos, enyhén szirmozó értesítésben látszik; nem nyit meg szintlépési ablakot. A gaz eltakarítása és a magtalálat ugyanabban a mentésben rögzül.
+- A korábbi mentések v11 formátumra frissülnek: a megszerzett pontok, magok, termények, pénz, rendelések és díszek helyei megmaradnak. A 2. szint jutalma frissítéskor nem ismétlődik.
+- A visszaállított, első barna hajú főhős ingujja keskenyebb, vállvonala lejtős; arca és haja megmarad.
+
+Nyitott javaslatok, még nem elfogadott követelmények: külön farmmentéseket kezelő Folytatás / Új játék menü; kapun túli gyűjtögetős rét; fa és gaz felhasználásával komposztáló készítése; később falusi faiskola és tyúkól.

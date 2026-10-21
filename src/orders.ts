@@ -1,6 +1,6 @@
 import {crops,emptyQuantities,type Economy,type Quantities} from './economy';
 import type {Garden} from './gardening';
-export const seedPrices:Quantities={radish:5,potato:10,pea:15,strawberry:20,honeyberry:25,blueberry:45};
+export const seedPrices:Quantities={radish:5,potato:10,pea:15,strawberry:20,honeyberry:25,blueberry:45,carrot:10,lettuce:5,onion:15};
 export type Orders={pending:Quantities;mailbox:Quantities};
 export const createOrders=():Orders=>({pending:emptyQuantities(),mailbox:emptyQuantities()});
 export const quantityTotal=(items:Quantities)=>crops.reduce((sum,c)=>sum+items[c],0);

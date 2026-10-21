@@ -11,13 +11,13 @@ export class FarmerArt{
   this.root=scene.add.container(0,0);
   if(!neighbor){
    // First brown-haired appearance, restored from 8d40544.
-   this.armX=8;this.armY=-30;
+   this.armX=6.8;this.armY=-29;
   const part=(parent:Phaser.GameObjects.Container,x:number,y:number,w:number,h:number,c:number)=>{const p=scene.add.graphics();p.fillStyle(c);p.fillRoundedRect(x-w/2,y-h/2,w,h,Math.min(w,h)*.4);parent.add(p);return p;};
   const leg=(x:number)=>{const c=scene.add.container(x,-16);this.root.add(c);part(c,0,5,5,12,neighbor?0x596b78:0x526c43);part(c,-1,5,1,10,0x7c925d);part(c,0,13,6,5,0x654d39);part(c,1,15,6,2,0x3c3d30);return c;};
   this.leftLeg=leg(-3.5);this.rightLeg=leg(3.5);
-  part(this.root,0,-24,14,17,neighbor?0x9b7654:0xf0e7cc);part(this.root,-6,-24,2,13,neighbor?0x73563d:0xc9c9ac);part(this.root,1,-20,1,9,0xc3bb96);part(this.root,0,-16,13,3,0x777548);part(this.root,1,-16,3,2,0xcbb477);
-  const arm=(x:number)=>{const c=scene.add.container(x,-30);this.root.add(c);part(c,0,4,5,8,neighbor?0x9b7654:0xeae1c6);part(c,0,8,5,2,0xb9b99d);part(c,0,11,4,6,0xe0ae83);part(c,-1,10,1,4,0xf4cba0);return c;};
-  this.leftArm=arm(-8);this.rightArm=arm(8);
+  const shirt=scene.add.graphics();shirt.fillStyle(0xf0e7cc);shirt.fillPoints([{x:-2,y:-32.5},{x:-6,y:-29},{x:-7,y:-25},{x:-7,y:-16},{x:7,y:-16},{x:7,y:-25},{x:6,y:-29},{x:2,y:-32.5}],true);this.root.add(shirt);part(this.root,-6,-24,2,13,neighbor?0x73563d:0xc9c9ac);part(this.root,1,-20,1,9,0xc3bb96);part(this.root,0,-16,13,3,0x777548);part(this.root,1,-16,3,2,0xcbb477);
+  const arm=(x:number)=>{const c=scene.add.container(x,this.armY);this.root.add(c);const sleeve=scene.add.graphics();sleeve.fillStyle(0xeae1c6);sleeve.fillPoints([{x:-1.5,y:0},{x:1,y:1},{x:1.8,y:7},{x:-1.4,y:7}],true);c.add(sleeve);part(c,0,7,3.4,1.5,0xb9b99d);part(c,0,10,3.4,6,0xe0ae83);part(c,-.6,9,1,4,0xf4cba0);return c;};
+  this.leftArm=arm(-this.armX);this.rightArm=arm(this.armX);
   this.pony=scene.add.container(3,-48);this.root.add(this.pony);
   const tail=scene.add.graphics();tail.fillStyle(0x61422e);tail.fillEllipse(3,-3,8,8);tail.fillEllipse(7,3,7,12);tail.fillStyle(0x96683f);tail.fillEllipse(3,-4,5,5);tail.fillEllipse(6,2,3,8);tail.fillStyle(0x6d864f);tail.fillRoundedRect(0,-5,5,3,1);this.pony.add(tail);this.pony.visible=!neighbor;
   this.head=scene.add.container(0,-40);this.root.add(this.head);
@@ -79,7 +79,7 @@ export class FarmerArt{
   else if(name==='water'){r(0,12,10,9,0x648f80);r(1,12,8,2,0xa9c4a4);g.lineStyle(2,0x8cab93);g.strokeCircle(5,11,4);g.lineBetween(9,16,15,12);r(14,10,3,4,0xc3d4b8);if(this.action>0){g.fillStyle(0x99d6df);for(let i=0;i<3;i++)g.fillEllipse(16+i*2,17+i*3,1,3);}}
   else if(name==='harvest'){r(-1,15,13,8,0xa38051);g.lineStyle(1,0xd7bc80);g.strokeCircle(5,14,5);for(let y=17;y<23;y+=3)g.lineBetween(0,y,11,y);}
   else if(['strawberry','honeyberry','blueberry'].includes(name)){r(0,16,9,7,0xb08255);r(-1,15,11,2,0xd0a575);r(4,7,1,8,0x658e49);g.fillStyle(0x8eb866);g.fillEllipse(2,10,5,3);g.fillEllipse(7,8,5,3);}
-  else if(['radish','potato','pea'].includes(name)){r(0,12,9,12,0xdfc796);r(1,14,7,6,0xf2e8c7);r(3,15,3,4,name==='radish'?0xdf8791:name==='potato'?0xa58451:0x7caa55);}
+  else if(['radish','potato','pea','carrot','lettuce','onion'].includes(name)){r(0,12,9,12,0xdfc796);r(1,14,7,6,0xf2e8c7);r(3,15,3,4,name==='radish'?0xdf8791:name==='potato'?0xa58451:0x7caa55);}
  }
  update(walking:boolean,running:boolean,dir:{x:number;y:number},dt:number,jumping=false){
   this.phase+=walking?dt*(running?17:11):0;this.action=Math.max(0,this.action-dt);
