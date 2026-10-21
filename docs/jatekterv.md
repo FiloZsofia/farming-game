@@ -20,7 +20,7 @@ Az „Erdőszéli birtok” csak munkacím. Felmerült címjavaslatok: Új gyök
 
 - Kevés állandó képernyőgomb: a korábbi Napló, Eladóláda, Bevétel és jobb alsó Művelet/Ugrás/Futás gombok megszűnnek. A házhoz teleportáló próbagombot is eltávolítjuk.
 - A tárgyakat közelről E-vel vagy kattintással/koppintással használjuk. Egyetlen Menü mögött van a történet, irányítás és készlet.
-- Készletnyitás Tab-bal, bezárás Escape-pel; külön termény- és ültetőanyag-mennyiségek. Betakarítás után a termény itt azonnal látható.
+- Készletnyitás és -zárás Tab-bal, bezárás Escape-pel is; külön termény- és ültetőanyag-mennyiségek. Betakarítás után a termény itt azonnal látható.
 - A gyakran nézett napszak- és goldfelirat nagyobb, hangsúlyos szöveg legyen, mobilon is.
 
 - A játék töltse ki a böngészőablakot, külön szöveges oldalsáv nélkül. A háttértörténet és egyéb szövegek a játéktér fölötti párbeszédablakokban jelenjenek meg. Párbeszéd alatt a karakter nem mozog.
@@ -59,13 +59,17 @@ Verandával kiegészített változat: [tavaszi farm verandával és naplóasztal
 - A birtok nagy része kezdettől bejárható. Gaz, kövek és kidőlt ágak eltakarításával fokozatosan válik használhatóvá.
 - A ház közelében kevés munkával kialakítható az első veteményes.
 
+## Farmnév és kezdés
+
+A nyitó történettel közös ablakban a játékos elnevezi a farmját (1–40 karakter). Ez kerül a felső cím helyére és mentődik. A régi mentéseknél is kérünk nevet, az összes korábbi állapot megőrzésével. A névadás közben az idő áll.
+
 ## Történet
 
 A játékos már a kezdéskor megtudja, hogy a főhős kutatólaborban dolgozott, elfáradt, és vidéken szeretne új életet kezdeni. A birtok barátságosan elhanyagolt, a kezdésben nincs zombi- vagy horrorhangulat.
 
 A lezárt épülethez odasétálva egyelőre csak kérdőjeles gondolatbuborék jelenik meg; belépni nem lehet. A feloldás időzítése és az épület tartalma még nyitott.
 
-Nem elfogadott történeti tény a korábbi gazda személye, a birtok megszerzésének módja vagy egy konkrét nyitószöveg. A beszélgetésben felmerült ilyen részletek csak javaslatok.
+Nem elfogadott történeti tény a korábbi gazda személye vagy a birtok megszerzésének módja. A beszélgetésben felmerült ilyen részletek csak javaslatok.
 
 ## Idő és napi ritmus
 
@@ -126,7 +130,7 @@ Tavaszi kezdés, összesen 12 elültethető növénnyel:
 - A nap lezárásáig a tárgyak visszavehetők.
 - Másnap reggel megérkezik a gold és egy rövid elszámolás.
 - Elfogadott induló eladási árak: retek 15, burgonya 30, borsó 12 gold/darab. A borsó újravetés nélküli újratermése megmarad.
-- A prototípus eladóládája a veranda bal oldalán áll. Közelről E vagy kattintás nyitja. Egyesével vagy minden darab egyszerre betehető/visszavehető.
+- A prototípus eladóládája a veranda bal oldalán áll. Közelről E vagy kattintás nyitja. Képes tárgyhelyeken jelennek meg a termények és a darabszámok; kattintás vagy húzás teljes kupacot, Shift+kattintás egy darabot tesz át. A ládából ugyanígy visszavehetők.
 - A gold és a függőben lévő eladás mentődik; az önkéntes és kényszerű napváltás ugyanazt az egyszeri elszámolást használja.
 - Nem tervezünk rendelőtáblát vagy kötelező terményrendeléseket az alapváltozatba.
 

@@ -5,6 +5,8 @@ import { farmLayout } from './layout';
 import { createGarden, targetTile, cultivable, reachable, work, TILE, type Tile, type Tool, nextDayGarden, isRipe, growthTarget, cropNames } from './gardening';
 import { createClock, advanceClock, clockLabel, nightOpacity, type Clock } from './clock';
 import { JUMP_DURATION, JUMP_COOLDOWN, jumpHeight, movementSpeed } from './jump';
+import {itemIcon} from './item-icons';
+import {normalizeFarmName} from './farm-name';
 import { SaveStore, snapshot } from './storage';
 import {createOrders,seedPrices,orderCost,quantityTotal,purchaseSeeds,deliverOrders,collectPackage, type Orders} from './orders';
 import { createEconomy, crops, salePrices, shippingValue, settleSales, transferProduce, type Economy } from './economy';
@@ -14,7 +16,8 @@ function showDialogue(title:string,text:string,label='A BIRTOKON'){
  release();
  document.querySelector<HTMLButtonElement>('#sleep')!.hidden=true;
  document.querySelector<HTMLButtonElement>('#export-save')!.hidden=true;
- for(const id of ['shipping-panel','menu-panel','inventory-panel','catalog-panel','mailbox-panel'])document.querySelector<HTMLElement>(`#${id}`)!.hidden=true;
+ for(const id of ['farm-name-panel','shipping-panel','menu-panel','inventory-panel','catalog-panel','mailbox-panel'])document.querySelector<HTMLElement>(`#${id}`)!.hidden=true;
+ document.querySelector<HTMLButtonElement>('#dialogue-close')!.hidden=false;
  document.querySelector('#dialogue-close')!.textContent='Folytatás';
  document.querySelector('#dialogue-title')!.textContent=title;
  document.querySelector('#dialogue-text')!.textContent=text;
@@ -22,7 +25,7 @@ function showDialogue(title:string,text:string,label='A BIRTOKON'){
  if(!dialogue.open)dialogue.showModal();
 }
 document.querySelector('#story')!.addEventListener('click',()=>showDialogue('Végre megérkeztem.',story,'EGY ÚJ KEZDET'));
-document.querySelector('#help')!.addEventListener('click',()=>showDialogue('Lassan, a saját tempódban.','Mozgás: WASD, nyilak vagy a képernyő iránygombjai. Ugrás: Space. Futás: tartsd a Shiftet. Az ugrás magasabbra és messzebbre visz; akadályokon továbbra sem lehet áthaladni.\n\nA háznál, tónál és melléképületnél az E billentyűvel vagy a megjelenő jelzésre kattintva nézhetsz körül. A napló, a magkatalógus, az eladóláda és a postaláda a világban használható: sétálj oda, majd E vagy kattintás/koppintás.\n\nKertészkedés: 1–6 vagy az alsó eszközsáv. Kattints egy közeli földkockára, vagy használd az F billentyűt az előtted lévő kockán. Kapa → ültetőanyag → öntözés. A három ágyásban és a szabad rétfoltokon dolgozhatsz.\n\n6 perc nappal után éjszaka lesz. A 2. és 3. éjszakai percben figyelmeztetés érkezik, majd 3:30–4:00 között elfáradsz és otthon ébredsz, veszteség nélkül. A verandán a Naplóval korábban is lefekhetsz.\n\nA kert és az idő automatikusan mentődik ebben a böngészőben. Az öntözött növények reggel fejlődnek. Éréskor válaszd a Szedés eszközt (6), majd kattints a növényre. A leszedett termények Tab-bal vagy a Menü → Készlet pontban nézhetők meg. A veranda bal oldalán lévő eladóládába teheted a termést. Napzárásig visszavehető, reggel megkapod az árát. Retek: 15, burgonya: 30, borsó: 12 gold/db. A háznál lévő magkatalógusból rendelhetsz (retek 5, burgonya 10, borsó 15 gold/db), másnap a kapu melletti postaládából veheted át. Készlet: Tab; bezárás: Escape. A stamina még nincs bekötve.','IRÁNYÍTÁS'));
+document.querySelector('#help')!.addEventListener('click',()=>showDialogue('Lassan, a saját tempódban.','Mozgás: WASD, nyilak vagy a képernyő iránygombjai. Ugrás: Space. Futás: tartsd a Shiftet. Az ugrás magasabbra és messzebbre visz; akadályokon továbbra sem lehet áthaladni.\n\nA háznál, tónál és melléképületnél az E billentyűvel vagy a megjelenő jelzésre kattintva nézhetsz körül. A napló, a magkatalógus, az eladóláda és a postaláda a világban használható: sétálj oda, majd E vagy kattintás/koppintás.\n\nKertészkedés: 1–6 vagy az alsó eszközsáv. Kattints egy közeli földkockára, vagy használd az F billentyűt az előtted lévő kockán. Kapa → ültetőanyag → öntözés. A három ágyásban és a szabad rétfoltokon dolgozhatsz.\n\n6 perc nappal után éjszaka lesz. A 2. és 3. éjszakai percben figyelmeztetés érkezik, majd 3:30–4:00 között elfáradsz és otthon ébredsz, veszteség nélkül. A verandán a Naplóval korábban is lefekhetsz.\n\nA kert és az idő automatikusan mentődik ebben a böngészőben. Az öntözött növények reggel fejlődnek. Éréskor válaszd a Szedés eszközt (6), majd kattints a növényre. A leszedett termények Tab-bal vagy a Menü → Készlet pontban nézhetők meg. A veranda bal oldalán lévő eladóládába teheted a termést. Napzárásig visszavehető, reggel megkapod az árát. Retek: 15, burgonya: 30, borsó: 12 gold/db. A háznál lévő magkatalógusból rendelhetsz (retek 5, burgonya 10, borsó 15 gold/db), másnap a kapu melletti postaládából veheted át. Készlet: Tab; bezárás: Tab vagy Escape. A stamina még nincs bekötve.','IRÁNYÍTÁS'));
 const held=new Set<string>();
 function release(){held.clear();const run=document.querySelector<HTMLButtonElement>('#run');if(run)run.setAttribute('aria-pressed','false');document.querySelectorAll('.active').forEach(el=>el.classList.remove('active'));}
 window.addEventListener('blur',release);document.addEventListener('visibilitychange',()=>{if(document.hidden)release();});
@@ -38,6 +41,8 @@ class Farm extends Phaser.Scene {
  private facing=1;
  private bubble!:Phaser.GameObjects.Text;
  private nearby='';
+ private farmName:string|null=null;
+ private naming=false;
  private garden=createGarden();
  private economy:Economy=createEconomy();
  private orders:Orders=createOrders();
@@ -68,16 +73,17 @@ class Farm extends Phaser.Scene {
   if(!this.ready||this.transitioning)return;
   const label=document.querySelector<HTMLElement>('#save-state')!;
   const revision=++this.saveRevision;label.textContent='Mentés…';
-  try{await this.store.save(snapshot(this.actor,this.clock,this.garden,this.economy,this.orders));if(revision===this.saveRevision)label.textContent='Mentve ebben a böngészőben';}
+  try{await this.store.save(snapshot(this.actor,this.clock,this.garden,this.economy,this.orders,this.farmName));if(revision===this.saveRevision)label.textContent='Mentve ebben a böngészőben';}
   catch{if(revision===this.saveRevision){label.textContent='Nem sikerült menteni';this.notice('A mentés nem sikerült. A következő automatikus mentés újrapróbálja.');}}
  }
  private async initStorage(){
   const load=async()=>{
    try{
     const loaded=await this.store.load();
-    if(loaded.data){const {player,clock,seeds,produce,plots,economy,orders}=loaded.data;this.economy=economy;this.orders=orders;this.actor.setPosition(player.x,player.y);this.clock=clock;this.garden={seeds,produce,plots:new Map(plots)};this.drawGarden();}
+    if(loaded.data){const {player,clock,seeds,produce,plots,economy,orders,farmName}=loaded.data;this.farmName=farmName;this.updateFarmTitle();this.economy=economy;this.orders=orders;this.actor.setPosition(player.x,player.y);this.clock=clock;this.garden={seeds,produce,plots:new Map(plots)};this.drawGarden();}
     this.ready=true;this.lastTick=performance.now();
-    if(loaded.recovered)showDialogue('Az előző mentésből folytatjuk.','A legutóbbi mentés hibás volt. Az előző érvényes állapotot sikerült visszaállítani.','MENTÉS HELYREÁLLÍTVA');
+    if(!this.farmName)this.openFarmNaming();
+    else if(loaded.recovered)showDialogue('Az előző mentésből folytatjuk.','A legutóbbi mentés hibás volt. Az előző érvényes állapotot sikerült visszaállítani.','MENTÉS HELYREÁLLÍTVA');
     else if(loaded.data&&dialogue.open)dialogue.close();
     await this.persist();
    }catch(error){
@@ -95,6 +101,29 @@ class Farm extends Phaser.Scene {
   window.addEventListener('focus',()=>{this.lastTick=performance.now();});
   window.addEventListener('pagehide',()=>{void this.persist().finally(()=>{this.ready=false;this.store.close();this.lockRelease?.();});});
   window.addEventListener('pageshow',event=>{if(event.persisted)location.reload();});
+ }
+ private updateFarmTitle(){
+  const name=this.farmName??'A farmod';document.querySelector('h1')!.textContent=name;document.title=`${name} · farmjáték`;document.querySelector('#app')!.setAttribute('aria-label',name);
+ }
+ private openFarmNaming(){
+  this.naming=true;showDialogue('Végre megérkeztem.',story,'EGY ÚJ KEZDET');
+  document.querySelector<HTMLElement>('#farm-name-panel')!.hidden=false;document.querySelector<HTMLButtonElement>('#dialogue-close')!.hidden=true;
+  document.querySelector<HTMLInputElement>('#farm-name')!.focus();this.validateFarmName();
+ }
+ private validateFarmName(){
+  const input=document.querySelector<HTMLInputElement>('#farm-name')!,name=normalizeFarmName(input.value);
+  document.querySelector<HTMLButtonElement>('#start-farm')!.disabled=!name||this.transitioning;
+  document.querySelector('#farm-name-error')!.textContent=!input.value.trim()?'Válassz egy nevet a farmodnak.':!name?'A név legfeljebb 40 karakter lehet.':'';
+ }
+ private async confirmFarmName(){
+  if(!this.naming||!this.ready||this.transitioning)return;
+  const name=normalizeFarmName(document.querySelector<HTMLInputElement>('#farm-name')!.value);if(!name)return;
+  this.transitioning=true;this.saveRevision++;document.querySelector<HTMLButtonElement>('#start-farm')!.disabled=true;
+  try{
+   await this.store.save(snapshot(this.actor,this.clock,this.garden,this.economy,this.orders,name));
+   this.farmName=name;this.naming=false;this.updateFarmTitle();document.querySelector<HTMLButtonElement>('#dialogue-close')!.hidden=false;dialogue.close();document.querySelector('#save-state')!.textContent='Mentve ebben a böngészőben';
+  }catch{document.querySelector('#farm-name-error')!.textContent='A nevet nem sikerült menteni. A farmod megmaradt; próbáld újra.';}
+  finally{this.transitioning=false;this.lastTick=performance.now();document.querySelector<HTMLButtonElement>('#start-farm')!.disabled=!normalizeFarmName(document.querySelector<HTMLInputElement>('#farm-name')!.value);}
  }
  private startJump(){
   if(!this.ready||dialogue.open||this.transitioning||this.collapseRemaining>0||this.jumpRemaining>0||this.jumpCooldown>0)return;
@@ -116,7 +145,7 @@ class Farm extends Phaser.Scene {
   try{
    const nextEconomy=settleSales(this.economy,this.clock.day);
    const nextOrders=deliverOrders(this.orders);
-   await this.store.save(snapshot(START,nextClock,nextGarden,nextEconomy,nextOrders));
+   await this.store.save(snapshot(START,nextClock,nextGarden,nextEconomy,nextOrders,this.farmName));
    this.clock=nextClock;this.garden=nextGarden;this.economy=nextEconomy;this.orders=nextOrders;this.actor.setPosition(START.x,START.y);this.actor.setAngle(0);this.body.setY(0);this.jumpRemaining=0;this.jumpCooldown=0;this.collapseRemaining=0;this.bubble.setVisible(false);this.nearby='';document.querySelector('#status')!.textContent='';this.shadow.setScale(1);this.drawGarden();this.aimAhead();
    document.querySelector<HTMLElement>('#night-warning')!.hidden=true;
    document.querySelector<HTMLElement>('#sleep-shade')!.style.opacity='0';
@@ -138,7 +167,7 @@ class Farm extends Phaser.Scene {
    for(const crop of crops){
     const card=document.createElement('div');card.className=`inventory-card crop-${crop}`;card.dataset[seeds?'inventorySeed':'inventoryCrop']=crop;
     const name=document.createElement('span');name.textContent=cropNames[crop]+(seeds?(crop==='potato'?' · vetőgumó':' · mag'):'');
-    const amount=document.createElement('strong');amount.textContent=`${items[crop]} db`;card.append(name,amount);grid.append(card);
+    const amount=document.createElement('strong');amount.textContent=`${items[crop]} db`;card.append(itemIcon(crop),name,amount);grid.append(card);
    }
   }
   document.querySelector<HTMLElement>('#inventory-panel')!.hidden=false;document.querySelector('#dialogue-close')!.textContent='Vissza a kertbe';
@@ -170,7 +199,7 @@ class Farm extends Phaser.Scene {
   const purchase=purchaseSeeds(this.economy,this.orders,this.garden.seeds,this.readCart());if(!purchase)return;
   this.transitioning=true;this.saveRevision++;document.querySelector<HTMLButtonElement>('#place-order')!.disabled=true;
   try{
-   await this.store.save(snapshot(this.actor,this.clock,this.garden,purchase.economy,purchase.orders));
+   await this.store.save(snapshot(this.actor,this.clock,this.garden,purchase.economy,purchase.orders,this.farmName));
    this.economy=purchase.economy;this.orders=purchase.orders;document.querySelector('#save-state')!.textContent='Mentve ebben a böngészőben';
    showDialogue('A rendelés elküldve.','A magok másnap reggel érkeznek a kapu melletti postaládába.','MAGKATALÓGUS');
   }catch{document.querySelector('#save-state')!.textContent='A rendelést nem sikerült menteni';document.querySelector('#catalog-total')!.textContent='Nem sikerült menteni. Goldot nem vontam le; próbáld újra.';}
@@ -189,7 +218,7 @@ class Farm extends Phaser.Scene {
   const collected=collectPackage(this.garden,this.orders);if(!collected)return;
   this.transitioning=true;this.saveRevision++;document.querySelector<HTMLButtonElement>('#collect-package')!.disabled=true;
   try{
-   await this.store.save(snapshot(this.actor,this.clock,collected.garden,this.economy,collected.orders));
+   await this.store.save(snapshot(this.actor,this.clock,collected.garden,this.economy,collected.orders,this.farmName));
    this.garden=collected.garden;this.orders=collected.orders;this.drawGarden();document.querySelector('#save-state')!.textContent='Mentve ebben a böngészőben';
    showDialogue('A csomag átvéve.','Az ültetőanyagok bekerültek a készletedbe.','POSTALÁDA');
   }catch{document.querySelector('#save-state')!.textContent='Az átvételt nem sikerült menteni';document.querySelector('#mailbox-content')!.textContent='Nem sikerült menteni. A csomag megmaradt a postaládában; próbáld újra.';}
@@ -202,31 +231,41 @@ class Farm extends Phaser.Scene {
   return `${receipt.day}. napi elszámolás\n${lines.length?lines.join('\n'):'Nem adtál el terményt.'}\nBevétel: ${receipt.total} gold\nEgyenleg: ${this.economy.gold} gold`;
  }
  private renderShipping(){
-  const panel=document.querySelector<HTMLElement>('#shipping-rows')!;panel.replaceChildren();
-  for(const crop of crops){
-   const row=document.createElement('div');row.className='shipping-row';
-   const title=document.createElement('p');title.textContent=`${cropNames[crop]} · ${salePrices[crop]} gold/db`;
-   const counts=document.createElement('p');counts.dataset.shippingCrop=crop;counts.textContent=`Nálad: ${this.garden.produce[crop]} · Ládában: ${this.economy.shipping[crop]}`;
-   row.append(title,counts);
-   for(const [direction,all,label] of [['deposit',false,'+1'],['deposit',true,'Mind be'],['withdraw',false,'−1'],['withdraw',true,'Mind vissza']] as const){
-    const button=document.createElement('button');button.type='button';button.textContent=label;button.dataset.transfer=`${crop}-${direction}-${all?'all':'one'}`;
-    button.setAttribute('aria-label',`${cropNames[crop]}: ${label}`);
-    const available=direction==='deposit'?this.garden.produce[crop]:this.economy.shipping[crop];button.disabled=available===0;
-    button.addEventListener('click',()=>{
-     if(!this.ready||this.transitioning||this.collapseRemaining>0)return;
-     const amount=all?(direction==='deposit'?this.garden.produce[crop]:this.economy.shipping[crop]):1;
-     if(transferProduce(this.garden,this.economy,crop,amount,direction)){this.renderShipping();this.drawGarden();void this.persist();}
-    });row.append(button);
+  const focused=(document.activeElement as HTMLElement)?.dataset.item;
+  for(const [id,items,from] of [['shipping-crate',this.economy.shipping,'crate'],['shipping-inventory',this.garden.produce,'inventory']] as const){
+   const grid=document.querySelector<HTMLElement>(`#${id}`)!;grid.replaceChildren();
+   const present=crops.filter(c=>items[c]>0);
+   for(const crop of present){
+    const slot=document.createElement('button');slot.type='button';slot.className='item-slot';slot.draggable=true;slot.dataset.item=`${from}-${crop}`;
+    slot.title=`${cropNames[crop]} · ${items[crop]} db · ${salePrices[crop]} gold/db`;slot.setAttribute('aria-label',`${cropNames[crop]}: ${items[crop]} db, ${from==='crate'?'visszavétel':'eladásra tesz'}`);
+    const count=document.createElement('span');count.className='slot-count';count.textContent=String(items[crop]);slot.append(itemIcon(crop),count);
+    slot.addEventListener('click',event=>this.moveShipping(crop,from,event.shiftKey?1:items[crop]));
+    slot.addEventListener('dragstart',event=>{event.dataTransfer?.setData('application/x-farm-item',JSON.stringify({crop,from}));if(event.dataTransfer)event.dataTransfer.effectAllowed='move';});
+    grid.append(slot);
    }
-   panel.append(row);
+   const padding=Math.max(8,Math.ceil((present.length+1)/8)*8)-present.length;
+   for(let i=0;i<padding;i++){const empty=document.createElement('span');empty.className='empty-slot';empty.setAttribute('aria-hidden','true');grid.append(empty);}
+   grid.ondragover=event=>{event.preventDefault();if(event.dataTransfer)event.dataTransfer.dropEffect='move';};
+   grid.ondrop=event=>{
+    event.preventDefault();try{
+     const data=JSON.parse(event.dataTransfer?.getData('application/x-farm-item')??'null');
+     if(!data||!crops.includes(data.crop)||!['inventory','crate'].includes(data.from)||data.from===from)return;
+     const crop=data.crop as typeof crops[number],quantity=data.from==='inventory'?this.garden.produce[crop]:this.economy.shipping[crop];this.moveShipping(crop,data.from,quantity);
+    }catch{/* Ignore unrelated drag payloads. */}
+   };
   }
-  document.querySelector('#shipping-total')!.textContent=`Várható reggeli bevétel: ${shippingValue(this.economy.shipping)} gold`;
+  document.querySelector('#shipping-total')!.textContent=`Reggel érkezik: ${shippingValue(this.economy.shipping)} gold`;
+  if(focused){const next=document.querySelector<HTMLButtonElement>(`[data-item="${focused}"]`)??document.querySelector<HTMLButtonElement>('.item-slot');next?.focus({preventScroll:true});}
+ }
+ private moveShipping(crop:typeof crops[number],from:'inventory'|'crate',amount:number){
+  if(!this.ready||this.transitioning||this.collapseRemaining>0||document.querySelector<HTMLElement>('#shipping-panel')!.hidden)return;
+  if(transferProduce(this.garden,this.economy,crop,amount,from==='inventory'?'deposit':'withdraw')){this.renderShipping();this.drawGarden();void this.persist();}
  }
  private openShipping(){
   if(!this.ready||dialogue.open||this.transitioning||this.collapseRemaining>0||this.jumpRemaining>0)return;
   const box=farmLayout.shipping;
   if(Math.hypot(this.actor.x-(box.x+box.w/2),this.actor.y-(box.y+box.h/2))>55){this.notice('Sétálj a veranda bal oldalán lévő eladóládához.');return;}
-  showDialogue('Mit adjunk el?','A terményeket napzárásig visszaveheted. A bevétel másnap reggel érkezik.','ELADÓLÁDA');
+  showDialogue('Eladóláda','Tedd be, amit el szeretnél adni. Napzárásig visszaveheted.','ELADÓLÁDA');
   this.renderShipping();document.querySelector<HTMLElement>('#shipping-panel')!.hidden=false;
  }
  private selectTool(tool:Tool){
@@ -378,15 +417,24 @@ class Farm extends Phaser.Scene {
   dialogue.addEventListener('close',()=>{this.input.keyboard?.resetKeys();release();});
   showDialogue('Végre megérkeztem.',story,'EGY ÚJ KEZDET');
   void this.initStorage();
-  this.keys=this.input.keyboard!.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT,SHIFT') as Record<string,Phaser.Input.Keyboard.Key>;
+  this.keys=this.input.keyboard!.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT,SHIFT',false) as Record<string,Phaser.Input.Keyboard.Key>;
   document.querySelector('#produce')!.addEventListener('click',()=>this.openInventory());
-  window.addEventListener('keydown',event=>{if(event.code==='Tab'&&!event.repeat&&!dialogue.open&&this.ready&&!this.transitioning&&this.collapseRemaining<=0){event.preventDefault();this.openInventory();}},true);
-  document.querySelector('#menu')!.addEventListener('click',()=>{showDialogue('Erdőszéli birtok','', 'MENÜ');document.querySelector<HTMLElement>('#menu-panel')!.hidden=false;});
+  window.addEventListener('keydown',event=>{
+   if(event.code==='Escape'&&dialogue.open){event.preventDefault();if(!this.naming)dialogue.close();return;}
+   if(event.code!=='Tab'||event.repeat||this.naming)return;
+   if(dialogue.open&&!document.querySelector<HTMLElement>('#inventory-panel')!.hidden){event.preventDefault();dialogue.close();return;}
+   if(!dialogue.open&&this.ready&&!this.transitioning&&this.collapseRemaining<=0){event.preventDefault();this.openInventory();}
+  },true);
+  dialogue.addEventListener('cancel',event=>{if(this.naming)event.preventDefault();});
+  document.querySelector('#dialogue form')!.addEventListener('submit',event=>{if(this.naming){event.preventDefault();void this.confirmFarmName();}});
+  document.querySelector('#farm-name')!.addEventListener('input',()=>this.validateFarmName());
+  document.querySelector('#start-farm')!.addEventListener('click',()=>void this.confirmFarmName());
+  document.querySelector('#menu')!.addEventListener('click',()=>{showDialogue(this.farmName??'A farmod','', 'MENÜ');document.querySelector<HTMLElement>('#menu-panel')!.hidden=false;});
   document.querySelector('#place-order')!.addEventListener('click',()=>void this.placeOrder());
   document.querySelector('#collect-package')!.addEventListener('click',()=>void this.collectMail());
   document.querySelector('#sleep')!.addEventListener('click',()=>void this.finishDay(false));
   document.querySelector('#export-save')!.addEventListener('click',()=>{
-   const blob=new Blob([JSON.stringify(snapshot(this.actor,this.clock,this.garden,this.economy,this.orders),null,2)],{type:'application/json'});
+   const blob=new Blob([JSON.stringify(snapshot(this.actor,this.clock,this.garden,this.economy,this.orders,this.farmName),null,2)],{type:'application/json'});
    const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download=`erdoszeli-birtok-${this.clock.day}.json`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
   });
  }

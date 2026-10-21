@@ -1,9 +1,10 @@
 # Mentés és helyreállítás
 
-A játék natív IndexedDB-be ment, `erdoszeli-birtok` adatbázisban. A mentési formátum verziója 4 (az IndexedDB adatbázisszerkezeti verziója továbbra is 1). A korábbi 1-es, 2-es és 3-as formátumú mentést automatikusan frissítjük. Nincs felhőszinkron: másik böngésző vagy eszköz külön farmot használ.
+A játék natív IndexedDB-be ment, `erdoszeli-birtok` adatbázisban. A mentési formátum verziója 5 (az IndexedDB adatbázisszerkezeti verziója továbbra is 1). A korábbi 1-es, 2-es, 3-as és 4-es formátumú mentést automatikusan frissítjük. Nincs felhőszinkron: másik böngésző vagy eszköz külön farmot használ.
 
 ## Mentett állapot
 
+- Farmnév (névadás előtt null); a 4 → 5 migráció minden korábbi adatot megőriz.
 - Karakter talajon mért helyzete.
 - Napszám, az adott napon eltelt aktív másodpercek és az előre kisorsolt éjszakai összeesési időpont.
 - A három ültetőanyag mennyisége.
@@ -39,7 +40,7 @@ Bezáráskor, háttérben, másik ablakra váltáskor és párbeszéd alatt nem 
 
 ## 3-as mentési formátum
 
-A korábbi 1-es, 2-es és 3-as mentésből közvetlenül 3-as készül; a betakarított termények, növekedés és borsó-újratermés a 2-esből megmarad. A korábban nem létező pénztárca 0 golddal, az eladóláda üresen indul. A láda új ütközési területe miatt csak akkor igazítjuk a korábbi karakterhelyzetet, ha éppen a láda helyén állt: ilyenkor közvetlenül elé kerül. Más helyzetet és a farmot nem változtatjuk meg.
+A korábbi 1-es, 2-es, 3-as és 4-es mentésből közvetlenül 3-as készül; a betakarított termények, növekedés és borsó-újratermés a 2-esből megmarad. A korábban nem létező pénztárca 0 golddal, az eladóláda üresen indul. A láda új ütközési területe miatt csak akkor igazítjuk a korábbi karakterhelyzetet, ha éppen a láda helyén állt: ilyenkor közvetlenül elé kerül. Más helyzetet és a farmot nem változtatjuk meg.
 
 Az eladási bevételt nem betöltéskor számoljuk újra: a mentett goldot állítjuk vissza, így újratöltéssel nem fizetjük ki még egyszer ugyanazt a szállítmányt. Az ismeretlen vagy sérült 3-as gazdasági adatok nem alakulnak át üres pénztárcává. A biztonsági mentés és az írások sorrendje az eddigi módon működik.
 
