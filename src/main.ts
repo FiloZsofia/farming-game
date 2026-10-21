@@ -2,6 +2,8 @@ import Phaser from 'phaser';
 import './style.css';
 import { move, START } from './movement';
 import { farmLayout } from './layout';
+import {drawFarm} from './world-art';
+import {drawCrop} from './crop-art';
 import { createGarden, targetTile, cultivable, reachable, work, TILE, type Tile, type Tool, nextDayGarden, isRipe, growthTarget, cropNames } from './gardening';
 import { createClock, advanceClock, clockLabel, nightOpacity, type Clock } from './clock';
 import { JUMP_DURATION, JUMP_COOLDOWN, jumpHeight, movementSpeed } from './jump';
@@ -278,15 +280,7 @@ class Farm extends Phaser.Scene {
    const [x,y]=key.split(',').map(Number);
    g.fillStyle(plot.watered?0x493f31:0x88603f);g.fillRect(x+1,y+1,TILE-2,TILE-2);
    g.lineStyle(1,plot.watered?0x635b43:0xa17b51);for(let row=4;row<TILE;row+=4)g.lineBetween(x+3,y+row,x+TILE-3,y+row);
-   if(plot.crop){
-    const colors={radish:0xd57c91,potato:0xc5a363,pea:0x9db56a};
-    const stage=Math.min(1,plot.growth/growthTarget(plot));
-    const size=stage===0?3:stage<.5?5:7;
-    if(plot.crop==='pea'&&stage>.25){g.lineStyle(1,0xa28e67);g.lineBetween(x+5,y+12,x+5,y-3);g.lineBetween(x+12,y+12,x+12,y-3);g.lineBetween(x+5,y,x+12,y);}
-    g.fillStyle(0x62904a);g.fillRect(x+8-size/2,y+8-size/2,size,size);g.fillRect(x+3,y+5,Math.max(3,size-1),3);
-    if(isRipe(plot)){g.fillStyle(colors[plot.crop]);g.fillRect(x+6,y+8,5,5);g.fillStyle(0xf6df90);g.fillRect(x+TILE-4,y-2,3,3);}
-    else if(stage>.3){g.fillStyle(0x8bae57);g.fillRect(x+9,y+3,3,5);}
-   }
+   drawCrop(g,x,y,plot);
    if(plot.watered){g.fillStyle(0x83b8c5);g.fillRect(x+TILE-4,y+3,2,3);}
   }
   this.drawMailFlag();
@@ -303,73 +297,25 @@ class Farm extends Phaser.Scene {
  }
 
  create(){
-  const g=this.add.graphics();
-  const rect=(x:number,y:number,w:number,h:number,c:number)=>{g.fillStyle(c);g.fillRect(x,y,w,h);};
-  rect(0,0,800,600,0x8da85e);
-  // Deterministic decoration keeps the prototype reproducible.
-  let seed=71;const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
-  for(let i=0;i<1100;i++){const x=random()*800,y=random()*600;rect(x,y,2,random()*4+1,[0x79944e,0x9cb96a,0xb1bf77][i%3]);}
-  for(const path of farmLayout.paths){
-    g.lineStyle(path.width,0xc5b481);g.beginPath();
-    path.points.forEach(([x,y],i)=>i===0?g.moveTo(x,y):g.lineTo(x,y));g.strokePath();
-    g.fillStyle(0xc5b481);for(const [x,y] of path.points)g.fillCircle(x,y,path.width/2);
-  }
-  for(let i=0;i<70;i++){const x=random()*800,y=random()*600;if(y<65||x<35||x>765)this.tree(g,x,y);}
-  // Cottage and covered veranda.
-  rect(140,142,215,89,0x53643f);rect(132,128,215,95,0xd5c6a3);rect(132,211,215,12,0x9a8767);
-  g.fillStyle(0x97573b);g.fillTriangle(116,138,365,138,325,83);g.fillTriangle(116,138,325,83,154,83);
-  for(let i=0;i<8;i++)rect(150+i*23,93+i%2*4,3,37,0xb7774a);
-  rect(172,75,19,32,0x9c9781);rect(169,73,25,8,0x77776a);
-  rect(225,169,29,54,0x70503b);rect(246,196,3,4,0xd7ba70);
-  for(const x of [161,287]){rect(x,161,27,28,0x6a5239);rect(x+3,164,21,22,0x8eafb0);rect(x+13,164,2,22,0xeee0b5);}
-  rect(192,222,91,29,0x947144);for(let y=224;y<250;y+=7)rect(192,y,91,1,0xb18a58);
-  rect(215,251,48,7,0xae8c5e);rect(221,258,36,5,0xbea16f);
-  rect(190,184,5,65,0x74513a);rect(280,184,5,65,0x74513a);
-  g.fillStyle(0x955b40);g.fillTriangle(179,190,295,190,237,153);
-  rect(260,229,16,10,0x5e4632);rect(261,226,13,5,0xe8dcaf);rect(267,226,1,5,0x977f51);
-  // Shipping crate: left of the veranda, distinct from the journal table.
-  const box=farmLayout.shipping;rect(box.x,box.y,box.w,box.h,0x705137);rect(box.x+2,box.y+2,box.w-4,8,0xb78f54);rect(box.x+2,box.y+12,box.w-4,2,0x9c7746);rect(box.x+13,box.y+7,6,12,0xd2b75d);
-  const crate=this.add.zone(box.x+box.w/2,box.y+box.h/2,box.w,box.h).setInteractive({useHandCursor:true});crate.on('pointerdown',()=>this.openShipping());
+  drawFarm(this);
   const objectZone=(id:string,area:{x:number;y:number;w:number;h:number},action:()=>void)=>{
    const zone=this.add.zone(area.x+area.w/2,area.y+area.h/2,area.w+10,area.h+10).setInteractive({useHandCursor:true});zone.setName(id);zone.on('pointerdown',action);
   };
+  objectZone('shipping',farmLayout.shipping,()=>this.openShipping());
   objectZone('journal',farmLayout.journal,()=>this.openJournal());
-  const catalog=farmLayout.catalog;rect(catalog.x-3,catalog.y+catalog.h,24,4,0x836341);rect(catalog.x,catalog.y,catalog.w,catalog.h,0x668a68);rect(catalog.x+3,catalog.y+2,12,8,0xe8dfb9);rect(catalog.x+8,catalog.y+2,1,8,0x867958);
-  objectZone('catalog',catalog,()=>this.openCatalog());
-  const mail=farmLayout.mailbox;rect(mail.x+10,mail.y+mail.h,5,20,0x80613e);rect(mail.x,mail.y,mail.w,mail.h,0x718e91);rect(mail.x+2,mail.y+3,mail.w-4,4,0xc7cfbc);rect(mail.x+8,mail.y+9,8,2,0x384e4d);
-  objectZone('mailbox',mail,()=>this.openMailbox());
+  objectZone('catalog',farmLayout.catalog,()=>this.openCatalog());
+  objectZone('mailbox',farmLayout.mailbox,()=>this.openMailbox());
   this.mailFlag=this.add.graphics().setDepth(3);
-  // Locked outbuilding, closer to the garden as in the reference.
-  const shedRect=(x:number,y:number,w:number,h:number,c:number)=>rect(x+farmLayout.shedOffset.x,y+farmLayout.shedOffset.y,w,h,c);
-  shedRect(607,152,117,55,0x57623b);shedRect(601,133,118,68,0x92744c);
-  for(let x=604;x<719;x+=12)shedRect(x,137,2,63,0x79603f);
-  shedRect(636,151,43,50,0x6e5137);shedRect(656,151,3,50,0x392f26);shedRect(651,172,12,5,0xa8a18c);shedRect(655,175,5,7,0xc3b16f);
-  g.fillStyle(0x77553b);g.fillTriangle(562,121,710,121,685,84);g.fillTriangle(562,121,685,84,592,84);
-  // A larger, irregular-looking pond and short dock echo the reference's lower-right shoreline.
-  const pond=farmLayout.pond;
-  g.fillStyle(0x71884d);g.fillEllipse(pond.x,pond.y,pond.rx*2+22,pond.ry*2+22);
-  g.fillStyle(0xb7ae7a);g.fillEllipse(pond.x,pond.y,pond.rx*2+10,pond.ry*2+10);
-  g.fillStyle(0x568b91);g.fillEllipse(pond.x,pond.y,pond.rx*2,pond.ry*2);
-  for(let i=0;i<48;i++){const x=pond.x-pond.rx+random()*pond.rx*2,y=pond.y-pond.ry+random()*pond.ry*2;if(((x-pond.x)/pond.rx)**2+((y-pond.y)/pond.ry)**2<.8)rect(x,y,9+random()*9,2,0x7aa9a6);}
-  for(const [x,y] of [[570,443],[731,480],[620,540]]){g.fillStyle(0x739659);g.fillEllipse(x,y,15,7);rect(x+3,y-4,3,3,0xe5d8b7);}
-  for(let i=0;i<20;i++){const x=560+i*8;rect(x,350-Math.sin(i)*6,2,17,0x596f3a);}
-  const dock=farmLayout.dock;
-  rect(dock.x,dock.y,dock.w,dock.h,0x77573c);
-  for(let x=dock.x+2;x<dock.x+dock.w;x+=8)rect(x,dock.y+2,6,dock.h-4,0xb18c59);
-  for(const x of [dock.x,dock.x+dock.w-5]){rect(x,dock.y-5,5,11,0x735337);rect(x,dock.y+dock.h-6,5,11,0x735337);}
-  // Beds are grouped to the right of the veranda, away from all path edges.
-  for(const bed of farmLayout.beds){const {x,y,w,h}=bed;rect(x,y,w,h,0xb69b64);rect(x+3,y+3,w-6,h-6,0x755b3e);}
-  for(const [x,y] of [[74,353],[518,280],[440,491]]){rect(x,y,24,18,0x80877a);rect(x+3,y,15,5,0xa4a998);}
-  const fence=(x:number,y:number,count:number)=>{rect(x,y+7,count*25,4,0x846c45);rect(x,y+16,count*25,3,0x9c8050);for(let i=0;i<=count;i++)rect(x+i*25,y,5,27,0x765f3e);};
-  fence(28,499,4);fence(211,515,9);fence(433,176,4);fence(691,221,3);
-  rect(490,249,3,94,0x846c45);rect(498,249,3,94,0x9c8050);
-  for(let y=249;y<=343;y+=23)rect(487,y,16,5,0x765f3e);
-  // Open gate on the lower-left path.
-  rect(132,492,6,37,0x715436);rect(201,505,6,37,0x715436);rect(121,504,4,25,0x947348);
-  for(let i=0;i<100;i++){const x=45+random()*710,y=275+random()*265;if(Math.abs(x-215)<65||x>480&&y>340||x>325&&x<495&&y<380)continue;rect(x,y,2,4,0x668344);if(i%3===0)rect(x-1,y-2,4,3,i%2?0xe9d7a1:0xb7a3ba);}
   this.planted=this.add.graphics().setDepth(1);
   this.selection=this.add.graphics().setDepth(2);
   this.drawGarden();
+  for(const button of Array.from(document.querySelectorAll<HTMLButtonElement>('#toolbar [data-tool]'))){
+   const tool=button.dataset.tool as Tool;
+   const label=button.querySelector('span')!;
+   const names={hoe:'Kapa',water:'Öntözés',radish:'Retek',potato:'Burgonya',pea:'Borsó',harvest:'Szedés'};
+   if(tool==='hoe'||tool==='water'||tool==='harvest')for(const node of Array.from(button.childNodes))if(node.nodeType===Node.TEXT_NODE)node.remove();
+   label.textContent=names[tool];button.prepend(itemIcon(tool));button.setAttribute('aria-label',names[tool]);
+  }
   const tools:Tool[]=['hoe','water','radish','potato','pea','harvest'];
   document.querySelectorAll<HTMLButtonElement>('[data-tool]').forEach(button=>button.addEventListener('click',(event)=>{this.selectTool(button.dataset.tool as Tool);if(event.detail>0)button.blur();}));
   document.querySelectorAll<HTMLButtonElement>('#toolbar button,#work,#jump,#run').forEach(b=>b.addEventListener('keydown',e=>{if(e.code==='Space')e.stopPropagation();}));
@@ -439,7 +385,6 @@ class Farm extends Phaser.Scene {
   });
  }
  private aimAhead(){this.target=targetTile(this.actor.x+this.direction.x*22,this.actor.y+this.direction.y*22);}
- private tree(g:Phaser.GameObjects.Graphics,x:number,y:number){g.fillStyle(0x6d5739);g.fillRect(x-3,y,7,24);g.fillStyle(0x45693f);g.fillCircle(x,y-10,23);g.fillStyle(0x628348);g.fillCircle(x-7,y-18,18);g.fillStyle(0x799650);g.fillCircle(x-10,y-23,11);}
  update(time:number,delta:number){
   if(!this.actor)return;
   const now=performance.now();const seconds=Math.max(0,(now-this.lastTick)/1000);this.lastTick=now;

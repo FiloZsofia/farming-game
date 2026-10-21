@@ -176,3 +176,9 @@ Ez munkajavaslat, nem véglegesített megvalósítási ütemterv:
 6. Korlátozott kapacitású tárolóláda.
 
 Az évszakváltás, építkezés és tárolóbővítés pontos ütemezése külön döntést igényel. A kezdeti látványterv elfogadása nem jelenti az összes rajta látható tárgy és mechanika vállalását.
+
+### Grafikai frissítés – 2026-10-21
+
+- Egységesebb, részletesebb 2D-s próbagrafika természetes színekkel: textúrázott talaj és ösvény, cseréptető, vakolat, fa veranda és kerítés, rétegzett lomb, növények, víz és tópart. A köveket és ágakat határozott sziluett és árnyék különíti el.
+- Az alsó eszközsávban saját rajzú ikon jelöli a kapát, öntözőkannát, terményeket és szedőkosarat. A fejsze és csákány ikonja elkészült, használható gombot a hozzájuk tartozó mechanika bevezetésekor kapnak.
+- A grafika saját, programból rajzolt alkotás; nem külső assetcsomag. Még nem végleges látvány. A korábbi verzió külön Git-commitból visszaállítható.
