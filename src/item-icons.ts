@@ -1,7 +1,9 @@
 import type {Crop} from './gardening';
-export type IconName=Crop|'hoe'|'water'|'harvest'|'axe'|'pickaxe'|'hand'|'wood'|'stone';
+export type IconName=Crop|'hoe'|'water'|'harvest'|'axe'|'pickaxe'|'hand'|'wood'|'stone'|'weed'|'birdhouse';
 // Original, locally drawn interface icons; no external asset dependency.
 const artwork:Record<IconName,string>={
+ weed:'<path fill="#557a3a" d="m14 29-9-8-3-9 8 3 3 8-2-19 7 4 1 16 8-16 5 1-5 16-8 7z"/><path fill="#92ae57" d="m14 28-7-8-2-5 7 4zm4 0-3-17 3 4zm3-1 7-13-1 8z"/><path fill="#9d824d" d="m13 30 9-2 5 3-8 3-8-1z"/>',
+ birdhouse:'<path fill="#886440" d="M16 25h4v10h-4z"/><path fill="#cba26b" d="M7 12h23v17H7z"/><path fill="#71513b" d="m3 14 15-13 16 13-3 3-13-10L6 17z"/><circle cx="18" cy="18" r="5" fill="#354d3d"/><path fill="#efce8f" d="M17 25h3v4h-3z"/>',
  hand:'<path fill="#d9af82" d="m8 20-3-6 3-2 4 5V6l3-1 1 11V3l4 1v12l2-10 3 1-1 11 4-6 3 2-5 15-6 5-10-5z"/><path fill="#f0c99b" d="m10 21 7-2 6 3-4 8-7-3z"/>',
  wood:'<path fill="#624b34" d="m3 22 20-17 11 9-20 18z"/><path fill="#9e784e" d="M5 21 24 7l6 6-19 15z"/><path fill="#d3b37c" d="m3 22 6-1 6 6-1 5-7-2z"/><path stroke="#8b6d47" fill="none" d="m6 24 5 4m0-9 15-11m-12 17L29 14"/>',
  stone:'<path fill="#52665e" d="m3 23 4-14 12-6 12 8 3 14-14 8-14-3z"/><path fill="#adb9aa" d="M7 9 19 3l12 8-11 6-12 2z"/><path fill="#7f958a" d="m8 19 12-2 11-6 3 14-14 5-14-2z"/>',

@@ -63,7 +63,7 @@ describe('persistent farm state',()=>{
   const data=fresh();data.player={x:337,y:282};data.clock.day=12;data.seeds.radish=3;
   const legacy={...data,version:1,plots:[['353,280',{crop:'radish',watered:true}]]};
   await put(factory,'active',legacy);const reader=new SaveStore(factory);const loaded=await reader.load();
-  expect(loaded.data).toMatchObject({version:6,clock:{day:12},player:{x:337,y:282},seeds:{radish:3},produce:{radish:0,potato:0,pea:0}});
+  expect(loaded.data).toMatchObject({version:7,clock:{day:12},player:{x:337,y:282},seeds:{radish:3},produce:{radish:0,potato:0,pea:0}});
   expect(loaded.data?.plots).toEqual([['353,280',{crop:'radish',watered:true,growth:0,regrowing:false}]]);
   await reader.save(loaded.data!);reader.close();const reread=new SaveStore(factory);expect((await reread.load()).data).toEqual(loaded.data);reread.close();
  });
@@ -82,7 +82,7 @@ describe('persistent farm state',()=>{
   const factory=new IDBFactory(),writer=new SaveStore(factory);await writer.load();writer.close();
   const old={...fresh(),version:2,produce:{radish:5,potato:2,pea:7},plots:[['353,280',{crop:'pea',watered:true,growth:2,regrowing:true}]]};
   await put(factory,'active',old);const reader=new SaveStore(factory);const data=(await reader.load()).data!;
-  expect(data.version).toBe(6);expect(data.produce).toEqual(old.produce);expect(data.plots).toEqual(old.plots);expect(data.economy).toEqual(createEconomy());reader.close();
+  expect(data.version).toBe(7);expect(data.produce).toEqual(old.produce);expect(data.plots).toEqual(old.plots);expect(data.economy).toEqual(createEconomy());reader.close();
  });
  it('moves old players out of the newly introduced crate without losing their farm',()=>{
   const old={...fresh(),version:2,player:{x:174,y:256}};const upgraded=decodeSnapshot(old)!;expect(upgraded.player).toEqual({x:174,y:276});expect(upgraded.seeds).toEqual(old.seeds);
@@ -97,7 +97,7 @@ describe('persistent farm state',()=>{
  it('upgrades v3 while preserving money, shipping and receipts without sharing mutable backup data',()=>{
   const economy=createEconomy();economy.gold=123;economy.shipping.pea=2;
   const old={...fresh(),version:3,economy,produce:{radish:2,potato:0,pea:1}};const decoded=decodeSnapshot(old)!;
-  expect(decoded.version).toBe(6);expect(decoded.economy).toEqual(economy);expect(decoded.orders).toEqual(createOrders());expect(decoded.produce).toEqual(old.produce);
+  expect(decoded.version).toBe(7);expect(decoded.economy).toEqual(economy);expect(decoded.orders).toEqual(createOrders());expect(decoded.produce).toEqual(old.produce);
   decoded.economy.gold=0;decoded.produce.radish=0;expect(old.economy.gold).toBe(123);expect(old.produce.radish).toBe(2);
  });
  it('restores pending orders, delivered parcels and collected seed counts separately',async()=>{
@@ -113,7 +113,7 @@ describe('persistent farm state',()=>{
 
  it('migrates v4 without losing orders, money, produce or the original backup',()=>{
   const old={...fresh(),version:4};old.orders.pending.pea=3;old.orders.mailbox.radish=2;old.economy.gold=77;old.produce.potato=6;
-  const decoded=decodeSnapshot(old)!;expect(decoded).toEqual({...old,version:6,farmName:null});decoded.orders.pending.pea=0;expect(old.orders.pending.pea).toBe(3);
+  const decoded=decodeSnapshot(old)!;expect(decoded).toEqual({...old,version:7,farmName:null});decoded.orders.pending.pea=0;expect(old.orders.pending.pea).toBe(3);
  });
  it('persists a personalized name and rejects malformed names',async()=>{
   const factory=new IDBFactory(),store=new SaveStore(factory);await store.load();const data={...fresh(),farmName:'Vadvirág Farm'};await store.save(data);store.close();
@@ -123,13 +123,23 @@ describe('persistent farm state',()=>{
 
  it('migrates v5 while preserving the named farm, produce, wallet and orders',()=>{
   const current={...fresh(),version:5,farmName:'Napsugár Farm'};current.orders.pending.pea=3;current.produce.radish=9;current.economy.gold=60;
-  const upgraded=decodeSnapshot(current)!;expect(upgraded).toEqual({...current,version:6,clearing:createClearing()});
+  const upgraded=decodeSnapshot(current)!;expect(upgraded).toEqual({...current,version:7,clearing:createClearing()});
  });
  it('restores gathered materials and removed objects without duplicating rewards',async()=>{
-  const factory=new IDBFactory(),writer=new SaveStore(factory);await writer.load();const data={...fresh(),farmName:'Farm',clearing:{removed:{'rock-a':1,'branch-a':1},wood:1,stone:1}};
+  const factory=new IDBFactory(),writer=new SaveStore(factory);await writer.load();const data={...fresh(),farmName:'Farm',clearing:{removed:{'rock-a':1,'branch-a':1},wood:1,stone:1,weed:0}};
   await writer.save(data);writer.close();const reader=new SaveStore(factory);expect((await reader.load()).data).toEqual(data);reader.close();
   expect(validSnapshot({...data,clearing:{...data.clearing,removed:{'rock-a':2}}})).toBe(false);
   expect(validSnapshot({...data,clearing:{...data.clearing,removed:{unknown:1}}})).toBe(false);
+ });
+
+ it('migrates v6 with cleared sites, materials and the named farm intact',()=>{
+  const old={...fresh(),version:6,farmName:'Réti Farm',clearing:{removed:{'weed-a':1},wood:2,stone:3}};
+  const upgraded=decodeSnapshot(old)!;expect(upgraded.version).toBe(7);expect(upgraded.farmName).toBe(old.farmName);expect(upgraded.clearing).toEqual({...old.clearing,weed:0});expect(upgraded.story).toEqual({giftReceived:false,morningSeen:false,birdhouse:null});
+ });
+ it('persists the gift, placed birdhouse, morning thought and collected weeds',async()=>{
+  const factory=new IDBFactory(),writer=new SaveStore(factory);await writer.load();const data=fresh();data.clearing.weed=2;data.story={giftReceived:true,morningSeen:true,birdhouse:{x:280,y:400}};
+  await writer.save(data);writer.close();const reader=new SaveStore(factory);expect((await reader.load()).data).toEqual(data);reader.close();
+  expect(validSnapshot({...data,story:{giftReceived:false,morningSeen:true,birdhouse:null}})).toBe(false);
  });
 
 });

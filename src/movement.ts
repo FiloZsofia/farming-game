@@ -1,3 +1,4 @@
+import {pondRadius} from './pond-shape';
 import { farmLayout } from './layout';
 export type Box = { x: number; y: number; w: number; h: number };
 export const START = { x: 250, y: 242 };
@@ -10,7 +11,8 @@ export const obstacles: Box[] = [
 export function blocked(x:number,y:number):boolean {
   const {pond,dock}=farmLayout;
   const onDock=x>=dock.x+7&&x<=dock.x+dock.w-7&&y>=dock.y&&y<=dock.y+dock.h-4;
-  const inWater=((x-pond.x)/(pond.rx+7))**2+((y-pond.y)/(pond.ry+4))**2<1;
+  const nx=(x-pond.x)/(pond.rx+7),ny=(y-pond.y)/(pond.ry+4);
+  const inWater=Math.hypot(nx,ny)<pondRadius(Math.atan2(ny,nx));
   return (inWater&&!onDock)||x<12||x>788||y<12||y>588||obstacles.some(b=>x+7>b.x&&x-7<b.x+b.w&&y+3>b.y&&y-4<b.y+b.h);
 }
 export function move(x:number,y:number,dx:number,dy:number,seconds:number,speedMultiplier=1){

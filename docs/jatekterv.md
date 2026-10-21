@@ -188,6 +188,16 @@ Az évszakváltás, építkezés és tárolóbővítés pontos ütemezése kül�
 - Élénkebb, természetes zöld fű és türkiz tó; nappal meleg fény, vetett árnyékok és vízcsillanások, éjszakára eltűnő napfény.
 - Magok/vetőgumók külön tasakikont kapnak a növény képével, a készletben, eszközsávon, katalógusban és a postaládában. A termények eredeti ikonja megmarad.
 - Kéz (7): gaz; Fejsze (8): lehullott ág; Csákány (9): kő. Közelről kattintás vagy F. A fák kivágása még későbbi feladat.
-- Egy ág egy fát, egy kő egy követ ad a készlet Alapanyagok részébe; a gaz eltakarítása felszabadítja a helyet. Az erőforrások felhasználása még nincs bekötve.
+- Egy ág egy fát, egy kő egy követ ad a készlet Alapanyagok részébe; a gaz a Gaz alapanyag halomba kerül. Az erőforrások felhasználása még nincs bekötve.
 - Elfogadott visszatérés: minden eltakarított gaz, ág és kő két nap után visszatér eredeti helyére, kivéve ha ott művelt föld van. A régi mentésekben már meglévő föld is védett. Az elhalasztott visszatérés későbbi reggeleken újra ellenőrizhető.
 - Mobilon az eszközsáv vízszintesen görgethető; számbillentyűs választáskor a kiválasztott eszközhöz görget.
+
+### Szomszéd, madárodú és élőbb farm – 2026-10-21
+
+- Az első napon egy szomszéd sétál be a kapun, és a ház előtt madárodút ad. Ha a játékos távol van, megvárja, illetve E-vel/kattintással megszólítható. Régebbi farmon a következő nappali lehetőségnél pótolja a látogatást.
+- Az ajándék egyetlen példányban kerül a készletbe. Tab → Alapanyagok → Madárodú → Elhelyezem; közeli, szabad helyre kattintva kerül ki. A növényeket és az épületeket nem lehet vele lefedni; a visszatérő gaz/ág/kő nem jelenik meg az odú alatt.
+- A szomszéd tanácsa a madarak későbbi kártevővédő szerepét vezeti be; tényleges kártevőrendszert és hozammódosítást még nem adunk hozzá.
+- A második reggelen egyszer jelenik meg a főhős kedves gondolatbuboréka; ha az odú még készletben van, elhelyezésre bátorít. A második naptól ritkán madarak repülnek át, nappal időnként színes pillangó is. Ezek nem gyűjthető, nem akadályozó hangulati elemek.
+- Részletesebb, barátságos arcú női karakter, szőkés lófarokkal, törtfehér ingben és mohazöld nadrágban. Külön mozgó lábak, karok és lófarok; futáskor gyorsabb léptek. Az éppen választott kertészkedő eszköz a kézben látszik, sikeres munka közben mozog, öntözéskor vízcseppekkel.
+- A gaz külön alapanyag a készletben és a mentésben; felhasználása továbbra is nyitott.
+- A tó szabálytalan, kisebb öblökkel tagolt partvonalat kap, a víz ütközési határa ugyanazt az alakot követi.

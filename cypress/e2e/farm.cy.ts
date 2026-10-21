@@ -86,3 +86,15 @@ describe('Clearing and seed packets',()=>{
   start(data);sleepTo(2);cy.get('#game').should('have.attr','data-cleared','3');sleepTo(3);cy.get('#game').should('have.attr','data-cleared','0').and('have.attr','data-wood','1').and('have.attr','data-stone','1');
  });
 });
+
+describe('Neighbor, birdhouse and weeds',()=>{
+ const base={version:7,farmName:'Tesztfarm',player:{x:250,y:242},clock:{day:1,elapsed:0,collapseAt:580},seeds:{radish:4,potato:4,pea:4},produce:{radish:0,potato:0,pea:0},plots:[],economy:{gold:0,shipping:{radish:0,potato:0,pea:0},lastSale:null},orders:{pending:{radish:0,potato:0,pea:0},mailbox:{radish:0,potato:0,pea:0}},clearing:{removed:{},wood:0,stone:0,weed:0},story:{giftReceived:false,morningSeen:false,birdhouse:null}};
+ it('receives one gift, places it and sees the next morning thought',()=>{
+  start(base);cy.get('#game',{timeout:20000}).should('have.attr','data-gift','true');cy.get('#dialogue-title').should('contain','szomszéd');press('Escape','Escape',27);press('Tab','Tab',9);
+  cy.get('#inventory-materials [data-birdhouse] button').click();walk('down','y',288);clickWorld(280,288);cy.get('#game').should('have.attr','data-birdhouse','true');
+  cy.reload();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-gift','true').and('have.attr','data-birdhouse','true');cy.get('#dialogue').should('not.be.visible');walk('up','y',242);sleepTo(2);cy.get('#game').should('have.attr','data-morning-seen','true');cy.get('#game',{timeout:12000}).should('have.attr','data-birds','1');
+ });
+ it('adds removed weeds to the material inventory and saves them',()=>{
+  start({...base,player:{x:137,y:300},story:{giftReceived:true,morningSeen:true,birdhouse:null}});press('7','Digit7',55);clickWorld(112,300);cy.get('#game').should('have.attr','data-cleared','1');press('Tab','Tab',9);cy.get('[data-material=weed]').should('contain','1 db');press('Escape','Escape',27);cy.reload();cy.get('#game').should('have.attr','data-ready','true');press('Tab','Tab',9);cy.get('[data-material=weed]').should('contain','1 db');
+ });
+});

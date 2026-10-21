@@ -1,11 +1,12 @@
 # Mentés és helyreállítás
 
-A játék natív IndexedDB-be ment, `erdoszeli-birtok` adatbázisban. A mentési formátum verziója 6 (az IndexedDB adatbázisszerkezeti verziója továbbra is 1). A korábbi 1-es, 2-es, 3-as, 4-es és 5-ös formátumú mentést automatikusan frissítjük. Nincs felhőszinkron: másik böngésző vagy eszköz külön farmot használ.
+A játék natív IndexedDB-be ment, `erdoszeli-birtok` adatbázisban. A mentési formátum verziója 7 (az IndexedDB adatbázisszerkezeti verziója továbbra is 1). A korábbi 1-es, 2-es, 3-as, 4-es, 5-ös és 6-os formátumú mentést automatikusan frissítjük. Nincs felhőszinkron: másik böngésző vagy eszköz külön farmot használ.
 
 ## Mentett állapot
 
-- Farmnév (névadás előtt null); az 5 → 6 migráció a nevet és minden korábbi adatot megőriz.
-- Eltakarított gaz, ágak és kövek azonosítója és eltakarítási napja; összegyűjtött fa és kő mennyisége. A második reggelen, művelt földön kívül visszatérnek.
+- Farmnév (névadás előtt null); a 6 → 7 migráció a nevet és minden korábbi adatot megőriz.
+- Eltakarított gaz, ágak és kövek azonosítója és eltakarítási napja; összegyűjtött fa, kő és gaz mennyisége. A második reggelen, művelt földön kívül visszatérnek.
+- A szomszéd ajándékának átvétele, a madárodú elhelyezett pozíciója (vagy készletben tartása), a második reggeli gondolat megjelenése.
 - Karakter talajon mért helyzete.
 - Napszám, az adott napon eltelt aktív másodpercek és az előre kisorsolt éjszakai összeesési időpont.
 - A három ültetőanyag mennyisége.
@@ -42,7 +43,7 @@ Bezáráskor, háttérben, másik ablakra váltáskor és párbeszéd alatt nem 
 
 ## 3-as mentési formátum
 
-A korábbi 1-es, 2-es, 3-as, 4-es és 5-ös mentésből közvetlenül 3-as készül; a betakarított termények, növekedés és borsó-újratermés a 2-esből megmarad. A korábban nem létező pénztárca 0 golddal, az eladóláda üresen indul. A láda új ütközési területe miatt csak akkor igazítjuk a korábbi karakterhelyzetet, ha éppen a láda helyén állt: ilyenkor közvetlenül elé kerül. Más helyzetet és a farmot nem változtatjuk meg.
+A korábbi 1-es, 2-es, 3-as, 4-es, 5-ös és 6-os mentésből közvetlenül 3-as készül; a betakarított termények, növekedés és borsó-újratermés a 2-esből megmarad. A korábban nem létező pénztárca 0 golddal, az eladóláda üresen indul. A láda új ütközési területe miatt csak akkor igazítjuk a korábbi karakterhelyzetet, ha éppen a láda helyén állt: ilyenkor közvetlenül elé kerül. Más helyzetet és a farmot nem változtatjuk meg.
 
 Az eladási bevételt nem betöltéskor számoljuk újra: a mentett goldot állítjuk vissza, így újratöltéssel nem fizetjük ki még egyszer ugyanazt a szállítmányt. Az ismeretlen vagy sérült 3-as gazdasági adatok nem alakulnak át üres pénztárcává. A biztonsági mentés és az írások sorrendje az eddigi módon működik.
 
@@ -54,3 +55,5 @@ Az 1–3-as mentések közvetlenül 4-esre frissülnek. A 3-asból megmarad a go
 A rendelés fizetését és a függő rendelést közös tranzakció menti, és csak siker után változik az élő játékállapot. Reggel a függő rendelés a postaládába kerül a napváltás tranzakciójában, az összeesés utáni reggelen is. Az átvétel egyetlen tranzakcióban növeli a készletet és üríti a postaládát. Sikertelen írás nem von le pénzt, és nem tünteti el a csomagot; a művelet újrapróbálható.
 
 A magmennyiség a kezdő 4 darab fölé nőhet. Az aktuális játékban egy fajtából a készlet + úton lévő + postaládás mennyiség legfeljebb 999999 lehet; ez technikai tárolási korlát, nem a később tervezett hátizsák-kapacitás. A Tab-os készlet ugyanazokat a mentett számokat mutatja, nincs külön másolat vagy külön számláló.
+
+Az ajándék, az odú elhelyezése és a reggeli gondolat megjelölése előtt mentünk; sikertelen íráskor újra próbálható. Régi farmnál a szomszéd a következő nappali látogatási lehetőségnél hozza az ajándékot. A repülő állatok és a karakter animációjának pillanatnyi képkockái nem mentett állapotok.
