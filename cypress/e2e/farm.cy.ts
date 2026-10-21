@@ -13,7 +13,7 @@ function start(data?:object){
   win.indexedDB.deleteDatabase('erdoszeli-birtok');
   if(data){const r=win.indexedDB.open('erdoszeli-birtok',1);r.onupgradeneeded=()=>r.result.createObjectStore('saves');r.onsuccess=()=>{const tx=r.result.transaction('saves','readwrite');tx.objectStore('saves').put(data,'active');tx.oncomplete=()=>r.result.close();};}
  }});
- cy.get('#game').should('have.attr','data-ready','true');cy.get('#farm-name').type('Tesztfarm');cy.get('#start-farm').click();cy.get('#dialogue').should('not.be.visible');
+ cy.get('#game').should('have.attr','data-ready','true');cy.get('#farm-name-panel').then(panel=>{if(!panel.prop('hidden')){cy.get('#farm-name').type('Tesztfarm');cy.get('#start-farm').click();}});cy.get('#dialogue').should('not.be.visible');
 }
 function clickWorld(x:number,y:number){
  cy.window().then(win=>cy.get('#game').then(el=>{
@@ -69,5 +69,20 @@ describe('Visual shipping and farm name',()=>{
   start({version:4,player:{x:210,y:280},clock:{day:1,elapsed:200,collapseAt:580},seeds:{radish:4,potato:4,pea:4},produce:{radish:3,potato:2,pea:4},plots:[],economy:{gold:100,shipping:{radish:0,potato:0,pea:0},lastSale:null},orders:{pending:{radish:0,potato:0,pea:0},mailbox:{radish:0,potato:0,pea:0}}});
   clickWorld(174,256);cy.get('#shipping-inventory button svg').should('have.length',3);cy.get('[data-item=inventory-radish]').click();cy.get('[data-item=crate-radish] .slot-count').should('have.text','3');cy.get('[data-item=inventory-radish]').should('not.exist');
   cy.get('[data-item=crate-radish]').click({shiftKey:true});cy.get('[data-item=crate-radish] .slot-count').should('have.text','2');cy.get('[data-item=inventory-radish] .slot-count').should('have.text','1');cy.get('#shipping-total').should('contain','30 gold');
+ });
+});
+
+describe('Clearing and seed packets',()=>{
+ const base={version:4,player:{x:112,y:365},clock:{day:1,elapsed:0,collapseAt:580},seeds:{radish:4,potato:4,pea:4},produce:{radish:1,potato:0,pea:0},plots:[],economy:{gold:0,shipping:{radish:0,potato:0,pea:0},lastSale:null},orders:{pending:{radish:0,potato:0,pea:0},mailbox:{radish:2,potato:1,pea:3}}};
+ it('requires a pickaxe, collects a rock only once and preserves the cleared spot',()=>{
+  start(base);clickWorld(86,365);cy.get('#game').should('have.attr','data-stone','0');press('9','Digit9',57);clickWorld(86,365);cy.get('#game').should('have.attr','data-stone','1').and('have.attr','data-cleared','1');clickWorld(86,365);cy.get('#game').should('have.attr','data-stone','1');
+  cy.reload();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-stone','1').and('have.attr','data-cleared','1');press('Tab','Tab',9);cy.get('[data-material=stone]').should('contain','1 db');
+ });
+ it('distinguishes seed packets from produce and illustrates delivered mail',()=>{
+  start({...base,player:{x:145,y:470}});press('Tab','Tab',9);cy.get('#inventory-seeds .seed-icon').should('have.length',3);cy.get('#inventory-produce .seed-icon').should('not.exist');press('Tab','Tab',9);clickWorld(124,482);cy.get('#mailbox-content .seed-icon').should('have.length',3);cy.get('#collect-package').click();cy.get('#game').should('have.attr','data-mail-seeds','0');
+ });
+ it('restores cleared decorations on the second morning and retains materials',()=>{
+  const data={...base,version:6,farmName:'Tesztfarm',player:{x:250,y:242},clearing:{removed:{'rock-a':1,'branch-a':1,'weed-a':1},wood:1,stone:1}};
+  start(data);sleepTo(2);cy.get('#game').should('have.attr','data-cleared','3');sleepTo(3);cy.get('#game').should('have.attr','data-cleared','0').and('have.attr','data-wood','1').and('have.attr','data-stone','1');
  });
 });

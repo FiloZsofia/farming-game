@@ -1,7 +1,10 @@
 import type {Crop} from './gardening';
-export type IconName=Crop|'hoe'|'water'|'harvest'|'axe'|'pickaxe';
+export type IconName=Crop|'hoe'|'water'|'harvest'|'axe'|'pickaxe'|'hand'|'wood'|'stone';
 // Original, locally drawn interface icons; no external asset dependency.
 const artwork:Record<IconName,string>={
+ hand:'<path fill="#d9af82" d="m8 20-3-6 3-2 4 5V6l3-1 1 11V3l4 1v12l2-10 3 1-1 11 4-6 3 2-5 15-6 5-10-5z"/><path fill="#f0c99b" d="m10 21 7-2 6 3-4 8-7-3z"/>',
+ wood:'<path fill="#624b34" d="m3 22 20-17 11 9-20 18z"/><path fill="#9e784e" d="M5 21 24 7l6 6-19 15z"/><path fill="#d3b37c" d="m3 22 6-1 6 6-1 5-7-2z"/><path stroke="#8b6d47" fill="none" d="m6 24 5 4m0-9 15-11m-12 17L29 14"/>',
+ stone:'<path fill="#52665e" d="m3 23 4-14 12-6 12 8 3 14-14 8-14-3z"/><path fill="#adb9aa" d="M7 9 19 3l12 8-11 6-12 2z"/><path fill="#7f958a" d="m8 19 12-2 11-6 3 14-14 5-14-2z"/>',
  hoe:'<path stroke="#5e432e" stroke-width="6" d="m9 30 16-22"/><path stroke="#bc9964" stroke-width="3" d="m9 29 16-22"/><path fill="#4d6261" d="m17 4 13 8-2 10-7-3 1-6-8-5z"/><path fill="#a2b4ad" d="m17 4 13 8-2 3-14-7z"/>',
  water:'<path fill="#445f58" d="M8 15C-1 1 21-1 24 14l-4 2C17 4 6 5 12 14z"/><path fill="#789b8b" d="m7 12 17 1 1 17-17 1z"/><path fill="#adc3a1" d="m9 13 13 1-1 4-12-1z"/><path fill="#597e72" d="m23 19 7-9 4 2-8 14-4 1z"/><path fill="#b5c9b4" d="m29 8 6 3-2 5-6-4z"/><path stroke="#a8cdd2" d="m30 19-1 4m5-4-1 5"/>',
  harvest:'<path fill="none" stroke="#c7ad74" stroke-width="3" d="M8 18C6 1 30 1 28 18"/><path fill="#527948" d="m10 18 2-9 5 6 6-6 3 10z"/><path fill="#d68b82" d="M10 16h9v8h-9z"/><path fill="#9f794b" d="m4 18 28 1-4 14H8z"/><path stroke="#d2b17a" stroke-width="2" d="m6 21 24 1M8 26h21M12 20l1 11m7-11v11m7-11-2 11"/>',
@@ -13,4 +16,10 @@ const artwork:Record<IconName,string>={
 };
 export function itemIcon(crop:IconName){
  const icon=document.createElementNS('http://www.w3.org/2000/svg','svg');icon.setAttribute('viewBox','0 0 36 36');icon.setAttribute('aria-hidden','true');icon.classList.add('item-icon');icon.innerHTML=artwork[crop];return icon;
+}
+
+export function seedIcon(crop:Crop){
+ const icon=itemIcon(crop);icon.classList.add('seed-icon');
+ icon.innerHTML='<path fill="#775d3e" d="M6 2h24v32H6z"/><path fill="#ddc795" d="M7 3h22v30H7z"/><path fill="#b29a6b" d="M7 3h22v5H7z"/><path fill="#f2e5bd" d="M9 10h18v16H9z"/><g transform="translate(10 10) scale(.45)">'+artwork[crop]+'</g><path fill="#775436" d="m11 29 2-2 2 1-1 2zm6-1 2-1 2 2-2 2zm7 0 2-1 1 2-2 1z"/>';
+ return icon;
 }

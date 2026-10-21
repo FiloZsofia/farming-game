@@ -180,5 +180,14 @@ Az évszakváltás, építkezés és tárolóbővítés pontos ütemezése kül�
 ### Grafikai frissítés – 2026-10-21
 
 - Egységesebb, részletesebb 2D-s próbagrafika természetes színekkel: textúrázott talaj és ösvény, cseréptető, vakolat, fa veranda és kerítés, rétegzett lomb, növények, víz és tópart. A köveket és ágakat határozott sziluett és árnyék különíti el.
-- Az alsó eszközsávban saját rajzú ikon jelöli a kapát, öntözőkannát, terményeket és szedőkosarat. A fejsze és csákány ikonja elkészült, használható gombot a hozzájuk tartozó mechanika bevezetésekor kapnak.
+- Az alsó eszközsávban saját rajzú ikon jelöli a kapát, öntözőkannát, terményeket és szedőkosarat. A fejsze, csákány és kéz ikonja a takarítás eszközeit jelöli.
 - A grafika saját, programból rajzolt alkotás; nem külső assetcsomag. Még nem végleges látvány. A korábbi verzió külön Git-commitból visszaállítható.
+
+### Napsütés, magtasakok és takarítás – 2026-10-21
+
+- Élénkebb, természetes zöld fű és türkiz tó; nappal meleg fény, vetett árnyékok és vízcsillanások, éjszakára eltűnő napfény.
+- Magok/vetőgumók külön tasakikont kapnak a növény képével, a készletben, eszközsávon, katalógusban és a postaládában. A termények eredeti ikonja megmarad.
+- Kéz (7): gaz; Fejsze (8): lehullott ág; Csákány (9): kő. Közelről kattintás vagy F. A fák kivágása még későbbi feladat.
+- Egy ág egy fát, egy kő egy követ ad a készlet Alapanyagok részébe; a gaz eltakarítása felszabadítja a helyet. Az erőforrások felhasználása még nincs bekötve.
+- Elfogadott visszatérés: minden eltakarított gaz, ág és kő két nap után visszatér eredeti helyére, kivéve ha ott művelt föld van. A régi mentésekben már meglévő föld is védett. Az elhalasztott visszatérés későbbi reggeleken újra ellenőrizhető.
+- Mobilon az eszközsáv vízszintesen görgethető; számbillentyűs választáskor a kiválasztott eszközhöz görget.
