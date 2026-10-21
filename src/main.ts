@@ -4,6 +4,7 @@ import { move, START,blocked } from './movement';
 import { farmLayout } from './layout';
 import {FarmMusic} from './music';
 import {createGardenSkill,gainGardening,LEVEL_TWO_XP,rewardFruits,type RewardFruit} from './gardening-skill';
+import {preloadFarmer} from './farmer-sprite';
 import {FarmerArt,anniePortrait} from './character';
 import {Wildlife} from './wildlife';
 import {createStory,type FarmStory} from './story-events';
@@ -44,6 +45,7 @@ document.querySelectorAll<HTMLButtonElement>('[data-dir]').forEach(button=>{
 });
 type FarmTool=Tool|ClearingTool|'birdhouse';
 class Farm extends Phaser.Scene {
+ preload(){preloadFarmer(this);}
  private actor!:Phaser.GameObjects.Container;
  private keys!:Record<string,Phaser.Input.Keyboard.Key>;
  private avatar!:FarmerArt;

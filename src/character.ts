@@ -1,14 +1,21 @@
 import Phaser from 'phaser';
+import {createFarmerSprite,poseFarmer} from './farmer-sprite';
 import {WORK_SECONDS,workAngle} from './tool-motion';
 export class FarmerArt{
  readonly root:Phaser.GameObjects.Container;
- private leftLeg:Phaser.GameObjects.Container;private rightLeg:Phaser.GameObjects.Container;
- private leftArm:Phaser.GameObjects.Container;private rightArm:Phaser.GameObjects.Container;
- private head:Phaser.GameObjects.Container;private pony:Phaser.GameObjects.Container;
- private armX:number;private armY:number;
+ private leftLeg!:Phaser.GameObjects.Container;private rightLeg!:Phaser.GameObjects.Container;
+ private leftArm!:Phaser.GameObjects.Container;private rightArm:Phaser.GameObjects.Container;
+ private head!:Phaser.GameObjects.Container;private pony!:Phaser.GameObjects.Container;
+ private armX=6.2;private armY=-29;
+ private sprite:Phaser.GameObjects.Image|null=null;
  private tool:Phaser.GameObjects.Graphics;private action=0;private phase=0;private equipped='hoe';private actionTool='hoe';private aim={x:0,y:1};
  constructor(scene:Phaser.Scene,neighbor=false){
   this.root=scene.add.container(0,0);
+  if(!neighbor){
+   this.sprite=createFarmerSprite(scene);this.root.add(this.sprite);
+   this.rightArm=scene.add.container(this.armX,this.armY);this.root.add(this.rightArm);
+   this.tool=scene.add.graphics();this.rightArm.add(this.tool);this.equip('hoe');return;
+  }
   const part=(parent:Phaser.GameObjects.Container,x:number,y:number,w:number,h:number,c:number)=>{const p=scene.add.graphics();p.fillStyle(c);p.fillEllipse(x,y,w,h);parent.add(p);return p;};
   const leg=(x:number)=>{const c=scene.add.container(x,-16);this.root.add(c);part(c,0,5,6,12,neighbor?0x596b78:0x526c43);part(c,-1,5,1,10,0x7c925d);part(c,0,13,6,5,0x654d39);part(c,1,15,6,2,0x3c3d30);return c;};
   this.leftLeg=leg(-3.5);this.rightLeg=leg(3.5);
@@ -55,15 +62,31 @@ export class FarmerArt{
   const name=this.action>0?this.actionTool:this.equipped;
   if(['hoe','axe','pickaxe'].includes(name)){r(0,8,2,21,0x654b32);r(0,8,1,20,0xc6a46b);if(name==='hoe'){r(-2,25,9,3,0x8faaa2);r(4,26,3,6,0x536e69);}if(name==='axe'){g.fillStyle(0x91aaa4);g.fillTriangle(1,23,10,21,8,31);r(8,24,2,5,0xd2d9c4);}if(name==='pickaxe'){r(-7,24,17,2,0x98afa9);r(-8,26,2,3,0xc2cdba);r(9,26,2,3,0xc2cdba);}}
   else if(name==='water'){r(0,12,10,9,0x648f80);r(1,12,8,2,0xa9c4a4);g.lineStyle(2,0x8cab93);g.strokeCircle(5,11,4);g.lineBetween(9,16,15,12);r(14,10,3,4,0xc3d4b8);if(this.action>0){g.fillStyle(0x99d6df);for(let i=0;i<3;i++)g.fillEllipse(16+i*2,17+i*3,1,3);}}
-  else if(name==='harvest'){r(-1,15,13,8,0xa38051);g.lineStyle(1,0xd7bc80);g.strokeCircle(5,14,5);for(let y=17;y<23;y+=3)g.lineBetween(0,y,11,y);}
+  else if(name==='harvest'){
+   // Arched handle, oval opening and tapered woven belly read as a basket at game scale.
+   g.lineStyle(2.5,0x6f4c2e);g.strokeEllipse(5,13,12,14);g.lineStyle(1,0xd8b575);g.strokeEllipse(5,12.5,11,13);
+   g.fillStyle(0x65472e);g.fillEllipse(5,17,16,6);
+   g.fillStyle(0xb78a50);g.fillPoints([{x:-3,y:17},{x:13,y:17},{x:10.5,y:25},{x:7,y:27},{x:2,y:27},{x:-.5,y:25}],true);
+   g.fillStyle(0xcc9e60);g.fillEllipse(5,24,11,5);
+   for(let y=19;y<=25;y+=2){g.lineStyle(.7,0x866039);g.lineBetween(-1+(y-19)*.2,y,11-(y-19)*.2,y);}
+   for(let x=1;x<=9;x+=3){g.lineStyle(.7,0xe4bd7b);g.lineBetween(x,18,x+(5-x)*.17,25);}
+   g.lineStyle(1.5,0xe2bd80);g.strokeEllipse(5,17,16,5);g.lineStyle(1,0x765434);g.lineBetween(1,26,9,26);
+  }
   else if(['strawberry','honeyberry','blueberry'].includes(name)){r(0,16,9,7,0xb08255);r(-1,15,11,2,0xd0a575);r(4,7,1,8,0x658e49);g.fillStyle(0x8eb866);g.fillEllipse(2,10,5,3);g.fillEllipse(7,8,5,3);}
   else if(['radish','potato','pea'].includes(name)){r(0,12,9,12,0xdfc796);r(1,14,7,6,0xf2e8c7);r(3,15,3,4,name==='radish'?0xdf8791:name==='potato'?0xa58451:0x7caa55);}
  }
  update(walking:boolean,running:boolean,dir:{x:number;y:number},dt:number,jumping=false){
   this.phase+=walking?dt*(running?17:11):0;this.action=Math.max(0,this.action-dt);
   const stride=walking?Math.sin(this.phase)*(running?25:18):0;
-  this.leftLeg.angle=stride;this.rightLeg.angle=-stride;this.leftLeg.y=-16+(walking?Math.max(0,Math.sin(this.phase))*2:0);this.rightLeg.y=-16+(walking?Math.max(0,-Math.sin(this.phase))*2:0);
   const look=this.action>0?this.aim:dir;
+  if(this.sprite){
+   poseFarmer(this.sprite,walking,this.phase,look,this.action>0);
+   this.rightArm.rotation=this.action>0?workAngle(this.aim.x,this.aim.y+12,this.action,look.x<0):Phaser.Math.DegToRad(stride*.25);
+   this.rightArm.setPosition(this.action>0?0:this.armX,this.action>0?-12:this.armY);
+   this.rightArm.setScale(1,this.action>0?Phaser.Math.Clamp(Math.hypot(this.aim.x,this.aim.y+12)/31,.4,1.4):1);
+   this.root.scaleX=look.x<0?-1:1;this.root.scaleY=1;this.drawTool();return;
+  }
+  this.leftLeg.angle=stride;this.rightLeg.angle=-stride;this.leftLeg.y=-16+(walking?Math.max(0,Math.sin(this.phase))*2:0);this.rightLeg.y=-16+(walking?Math.max(0,-Math.sin(this.phase))*2:0);
   this.leftArm.angle=-stride*.6;this.rightArm.rotation=this.action>0?workAngle(this.aim.x,this.aim.y+12,this.action,look.x<0):Phaser.Math.DegToRad(stride*.45);
   this.rightArm.setPosition(this.action>0?0:this.armX,this.action>0?-12:this.armY);
   this.rightArm.setScale(1,this.action>0?Phaser.Math.Clamp(Math.hypot(this.aim.x,this.aim.y+12)/31,.4,1.4):1);

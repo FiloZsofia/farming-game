@@ -38,7 +38,7 @@ Verandával kiegészített változat: [tavaszi farm verandával és naplóasztal
 
 ## Alap főhős megjelenése
 
-- Elfogadott látványirány: a [három karakterterv](concepts/farmer-character-directions-abc.png) **B változata**, lágyan stilizált arányokkal és barátságos, kifejező arccal. Ebből kell elkészíteni a játék méretéhez és nézőpontjához illő figurát; a jelenlegi játékbeli alak még nem ennek a megvalósítása.
+- Elfogadott látványirány: a [három karakterterv](concepts/farmer-character-directions-abc.png) **B változata**, lágyan stilizált arányokkal és barátságos, kifejező arccal. A játékban ebből készült képi figura látható, elöl-, hátul- és oldalnézettel, lépésfázisokkal. Ez az elfogadott terv első játékbeli változata.
 
 - Felnőtt nő, vékony, természetes testalkattal és barátságos arccal.
 - Világos bőr, de nem túl sápadt tónussal.
@@ -243,3 +243,5 @@ Az évszakváltás, építkezés és tárolóbővítés pontos ütemezése kül�
 - A készlet harmadik füle a Jártasságok. A Kertészkedés kártyán az aktuális szint, haladási sáv és a 2. szintig hiányzó tapasztalatpont látható; 2. szinten jelezzük, hogy a további szintek még nincsenek kidolgozva. A fejlődést adó munkákat és a jutalmat is ismerteti. A szintlépés ünneplése előnézetként bármikor megnyitható, jutalom és haladásmódosítás nélkül; onnan vissza lehet térni a Jártasságok fülre. A három fül nyilakkal, Home/End billentyűkkel is kezelhető.
 
 - A három verandaközeli tárgy felismerhetőbb saját rajzot kapott: az eladóláda nyitott belsővel, vastag peremmel, deszkázattal, vasalattal és terményjelzéssel; a magkatalógus növénymintás zöld borítóval és faállvánnyal; a napló nyitott lapokkal, könyvjelzőszalaggal és tollal az íróasztalon. Az interakciós helyek és a működés változatlan.
+
+- A B főhős külön, saját generált karakterlapból jelenik meg, a korábbi geometriai főhősrajz helyett. A meglévő mozgás, futás, ugrás és eszközirányítás megmarad. Annie rajza változatlan. A naplóasztal mellé fa, párnázott háttámlás szék került; dekoráció, új ülési mechanika nélkül. A kézben tartott kosár íves fület, ovális peremet, lekerekített fonott testet kapott.
