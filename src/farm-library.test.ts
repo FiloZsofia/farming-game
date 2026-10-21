@@ -6,7 +6,7 @@ import {createClock} from './clock';
 import {createEconomy} from './economy';
 import {createOrders} from './orders';
 import {START} from './movement';
-const fresh=(name='Tesztfarm')=>snapshot(START,createClock(),createGarden(),{...createEconomy(),gold:100},createOrders(),name);
+const fresh=(name='Tesztfarm',farmerName='Mira')=>snapshot(START,createClock(),createGarden(),{...createEconomy(),gold:100},createOrders(),name,undefined,undefined,undefined,farmerName);
 async function access(factory:IDBFactory,key:string,value?:unknown){
  const db=await new Promise<IDBDatabase>((resolve,reject)=>{const r=factory.open(DB_NAME,1);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});
  const result=await new Promise<unknown>((resolve,reject)=>{const tx=db.transaction('saves',value===undefined?'readonly':'readwrite'),request=value===undefined?tx.objectStore('saves').get(key):tx.objectStore('saves').put(value,key);tx.oncomplete=()=>resolve(request.result);tx.onabort=()=>reject(tx.error);});db.close();return result;
@@ -62,4 +62,13 @@ describe('separate farm saves',()=>{
   const factory=new IDBFactory(),store=new SaveStore(factory);await store.load();const data=fresh('Megmarad'),id=await store.createFarm(data);const rows=await store.listFarms();rows[0].name='Átírva';expect((await store.listFarms())[0].name).toBe('Megmarad');store.close();
   await access(factory,'active',{broken:true});const reader=new SaveStore(factory);expect((await reader.load()).data).toEqual(data);expect(reader.selectedFarmId).toBe(id);reader.close();
  });
+ it('keeps farmer identities separate through switching, saves and reloads',async()=>{
+  const factory=new IDBFactory(),store=new SaveStore(factory);await store.load();const a=await store.createFarm(fresh('Tavasz Farm','Léna')),b=await store.createFarm(fresh('Tesztfarm','Nóra'));
+  expect(await store.listFarms()).toEqual(expect.arrayContaining([expect.objectContaining({id:a,farmerName:'Léna'}),expect.objectContaining({id:b,farmerName:'Nóra'})]));
+  const state=(await store.selectFarm(a)).data;expect(state.farmerName).toBe('Léna');state.economy.gold=77;await store.save(state);expect((await store.selectFarm(b)).data.farmerName).toBe('Nóra');store.close();const reader=new SaveStore(factory);expect((await reader.load()).data!.farmerName).toBe('Nóra');expect((await reader.selectFarm(a)).data.farmerName).toBe('Léna');reader.close();
+ });
+ it('requires a farmer name for newly created farms while preserving unnamed legacy identities',async()=>{
+  const factory=new IDBFactory(),store=new SaveStore(factory);await store.load();await expect(store.createFarm({...fresh(),farmerName:null})).rejects.toThrow();store.close();const data={...fresh(),version:11};delete (data as Partial<Snapshot>).farmerName;await access(factory,'active',data);const reader=new SaveStore(factory);expect((await reader.load()).data!.farmerName).toBeNull();expect(await reader.listFarms()).toHaveLength(1);reader.close();
+ });
+
 });

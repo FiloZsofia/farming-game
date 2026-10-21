@@ -13,7 +13,7 @@ function start(data?:object){
   win.indexedDB.deleteDatabase('erdoszeli-birtok');
   if(data){const r=win.indexedDB.open('erdoszeli-birtok',1);r.onupgradeneeded=()=>r.result.createObjectStore('saves');r.onsuccess=()=>{const tx=r.result.transaction('saves','readwrite');tx.objectStore('saves').put(data,'active');tx.oncomplete=()=>r.result.close();};}
  }});
- cy.get('#game').should('have.attr','data-ready','true');cy.get('#new-farm').should('not.be.disabled');cy.get('#continue-farm').then(button=>{if(button.prop('hidden'))cy.get('#new-farm').click();else cy.get('#continue-farm').click();});cy.get('#farm-name-panel').then(panel=>{if(!panel.prop('hidden')){cy.get('#farm-name').type('Tesztfarm');cy.get('#start-farm').click();}});cy.get('#dialogue').should('not.be.visible');
+ cy.get('#game').should('have.attr','data-ready','true');cy.get('#new-farm').should('not.be.disabled');cy.get('#continue-farm').then(button=>{if(button.prop('hidden'))cy.get('#new-farm').click();else cy.get('#continue-farm').click();});cy.get('#farm-name-panel').then(panel=>{if(!panel.prop('hidden')){cy.get('#farm-name').type('Tesztfarm');cy.get('#farmer-name').type('Tesztfarmer');cy.get('#start-farm').click();}});cy.get('#dialogue').should('not.be.visible');
 }
 function reloadFarm(){
  cy.reload();cy.get('#game').should('have.attr','data-ready','true');cy.get('#continue-farm').should('be.visible').and('not.be.disabled').click();cy.get('#dialogue').should('not.be.visible');
@@ -121,9 +121,8 @@ describe('Gardening level two and Annie',()=>{
  it('shows Annie in her own inventory tab and retains it on reload',()=>{
   start(base);press('Tab','Tab',9);cy.get('#people-tab').click();cy.get('[data-person=annie]').should('contain','Annie');cy.get('#items-page').should('not.be.visible');press('Escape','Escape',27);reloadFarm();cy.get('#game').should('have.attr','data-ready','true');press('Tab','Tab',9);cy.get('#people-tab').click();cy.get('[data-person=annie]').should('be.visible');
  });
- it('shows skill progress and previews celebrations without granting rewards',()=>{
-  start({...base,skill:{xp:12,credited:Array.from({length:12},(_,i)=>`hoe:old${i}`),rewarded:false,fruits:{}}});press('Tab','Tab',9);cy.get('#skills-tab').click();cy.get('[data-skill-progress=gardening]').should('contain','24 pont');cy.get('#skills-page progress').should('have.value','12');
-  cy.get('#replay-gardening').click();cy.get('#level-reward-panel').should('be.visible');cy.get('#dialogue-label').should('contain','ELŐNÉZET');cy.get('#reward-preview-back').click();cy.get('#skills-tab').should('have.attr','aria-selected','true');cy.get('#game').should('have.attr','data-gardening-xp','12').and('have.attr','data-gardening-reward','false');press('Tab','Tab',9);cy.get('#toolbar [data-tool=strawberry]').should('not.be.visible');
+ it('shows progress without offering previews of unearned levels',()=>{
+  start({...base,skill:{xp:12,credited:Array.from({length:12},(_,i)=>`hoe:old${i}`),rewarded:false,fruits:{}}});press('Tab','Tab',9);cy.get('#skills-tab').click();cy.get('[data-skill-progress=gardening]').should('contain','24 pont');cy.get('#skills-page progress').should('have.value','12');cy.get('#replay-gardening,#replay-gardening-three').should('not.exist');press('Tab','Tab',9);cy.get('#game').should('have.attr','data-gardening-xp','12');
  });
  it('awards four of each fruit once and unlocks all three planting materials',()=>{
   start({...base,skill:{xp:35,credited:Array.from({length:35},(_,i)=>`hoe:old${i}`),rewarded:false,fruits:{}}});walk('right','x',339);press('f','KeyF',70);cy.get('#game').should('have.attr','data-gardening-xp','36').and('have.attr','data-gardening-reward','true');cy.get('#level-reward-panel').should('be.visible');cy.get('#dialogue-close').click();press('Tab','Tab',9);cy.get('[data-inventory-seed=strawberry],[data-inventory-seed=honeyberry],[data-inventory-seed=blueberry]').should('have.length',3);cy.get('[data-inventory-seed=strawberry] strong,[data-inventory-seed=honeyberry] strong,[data-inventory-seed=blueberry] strong').each(el=>expect(el.text()).to.equal('4 db'));press('Escape','Escape',27);reloadFarm();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-gardening-xp','36');press('Tab','Tab',9);cy.get('[data-inventory-seed=strawberry] strong,[data-inventory-seed=honeyberry] strong,[data-inventory-seed=blueberry] strong').each(el=>expect(el.text()).to.equal('4 db'));
@@ -161,8 +160,15 @@ describe('Level three and starting money',()=>{
 describe('Start menu and separate farms',()=>{
  it('creates a test farm without replacing an older farm and returns to either',()=>{
   start();walk('down','y',288);walk('right','x',339);press('f','KeyF',70);cy.get('#game').should('have.attr','data-plots','1');press('3','Digit3',51);press('f','KeyF',70);cy.get('#game').should('have.attr','data-gardening-xp','2');cy.get('[data-count=radish]').should('have.text','3');
-  cy.get('#menu').click();cy.get('#open-start-menu').click();cy.get('.farm-save-card').should('have.length',1);cy.get('#new-farm').click();cy.get('#farm-name').type('Próbakert');cy.get('#start-farm').click();cy.get('h1').should('have.text','Próbakert');cy.get('#dialogue').should('not.be.visible');cy.get('#game').should('have.attr','data-gold','100').and('have.attr','data-gardening-xp','0');cy.get('[data-count=radish]').should('have.text','4');
+  cy.get('#menu').click();cy.get('#open-start-menu').click();cy.get('.farm-save-card').should('have.length',1);cy.get('#new-farm').click();cy.get('#farm-name').type('Próbakert');cy.get('#farmer-name').type('Nóra');cy.get('#start-farm').click();cy.get('h1').should('have.text','Próbakert');cy.get('#dialogue').should('not.be.visible');cy.get('#game').should('have.attr','data-gold','100').and('have.attr','data-gardening-xp','0');cy.get('[data-count=radish]').should('have.text','4');
   cy.get('#menu').click();cy.get('#open-start-menu').click();cy.get('.farm-save-card').should('have.length',2);cy.contains('.farm-save-card','Tesztfarm').find('button').click();cy.get('h1').should('have.text','Tesztfarm');cy.get('#dialogue').should('not.be.visible');cy.get('#game').should('have.attr','data-gardening-xp','2');cy.get('[data-count=radish]').should('have.text','3');
   cy.reload();cy.get('#start-panel').should('be.visible');cy.get('.farm-save-card').should('have.length',2);cy.get('#new-farm').click();cy.get('#cancel-farm-name').click();cy.get('.farm-save-card').should('have.length',2);cy.get('#continue-farm').click();cy.get('#game').should('have.attr','data-gardening-xp','2');
+ });
+});
+
+describe('Farmer identity and earned celebrations',()=>{
+ it('requires both names for a new farm and retains the farmer name after reload',()=>{
+  start();cy.get('#menu').click();cy.get('#open-start-menu').click();cy.get('#new-farm').click();cy.get('#farm-name').type('Harmat Farm');cy.get('#start-farm').should('be.disabled');cy.get('#farmer-name').type('Léna');cy.get('#start-farm').should('not.be.disabled').click();cy.get('h1').should('have.text','Harmat Farm');cy.get('#dialogue').should('not.be.visible');cy.get('#menu').click();cy.get('#open-start-menu').click();cy.contains('.farm-save-card','Harmat Farm').should('contain','Farmer: Léna');
+  cy.reload();cy.get('#start-panel').should('be.visible');cy.get('#continue-farm-name').should('contain','Léna');cy.get('#continue-farm').click();press('Tab','Tab',9);cy.get('#skills-tab').click();cy.get('#replay-gardening,#replay-gardening-three').should('not.exist');
  });
 });

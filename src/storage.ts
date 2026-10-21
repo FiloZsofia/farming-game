@@ -9,18 +9,19 @@ import {createClearing,validClearing,type Clearing} from './cleanup';
 import {createGardenSkill,validGardenSkill,gardeningLevel,rewardFruits,type GardenSkill} from './gardening-skill';
 import { farmLayout } from './layout';
 export const DB_NAME='erdoszeli-birtok';
-export type Snapshot={version:11;skill:GardenSkill;story:FarmStory;clearing:Clearing;farmName:string|null;orders:Orders;economy:Economy;produce:Garden['produce'];player:{x:number;y:number};clock:Clock;seeds:Garden['seeds'];plots:[string,Plot][]};
-export function snapshot(player:{x:number;y:number},clock:Clock,garden:Garden,economy:Economy=createEconomy(),orders:Orders=createOrders(),farmName:string|null=null,clearing:Clearing=createClearing(),story:FarmStory=createStory(),skill:GardenSkill=createGardenSkill()):Snapshot{
- return structuredClone({version:11,skill,story,clearing,farmName,orders,economy,produce:garden.produce,player:{x:player.x,y:player.y},clock,seeds:garden.seeds,plots:[...garden.plots]});
+export type Snapshot={version:12;skill:GardenSkill;story:FarmStory;clearing:Clearing;farmName:string|null;farmerName:string|null;orders:Orders;economy:Economy;produce:Garden['produce'];player:{x:number;y:number};clock:Clock;seeds:Garden['seeds'];plots:[string,Plot][]};
+export function snapshot(player:{x:number;y:number},clock:Clock,garden:Garden,economy:Economy=createEconomy(),orders:Orders=createOrders(),farmName:string|null=null,clearing:Clearing=createClearing(),story:FarmStory=createStory(),skill:GardenSkill=createGardenSkill(),farmerName:string|null=null):Snapshot{
+ return structuredClone({version:12,skill,story,clearing,farmName,farmerName,orders,economy,produce:garden.produce,player:{x:player.x,y:player.y},clock,seeds:garden.seeds,plots:[...garden.plots]});
 }
 const finite=(n:unknown):n is number=>typeof n==='number'&&Number.isFinite(n);
 export function validSnapshot(value:unknown):value is Snapshot{
  if(!value||typeof value!=='object')return false;
  const v=value as Snapshot;
- if(v.version!==11||!validGardenSkill(v.skill)||!validStory(v.story)||!validClearing(v.clearing)||!v.player||!finite(v.player.x)||!finite(v.player.y)||blocked(v.player.x,v.player.y))return false;
+ if(v.version!==12||!validGardenSkill(v.skill)||!validStory(v.story)||!validClearing(v.clearing)||!v.player||!finite(v.player.x)||!finite(v.player.y)||blocked(v.player.x,v.player.y))return false;
  if(!validEconomy(v.economy)||v.economy.lastSale&&v.economy.lastSale.day>=v.clock?.day)return false;
  if(!validOrders(v.orders)||crops.some(k=>{const c=k as keyof Garden['seeds'];return !v.seeds||!Number.isSafeInteger(v.seeds[c])||v.seeds[c]+v.orders.pending[c]+v.orders.mailbox[c]>999999;}))return false;
  if(v.farmName!==null&&(typeof v.farmName!=='string'||normalizeFarmName(v.farmName)!==v.farmName))return false;
+ if(v.farmerName!==null&&(typeof v.farmerName!=='string'||normalizeFarmName(v.farmerName)!==v.farmerName))return false;
  const c=v.clock;
  if(Object.values(v.clearing.removed).some(day=>day>c?.day))return false;
  if(!c||!Number.isSafeInteger(c.day)||c.day<1||!finite(c.elapsed)||!finite(c.collapseAt)||c.elapsed<0||c.elapsed>c.collapseAt||c.collapseAt<570||c.collapseAt>=600)return false;
@@ -39,10 +40,10 @@ export function validSnapshot(value:unknown):value is Snapshot{
  }
  return true;
 }
-// Migrate known formats without discarding the original backup until a v11 write succeeds.
+// Migrate known formats without discarding the original backup until a v12 write succeeds.
 export function decodeSnapshot(value:unknown):Snapshot|null{
  if(validSnapshot(value))return structuredClone(value);
- if(!value||typeof value!=='object'||!('version' in value)||(value.version!==1&&value.version!==2&&value.version!==3&&value.version!==4&&value.version!==5&&value.version!==6&&value.version!==7&&value.version!==8&&value.version!==9&&value.version!==10))return null;
+ if(!value||typeof value!=='object'||!('version' in value)||(value.version!==1&&value.version!==2&&value.version!==3&&value.version!==4&&value.version!==5&&value.version!==6&&value.version!==7&&value.version!==8&&value.version!==9&&value.version!==10&&value.version!==11))return null;
  const legacy=value as {clearing?:Clearing;version:number;plots?:unknown;player?:{x:number;y:number}};
  if(!Array.isArray(legacy.plots)||legacy.plots.some(row=>!Array.isArray(row)||row.length!==2||!row[1]||typeof row[1]!=='object'))return null;
  let player=legacy.player;
@@ -52,7 +53,7 @@ export function decodeSnapshot(value:unknown):Snapshot|null{
  const old=value as unknown as Snapshot;
  const extend=(counts:object|undefined)=>counts&&typeof counts==='object'?{strawberry:0,honeyberry:0,blueberry:0,carrot:0,lettuce:0,onion:0,...counts}:counts;
  const additions={seeds:extend(old.seeds),...(legacy.version!==1?{produce:extend(old.produce)}:{}),...(legacy.version>=3?{economy:{...old.economy,shipping:extend(old.economy?.shipping),lastSale:old.economy?.lastSale?{...old.economy.lastSale,items:extend(old.economy.lastSale.items)}:old.economy?.lastSale}}:{}),...(legacy.version>=4?{orders:{pending:extend(old.orders?.pending),mailbox:extend(old.orders?.mailbox)}}:{})};
- const migrated={...value,...additions,version:11,skill:legacy.version<8?createGardenSkill():{...old.skill,levelThreeRewarded:false},clearing:legacy.version>=9?legacy.clearing:legacy.version>=6?{...legacy.clearing,positions:{},...(legacy.version===6?{weed:0}:{})}:createClearing(),...(legacy.version<7?{story:createStory()}:{}),...(legacy.version<5?{farmName:null}:{}),...(legacy.version<4?{orders:createOrders()}:{}),...(legacy.version<3?{economy:createEconomy()}:{}),player,
+ const migrated={...value,...additions,version:12,farmerName:null,skill:legacy.version<8?createGardenSkill():legacy.version===11?old.skill:{...old.skill,levelThreeRewarded:false},clearing:legacy.version>=9?legacy.clearing:legacy.version>=6?{...legacy.clearing,positions:{},...(legacy.version===6?{weed:0}:{})}:createClearing(),...(legacy.version<7?{story:createStory()}:{}),...(legacy.version<5?{farmName:null}:{}),...(legacy.version<4?{orders:createOrders()}:{}),...(legacy.version<3?{economy:createEconomy()}:{}),player,
   ...(legacy.version===1?{produce:{radish:0,potato:0,pea:0,strawberry:0,honeyberry:0,blueberry:0,carrot:0,lettuce:0,onion:0},plots:legacy.plots.map(([key,p])=>[key,{...p,growth:0,regrowing:false}])}:{})};
  if(!validSnapshot(migrated))return null;
  // Earlier rewards were produce, so supply the missing planting materials once.
@@ -60,7 +61,7 @@ export function decodeSnapshot(value:unknown):Snapshot|null{
  if(legacy.version<10&&migrated.skill.rewarded)for(const fruit of Object.keys(rewardFruits) as (keyof typeof rewardFruits)[])migrated.seeds[fruit]=Math.min(999999-migrated.orders.pending[fruit]-migrated.orders.mailbox[fruit],migrated.seeds[fruit]+4);
  return structuredClone(migrated);
 }
-export type FarmSummary={id:string;name:string;day:number;gold:number;level:number;updatedAt:number};
+export type FarmSummary={id:string;name:string;farmerName?:string|null;day:number;gold:number;level:number;updatedAt:number};
 type FarmCatalogue={version:1;selected:string|null;farms:FarmSummary[]};
 type FarmRecord={active:unknown;backup:unknown};
 const CATALOGUE_KEY='farm-catalogue';
@@ -69,13 +70,13 @@ function validCatalogue(value:unknown):value is FarmCatalogue{
  if(!value||typeof value!=='object')return false;const c=value as FarmCatalogue;
  if(c.version!==1||!Array.isArray(c.farms))return false;
  const ids=new Set<string>();
- for(const f of c.farms){if(!f||typeof f.id!=='string'||! /^(legacy|farm-[a-zA-Z0-9-]{1,80})$/.test(f.id)||ids.has(f.id)||typeof f.name!=='string'||!normalizeFarmName(f.name)||!Number.isSafeInteger(f.day)||f.day<1||!Number.isSafeInteger(f.gold)||f.gold<0||![1,2,3].includes(f.level)||!Number.isSafeInteger(f.updatedAt)||f.updatedAt<0)return false;ids.add(f.id);}
+ for(const f of c.farms){if(!f||typeof f.id!=='string'||! /^(legacy|farm-[a-zA-Z0-9-]{1,80})$/.test(f.id)||ids.has(f.id)||typeof f.name!=='string'||!normalizeFarmName(f.name)||(f.farmerName!==undefined&&f.farmerName!==null&&(typeof f.farmerName!=='string'||normalizeFarmName(f.farmerName)!==f.farmerName))||!Number.isSafeInteger(f.day)||f.day<1||!Number.isSafeInteger(f.gold)||f.gold<0||![1,2,3].includes(f.level)||!Number.isSafeInteger(f.updatedAt)||f.updatedAt<0)return false;ids.add(f.id);}
  return c.selected===null?c.farms.length===0:ids.has(c.selected);
 }
-function summary(id:string,data:Snapshot):FarmSummary{return {id,name:data.farmName??'Névtelen farm',day:data.clock.day,gold:data.economy.gold,level:gardeningLevel(data.skill),updatedAt:Date.now()};}
+function summary(id:string,data:Snapshot):FarmSummary{return {id,name:data.farmName??'Névtelen farm',farmerName:data.farmerName,day:data.clock.day,gold:data.economy.gold,level:gardeningLevel(data.skill),updatedAt:Date.now()};}
 function decodePair(active:unknown,backup:unknown){
  const decoded=decodeSnapshot(active);if(decoded)return {data:decoded,recovered:false,raw:active};
- if(active&&typeof active==='object'&&'version' in active&&(!Number.isInteger(active.version)||Number(active.version)<1||Number(active.version)>11))throw new Error('Ez a mentés másik játékverzióhoz tartozik. Megőriztem, nem írtam felül.');
+ if(active&&typeof active==='object'&&'version' in active&&(!Number.isInteger(active.version)||Number(active.version)<1||Number(active.version)>12))throw new Error('Ez a mentés másik játékverzióhoz tartozik. Megőriztem, nem írtam felül.');
  const previous=decodeSnapshot(backup);if(previous)return {data:previous,recovered:true,raw:backup};
  throw new Error('A mentés nem olvasható. Megőriztem az eredetit; nem indítok rá új játékot.');
 }
@@ -137,7 +138,7 @@ export class SaveStore{
   });
  }
  async createFarm(data:Snapshot):Promise<string>{
-  const copy=structuredClone(data);if(!validSnapshot(copy)||!copy.farmName)throw new Error('Az új farmnak érvényes név és kezdőállapot szükséges.');
+  const copy=structuredClone(data);if(!validSnapshot(copy)||!copy.farmName||!copy.farmerName)throw new Error('Az új farmnak és farmernek érvényes név és kezdőállapot szükséges.');
   await this.listFarms();
   return this.enqueue(async()=>{
    const id=`farm-${crypto.randomUUID()}`;if(this.catalogue!.farms.some(f=>f.id===id))throw new Error('Nem sikerült új mentésazonosítót létrehozni. Próbáld újra.');const next:FarmCatalogue={...structuredClone(this.catalogue!),selected:id};next.farms.push(summary(id,copy));

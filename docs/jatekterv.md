@@ -240,7 +240,7 @@ Az évszakváltás, építkezés és tárolóbővítés pontos ütemezése kül�
 - A kertészkedés 2. szintjét középre rendezett, nagy betűs jutalomablak ünnepli hulló virágszirmokkal; a játék az elolvasásáig szünetel. A kapott ültetőanyag azonnal kiválasztható az eszközsoron. A v10 mentésre váltás a korábban tévesen terményként adott jutalom mellé egyszer hozzáadja a hiányzó ültetőanyagot, a meglévő készlet megtartásával. Annie avatarképe az arcát és kalapját mutatja.
 - A főhős további megjelenésbeli módosítása előtt külön karakterterven kell megegyezni; a jelenlegi alak nem elfogadott végleges grafika.
 
-- A készlet harmadik füle a Jártasságok. A Kertészkedés kártyán az aktuális szint, haladási sáv és a 2. szintig hiányzó tapasztalatpont látható; 2. szinten a 3. szintig hiányzó pontokat mutatjuk; jelenleg a 3. szint a legmagasabb. A fejlődést adó munkákat és a jutalmat is ismerteti. A szintlépés ünneplése előnézetként bármikor megnyitható, jutalom és haladásmódosítás nélkül; onnan vissza lehet térni a Jártasságok fülre. A három fül nyilakkal, Home/End billentyűkkel is kezelhető.
+- A készlet harmadik füle a Jártasságok. A Kertészkedés kártyán az aktuális szint, haladási sáv és a 2. szintig hiányzó tapasztalatpont látható; 2. szinten a 3. szintig hiányzó pontokat mutatjuk; jelenleg a 3. szint a legmagasabb. A fejlődést adó munkákat és a jutalmat is ismerteti. A már elért szintek ünneplése újranézhető, jutalom és haladásmódosítás nélkül; onnan vissza lehet térni a Jártasságok fülre. A három fül nyilakkal, Home/End billentyűkkel is kezelhető.
 
 - A három verandaközeli tárgy felismerhetőbb saját rajzot kapott: az eladóláda nyitott belsővel, vastag peremmel, deszkázattal, vasalattal és terményjelzéssel; a magkatalógus növénymintás zöld borítóval és faállvánnyal; a napló nyitott lapokkal, könyvjelzőszalaggal és tollal az íróasztalon. Az interakciós helyek és a működés változatlan.
 
@@ -250,7 +250,7 @@ Az évszakváltás, építkezés és tárolóbővítés pontos ütemezése kül�
 ## Kertészkedés 3. szint és ültetőanyag-utánpótlás
 
 - Új farm indításakor 100 gold jár. A már létező mentések pénzét nem írjuk át.
-- A 3. kertészkedési szint további 36 érdemi művelet, összesen 72 tapasztalatpont után érhető el. Egyszeri jutalma 4 sárgarépamag, 4 salátamag és 4 hagymamag. Mindhárom azonnal kiválasztható az alsó eszközsoron, és rendelhető a katalógusból. A szintlépés középen ünnepelhető és a Jártasságok fülről előnézetként újranézhető, jutalomismétlés nélkül.
+- A 3. kertészkedési szint további 36 érdemi művelet, összesen 72 tapasztalatpont után érhető el. Egyszeri jutalma 4 sárgarépamag, 4 salátamag és 4 hagymamag. Mindhárom azonnal kiválasztható az alsó eszközsoron, és rendelhető a katalógusból. A szintlépés középen ünnepelhető és az elérése után a Jártasságok fülről újranézhető, jutalomismétlés nélkül.
 
 | Növény | Vétel, gold/db | Eladás, gold/db | Öntözött nap az érésig | Újraterem |
 | --- | --- | --- | --- | --- |
@@ -272,4 +272,7 @@ Nyitott javaslatok, még nem elfogadott követelmények: kapun túli gyűjtöget
 - A játék megnyitásakor Folytatás / Új játék kezdőmenü jelenik meg. A Folytatás az utoljára játszott farmot nyitja meg. A Mentett farmjaid listában név, játéknap, gold, kertészkedési szint és mentési idő látszik; a többi birtok innen nyitható meg.
 - Az Új játék a bevezetővel közös névadó ablakot nyitja. A létrehozásig vissza lehet lépni, ilyenkor nem keletkezik új mentés. Az új farm 100 golddal, a kezdő 4-4-4 maggal, 1. nappal, 0 jártasságponttal és újra elérhető Annie-látogatással kezd; a kert, rendelések, készlet és történeti események önállók.
 - A meglévő aktív mentés első megnyitáskor a farmok listájába kerül, adatvesztés nélkül. A farmoknak egyedi azonosítójuk és külön előző biztonsági mentésük van. Azonos farmnév sem ír felül másik birtokot. A pillanatnyi állapot a farmválasztó megnyitásakor elmentődik; új farm létrehozása és a váltás atomikusan rögzül. Sikertelen íráskor az eredeti állapot és kiválasztás marad meg.
-- Játék közben Menü → Kezdőmenü · Farmválasztás vezet vissza a listához. A kezdőmenüben az idő áll. Farmváltáskor a jelenet teljesen újraindul, így nem maradnak át az előző farm eszközei, madarai, szereplői vagy értesítései. A Snapshot v11 és az IndexedDB v1 adatbázis megmarad; a farmkatalógus és a farmonkénti mentések külön rekordok ugyanabban a tárolóban.
+- Játék közben Menü → Kezdőmenü · Farmválasztás vezet vissza a listához. A kezdőmenüben az idő áll. Farmváltáskor a jelenet teljesen újraindul, így nem maradnak át az előző farm eszközei, madarai, szereplői vagy értesítései. A mentés jelenleg Snapshot v12 formátumú, az IndexedDB adatbázisa továbbra is v1; a farmkatalógus és a farmonkénti mentések külön rekordok ugyanabban a tárolóban.
+
+- A Jártasságok fül nem kínál előnézetet a még el nem ért szintek ünnepléséhez. Kizárólag az elért 2., illetve 3. szint újranézése jelenik meg.
+- Új farm létrehozásakor a farm és a farmer nevét is meg kell adni, legfeljebb 40 karakterrel. Mindkettő mentődik; a farmer neve a farmválasztó kártyán és a Folytatás felirat alatt is látható. A korábbi v1–v11 mentések v12-re frissülnek, a meglévő farmhoz nem találunk ki farmernevet és nem kérünk kötelező új névadást. A jártasság, pénz, kert, rendelések és külön farmmentések megmaradnak.
