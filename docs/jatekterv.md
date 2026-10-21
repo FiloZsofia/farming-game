@@ -262,6 +262,14 @@ Az évszakváltás, építkezés és tárolóbővítés pontos ütemezése kül�
 - A korábbi mentések v11 formátumra frissülnek: a megszerzett pontok, magok, termények, pénz, rendelések és díszek helyei megmaradnak. A 2. szint jutalma frissítéskor nem ismétlődik.
 - A visszaállított, első barna hajú főhős ingujja keskenyebb, vállvonala lejtős; arca és haja megmarad.
 
-Nyitott javaslatok, még nem elfogadott követelmények: külön farmmentéseket kezelő Folytatás / Új játék menü; kapun túli gyűjtögetős rét; fa és gaz felhasználásával komposztáló készítése; később falusi faiskola és tyúkól.
+Nyitott javaslatok, még nem elfogadott követelmények: kapun túli gyűjtögetős rét; fa és gaz felhasználásával komposztáló készítése; később falusi faiskola és tyúkól.
 
 - A fejlődési jelző mindig az aktuális szinten szerzett pontokat mutatja: a 2. szint elérésekor 0/36-ról indul a 3. szint felé. A mentett összes pont változatlan, korábbi haladás nem vész el. A szám a függőleges csík fölött nagy, világos felirat; pontszerzéskor megugrik és +1 visszajelzés kíséri, a csík finoman megrezdül. Csökkentett mozgás beállításánál nincs ugrás vagy remegés. A Jártasságok fül ugyanezt a szintenkénti haladást és az ültetést is tartalmazó leírást mutatja.
+
+
+## Kezdőmenü és külön farmmentések
+
+- A játék megnyitásakor Folytatás / Új játék kezdőmenü jelenik meg. A Folytatás az utoljára játszott farmot nyitja meg. A Mentett farmjaid listában név, játéknap, gold, kertészkedési szint és mentési idő látszik; a többi birtok innen nyitható meg.
+- Az Új játék a bevezetővel közös névadó ablakot nyitja. A létrehozásig vissza lehet lépni, ilyenkor nem keletkezik új mentés. Az új farm 100 golddal, a kezdő 4-4-4 maggal, 1. nappal, 0 jártasságponttal és újra elérhető Annie-látogatással kezd; a kert, rendelések, készlet és történeti események önállók.
+- A meglévő aktív mentés első megnyitáskor a farmok listájába kerül, adatvesztés nélkül. A farmoknak egyedi azonosítójuk és külön előző biztonsági mentésük van. Azonos farmnév sem ír felül másik birtokot. A pillanatnyi állapot a farmválasztó megnyitásakor elmentődik; új farm létrehozása és a váltás atomikusan rögzül. Sikertelen íráskor az eredeti állapot és kiválasztás marad meg.
+- Játék közben Menü → Kezdőmenü · Farmválasztás vezet vissza a listához. A kezdőmenüben az idő áll. Farmváltáskor a jelenet teljesen újraindul, így nem maradnak át az előző farm eszközei, madarai, szereplői vagy értesítései. A Snapshot v11 és az IndexedDB v1 adatbázis megmarad; a farmkatalógus és a farmonkénti mentések külön rekordok ugyanabban a tárolóban.

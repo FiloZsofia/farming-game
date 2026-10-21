@@ -13,7 +13,10 @@ function start(data?:object){
   win.indexedDB.deleteDatabase('erdoszeli-birtok');
   if(data){const r=win.indexedDB.open('erdoszeli-birtok',1);r.onupgradeneeded=()=>r.result.createObjectStore('saves');r.onsuccess=()=>{const tx=r.result.transaction('saves','readwrite');tx.objectStore('saves').put(data,'active');tx.oncomplete=()=>r.result.close();};}
  }});
- cy.get('#game').should('have.attr','data-ready','true');cy.get('#farm-name-panel').then(panel=>{if(!panel.prop('hidden')){cy.get('#farm-name').type('Tesztfarm');cy.get('#start-farm').click();}});cy.get('#dialogue').should('not.be.visible');
+ cy.get('#game').should('have.attr','data-ready','true');cy.get('#new-farm').should('not.be.disabled');cy.get('#continue-farm').then(button=>{if(button.prop('hidden'))cy.get('#new-farm').click();else cy.get('#continue-farm').click();});cy.get('#farm-name-panel').then(panel=>{if(!panel.prop('hidden')){cy.get('#farm-name').type('Tesztfarm');cy.get('#start-farm').click();}});cy.get('#dialogue').should('not.be.visible');
+}
+function reloadFarm(){
+ cy.reload();cy.get('#game').should('have.attr','data-ready','true');cy.get('#continue-farm').should('be.visible').and('not.be.disabled').click();cy.get('#dialogue').should('not.be.visible');
 }
 function clickWorld(x:number,y:number){
  cy.window().then(win=>cy.get('#game').then(el=>{
@@ -40,9 +43,9 @@ describe('World interactions and uncluttered UI',()=>{
   press('f','KeyF',70);cy.get('#game').should('have.attr','data-plots','1');
   press('3','Digit3',51);press('f','KeyF',70);press('2','Digit2',50);press('f','KeyF',70);
   cy.get('#game').should('have.attr','data-planted','1').and('have.attr','data-watered','1');cy.get('#save-state').should('contain','Mentve');
-  cy.reload();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-planted','1').and('have.attr','data-watered','1');
+  reloadFarm();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-planted','1').and('have.attr','data-watered','1');
  });
- it('opens the journal by clicking its actual world object',()=>{start();sleepTo(2);cy.reload();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-day','2');});
+ it('opens the journal by clicking its actual world object',()=>{start();sleepTo(2);reloadFarm();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-day','2');});
 });
 describe('Catalogue and mailbox',()=>{
  it('pays now, delivers tomorrow and collects exactly once',()=>{
@@ -52,7 +55,7 @@ describe('Catalogue and mailbox',()=>{
   walk('left','x',252);sleepTo(2);cy.get('#game').should('have.attr','data-mail-seeds','3');
   walk('down','y',478);walk('left','x',166);clickWorld(124,482);cy.get('#collect-package').click();
   cy.get('[data-count=radish]').should('have.text','6');cy.get('[data-count=pea]').should('have.text','5');cy.get('#game').should('have.attr','data-mail-seeds','0');
-  cy.reload();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-gold','75').and('have.attr','data-mail-seeds','0');
+  reloadFarm();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-gold','75').and('have.attr','data-mail-seeds','0');
  });
  it('keeps the HUD readable and the catalogue within a mobile screen',()=>{
   start({version:3,player:{x:285,y:242},clock:{day:1,elapsed:200,collapseAt:580},seeds:{radish:4,potato:4,pea:4},produce:{radish:0,potato:0,pea:0},plots:[],economy:{gold:100,shipping:{radish:0,potato:0,pea:0},lastSale:null}});
@@ -63,7 +66,7 @@ describe('Catalogue and mailbox',()=>{
 
 describe('Visual shipping and farm name',()=>{
  it('restores the chosen name without repeating the introduction',()=>{
-  start();cy.get('h1').should('have.text','Tesztfarm');cy.reload();cy.get('#game').should('have.attr','data-ready','true');cy.get('h1').should('have.text','Tesztfarm');cy.get('#dialogue').should('not.be.visible');
+  start();cy.get('h1').should('have.text','Tesztfarm');reloadFarm();cy.get('#game').should('have.attr','data-ready','true');cy.get('h1').should('have.text','Tesztfarm');cy.get('#dialogue').should('not.be.visible');
  });
  it('moves illustrated stacks and individual items in both directions',()=>{
   start({version:4,player:{x:210,y:280},clock:{day:1,elapsed:200,collapseAt:580},seeds:{radish:4,potato:4,pea:4},produce:{radish:3,potato:2,pea:4},plots:[],economy:{gold:100,shipping:{radish:0,potato:0,pea:0},lastSale:null},orders:{pending:{radish:0,potato:0,pea:0},mailbox:{radish:0,potato:0,pea:0}}});
@@ -76,7 +79,7 @@ describe('Clearing and seed packets',()=>{
  const base={version:4,player:{x:112,y:365},clock:{day:1,elapsed:0,collapseAt:580},seeds:{radish:4,potato:4,pea:4},produce:{radish:1,potato:0,pea:0},plots:[],economy:{gold:0,shipping:{radish:0,potato:0,pea:0},lastSale:null},orders:{pending:{radish:0,potato:0,pea:0},mailbox:{radish:2,potato:1,pea:3}}};
  it('requires a pickaxe, collects a rock only once and preserves the cleared spot',()=>{
   start(base);clickWorld(86,365);cy.get('#game').should('have.attr','data-stone','0');press('9','Digit9',57);clickWorld(86,365);cy.get('#game').should('have.attr','data-stone','1').and('have.attr','data-cleared','1');clickWorld(86,365);cy.get('#game').should('have.attr','data-stone','1');
-  cy.reload();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-stone','1').and('have.attr','data-cleared','1');press('Tab','Tab',9);cy.get('[data-material=stone]').should('contain','1 db');
+  reloadFarm();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-stone','1').and('have.attr','data-cleared','1');press('Tab','Tab',9);cy.get('[data-material=stone]').should('contain','1 db');
  });
  it('distinguishes seed packets from produce and illustrates delivered mail',()=>{
   start({...base,player:{x:145,y:470}});press('Tab','Tab',9);cy.get('#inventory-seeds .seed-icon').should('have.length',3);cy.get('#inventory-produce .seed-icon').should('not.exist');press('Tab','Tab',9);clickWorld(124,482);cy.get('#mailbox-content .seed-icon').should('have.length',3);cy.get('#collect-package').click();cy.get('#game').should('have.attr','data-mail-seeds','0');
@@ -92,10 +95,10 @@ describe('Neighbor, birdhouse and weeds',()=>{
  it('receives one gift, places it and sees the next morning thought',()=>{
   start(base);cy.get('#game',{timeout:20000}).should('have.attr','data-gift','true');cy.get('#dialogue-title').should('contain','szomszéd');press('Escape','Escape',27);press('Tab','Tab',9);
   cy.get('#inventory-materials [data-birdhouse] button').click();walk('down','y',288);clickWorld(280,288);cy.get('#game').should('have.attr','data-birdhouse','true');
-  cy.reload();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-gift','true').and('have.attr','data-birdhouse','true');cy.get('#dialogue').should('not.be.visible');walk('up','y',242);sleepTo(2);cy.get('#game').should('have.attr','data-morning-seen','true');cy.get('#game',{timeout:12000}).should('have.attr','data-birds','1');
+  reloadFarm();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-gift','true').and('have.attr','data-birdhouse','true');cy.get('#dialogue').should('not.be.visible');walk('up','y',242);sleepTo(2);cy.get('#game').should('have.attr','data-morning-seen','true');cy.get('#game',{timeout:12000}).should('have.attr','data-birds','1');
  });
  it('adds removed weeds to the material inventory and saves them',()=>{
-  start({...base,player:{x:137,y:300},story:{giftReceived:true,morningSeen:true,birdhouse:null}});press('7','Digit7',55);clickWorld(112,300);cy.get('#game').should('have.attr','data-cleared','1');press('Tab','Tab',9);cy.get('[data-material=weed]').should('contain','1 db');press('Escape','Escape',27);cy.reload();cy.get('#game').should('have.attr','data-ready','true');press('Tab','Tab',9);cy.get('[data-material=weed]').should('contain','1 db');
+  start({...base,player:{x:137,y:300},story:{giftReceived:true,morningSeen:true,birdhouse:null}});press('7','Digit7',55);clickWorld(112,300);cy.get('#game').should('have.attr','data-cleared','1');press('Tab','Tab',9);cy.get('[data-material=weed]').should('contain','1 db');press('Escape','Escape',27);reloadFarm();cy.get('#game').should('have.attr','data-ready','true');press('Tab','Tab',9);cy.get('[data-material=weed]').should('contain','1 db');
  });
 });
 
@@ -105,7 +108,7 @@ describe('Inventory visibility and movable birdhouse',()=>{
   start(base);cy.get('#toolbar [data-tool=radish]').should('not.be.visible');cy.get('#toolbar [data-tool=potato]').should('not.be.visible');cy.get('#toolbar [data-tool=pea]').should('not.be.visible');press('Tab','Tab',9);cy.get('#inventory-produce .inventory-card').should('have.length',1);cy.get('#inventory-seeds .inventory-card').should('not.exist');cy.get('#inventory-materials .inventory-card').should('have.length',1);
  });
  it('picks up the same birdhouse with an axe and saves its new position',()=>{
-  start(base);press('8','Digit8',56);clickWorld(280,296);cy.get('#game').should('have.attr','data-birdhouse','false');cy.reload();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-birdhouse','false');press('Tab','Tab',9);cy.get('#inventory-materials [data-birdhouse] button').click();clickWorld(304,352);cy.get('#game').should('have.attr','data-birdhouse','true');cy.reload();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-birdhouse','true');
+  start(base);press('8','Digit8',56);clickWorld(280,296);cy.get('#game').should('have.attr','data-birdhouse','false');reloadFarm();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-birdhouse','false');press('Tab','Tab',9);cy.get('#inventory-materials [data-birdhouse] button').click();clickWorld(304,352);cy.get('#game').should('have.attr','data-birdhouse','true');reloadFarm();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-birdhouse','true');
  });
 });
 
@@ -116,14 +119,14 @@ describe('Gardening level two and Annie',()=>{
   start(base);walk('right','x',339);press('f','KeyF',70);cy.get('#game').should('have.attr','data-plots','1').and('have.attr','data-gardening-xp','1');press('f','KeyF',70);cy.get('#game').should('have.attr','data-plots','0');press('f','KeyF',70);cy.get('#game').should('have.attr','data-plots','1').and('have.attr','data-gardening-xp','1');press('3','Digit3',51);press('f','KeyF',70);cy.get('#game').should('have.attr','data-planted','1');press('1','Digit1',49);press('f','KeyF',70);cy.get('#game').should('have.attr','data-planted','1');
  });
  it('shows Annie in her own inventory tab and retains it on reload',()=>{
-  start(base);press('Tab','Tab',9);cy.get('#people-tab').click();cy.get('[data-person=annie]').should('contain','Annie');cy.get('#items-page').should('not.be.visible');press('Escape','Escape',27);cy.reload();cy.get('#game').should('have.attr','data-ready','true');press('Tab','Tab',9);cy.get('#people-tab').click();cy.get('[data-person=annie]').should('be.visible');
+  start(base);press('Tab','Tab',9);cy.get('#people-tab').click();cy.get('[data-person=annie]').should('contain','Annie');cy.get('#items-page').should('not.be.visible');press('Escape','Escape',27);reloadFarm();cy.get('#game').should('have.attr','data-ready','true');press('Tab','Tab',9);cy.get('#people-tab').click();cy.get('[data-person=annie]').should('be.visible');
  });
  it('shows skill progress and previews celebrations without granting rewards',()=>{
   start({...base,skill:{xp:12,credited:Array.from({length:12},(_,i)=>`hoe:old${i}`),rewarded:false,fruits:{}}});press('Tab','Tab',9);cy.get('#skills-tab').click();cy.get('[data-skill-progress=gardening]').should('contain','24 pont');cy.get('#skills-page progress').should('have.value','12');
   cy.get('#replay-gardening').click();cy.get('#level-reward-panel').should('be.visible');cy.get('#dialogue-label').should('contain','ELŐNÉZET');cy.get('#reward-preview-back').click();cy.get('#skills-tab').should('have.attr','aria-selected','true');cy.get('#game').should('have.attr','data-gardening-xp','12').and('have.attr','data-gardening-reward','false');press('Tab','Tab',9);cy.get('#toolbar [data-tool=strawberry]').should('not.be.visible');
  });
  it('awards four of each fruit once and unlocks all three planting materials',()=>{
-  start({...base,skill:{xp:35,credited:Array.from({length:35},(_,i)=>`hoe:old${i}`),rewarded:false,fruits:{}}});walk('right','x',339);press('f','KeyF',70);cy.get('#game').should('have.attr','data-gardening-xp','36').and('have.attr','data-gardening-reward','true');cy.get('#level-reward-panel').should('be.visible');cy.get('#dialogue-close').click();press('Tab','Tab',9);cy.get('[data-inventory-seed=strawberry],[data-inventory-seed=honeyberry],[data-inventory-seed=blueberry]').should('have.length',3);cy.get('[data-inventory-seed=strawberry] strong,[data-inventory-seed=honeyberry] strong,[data-inventory-seed=blueberry] strong').each(el=>expect(el.text()).to.equal('4 db'));press('Escape','Escape',27);cy.reload();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-gardening-xp','36');press('Tab','Tab',9);cy.get('[data-inventory-seed=strawberry] strong,[data-inventory-seed=honeyberry] strong,[data-inventory-seed=blueberry] strong').each(el=>expect(el.text()).to.equal('4 db'));
+  start({...base,skill:{xp:35,credited:Array.from({length:35},(_,i)=>`hoe:old${i}`),rewarded:false,fruits:{}}});walk('right','x',339);press('f','KeyF',70);cy.get('#game').should('have.attr','data-gardening-xp','36').and('have.attr','data-gardening-reward','true');cy.get('#level-reward-panel').should('be.visible');cy.get('#dialogue-close').click();press('Tab','Tab',9);cy.get('[data-inventory-seed=strawberry],[data-inventory-seed=honeyberry],[data-inventory-seed=blueberry]').should('have.length',3);cy.get('[data-inventory-seed=strawberry] strong,[data-inventory-seed=honeyberry] strong,[data-inventory-seed=blueberry] strong').each(el=>expect(el.text()).to.equal('4 db'));press('Escape','Escape',27);reloadFarm();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-gardening-xp','36');press('Tab','Tab',9);cy.get('[data-inventory-seed=strawberry] strong,[data-inventory-seed=honeyberry] strong,[data-inventory-seed=blueberry] strong').each(el=>expect(el.text()).to.equal('4 db'));
  });
 });
 
@@ -146,11 +149,20 @@ describe('Level three and starting money',()=>{
  it('counts empty-soil watering and planting toward the current 36-point level',()=>{
   start({...base,seeds:{...zero,radish:4},plots:[['353,280',{crop:null,watered:false,growth:0,regrowing:false}]],skill:{...base.skill,xp:36,credited:Array.from({length:36},(_,i)=>`hoe:old${i}`)}});
   press('Tab','Tab',9);cy.get('#skills-tab').click();cy.get('#skills-page progress').should('have.value','0').and('have.attr','max','36');cy.get('#skills-page').should('contain','ültetéssel');press('Escape','Escape',27);
-  walk('right','x',339);cy.get('#toolbar [data-tool=water]').click();press('f','KeyF',70);cy.get('#game').should('have.attr','data-gardening-xp','37');cy.get('#skill-xp').should('have.text','1 / 36');cy.get('#toolbar [data-tool=radish]').click();press('f','KeyF',70);cy.get('#game').should('have.attr','data-gardening-xp','38');cy.get('#skill-xp').should('have.text','2 / 36');cy.get('#toolbar [data-tool=water]').click();press('f','KeyF',70);cy.get('#game').should('have.attr','data-gardening-xp','38');cy.reload();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-gardening-xp','38');press('Tab','Tab',9);cy.get('#skills-tab').click();cy.get('#skills-page progress').should('have.value','2');cy.get('[data-skill-progress]').should('contain','34 pont');
+  walk('right','x',339);cy.get('#toolbar [data-tool=water]').click();press('f','KeyF',70);cy.get('#game').should('have.attr','data-gardening-xp','37');cy.get('#skill-xp').should('have.text','1 / 36');cy.get('#toolbar [data-tool=radish]').click();press('f','KeyF',70);cy.get('#game').should('have.attr','data-gardening-xp','38');cy.get('#skill-xp').should('have.text','2 / 36');cy.get('#toolbar [data-tool=water]').click();press('f','KeyF',70);cy.get('#game').should('have.attr','data-gardening-xp','38');reloadFarm();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-gardening-xp','38');press('Tab','Tab',9);cy.get('#skills-tab').click();cy.get('#skills-page progress').should('have.value','2');cy.get('[data-skill-progress]').should('contain','34 pont');
  });
  it('awards and unlocks three new plantable vegetables at 72 XP exactly once',()=>{
   start(base);walk('right','x',339);press('f','KeyF',70);cy.get('#game').should('have.attr','data-gardening-xp','72');cy.get('#dialogue-title').should('contain','3. szint');cy.get('#dialogue-close').click();
   for(const crop of ['carrot','lettuce','onion']){cy.get(`#toolbar [data-tool=${crop}]`).should('be.visible');cy.get(`[data-count=${crop}]`).should('have.text','4');}
-  cy.get('#toolbar [data-tool=carrot]').click();press('f','KeyF',70);cy.get('[data-count=carrot]').should('have.text','3');cy.reload();cy.get('#game').should('have.attr','data-ready','true');cy.get('[data-count=carrot]').should('have.text','3');cy.get('[data-count=onion]').should('have.text','4');press('Tab','Tab',9);cy.get('#skills-tab').click();cy.get('.skill-card-level').should('have.text','3. szint');cy.get('#replay-gardening-three').click();cy.get('#dialogue-title').should('contain','3. szint');cy.get('#reward-preview-back').click();cy.get('[data-count=carrot]').should('have.text','3');
+  cy.get('#toolbar [data-tool=carrot]').click();press('f','KeyF',70);cy.get('[data-count=carrot]').should('have.text','3');reloadFarm();cy.get('#game').should('have.attr','data-ready','true');cy.get('[data-count=carrot]').should('have.text','3');cy.get('[data-count=onion]').should('have.text','4');press('Tab','Tab',9);cy.get('#skills-tab').click();cy.get('.skill-card-level').should('have.text','3. szint');cy.get('#replay-gardening-three').click();cy.get('#dialogue-title').should('contain','3. szint');cy.get('#reward-preview-back').click();cy.get('[data-count=carrot]').should('have.text','3');
+ });
+});
+
+describe('Start menu and separate farms',()=>{
+ it('creates a test farm without replacing an older farm and returns to either',()=>{
+  start();walk('down','y',288);walk('right','x',339);press('f','KeyF',70);cy.get('#game').should('have.attr','data-plots','1');press('3','Digit3',51);press('f','KeyF',70);cy.get('#game').should('have.attr','data-gardening-xp','2');cy.get('[data-count=radish]').should('have.text','3');
+  cy.get('#menu').click();cy.get('#open-start-menu').click();cy.get('.farm-save-card').should('have.length',1);cy.get('#new-farm').click();cy.get('#farm-name').type('Próbakert');cy.get('#start-farm').click();cy.get('h1').should('have.text','Próbakert');cy.get('#dialogue').should('not.be.visible');cy.get('#game').should('have.attr','data-gold','100').and('have.attr','data-gardening-xp','0');cy.get('[data-count=radish]').should('have.text','4');
+  cy.get('#menu').click();cy.get('#open-start-menu').click();cy.get('.farm-save-card').should('have.length',2);cy.contains('.farm-save-card','Tesztfarm').find('button').click();cy.get('h1').should('have.text','Tesztfarm');cy.get('#dialogue').should('not.be.visible');cy.get('#game').should('have.attr','data-gardening-xp','2');cy.get('[data-count=radish]').should('have.text','3');
+  cy.reload();cy.get('#start-panel').should('be.visible');cy.get('.farm-save-card').should('have.length',2);cy.get('#new-farm').click();cy.get('#cancel-farm-name').click();cy.get('.farm-save-card').should('have.length',2);cy.get('#continue-farm').click();cy.get('#game').should('have.attr','data-gardening-xp','2');
  });
 });
