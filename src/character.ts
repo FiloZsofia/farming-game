@@ -75,9 +75,9 @@ export class FarmerArt{
 
 // The contact portrait is rendered from the same character, including her outfit and hat.
 export function anniePortrait(scene:Phaser.Scene){
- const image=document.createElement('img');image.className='item-icon';image.alt='Annie, barna kabátban és kalapban';
- const art=new FarmerArt(scene,true);art.equip('none');art.root.setPosition(40,114).setScale(2);
- const portrait=scene.add.renderTexture(0,0,80,120).setVisible(false);
+ const image=document.createElement('img');image.className='item-icon';image.alt='Annie arcképe kalappal';
+ const art=new FarmerArt(scene,true);art.equip('none');art.root.setPosition(40,200).setScale(4);
+ const portrait=scene.add.renderTexture(0,0,80,80).setVisible(false);
  portrait.draw(art.root);art.root.destroy();
  portrait.snapshot(result=>{if(result instanceof HTMLImageElement)image.src=result.src;portrait.destroy();});
  return image;

@@ -24,7 +24,7 @@ function showDialogue(title:string,text:string,label='A BIRTOKON'){
  release();
  document.querySelector<HTMLButtonElement>('#sleep')!.hidden=true;
  document.querySelector<HTMLButtonElement>('#export-save')!.hidden=true;
- for(const id of ['farm-name-panel','shipping-panel','menu-panel','inventory-panel','catalog-panel','mailbox-panel'])document.querySelector<HTMLElement>(`#${id}`)!.hidden=true;
+ for(const id of ['level-reward-panel','farm-name-panel','shipping-panel','menu-panel','inventory-panel','catalog-panel','mailbox-panel'])document.querySelector<HTMLElement>(`#${id}`)!.hidden=true;
  document.querySelector<HTMLButtonElement>('#dialogue-close')!.hidden=false;
  document.querySelector('#dialogue-close')!.textContent='Folytatás';
  document.querySelector('#dialogue-title')!.textContent=title;
@@ -377,7 +377,16 @@ class Farm extends Phaser.Scene {
   document.querySelector('.skill-track')!.setAttribute('aria-valuenow',String(this.skill.xp));
   document.querySelector('#skill-level')!.textContent=`${this.skill.xp>=LEVEL_TWO_XP?2:1}. szint`;
   document.querySelector('#skill-xp')!.textContent=`${this.skill.xp} / ${LEVEL_TWO_XP}`;
-  if(previous<LEVEL_TWO_XP&&this.skill.xp===LEVEL_TWO_XP)this.notice('Kertészkedés 2. szint! Gyümölcsjutalom a készletben, új palánták a katalógusban.');
+  if(previous<LEVEL_TWO_XP&&this.skill.xp===LEVEL_TWO_XP){
+   showDialogue('Kertészkedés · 2. szint','A gondoskodásod meghozta a gyümölcsét! Új növényekkel gazdagíthatod a kertedet.','SZINTET LÉPTÉL!');
+   const panel=document.querySelector<HTMLElement>('#level-reward-panel')!;panel.replaceChildren();panel.hidden=false;
+   const petals=document.createElement('div');petals.className='reward-petals';petals.setAttribute('aria-hidden','true');
+   for(let i=0;i<18;i++){const petal=document.createElement('i');petal.style.setProperty('--left',`${i*37%100}%`);petal.style.setProperty('--delay',`${-i*.47}s`);petal.style.setProperty('--duration',`${5+i%4}s`);petals.append(petal);}panel.append(petals);
+   const gifts=document.createElement('div');gifts.className='reward-gifts';
+   for(const fruit of Object.keys(rewardFruits) as RewardFruit[]){const gift=document.createElement('div');gift.append(seedIcon(fruit));const label=document.createElement('strong');label.textContent=`4 × ${rewardFruits[fruit]}`;const kind=document.createElement('span');kind.textContent=this.materialName(fruit);gift.append(label,kind);gifts.append(gift);}panel.append(gifts);
+   const hint=document.createElement('p');hint.textContent='Az ültetőanyagokat már kiválaszthatod az alsó eszközsoron. A magkatalógusból is rendelhetsz belőlük.';panel.append(hint);
+   document.querySelector('#dialogue-close')!.textContent='Irány a kert!';
+  }
  }
  private redrawScenery(){this.scenery?.destroy();this.scenery=drawFarm(this,this.clearing,this.garden,this.story.birdhouse).setDepth(-1);}
  private async clean(item:NonNullable<ReturnType<typeof debrisAt>>){
@@ -385,7 +394,7 @@ class Farm extends Phaser.Scene {
   const next=clearDebris(this.clearing,item,this.tool,this.actor,this.clock.day);
   if(!next){this.notice(Math.hypot(this.actor.x-item.x,this.actor.y-item.y)>44?'Sétálj közelebb.':`Ehhez ${item.kind==='weed'?'a Kéz':item.kind==='branch'?'a Fejsze':'a Csákány'} eszközt válaszd.`);return;}
   const nextSkill=item.kind==='weed'?gainGardening(this.skill,`weed:${this.clock.day}:${item.id}`)??this.skill:this.skill;
-  const nextGarden=structuredClone(this.garden);if(!this.skill.rewarded&&nextSkill.rewarded)for(const fruit of Object.keys(rewardFruits) as RewardFruit[])nextGarden.produce[fruit]+=4;
+  const nextGarden=structuredClone(this.garden);if(!this.skill.rewarded&&nextSkill.rewarded)for(const fruit of Object.keys(rewardFruits) as RewardFruit[])nextGarden.seeds[fruit]+=4;
   this.transitioning=true;this.saveRevision++;
   try{
    await this.store.save(snapshot(this.actor,this.clock,nextGarden,this.economy,this.orders,this.farmName,next,this.story,nextSkill));
@@ -413,7 +422,7 @@ class Farm extends Phaser.Scene {
   const tileKey=`${target.x},${target.y}`;
   const credit=usedTool==='hoe'&&!before?`hoe:${tileKey}`:usedTool==='water'&&before?.crop?`water:${this.clock.day}:${tileKey}`:usedTool==='harvest'?`harvest:${this.clock.day}:${tileKey}`:null;
   const nextSkill=credit?gainGardening(this.skill,credit)??this.skill:this.skill;
-  if(!this.skill.rewarded&&nextSkill.rewarded)for(const fruit of Object.keys(rewardFruits) as RewardFruit[])nextGarden.produce[fruit]+=4;
+  if(!this.skill.rewarded&&nextSkill.rewarded)for(const fruit of Object.keys(rewardFruits) as RewardFruit[])nextGarden.seeds[fruit]+=4;
   this.transitioning=true;this.saveRevision++;
   try{
    await this.store.save(snapshot(this.actor,this.clock,nextGarden,this.economy,this.orders,this.farmName,this.clearing,this.story,nextSkill));

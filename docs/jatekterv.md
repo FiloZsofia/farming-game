@@ -218,7 +218,7 @@ Az évszakváltás, építkezés és tárolóbővítés pontos ütemezése kül�
 - A szomszéd neve Annie; bemutatkozó cím: „Egy kedves szomszéd, Annie.” Az inventory Készlet és Ismerősök fület kap; az ajándék átvétele után Annie portréval és rövid leírással megjelenik. Régi mentésben is megmarad az ismeretség.
 - A kertészkedés 2. szintje 36 érdemi művelet után érhető el, a kezdő kert rendes gondozásával körülbelül 2–3 nap alatt. Művelet közben öt másodpercre megjelenik a jobb alsó függőleges zöld csík.
 - Új föld felásása helyenként egyszer, beültetett föld öntözése és betakarítása naponta/helyenként egyszer, kézi gazszedés naponta/objektumonként egyszer ad pontot. Ugyanannak a helynek a ki-be kapálása nem fejleszt. Vetés, fejszés és csákányos munka nem része ennek a négy kertészkedési pontforrásnak.
-- A 2. szint jutalma egyszeri 4 eper, 4 mézbogyó, 4 áfonya. Ekkor válik elérhetővé a katalógusban a három ültetőanyag; nem csak a jutalom gyümölcse, hanem a saját termés is eladható.
+- A 2. szint jutalma egyszeri 4 eperpalánta, 4 mézbogyócsemete, 4 áfonyacsemete. Ekkor válik elérhetővé a katalógusban a három ültetőanyag; nem csak a jutalom gyümölcse, hanem a saját termés is eladható.
 
 | Növény | Ültetőanyag ára | Termény eladási ára | Első termés, öntözött nap | Újratermés |
 | --- | --- | --- | --- | --- |
@@ -234,3 +234,6 @@ Az évszakváltás, építkezés és tárolóbővítés pontos ütemezése kül�
 - A visszatérő gaz, ágak és kövek helyét véletlenszerűen választjuk ki, az előző helytől legalább 52 világegységre. A művelt föld, ágyások, ösvények, épületek, tó, kerítés, más tárgyak és a madárodú környezete védett. Az új pozíciók a reggeli mentés részei; betöltéskor nem sorsoljuk újra őket. A kövek ütközése az aktuális helyüket követi, eltakarítás után nem marad láthatatlan akadály.
 
 - A zene alaphangereje kissé erősebb. A menü készletgombja egyszerűen „Készlet”; a Tab gyorsbillentyű megmarad. Annie ismerősök közötti képe ugyanazzal a karakterrajzolóval készül, mint a farmon látható alakja, kalappal és barna kabáttal. A főhős ingének lejtős válla és beszűkülő dereka van, arca keskenyebb, ovális, szeme világos szemfehérjével, íriszével és fényfolttal készül.
+
+- A kertészkedés 2. szintjét középre rendezett, nagy betűs jutalomablak ünnepli hulló virágszirmokkal; a játék az elolvasásáig szünetel. A kapott ültetőanyag azonnal kiválasztható az eszközsoron. A v10 mentésre váltás a korábban tévesen terményként adott jutalom mellé egyszer hozzáadja a hiányzó ültetőanyagot, a meglévő készlet megtartásával. Annie avatarképe az arcát és kalapját mutatja.
+- A főhős további megjelenésbeli módosítása előtt külön karakterterven kell megegyezni; a jelenlegi alak nem elfogadott végleges grafika.
