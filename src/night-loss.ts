@@ -1,0 +1,23 @@
+export type LossCandidate={id:string;name:string;quantity:number};
+export type NightLoss={kind:'item';id:string;name:string;amount:1}|{kind:'gold';amount:number}|{kind:'nothing'};
+// Choose the branch once. An empty branch never falls back to the other one.
+export function nightLoss(gold:number,items:LossCandidate[],random=Math.random):NightLoss{
+ if(random()<.5){const available=items.filter(item=>Number.isSafeInteger(item.quantity)&&item.quantity>0);if(!available.length)return {kind:'nothing'};const item=available[Math.min(available.length-1,Math.max(0,Math.floor(random()*available.length)))];return {kind:'item',id:item.id,name:item.name,amount:1};}
+ const amount=Math.min(10,Math.max(0,gold));return amount>0?{kind:'gold',amount}:{kind:'nothing'};
+}
+export function nightLossText(loss:NightLoss){
+ if(loss.kind==='nothing')return 'Az éjjel megpróbáltak kirabolni, de nem találtak nálam semmit. Most már biztonságban vagyok itthon.';
+ return `Az éjjel kiraboltak. Elveszítettem: ${loss.kind==='gold'?`${loss.amount} gold`:`1 db ${loss.name.toLocaleLowerCase('hu')}`}. Most már biztonságban vagyok itthon.`;
+}
+
+import {crops} from './economy';
+import {cropNames,type Garden} from './gardening';
+import type {Clearing} from './cleanup';
+export function robInventory(garden:Garden,clearing:Clearing,gold:number,random=Math.random){
+ const candidates:LossCandidate[]=[];
+ for(const crop of crops){candidates.push({id:`produce:${crop}`,name:cropNames[crop],quantity:garden.produce[crop]});candidates.push({id:`seed:${crop}`,name:`${cropNames[crop]} ${crop==='potato'?'vetőgumó':crop==='strawberry'?'palánta':['honeyberry','blueberry'].includes(crop)?'csemete':'mag'}`,quantity:garden.seeds[crop]});}
+ for(const [id,name]of [['wood','Fa'],['stone','Kő'],['weed','Gaz']] as const)candidates.push({id:`material:${id}`,name,quantity:clearing[id]});
+ const loss=nightLoss(gold,candidates,random),nextGarden=structuredClone(garden),nextClearing=structuredClone(clearing);
+ if(loss.kind==='item'){const [type,id]=loss.id.split(':');if(type==='material')nextClearing[id as 'wood'|'stone'|'weed']--;else nextGarden[type==='seed'?'seeds':'produce'][id as typeof crops[number]]--;}
+ return {loss,garden:nextGarden,clearing:nextClearing,gold:gold-(loss.kind==='gold'?loss.amount:0)};
+}

@@ -22,7 +22,7 @@ function clickWorld(x:number,y:number){
  cy.window().then(win=>cy.get('#game').then(el=>{
   const zoom=Math.max(win.innerWidth/800,win.innerHeight/600),px=Number(el.attr('data-player-x')),py=Number(el.attr('data-player-y'));
   const scrollX=Math.max(0,Math.min(800-win.innerWidth/zoom,px-win.innerWidth/zoom/2));
-  const scrollY=Math.max(0,Math.min(600-win.innerHeight/zoom,py-win.innerHeight/zoom/2));
+  const scrollY=Math.max(0,Math.min(1420-win.innerHeight/zoom,py-win.innerHeight/zoom/2));
   cy.get('canvas').click((x-scrollX)*zoom,(y-scrollY)*zoom);
  }));
 }
@@ -181,5 +181,20 @@ describe('Music choices and quiet inventory tabs',()=>{
   cy.get('#music-toggle').then(button=>{if(button.text().includes('be'))cy.wrap(button).click();});
   cy.get('#music-track').select('original');cy.get('#music-toggle').should('have.text','Zene: ki');cy.get('#music-track').select('meadow');
   reloadFarm();cy.get('#menu').click();cy.get('#music-track').should('have.value','meadow');cy.get('#music-toggle').should('have.text','Zene: ki');
+ });
+});
+
+describe('Southern village and forest',()=>{
+ const quantities={radish:0,potato:0,pea:0,strawberry:0,honeyberry:0,blueberry:0,carrot:0,lettuce:0,onion:0};
+ const villageSave={version:12,farmName:'Erdei próba',farmerName:null,player:{x:170,y:555},clock:{day:2,elapsed:0,collapseAt:580},seeds:{...quantities,radish:4},produce:{...quantities},plots:[],economy:{gold:100,shipping:{...quantities},lastSale:null},orders:{pending:{...quantities},mailbox:{...quantities}},clearing:{removed:{},positions:{},wood:0,stone:0,weed:0},story:{giftReceived:true,morningSeen:true,birdhouse:null},skill:{xp:0,credited:[],rewarded:false,levelThreeRewarded:false,fruits:{}}};
+ it('walks through the south gate, gathers berries and remembers the collected bush',()=>{
+  start(villageSave);walk('down','y',700);walk('left','x',100);walk('down','y',762);press('e','KeyE',69);cy.get('#game').should('have.attr','data-produce','1');press('f','KeyF',70);cy.get('#game').should('have.attr','data-produce','1');press('Tab','Tab',9);cy.get('[data-inventory-crop=blueberry]').should('contain','1 db');press('Escape','Escape',27);reloadFarm();cy.get('#game').should('have.attr','data-region','forest');press('e','KeyE',69);cy.get('#game').should('have.attr','data-produce','1');
+ });
+ it('enters the nursery, preserves an indoor save and exits back onto the square',()=>{
+  start(villageSave);walk('down','y',700);walk('right','x',450);walk('down','y',975);walk('right','x',591);press('e','KeyE',69);cy.get('#dialogue-title').should('have.text','Faiskola');press('Escape','Escape',27);cy.get('#game').should('have.attr','data-region','nursery');reloadFarm();cy.get('#game').should('have.attr','data-region','nursery');press('e','KeyE',69);cy.get('#game').should('have.attr','data-region','village');
+ });
+ it('reports capped gold loss after collapsing in the village and keeps the birdhouse safe',()=>{
+  start({...villageSave,version:13,travel:{picked:{},morning:null},player:{x:550,y:1050},clock:{day:2,elapsed:578,collapseAt:580},economy:{...villageSave.economy,gold:6}});
+  cy.window().then(win=>cy.stub(win.Math,'random').returns(.9));cy.get('#game').should('have.attr','data-day','3');cy.get('#dialogue-text').should('contain','6 gold');cy.get('#game').should('have.attr','data-gold','0').and('have.attr','data-gift','true').and('have.attr','data-birdhouse','false');
  });
 });

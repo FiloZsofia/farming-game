@@ -1,5 +1,6 @@
+import {createTravel,validTravel,type Travel} from './travel';
+import {worldBlocked} from './village-layout';
 import { cultivable, targetTile, tileKey, type Garden, type Plot } from './gardening';
-import { blocked } from './movement';
 import type { Clock } from './clock';
 import { createEconomy, validEconomy, crops, type Economy } from './economy';
 import { createOrders, validOrders, type Orders } from './orders';
@@ -9,15 +10,15 @@ import {createClearing,validClearing,type Clearing} from './cleanup';
 import {createGardenSkill,validGardenSkill,gardeningLevel,rewardFruits,type GardenSkill} from './gardening-skill';
 import { farmLayout } from './layout';
 export const DB_NAME='erdoszeli-birtok';
-export type Snapshot={version:12;skill:GardenSkill;story:FarmStory;clearing:Clearing;farmName:string|null;farmerName:string|null;orders:Orders;economy:Economy;produce:Garden['produce'];player:{x:number;y:number};clock:Clock;seeds:Garden['seeds'];plots:[string,Plot][]};
-export function snapshot(player:{x:number;y:number},clock:Clock,garden:Garden,economy:Economy=createEconomy(),orders:Orders=createOrders(),farmName:string|null=null,clearing:Clearing=createClearing(),story:FarmStory=createStory(),skill:GardenSkill=createGardenSkill(),farmerName:string|null=null):Snapshot{
- return structuredClone({version:12,skill,story,clearing,farmName,farmerName,orders,economy,produce:garden.produce,player:{x:player.x,y:player.y},clock,seeds:garden.seeds,plots:[...garden.plots]});
+export type Snapshot={version:13;travel:Travel;skill:GardenSkill;story:FarmStory;clearing:Clearing;farmName:string|null;farmerName:string|null;orders:Orders;economy:Economy;produce:Garden['produce'];player:{x:number;y:number};clock:Clock;seeds:Garden['seeds'];plots:[string,Plot][]};
+export function snapshot(player:{x:number;y:number},clock:Clock,garden:Garden,economy:Economy=createEconomy(),orders:Orders=createOrders(),farmName:string|null=null,clearing:Clearing=createClearing(),story:FarmStory=createStory(),skill:GardenSkill=createGardenSkill(),farmerName:string|null=null,travel:Travel=createTravel()):Snapshot{
+ return structuredClone({version:13,travel,skill,story,clearing,farmName,farmerName,orders,economy,produce:garden.produce,player:{x:player.x,y:player.y},clock,seeds:garden.seeds,plots:[...garden.plots]});
 }
 const finite=(n:unknown):n is number=>typeof n==='number'&&Number.isFinite(n);
 export function validSnapshot(value:unknown):value is Snapshot{
  if(!value||typeof value!=='object')return false;
  const v=value as Snapshot;
- if(v.version!==12||!validGardenSkill(v.skill)||!validStory(v.story)||!validClearing(v.clearing)||!v.player||!finite(v.player.x)||!finite(v.player.y)||blocked(v.player.x,v.player.y))return false;
+ if(v.version!==13||!validTravel(v.travel,v.clock?.day)||!validGardenSkill(v.skill)||!validStory(v.story)||!validClearing(v.clearing)||!v.player||!finite(v.player.x)||!finite(v.player.y)||worldBlocked(v.player.x,v.player.y))return false;
  if(!validEconomy(v.economy)||v.economy.lastSale&&v.economy.lastSale.day>=v.clock?.day)return false;
  if(!validOrders(v.orders)||crops.some(k=>{const c=k as keyof Garden['seeds'];return !v.seeds||!Number.isSafeInteger(v.seeds[c])||v.seeds[c]+v.orders.pending[c]+v.orders.mailbox[c]>999999;}))return false;
  if(v.farmName!==null&&(typeof v.farmName!=='string'||normalizeFarmName(v.farmName)!==v.farmName))return false;
@@ -40,10 +41,10 @@ export function validSnapshot(value:unknown):value is Snapshot{
  }
  return true;
 }
-// Migrate known formats without discarding the original backup until a v12 write succeeds.
+// Migrate known formats without discarding the original backup until a v13 write succeeds.
 export function decodeSnapshot(value:unknown):Snapshot|null{
  if(validSnapshot(value))return structuredClone(value);
- if(!value||typeof value!=='object'||!('version' in value)||(value.version!==1&&value.version!==2&&value.version!==3&&value.version!==4&&value.version!==5&&value.version!==6&&value.version!==7&&value.version!==8&&value.version!==9&&value.version!==10&&value.version!==11))return null;
+ if(!value||typeof value!=='object'||!('version' in value)||(value.version!==1&&value.version!==2&&value.version!==3&&value.version!==4&&value.version!==5&&value.version!==6&&value.version!==7&&value.version!==8&&value.version!==9&&value.version!==10&&value.version!==11&&value.version!==12))return null;
  const legacy=value as {clearing?:Clearing;version:number;plots?:unknown;player?:{x:number;y:number}};
  if(!Array.isArray(legacy.plots)||legacy.plots.some(row=>!Array.isArray(row)||row.length!==2||!row[1]||typeof row[1]!=='object'))return null;
  let player=legacy.player;
@@ -53,7 +54,7 @@ export function decodeSnapshot(value:unknown):Snapshot|null{
  const old=value as unknown as Snapshot;
  const extend=(counts:object|undefined)=>counts&&typeof counts==='object'?{strawberry:0,honeyberry:0,blueberry:0,carrot:0,lettuce:0,onion:0,...counts}:counts;
  const additions={seeds:extend(old.seeds),...(legacy.version!==1?{produce:extend(old.produce)}:{}),...(legacy.version>=3?{economy:{...old.economy,shipping:extend(old.economy?.shipping),lastSale:old.economy?.lastSale?{...old.economy.lastSale,items:extend(old.economy.lastSale.items)}:old.economy?.lastSale}}:{}),...(legacy.version>=4?{orders:{pending:extend(old.orders?.pending),mailbox:extend(old.orders?.mailbox)}}:{})};
- const migrated={...value,...additions,version:12,farmerName:null,skill:legacy.version<8?createGardenSkill():legacy.version===11?old.skill:{...old.skill,levelThreeRewarded:false},clearing:legacy.version>=9?legacy.clearing:legacy.version>=6?{...legacy.clearing,positions:{},...(legacy.version===6?{weed:0}:{})}:createClearing(),...(legacy.version<7?{story:createStory()}:{}),...(legacy.version<5?{farmName:null}:{}),...(legacy.version<4?{orders:createOrders()}:{}),...(legacy.version<3?{economy:createEconomy()}:{}),player,
+ const migrated={...value,...additions,version:13,travel:createTravel(),farmerName:legacy.version===12?old.farmerName:null,skill:legacy.version<8?createGardenSkill():legacy.version>=11?old.skill:{...old.skill,levelThreeRewarded:false},clearing:legacy.version>=9?legacy.clearing:legacy.version>=6?{...legacy.clearing,positions:{},...(legacy.version===6?{weed:0}:{})}:createClearing(),...(legacy.version<7?{story:createStory()}:{}),...(legacy.version<5?{farmName:null}:{}),...(legacy.version<4?{orders:createOrders()}:{}),...(legacy.version<3?{economy:createEconomy()}:{}),player,
   ...(legacy.version===1?{produce:{radish:0,potato:0,pea:0,strawberry:0,honeyberry:0,blueberry:0,carrot:0,lettuce:0,onion:0},plots:legacy.plots.map(([key,p])=>[key,{...p,growth:0,regrowing:false}])}:{})};
  if(!validSnapshot(migrated))return null;
  // Earlier rewards were produce, so supply the missing planting materials once.
@@ -76,7 +77,7 @@ function validCatalogue(value:unknown):value is FarmCatalogue{
 function summary(id:string,data:Snapshot):FarmSummary{return {id,name:data.farmName??'Névtelen farm',farmerName:data.farmerName,day:data.clock.day,gold:data.economy.gold,level:gardeningLevel(data.skill),updatedAt:Date.now()};}
 function decodePair(active:unknown,backup:unknown){
  const decoded=decodeSnapshot(active);if(decoded)return {data:decoded,recovered:false,raw:active};
- if(active&&typeof active==='object'&&'version' in active&&(!Number.isInteger(active.version)||Number(active.version)<1||Number(active.version)>12))throw new Error('Ez a mentés másik játékverzióhoz tartozik. Megőriztem, nem írtam felül.');
+ if(active&&typeof active==='object'&&'version' in active&&(!Number.isInteger(active.version)||Number(active.version)<1||Number(active.version)>13))throw new Error('Ez a mentés másik játékverzióhoz tartozik. Megőriztem, nem írtam felül.');
  const previous=decodeSnapshot(backup);if(previous)return {data:previous,recovered:true,raw:backup};
  throw new Error('A mentés nem olvasható. Megőriztem az eredetit; nem indítok rá új játékot.');
 }

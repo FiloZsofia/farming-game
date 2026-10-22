@@ -14,14 +14,14 @@ export function blocked(x:number,y:number):boolean {
   const inWater=Math.hypot(nx,ny)<pondRadius(Math.atan2(ny,nx));
   return (inWater&&!onDock)||x<12||x>788||y<12||y>588||obstacles.some(b=>x+7>b.x&&x-7<b.x+b.w&&y+3>b.y&&y-4<b.y+b.h);
 }
-export function move(x:number,y:number,dx:number,dy:number,seconds:number,speedMultiplier=1,extraBlocked:(x:number,y:number)=>boolean=()=>false){
+export function move(x:number,y:number,dx:number,dy:number,seconds:number,speedMultiplier=1,extraBlocked:(x:number,y:number)=>boolean=()=>false,terrainBlocked=blocked){
   const length=Math.hypot(dx,dy); if(!length)return {x,y};
   const distance=95*speedMultiplier*Math.min(Math.max(seconds,0),0.05), steps=Math.max(1,Math.ceil(distance/2));
   for(let i=0;i<steps;i++){
     const nx=x+dx/length*distance/steps;
-    if(!blocked(nx,y)&&!extraBlocked(nx,y))x=nx;
+    if(!terrainBlocked(nx,y)&&!extraBlocked(nx,y))x=nx;
     const ny=y+dy/length*distance/steps;
-    if(!blocked(x,ny)&&!extraBlocked(x,ny))y=ny;
+    if(!terrainBlocked(x,ny)&&!extraBlocked(x,ny))y=ny;
   }
   return {x,y};
 }

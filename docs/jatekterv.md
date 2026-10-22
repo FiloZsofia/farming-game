@@ -284,3 +284,14 @@ Nyitott javaslatok, még nem elfogadott követelmények: kapun túli gyűjtöget
 - A Jártasságok fülről lekerül a fejlődést és a 2–3. szint jutalmait részletező három bekezdés; a szint és a haladásjelző megmarad.
 - A közös „Tab / Escape: vissza a kertbe” súgó egyik készletfülön sem jelenik meg. A billentyűk továbbra is bezárják az ablakot.
 - Az eredeti zene mellé saját, „Réti séta” című instrumentális indie dallam kerül, pengetős hangzással, lágy billentyűkkel és halk ritmussal. A Menü → Dallam mezőben választható, a választás és a némítás helyben megmarad. Külső hangfelvételt nem használ.
+
+### Déli út, erdő és falu – 2026-10-22
+
+- A déli kapun át folyamatosan bejárható út vezet a faluba. Balra tölgyes, nyíres és fenyős erdei ösvény kanyarog; a faluban kövezett tér, szökőkút, padok, virágládák és házak adják a hangulatot. A farm korábbi elrendezése megmarad.
+- Elsőként a helyszínek készülnek el: a Faiskola és a Tóparti bolt ajtaján E-vel vagy koppintással lehet belépni, belül sétálni és a pultot megnézni. Vásárlás, gyümölcsfák, haltelepítés és kacsafészek egy későbbi, külön egyeztetett lépés; árak még nincsenek.
+- Az erdő négy bokráról bokronként egy áfonya szedhető E-vel, F-fel vagy koppintással, külön szerszám nélkül. A bokrok két nap után újrateremnek. A termés a meglévő áfonyaikon alatt jelenik meg, és a meglévő 30 gold/db áron tehető az eladóládába. A bokrok állapota és a kinti/benti tartózkodási hely is mentődik.
+- A farmon történő éjszakai összeesés továbbra is veszteségmentes. A birtokon kívül (erdő, út, falu és üzlet) az összeeséskor 50% eséllyel tárgylopás, 50% eséllyel aranylopás történik. A tárgyág egy véletlenszerű, pozitív darabszámú készletfajtából pontosan 1 db-ot vesz el: nálunk lévő magból/ültetőanyagból, termésből, fából, kőből vagy gazból. Az alap szerszámok és a madárodú védettek; eladóládába tett és postai kézbesítésre váró dolgok nem a nálunk lévő készlet részei.
+- Az aranyág legfeljebb 10 goldot vesz el, kizárólag a lefekvés előtti egyenlegből, a másnap érkező eladási bevétel előtt. Üres tárgykészletnél vagy üres erszénynél a kisorsolt ág sikertelen; nem vált át a másik ágra. Reggel pontos veszteséglista vagy „megpróbáltak kirabolni, de nem találtak nálam semmit” üzenet jelenik meg. A hős a ház ajtajánál ébred. Az üzenet elolvasásig mentve marad.
+- A mentési formátum v13-ra lép. A v1–v12 mentések továbbra is betölthetők, az új terület állapota alapértékekkel egészül ki. A gyűjtés, ajtón átlépés és napváltás sikertelen mentése nem fogyaszt készletet és nem mozgatja át a hőst.
+- A falu és a boltbelsők saját procedurális grafikák. Külső asset vagy új függőség nincs. A szökőkút finom fodrozódása, lassú levélsodródás és esti lámpafény teszi élőbbé a teret.
+- A közzétételi workflow Node.js 24-et használó actionökre frissül. A GitHub Actions sárga/várakozó közzététele alatt az élő oldalon még a korábbi kiadás látszik; a sikeres feltöltés nem jelenti önmagában a Pages-közzététel sikerét.
