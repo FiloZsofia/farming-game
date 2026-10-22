@@ -138,7 +138,7 @@ export class SaveStore{
   });
  }
  async createFarm(data:Snapshot):Promise<string>{
-  const copy=structuredClone(data);if(!validSnapshot(copy)||!copy.farmName||!copy.farmerName)throw new Error('Az új farmnak és farmernek érvényes név és kezdőállapot szükséges.');
+  const copy=structuredClone(data);if(!validSnapshot(copy)||!copy.farmName)throw new Error('Az új farmnak érvényes név és kezdőállapot szükséges.');
   await this.listFarms();
   return this.enqueue(async()=>{
    const id=`farm-${crypto.randomUUID()}`;if(this.catalogue!.farms.some(f=>f.id===id))throw new Error('Nem sikerült új mentésazonosítót létrehozni. Próbáld újra.');const next:FarmCatalogue={...structuredClone(this.catalogue!),selected:id};next.farms.push(summary(id,copy));

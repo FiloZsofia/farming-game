@@ -67,8 +67,8 @@ describe('separate farm saves',()=>{
   expect(await store.listFarms()).toEqual(expect.arrayContaining([expect.objectContaining({id:a,farmerName:'Léna'}),expect.objectContaining({id:b,farmerName:'Nóra'})]));
   const state=(await store.selectFarm(a)).data;expect(state.farmerName).toBe('Léna');state.economy.gold=77;await store.save(state);expect((await store.selectFarm(b)).data.farmerName).toBe('Nóra');store.close();const reader=new SaveStore(factory);expect((await reader.load()).data!.farmerName).toBe('Nóra');expect((await reader.selectFarm(a)).data.farmerName).toBe('Léna');reader.close();
  });
- it('requires a farmer name for newly created farms while preserving unnamed legacy identities',async()=>{
-  const factory=new IDBFactory(),store=new SaveStore(factory);await store.load();await expect(store.createFarm({...fresh(),farmerName:null})).rejects.toThrow();store.close();const data={...fresh(),version:11};delete (data as Partial<Snapshot>).farmerName;await access(factory,'active',data);const reader=new SaveStore(factory);expect((await reader.load()).data!.farmerName).toBeNull();expect(await reader.listFarms()).toHaveLength(1);reader.close();
+ it('creates farms using only a farm name without requiring a farmer identity',async()=>{
+  const factory=new IDBFactory(),store=new SaveStore(factory);await store.load();const data={...fresh(),farmerName:null};await store.createFarm(data);expect(await store.listFarms()).toHaveLength(1);store.close();const reader=new SaveStore(factory);expect((await reader.load()).data).toEqual(data);reader.close();
  });
 
 });

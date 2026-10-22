@@ -13,7 +13,7 @@ function start(data?:object){
   win.indexedDB.deleteDatabase('erdoszeli-birtok');
   if(data){const r=win.indexedDB.open('erdoszeli-birtok',1);r.onupgradeneeded=()=>r.result.createObjectStore('saves');r.onsuccess=()=>{const tx=r.result.transaction('saves','readwrite');tx.objectStore('saves').put(data,'active');tx.oncomplete=()=>r.result.close();};}
  }});
- cy.get('#game').should('have.attr','data-ready','true');cy.get('#new-farm').should('not.be.disabled');cy.get('#continue-farm').then(button=>{if(button.prop('hidden'))cy.get('#new-farm').click();else cy.get('#continue-farm').click();});cy.get('#farm-name-panel').then(panel=>{if(!panel.prop('hidden')){cy.get('#farm-name').type('Tesztfarm');cy.get('#farmer-name').type('Tesztfarmer');cy.get('#start-farm').click();}});cy.get('#dialogue').should('not.be.visible');
+ cy.get('#game').should('have.attr','data-ready','true');cy.get('#new-farm').should('not.be.disabled');cy.get('#continue-farm').then(button=>{if(button.prop('hidden'))cy.get('#new-farm').click();else cy.get('#continue-farm').click();});cy.get('#farm-name-panel').then(panel=>{if(!panel.prop('hidden')){cy.get('#farm-name').type('Tesztfarm');cy.get('#start-farm').click();}});cy.get('#dialogue').should('not.be.visible');
 }
 function reloadFarm(){
  cy.reload();cy.get('#game').should('have.attr','data-ready','true');cy.get('#continue-farm').should('be.visible').and('not.be.disabled').click();cy.get('#dialogue').should('not.be.visible');
@@ -153,22 +153,21 @@ describe('Level three and starting money',()=>{
  it('awards and unlocks three new plantable vegetables at 72 XP exactly once',()=>{
   start(base);walk('right','x',339);press('f','KeyF',70);cy.get('#game').should('have.attr','data-gardening-xp','72');cy.get('#dialogue-title').should('contain','3. szint');cy.get('#dialogue-close').click();
   for(const crop of ['carrot','lettuce','onion']){cy.get(`#toolbar [data-tool=${crop}]`).should('be.visible');cy.get(`[data-count=${crop}]`).should('have.text','4');}
-  cy.get('#toolbar [data-tool=carrot]').click();press('f','KeyF',70);cy.get('[data-count=carrot]').should('have.text','3');reloadFarm();cy.get('#game').should('have.attr','data-ready','true');cy.get('[data-count=carrot]').should('have.text','3');cy.get('[data-count=onion]').should('have.text','4');press('Tab','Tab',9);cy.get('#skills-tab').click();cy.get('.skill-card-level').should('have.text','3. szint');cy.get('#replay-gardening-three').click();cy.get('#dialogue-title').should('contain','3. szint');cy.get('#reward-preview-back').click();cy.get('[data-count=carrot]').should('have.text','3');
+  cy.get('#toolbar [data-tool=carrot]').click();press('f','KeyF',70);cy.get('[data-count=carrot]').should('have.text','3');reloadFarm();cy.get('#game').should('have.attr','data-ready','true');cy.get('[data-count=carrot]').should('have.text','3');cy.get('[data-count=onion]').should('have.text','4');press('Tab','Tab',9);cy.get('#skills-tab').click();cy.get('.skill-card-level').should('have.text','3. szint');cy.get('#replay-gardening,#replay-gardening-three').should('not.exist');cy.get('[data-count=carrot]').should('have.text','3');
  });
 });
 
 describe('Start menu and separate farms',()=>{
  it('creates a test farm without replacing an older farm and returns to either',()=>{
   start();walk('down','y',288);walk('right','x',339);press('f','KeyF',70);cy.get('#game').should('have.attr','data-plots','1');press('3','Digit3',51);press('f','KeyF',70);cy.get('#game').should('have.attr','data-gardening-xp','2');cy.get('[data-count=radish]').should('have.text','3');
-  cy.get('#menu').click();cy.get('#open-start-menu').click();cy.get('.farm-save-card').should('have.length',1);cy.get('#new-farm').click();cy.get('#farm-name').type('Próbakert');cy.get('#farmer-name').type('Nóra');cy.get('#start-farm').click();cy.get('h1').should('have.text','Próbakert');cy.get('#dialogue').should('not.be.visible');cy.get('#game').should('have.attr','data-gold','100').and('have.attr','data-gardening-xp','0');cy.get('[data-count=radish]').should('have.text','4');
+  cy.get('#menu').click();cy.get('#open-start-menu').click();cy.get('.farm-save-card').should('have.length',1);cy.get('#new-farm').click();cy.get('#farm-name').type('Próbakert');cy.get('#start-farm').click();cy.get('h1').should('have.text','Próbakert');cy.get('#dialogue').should('not.be.visible');cy.get('#game').should('have.attr','data-gold','100').and('have.attr','data-gardening-xp','0');cy.get('[data-count=radish]').should('have.text','4');
   cy.get('#menu').click();cy.get('#open-start-menu').click();cy.get('.farm-save-card').should('have.length',2);cy.contains('.farm-save-card','Tesztfarm').find('button').click();cy.get('h1').should('have.text','Tesztfarm');cy.get('#dialogue').should('not.be.visible');cy.get('#game').should('have.attr','data-gardening-xp','2');cy.get('[data-count=radish]').should('have.text','3');
   cy.reload();cy.get('#start-panel').should('be.visible');cy.get('.farm-save-card').should('have.length',2);cy.get('#new-farm').click();cy.get('#cancel-farm-name').click();cy.get('.farm-save-card').should('have.length',2);cy.get('#continue-farm').click();cy.get('#game').should('have.attr','data-gardening-xp','2');
  });
 });
 
-describe('Farmer identity and earned celebrations',()=>{
- it('requires both names for a new farm and retains the farmer name after reload',()=>{
-  start();cy.get('#menu').click();cy.get('#open-start-menu').click();cy.get('#new-farm').click();cy.get('#farm-name').type('Harmat Farm');cy.get('#start-farm').should('be.disabled');cy.get('#farmer-name').type('Léna');cy.get('#start-farm').should('not.be.disabled').click();cy.get('h1').should('have.text','Harmat Farm');cy.get('#dialogue').should('not.be.visible');cy.get('#menu').click();cy.get('#open-start-menu').click();cy.contains('.farm-save-card','Harmat Farm').should('contain','Farmer: Léna');
-  cy.reload();cy.get('#start-panel').should('be.visible');cy.get('#continue-farm-name').should('contain','Léna');cy.get('#continue-farm').click();press('Tab','Tab',9);cy.get('#skills-tab').click();cy.get('#replay-gardening,#replay-gardening-three').should('not.exist');
+describe('Simplified farm creation and skills',()=>{
+ it('asks only for the farm name and omits skill levels from saved-farm cards',()=>{
+  start();cy.get('#menu').click();cy.get('#open-start-menu').click();cy.get('#farm-list').should('not.contain','Kertészkedés');cy.get('#new-farm').click();cy.get('label[for=farm-name]').should('have.text','Farm neve');cy.get('#farmer-name').should('not.exist');cy.get('#farm-name').type('Harmat Farm');cy.get('#start-farm').should('not.be.disabled').click();cy.get('h1').should('have.text','Harmat Farm');cy.get('#dialogue').should('not.be.visible');press('Tab','Tab',9);cy.get('#skills-tab').click();cy.get('#skills-page button').should('not.exist');
  });
 });

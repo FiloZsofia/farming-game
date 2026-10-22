@@ -11,7 +11,7 @@ npm ci
 npm run dev
 ```
 
-Nyisd meg a Vite által kiírt címet. A kezdőmenüben a Folytatás az utoljára játszott farmot nyitja meg; az Új játék a farm és a farmer nevének megadásával új, külön mentést hoz létre 100 golddal és induló magokkal. A korábbi farmok a Mentett farmjaid listában megmaradnak. Játék közben a Menü → Kezdőmenü · Farmválasztás pontban válthatsz közöttük. Mozgás: WASD, nyilak vagy érintőgombok. Ugrás: Space; futás: Shift; művelet: F vagy kattintás; készlet: Tab; tárgyhasználat: közelről E vagy kattintás.
+Nyisd meg a Vite által kiírt címet. A kezdőmenüben a Folytatás az utoljára játszott farmot nyitja meg; az Új játék a farm nevének megadásával új, külön mentést hoz létre 100 golddal és induló magokkal. A korábbi farmok a Mentett farmjaid listában megmaradnak. Játék közben a Menü → Kezdőmenü · Farmválasztás pontban válthatsz közöttük. Mozgás: WASD, nyilak vagy érintőgombok. Ugrás: Space; futás: Shift; művelet: F vagy kattintás; készlet: Tab; tárgyhasználat: közelről E vagy kattintás.
 
 ```sh
 npm test
