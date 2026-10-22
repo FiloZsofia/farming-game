@@ -33,7 +33,7 @@ import { createEconomy, crops, emptyQuantities, salePrices, shippingValue, settl
 const dialogue=document.querySelector<HTMLDialogElement>('#dialogue')!;
 const story='A kutatólaborban mindig akadt egy újabb feladat. Szerettem a munkámat, de elfáradtam. Változásra volt szükségem.\n\nMost itt vagyok. A ház előtt gaz nő, a kerítés javításra vár. Nem kell mindent ma rendbe hoznom. Ez egy új kezdet.';
 function showDialogue(title:string,text:string,label='A BIRTOKON'){
- release();delete dialogue.dataset.presentation;
+ release();delete dialogue.dataset.presentation;delete dialogue.dataset.speaker;document.querySelector<HTMLElement>('#speaker')!.hidden=true;document.querySelector('#speaker-portrait')!.replaceChildren();
  document.querySelector<HTMLButtonElement>('#sleep')!.hidden=true;
  document.querySelector<HTMLButtonElement>('#export-save')!.hidden=true;
  for(const id of ['shop-panel','start-panel','morning-sale-panel','level-reward-panel','farm-name-panel','shipping-panel','menu-panel','inventory-panel','catalog-panel','mailbox-panel'])document.querySelector<HTMLElement>(`#${id}`)!.hidden=true;
@@ -417,10 +417,14 @@ class Farm extends Phaser.Scene {
   if(!this.canInteract()||!shopsOpen(this.clock.elapsed)||shopAt(this.actor.y)!==shop||!merchantNearby(shop,this.actor.x,this.actor.y))return;
   const key=shop==='nursery'?'metLeo':'metAnnie';if(!this.travel[key]){this.transitioning=true;this.saveRevision++;const travel=structuredClone(this.travel);travel[key]=true;try{await this.store.save(snapshot(this.actor,this.clock,this.garden,this.economy,this.orders,this.farmName,this.clearing,this.story,this.skill,this.farmerName,travel));this.travel=travel;}catch{this.notice('A találkozást nem sikerült menteni. Próbáljuk újra egy kicsit később.');return;}finally{this.transitioning=false;this.lastTick=performance.now();}}
   const text=shop==='nursery'?'Jó látni, hogy új élet költözik a régi birtokra! Egy fának idő kell, míg megerősödik. Nekünk is szabad néha lassabban növekednünk.':this.story.giftReceived?(this.story.birdhouse?'Örülök, hogy helyet találtál a madárodúnak! Jó lesz hallgatni a kis lakók dalát — és közben a kertedre is vigyáznak.':'Remélem, hamar találsz egy kedves kis zugot a madárodúnak! A madarak dalával még otthonosabb lesz a birtokod, és a kertedre is vigyáznak majd.'):'Jó, hogy benéztél! Egy kis víz a kertben annyi életet vonz. Szeretem figyelni, ahogy lassan mindenki otthonra talál körülötte.';
-  showDialogue(shop==='nursery'?'Leo':'Annie',text,'EGY KEDVES SZÓ');
+  showDialogue(shop==='nursery'?'Leo':'Annie',text,'EGY KEDVES SZÓ');this.showSpeaker(shop);
+ }
+ private showSpeaker(shop:Shop){
+  dialogue.dataset.speaker=shop==='nursery'?'leo':'annie';document.querySelector<HTMLElement>('#speaker')!.hidden=false;document.querySelector('#speaker-name')!.textContent=shop==='nursery'?'Leo':'Annie';document.querySelector('#speaker-portrait')!.replaceChildren(shop==='nursery'?leoPortrait(this):anniePortrait(this));
  }
  private openShop(shop:Shop,message=''){
   showDialogue(shopNames[shop],message||(shop==='nursery'?'Szia! Nézz körül a csemetéim között. Tavasszal ültetheted el őket; 15 nap alatt megnőnek, öntözés nélkül.':'Válassz valamit a tavadhoz! A vásárolt holmit rögtön a készletedbe teszem.'),shop==='nursery'?'LEO':'ANNIE');
+  this.showSpeaker(shop);
   const panel=document.querySelector<HTMLElement>('#shop-panel')!;panel.replaceChildren();panel.hidden=false;
   const balance=document.createElement('p');balance.textContent=`Nálad: ${this.economy.gold} gold`;balance.setAttribute('role','status');panel.append(balance);
   for(const good of goods.filter(k=>shop==='nursery'?treeKinds.includes(k as typeof treeKinds[number]):!treeKinds.includes(k as typeof treeKinds[number]))){

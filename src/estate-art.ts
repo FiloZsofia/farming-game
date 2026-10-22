@@ -1,3 +1,4 @@
+import {drawRipeMarker} from './crop-art';
 import Phaser from 'phaser';
 import {type Estate} from './estate';
 export function drawEstate(scene:Phaser.Scene,estate:Estate,day:number){
@@ -6,6 +7,7 @@ export function drawEstate(scene:Phaser.Scene,estate:Estate,day:number){
   g.fillStyle(0x345737,.25).fillEllipse(x+7,y+5,61*s,22*s);g.lineStyle(7*s,0x785738).lineBetween(x,y,x,y-49*s);g.lineStyle(3*s,0x96714b).lineBetween(x-1,y,x-1,y-48*s);
   for(const [dx,dy]of [[-13,-43],[12,-49],[0,-64]]){g.fillStyle(0x3d693f).fillEllipse(x+dx*s,y+dy*s,46*s,37*s);g.fillStyle(0x74964d).fillEllipse(x+(dx-4)*s,y+(dy-5)*s,35*s,26*s);}
   if(t.fruit)for(let i=0;i<t.fruit;i++){const xx=x+Math.cos(i*2.4)*19,yy=y-48+Math.sin(i*2.4)*14;g.fillStyle(t.kind==='cherry'?0xb94f49:t.kind==='plum'?0x776187:t.kind==='apple'?0xcf9450:0xc1b566).fillEllipse(xx,yy,6,t.kind==='pear'?9:6);g.lineStyle(1,0x65583a).lineBetween(xx,yy-3,xx+1,yy-6);}
+  if(t.fruit)drawRipeMarker(g,x+25*s,y-65*s);
  }
  for(const p of estate.pond){if(p.kind==='lily'){
    for(const [dx,dy,r]of [[-8,3,14],[10,6,12]]){g.fillStyle(0x3c7651).fillEllipse(p.x+dx,p.y+dy,r*2,r);g.fillStyle(0x88aa5b).fillEllipse(p.x+dx-2,p.y+dy-2,r*1.7,r*.7);g.lineStyle(.8,0xb2c580).lineBetween(p.x+dx,p.y+dy,p.x+dx+r*.6,p.y+dy-2);g.fillStyle(0x397f87).fillTriangle(p.x+dx,p.y+dy,p.x+dx+r,p.y+dy-4,p.x+dx+r,p.y+dy+2);}

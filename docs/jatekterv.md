@@ -375,3 +375,12 @@ Ezek a következő vásárlási és tóba helyezési fejlesztés szabályai; ebb
 - Beköltözéskor két kacsa repül be a fészekhez, a kamera a tóra fordul; külön reggeli üdvözlő ablak jelenik meg. A felhasználó bezárása után következik a külön eladási elszámolás. A már látott érkezés nem ismétlődik visszatöltéskor; egy függőben lévő érkezés visszanézhető marad, jutalmat nem dupláz.
 - Az első 2–4 tojás a beköltözés utáni negyedik reggelen keletkezik, majd négy naponta újra. Eladási ár továbbra is 13 gold/db.
 - Mentésformátum v16: a v15-ös halak, növények, holmik, korábban keletkezett tojások és ismeretségek megmaradnak. Már kihelyezett régi fészeknél annak mentett kihelyezési napját használjuk; az érkezés a következő alkalmas reggelen történik. A még készletben lévő régi fészek ugyanúgy csak a későbbi kihelyezéstől számít három napot.
+
+
+## Betakarításjelzés és beszélő szereplők
+
+- Az érett vetemény apró pöttyét nagyobb, világos aranyszínű, sötét szegélyű, halvány fényudvaros pipa váltja fel. A termő gyümölcsfa is ugyanezt a jelzést kapja. A növekedési és betakarítási szabályok változatlanok.
+- Leo haja egységes barna; a korábbi világos hajfoltok és szakállfoltok eltűnnek. Az arc és a csukott szájú mosoly finomabb vonalakat kap.
+- Annie és Leo beszélgetése és a pultnál elhangzó kereskedői szöveg portrés beszédpanelben jelenik meg. A név és a portré mellett világos papírszínű beszédbuborék, a portréra mutató nyíl és kézi Folytatás gomb látható. A portré a játékbeli rajzból készül.
+- Beszélgetésnél a panel a képernyő alsó részén ül; a pultnál ugyanilyen beszélőfejléc alatt, görgethető kínálattal vásárolhat a játékos. Telefonon a portré kisebb és a szöveg alatta tördelődik.
+- Más felületek (készlet, napzárás, elszámolás, menü) megőrzik a saját megjelenésüket; a beszélőjelzés bezárás és újbóli megnyitás után sem ragad rájuk.

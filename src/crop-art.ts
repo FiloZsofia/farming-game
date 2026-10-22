@@ -27,5 +27,10 @@ export function drawCrop(g:Phaser.GameObjects.Graphics,x:number,y:number,plot:Pl
   if(isRipe(plot)&&plot.crop==='radish'){leaf(cx,cy+2,7,6,0xdd7d8c);leaf(cx-1,cy+1,3,2,0xf1b1a6);g.lineStyle(1,0xe9d7b7);g.lineBetween(cx,cy+4,cx+1,cy+6);}
   if(isRipe(plot)&&plot.crop==='potato'){leaf(cx-3,cy+3,5,4,0xc3a06c);leaf(cx+3,cy+4,5,4,0x9e7b4f);g.fillStyle(0xe6c68e);g.fillRect(cx-4,cy+2,2,1);}
  }
- if(isRipe(plot)){g.fillStyle(0xf1d88a);g.fillRect(x+13,y-2,2,2);}
+ if(isRipe(plot))drawRipeMarker(g,x+12,y-4);
+}
+
+export function drawRipeMarker(g:Phaser.GameObjects.Graphics,x:number,y:number){
+ g.fillStyle(0xf5d77c,.23).fillCircle(x,y,6);g.fillStyle(0x344f35).fillCircle(x,y,4.3);g.fillStyle(0xffe49b).fillCircle(x,y,3.2);g.fillStyle(0xfff7d6).fillCircle(x-.7,y-.8,1.1);
+ g.lineStyle(1.2,0x527147).beginPath().moveTo(x-1.5,y).lineTo(x-.3,y+1.2).lineTo(x+1.8,y-1.3).strokePath();
 }

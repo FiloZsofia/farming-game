@@ -218,7 +218,7 @@ describe('Southern village and forest',()=>{
 
  it('separates side conversations with Annie and Leo from counter purchases',()=>{
   for(const [origin,name] of [[2300,'Annie'],[1600,'Leo']] as const){
-   start({...villageSave,player:{x:325,y:origin+240}});press('e','KeyE',69);cy.get('#dialogue-title').should('have.text',name);cy.get('#shop-panel').should('not.be.visible');if(name==='Annie')cy.get('#dialogue-text').should('contain','madárodú');press('Escape','Escape',27);
+   start({...villageSave,player:{x:325,y:origin+240}});press('e','KeyE',69);cy.get('#dialogue-title').should('have.text',name);cy.get('#dialogue').should('have.attr','data-speaker',name.toLowerCase());cy.get('#speaker-name').should('have.text',name);cy.get('#speaker-portrait img').should('be.visible');cy.get('#shop-panel').should('not.be.visible');if(name==='Annie')cy.get('#dialogue-text').should('contain','madárodú');press('Escape','Escape',27);
    walk('down','y',origin+320);walk('right','x',450);press('e','KeyE',69);cy.get('#shop-panel').should('be.visible');cy.get('#dialogue-text').should('not.contain','madárodú');if(name==='Annie')cy.get('[data-buy-good=reed]').parent().should('contain','Később kosárfonáshoz hasznosítható.');
   }
  });
