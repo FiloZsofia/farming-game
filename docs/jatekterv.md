@@ -394,4 +394,4 @@ Az új farm elnevezésekor és a Menü → Történet felületen az alábbi köz
 >
 > Az utolsó hónapokban egy szokatlan minta érkezett a laborba. Az eredmények nem illettek ahhoz, amit addig tudtak. Sam még azelőtt eljött, hogy kiderült volna, mit találtak.
 >
-> – Szeretném megtudni, képes vagyok-e a saját kezemmel otthont teremteni ezen a helyen – sóhajtott fel.
+> Szeretném megtudni, képes vagyok-e a saját kezemmel otthont teremteni ezen a helyen.

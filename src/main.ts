@@ -31,7 +31,7 @@ import { SaveStore, snapshot,type Snapshot } from './storage';
 import {createOrders,seedPrices,orderCost,quantityTotal,purchaseSeeds,deliverOrders,collectPackage, type Orders} from './orders';
 import { createEconomy, crops, emptyQuantities, salePrices, shippingValue, settleSales, transferProduce, type Economy } from './economy';
 const dialogue=document.querySelector<HTMLDialogElement>('#dialogue')!;
-const story="Sam egy kutatólaborban dolgozott, ahol rovarokon élősködő gombákat vizsgáltak.\n\nAz utolsó hónapokban egy szokatlan minta érkezett a laborba. Az eredmények nem illettek ahhoz, amit addig tudtak. Sam még azelőtt eljött, hogy kiderült volna, mit találtak.\n\n– Szeretném megtudni, képes vagyok-e a saját kezemmel otthont teremteni ezen a helyen – sóhajtott fel.";
+const story="Sam egy kutatólaborban dolgozott, ahol rovarokon élősködő gombákat vizsgáltak.\n\nAz utolsó hónapokban egy szokatlan minta érkezett a laborba. Az eredmények nem illettek ahhoz, amit addig tudtak. Sam még azelőtt eljött, hogy kiderült volna, mit találtak.\n\nSzeretném megtudni, képes vagyok-e a saját kezemmel otthont teremteni ezen a helyen.";
 function showDialogue(title:string,text:string,label='A BIRTOKON'){
  release();delete dialogue.dataset.presentation;delete dialogue.dataset.speaker;document.querySelector<HTMLElement>('#speaker')!.hidden=true;document.querySelector('#speaker-portrait')!.replaceChildren();
  document.querySelector<HTMLButtonElement>('#sleep')!.hidden=true;
@@ -207,7 +207,7 @@ class Farm extends Phaser.Scene {
  private validateFarmName(){
   const input=document.querySelector<HTMLInputElement>('#farm-name')!,name=normalizeFarmName(input.value);
   document.querySelector<HTMLButtonElement>('#start-farm')!.disabled=!name||this.transitioning;
-  document.querySelector('#farm-name-error')!.textContent=!input.value.trim()?'Válassz egy nevet a farmodnak.':!name?'A farm neve legfeljebb 40 karakter lehet.':'';
+  document.querySelector('#farm-name-error')!.textContent=!input.value.trim()?'':!name?'A farm neve legfeljebb 40 karakter lehet.':'';
  }
  private async confirmFarmName(){
   if(!this.naming||!this.ready||this.transitioning)return;
