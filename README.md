@@ -27,6 +27,8 @@ Ez még nem a végleges grafika. A stamina még nincs bekötve; a növekedés é
 
 A mellékelt GitHub Actions munkafolyamat a `main` ág feltöltésekor ellenőriz és buildel, majd GitHub Pagesre telepít. A tároló **Settings → Pages → Source** beállítása legyen **GitHub Actions**. Első aktiválás után szükség esetén indítsd el kézzel a „Deploy game” munkafolyamatot. A játék várható címe: https://filozsofia.github.io/farming-game/ (csak sikeres telepítés után).
 
+A GitHub Pages közzétételi workflow `CYPRESS_INSTALL_BINARY=0` beállítással telepíti a függőségeket: az alkalmazás buildjéhez és a Vitest-tesztekhez nincs szükség a Cypress külön böngészős futtatójára. Így a futtató letöltési hibája nem állítja le a közzétételt. A Cypress npm-csomagja és a böngészős tesztek megmaradnak; azok futtatása előtt `npx cypress install` szükséges.
+
 ## Tervezés
 
 - [Közös játékterv](docs/jatekterv.md)

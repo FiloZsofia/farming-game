@@ -19,7 +19,11 @@ jobs:
         with:
           node-version: 24
           cache: npm
-      - run: npm ci
+      - name: Install build and test dependencies
+        run: npm ci
+        env:
+          # This job runs unit tests and builds Pages; it does not run Cypress.
+          CYPRESS_INSTALL_BINARY: '0'
       - run: npm test
       - run: npm run build
       - uses: actions/upload-pages-artifact@v5
