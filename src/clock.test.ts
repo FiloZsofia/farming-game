@@ -8,3 +8,13 @@ describe('active game clock',()=>{
  it('does not reroll exhaustion on a restored clock',()=>{const c=createClock(4,()=>.1);advanceClock(c,500);const restored=structuredClone(c);expect(advanceClock(restored,73).collapse).toBe(true);});
  it('applies a gradual readable night shade',()=>{const c=createClock();expect(nightOpacity(c)).toBe(0);c.elapsed=360;expect(nightOpacity(c)).toBeGreaterThan(0);c.elapsed=500;expect(nightOpacity(c)).toBe(.55);});
 });
+
+describe('spring preview boundary',()=>{
+ it('allows the last spring day until it ends, then blocks summer and preserves later saves',async()=>{
+  const {springPreviewComplete}=await import('./clock');
+  expect(springPreviewComplete({day:14,elapsed:580,collapseAt:580})).toBe(false);
+  expect(springPreviewComplete({day:15,elapsed:579.9,collapseAt:580})).toBe(false);
+  expect(springPreviewComplete({day:15,elapsed:580,collapseAt:580})).toBe(true);
+  const later={day:21,elapsed:12,collapseAt:580};expect(springPreviewComplete(later)).toBe(true);expect(later).toEqual({day:21,elapsed:12,collapseAt:580});
+ });
+});

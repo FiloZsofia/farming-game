@@ -394,6 +394,14 @@ Az új farm elnevezésekor és a Menü → Történet felületen az alábbi köz
 >
 > Az utolsó hónapokban egy szokatlan minta érkezett a laborba. Az eredmények nem illettek ahhoz, amit addig tudtak. Sam még azelőtt eljött, hogy kiderült volna, mit találtak.
 >
-> Szeretném megtudni, képes vagyok-e a saját kezemmel otthont teremteni ezen a helyen.
+> „Szeretném megtudni, képes vagyok-e a saját kezemmel otthont teremteni ezen a helyen.”
 
 - Az összeszedhető ikrát a nyugati sekély vízben, vízinövény szárára tapadó, áttetsző aranybarna ikraszemek csomója jelzi. A korábbi közös, nagy világos kör eltűnik; a gyűjthető kacsatojások külön, a fészekben láthatók. A gyűjtés, érték és termelési ütem változatlan.
+
+
+## A játszható változat vége
+
+- A jelenlegi változat az első tavasz 15. napjáig játszható. A naplóval lezárt utolsó nap és az éjszakai összeesés is a fejlesztés végéről szóló üzenetre vezet, a nyár nem indul el.
+- A 15. nap végállapota mentődik, a következő nap növekedése, rendelései, termelése és eladási elszámolása nem fut le előre. A ládába tett termény, holmik, pénz és minden elért eredmény megmarad a későbbi folytatáshoz. A lezárt napot a meglévő óraformátum teljesen eltelt napként őrzi, új mentésverzió nélkül.
+- Visszatöltéskor ugyanez a végüzenet jelenik meg. A játékos a farmválasztáshoz térhet vissza, másik vagy új farmot indíthat, illetve letöltheti mentését. Escape nem indítja tovább a lezárt napot.
+- A korábban már nyárba vagy későbbre jutott mentéseket nem tekerjük vissza: megnyitásukkor ugyanez a fejlesztési határ fogadja a játékost, az eredeti adatait megőrizve.

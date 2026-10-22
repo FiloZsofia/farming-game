@@ -13,3 +13,7 @@ export function clockLabel(clock:Clock){
  const seconds=Math.floor(night?clock.elapsed-DAY_SECONDS:clock.elapsed);
  return `${night?'Éjszaka':clock.elapsed<180?'Délelőtt':'Délután'} · ${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`;
 }
+
+// Keep the prototype at the end of its first spring; later saves stay intact.
+export const SPRING_PREVIEW_LAST_DAY=15;
+export const springPreviewComplete=(clock:Clock)=>clock.day>SPRING_PREVIEW_LAST_DAY||clock.day===SPRING_PREVIEW_LAST_DAY&&clock.elapsed>=clock.collapseAt;

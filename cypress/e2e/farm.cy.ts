@@ -223,4 +223,8 @@ describe('Southern village and forest',()=>{
   }
  });
 
+ it('stops after the final spring day and preserves the saved farm on reload',()=>{
+  start({...villageSave,player:{x:250,y:242},clock:{day:15,elapsed:100,collapseAt:580},economy:{gold:100,shipping:{...quantities,radish:2},lastSale:null}});clickWorld(268,232);cy.get('#sleep').click();cy.get('#dialogue').should('have.attr','data-presentation','development-end');cy.get('#game').should('have.attr','data-day','15').and('have.attr','data-gold','100').and('have.attr','data-shipping','30');press('Escape','Escape',27);cy.get('#dialogue').should('be.visible');cy.reload();cy.get('#continue-farm').should('be.visible').and('not.be.disabled').click();cy.get('#dialogue').should('have.attr','data-presentation','development-end');cy.get('#preview-farms').click();cy.get('#start-panel').should('be.visible');cy.get('#new-farm').should('not.be.disabled');
+ });
+
 });
