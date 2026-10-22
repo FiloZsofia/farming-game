@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import {villageLayout as layout,WORLD_HEIGHT} from './village-layout';
+import {villageLayout as layout,WORLD_HEIGHT,benchPose,benchPoint,type BenchPose,shopNames} from './village-layout';
 // Original procedural scenery, sharing coordinates with the walkable village.
 export function drawVillage(scene:Phaser.Scene){
  const g=scene.add.graphics().setDepth(-.5),labels:Phaser.GameObjects.Text[]=[];
@@ -15,14 +15,22 @@ export function drawVillage(scene:Phaser.Scene){
  const path=(points:number[][],width:number)=>{for(const [w,c]of [[width+5,0x6e8050],[width,0xb5a17b],[width-5,0xd0b992]]){g.lineStyle(w,c).beginPath();points.forEach(([x,y],i)=>i?g.lineTo(x,y):g.moveTo(x,y));g.strokePath();for(const[x,y]of points)oval(x,y,w,w,c);}};
  path([[170,595],[174,672],[305,784],[393,909],[476,1030],[493,1320],[493,1414]],31);
  path([[278,760],[150,813],[107,930],[211,1040],[356,1080]],17);
- path([[474,1016],[586,978],[591,940]],28);path([[555,1136],[643,1254]],28);
+ path([[474,1016],[586,978],[591,940]],28);path([[606,1097],[631,1080],[650,1069]],25);
  oval(479,1089,374,240,0x83915d);oval(476,1080,360,230,0xc3b697);
  for(let y=977;y<1183;y+=10)for(let x=298+(y%20?0:8);x<655;x+=17){if(((x-476)/176)**2+((y-1080)/109)**2>1)continue;rect(x,y,14,7,(x+y)%3?0xcabb9a:0xaeaa8e);line(x+2,y+1,x+12,y+1,0xdfcdae);}
  // A shallow stone fountain and a few pots give the square a quiet centre.
  oval(478,1089,67,30,0x485e43,.3);oval(476,1083,59,37,0x817e6b);oval(476,1078,55,31,0xc3b998);oval(476,1076,44,23,0x587e7e);oval(474,1074,36,16,0x8bb8ab);rect(472,1056,8,20,0xa9a88e);oval(476,1055,23,8,0xe0d1a9);line(476,1053,476,1063,0xc3e2cc,2);line(463,1078,470,1078,0xd2dfbc);line(484,1073,490,1073,0xd2dfbc);
  const flowers=(x:number,y:number)=>{oval(x+3,y+4,22,9,0x385d3d,.25);poly([x-9,y-7,x+9,y-7,x+6,y+7,x-6,y+7],0xa8744e);rect(x-10,y-9,20,4,0xc49764);for(let i=0;i<9;i++){const xx=x+(random()-.5)*22,yy=y-10-random()*8;line(xx,yy+5,xx,yy,0x496b3a);oval(xx,yy,4,3,[0xe7bf8e,0xc37c85,0xd6d4a1][i%3]);}};
- const bench=(x:number,y:number)=>{oval(x+4,y+11,55,11,0x355c3a,.25);for(const xx of[x-20,x+20]){rect(xx,y,3,14,0x4c5c4d);rect(xx,y-13,3,15,0x4c5c4d);}for(let i=0;i<3;i++)rect(x-25,y-14+i*4,53,3,0x997c4f);poly([x-25,y,x+27,y,x+31,y+7,x-21,y+7],0xba9a63);line(x-22,y+3,x+28,y+3,0x756044);};
- bench(367,1019);bench(540,1180);flowers(337,991);flowers(622,1005);flowers(589,1183);
+ const bench=(pose:BenchPose)=>{
+  const p=(x:number,y:number)=>benchPoint(pose,x,y),quad=(x:number,y:number,w:number,h:number,c:number)=>{const a=p(x,y),b=p(x+w,y),d=p(x+w,y+h),e=p(x,y+h);poly([a.x,a.y,b.x,b.y,d.x,d.y,e.x,e.y],c);};
+  const shadow=p(0,9);oval(shadow.x+4,shadow.y+5,52,20,0x355c3a,.25);
+  for(const x of [-22,22]){quad(x,-13,3,28,0x465347);quad(x,-13,1,27,0x91a087);}
+  // The backrest is on the outer edge, with the seat facing the fountain.
+  for(let i=0;i<3;i++){quad(-26,-15+i*4,55,3,0x98754b);quad(-25,-15+i*4,53,1,0xd0ac74);}
+  quad(-27,0,57,9,0xb79865);quad(-27,9,57,3,0x6e573c);quad(-26,2,55,1,0xe1bf85);
+  for(const x of [-23,24])quad(x,-1,3,8,0x4d5b49);
+ };
+ for(const b of layout.benches)bench(benchPose(b.angle));flowers(323,1001);flowers(617,993);flowers(627,1128);
  const house=(x:number,y:number,w:number,h:number,roof:number,wall:number)=>{
   poly([x,y+h-3,x+w,y+h-3,x+w+23,y+h+18,x+13,y+h+21],0x33583b,.28);
   rect(x,y,w,h,wall);rect(x,y+h-10,w,10,0x9c967b);for(let xx=x+2;xx<x+w-10;xx+=15){rect(xx,y+h-9,13,5,0xb9af90);}
@@ -35,11 +43,26 @@ export function drawVillage(scene:Phaser.Scene){
  };
  const n=layout.nursery;house(n.x,n.y,n.w,n.h,0x657b52,0xd6c8a0);label(593,864,'FAISKOLA',10);
  // Nursery saplings in tubs, a little glass lean-to and hand-painted tree sign.
- for(let i=0;i<5;i++){const x=490+i*30,y=993+(i%2)*8;rect(x-6,y-7,12,12,0x92704a);line(x,y-7,x,y-36,0x765639,2);oval(x-5,y-30,18,22,0x4d7843);oval(x+4,y-39,20,24,0x66924f);oval(x+1,y-44,13,15,0x8aa75b);}
- rect(684,884,64,68,0x586d59);for(let i=0;i<3;i++){rect(688+i*20,890,16,55,0xa6bdb0,.8);line(689+i*20,891,701+i*20,933,0xd7dfc7);}poly([680,884,712,860,751,884],0x8da998);line(682,884,712,862,0xe0d6b2,3);line(712,862,750,884,0xe0d6b2,3);
- const f=layout.fishShop;house(f.x,f.y,f.w,f.h,0x69888b,0xd8cca7);label(647,1154,'TÓPARTI BOLT',9);
- for(let i=0;i<5;i++){const x=578+i*27;poly([x,1190,x+27,1190,x+30,1208,x-2,1208],i%2?0xe1d4ac:0x698f8a);}line(576,1208,716,1208,0x53695e,2);
- oval(741,1235,30,18,0x627c70);rect(726,1213,30,22,0x947d54);oval(741,1213,30,12,0x5b9595);oval(739,1211,23,6,0x92c4b6);line(728,1218,753,1218,0xc3ad78);line(728,1230,753,1230,0x5e5b41);
+ rect(503,952,55,20,0xada17c);rect(630,952,55,20,0xada17c);
+ for(const {x,y}of layout.nurserySaplings){rect(x-6,y-7,12,12,0x92704a);line(x,y-7,x,y-36,0x765639,2);oval(x-5,y-30,18,22,0x4d7843);oval(x+4,y-39,20,24,0x66924f);oval(x+1,y-44,13,15,0x8aa75b);}
+
+ rect(684,839,64,68,0x586d59);for(let i=0;i<3;i++){rect(688+i*20,845,16,55,0xa6bdb0,.8);line(689+i*20,846,701+i*20,888,0xd7dfc7);}poly([680,839,712,815,751,839],0x8da998);line(682,839,712,817,0xe0d6b2,3);line(712,817,750,839,0xe0d6b2,3);
+ const f=layout.fishShop;
+ // Three-quarter view: the entrance faces the square, on the west wall.
+ poly([660,1059,782,1040,794,1085,682,1096],0x33583b,.25);
+ poly([660,969,706,984,706,1078,660,1062],0xc2b994);poly([706,984,782,963,782,1058,706,1078],0xe0d0a9);
+ for(let y=991;y<1061;y+=10){line(661,y,705,y+15,0xa79d7b,1,.7);line(707,y+15,781,y-6,0xb7ac86,1,.7);}
+ poly([648,970,686,923,732,936,711,992],0x4e6a69);poly([686,923,755,907,790,964,711,992],0x668c8b);
+ for(let y=935;y<986;y+=9){line(698,y,779,y-22,0x9eb6a2,1,.55);}
+ line(648,970,711,992,0x395858,3);line(711,992,790,964,0x395858,3);line(686,923,755,907,0xa7bca5,2);
+ // Recessed door, stone step and a small canopy above the lintel only.
+ poly([666,1008,691,1016,691,1071,666,1063],0x63523c);poly([670,1013,687,1019,687,1067,670,1062],0x8b7750);oval(682,1044,2,3,0xe3c47c);
+ poly([660,1065,692,1075,681,1084,649,1074],0xc4b693);line(653,1074,682,1082,0xe6d4af,2);
+ poly([660,1003,690,1013,697,1007,667,997],0x648b82);line(660,1003,690,1013,0xb6c7a0,2);
+ // A window on the long side and a hanging shop sign remain clear of the door.
+ poly([724,1004,764,993,764,1035,724,1046],0x7e8268);poly([728,1007,760,998,760,1031,728,1040],0x8fb6ac);line(744,1003,744,1035,0xe1d8ae,2);line(728,1023,760,1014,0xe1d8ae,2);
+ line(703,979,684,972,0x5b6047,2);label(706,964,shopNames.fishShop,9);
+ oval(749,1092,33,16,0x587d6d);rect(733,1071,32,21,0x947d54);oval(749,1071,32,12,0x5b9595);oval(747,1069,24,6,0x92c4b6);line(735,1079,763,1079,0xc3ad78);
  const c=layout.cottage;house(c.x,c.y,c.w,c.h,0x9b7155,0xd4c1a1);flowers(331,1343);flowers(446,1344);
  // Diverse forest silhouettes: broad oak, silver birch and fir.
  const tree=(x:number,y:number,kind:number,s=1)=>{
@@ -57,10 +80,18 @@ export function drawVillage(scene:Phaser.Scene){
  // Backdrop foliage frames the route without filling its walking spaces.
  for(let i=0;i<18;i++){tree(18+random()*750,700+Math.floor(i/9)*660,i%3,.65);}
  for(const t of layout.trees)tree(t.x,t.y,t.kind);
- for(const[x,y,k]of [[410,750,0],[746,766,1],[754,1052,0],[738,1337,2],[559,1372,1],[273,1375,0]])tree(x,y,k,.9);
+ for(const[x,y,k]of [[410,750,0],[746,766,1],[762,1178,0],[738,1337,2],[559,1372,1],[273,1375,0]])tree(x,y,k,.9);
  // Ferns, fallen leaves and meadow flowers along the shaded fork.
  for(let i=0;i<70;i++){const x=45+random()*240,y=660+random()*520;for(let j=0;j<4;j++)line(x,y,x+(j-1.5)*4,y-5-random()*8,0x63894e);if(i%3===0)oval(x,y,4,2,0xc6b77c,.7);}
- rect(229,661,4,40,0x7b6341);poly([216,665,264,665,272,674,264,683,216,683],0xae9567);label(243,674,'Falu ↓',8);label(88,694,'Erdei ösvény',8);
+ // Supported wooden signs at the road and its forest fork, rather than text in grass.
+ const sign=(postX:number,groundY:number,left:number,top:number,width:number,text:string,direction:'left'|'right')=>{
+  oval(postX+4,groundY+3,19,7,0x35553a,.22);rect(postX-2,top+10,5,groundY-top-8,0x6b5438);rect(postX-1,top+12,2,groundY-top-10,0xac8858);
+  const arrow=direction==='right'?[left,top,left+width-10,top,left+width,top+11,left+width-10,top+22,left,top+22]:[left+10,top,left+width,top,left+width,top+22,left+10,top+22,left,top+11];
+  poly(arrow,0x604f35);poly(arrow.map((v,i)=>v+(i%2? -1:0)),0xa98a59);line(left+12,top+3,left+width-12,top+3,0xcfb17b);line(left+12,top+19,left+width-12,top+19,0x735b3c);oval(postX,top+6,2,2,0x5c5b45);oval(postX,top+16,2,2,0x5c5b45);
+  const title=scene.add.text(left+width/2+(direction==='left'?3:-3),top+11,text,{fontFamily:'Georgia,serif',fontSize:'9px',color:'#fff0c8',resolution:2}).setOrigin(.5).setDepth(5);labels.push(title);
+ };
+ sign(220,667,207,608,57,'Falu','right');sign(292,810,220,759,88,'Erdei ösvény','left');
+
  rect(416,930,4,42,0x615940);rect(409,925,18,18,0xd9c994);rect(408,924,20,3,0x5b6550);poly([406,924,418,913,430,924],0x566650);
  return {graphics:g,labels};
 }

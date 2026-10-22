@@ -7,7 +7,7 @@ export class FarmerArt{
  private head:Phaser.GameObjects.Container;private pony:Phaser.GameObjects.Container;
  private armX:number;private armY:number;
  private tool:Phaser.GameObjects.Graphics;private action=0;private phase=0;private equipped='hoe';private actionTool='hoe';private aim={x:0,y:1};
- constructor(scene:Phaser.Scene,neighbor=false){
+ constructor(private scene:Phaser.Scene,neighbor=false){
   this.root=scene.add.container(0,0);
   if(!neighbor){
    // First brown-haired appearance, restored from 8d40544.
@@ -69,6 +69,10 @@ export class FarmerArt{
   face.lineStyle(.7,0xa56455);face.beginPath();face.moveTo(-1.6,4.7);face.lineTo(-.6,5.3);face.lineTo(.6,5.3);face.lineTo(1.6,4.7);face.strokePath();
   if(neighbor){part(this.head,0,-9,15,5,0xbba171);part(this.head,0,-6,20,2,0x827450);}
   this.tool=scene.add.graphics();this.rightArm.add(this.tool);this.equip('hoe');
+ }
+ async surprise(){
+  this.action=0;this.equip('none');
+  await Promise.all([new Promise<void>(resolve=>this.scene.tweens.add({targets:this.leftArm,angle:-170,duration:160,hold:650,yoyo:true,onComplete:()=>resolve()})),new Promise<void>(resolve=>this.scene.tweens.add({targets:this.rightArm,angle:170,duration:160,hold:650,yoyo:true,onComplete:()=>resolve()}))]);
  }
  equip(name:string){this.equipped=name;this.drawTool();}
  use(dx=0,dy=1,tool=this.equipped){this.actionTool=tool;this.action=WORK_SECONDS;this.aim={x:dx,y:dy};}

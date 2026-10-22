@@ -295,3 +295,36 @@ Nyitott javaslatok, még nem elfogadott követelmények: kapun túli gyűjtöget
 - A mentési formátum v13-ra lép. A v1–v12 mentések továbbra is betölthetők, az új terület állapota alapértékekkel egészül ki. A gyűjtés, ajtón átlépés és napváltás sikertelen mentése nem fogyaszt készletet és nem mozgatja át a hőst.
 - A falu és a boltbelsők saját procedurális grafikák. Külső asset vagy új függőség nincs. A szökőkút finom fodrozódása, lassú levélsodródás és esti lámpafény teszi élőbbé a teret.
 - A közzétételi workflow Node.js 24-et használó actionökre frissül. A GitHub Actions sárga/várakozó közzététele alatt az élő oldalon még a korábbi kiadás látszik; a sikeres feltöltés nem jelenti önmagában a Pages-közzététel sikerét.
+
+### Falutér, üzletek és új dallam – 2026-10-22
+
+- A két pad a tér északnyugati és északkeleti peremére kerül, ülőfelületével a szökőkút felé. A rajzolás, ütközés és interakció ugyanazokat a helyzeteket és irányokat használja.
+- A Tóparti bolt új neve Kertitó Szaküzlet. A tér jobb oldalán, feljebb áll, a tér felé forduló oldalsó bejárattal. A napellenző az ajtó fölé kerül. A faiskola kiállított facsemetéi az ajtó két oldalán lévő bemutatósávokban állnak, a bevezető út szabad.
+- A Kertitó Szaküzletben Annie áll a pult mögött. A belső térben különböző méretű akváriumok, tavirózsás dézsa, nád, fészek, merítőháló és tárolóláda látható.
+- A faiskolában Leo, a barátságos férfi kertész fogad. Első találkozás után saját, a bolti karakterével egyező arcképpel bekerül az Ismerősök közé. Annie a szaküzletben való első találkozással is megismerhető, a farmon átadott ajándéktól függetlenül.
+- Minden üzlet nappal nyitva, a 6. percben kezdődő éjszakától zárva tart. Éjszaka sem billentyűvel, sem koppintással nem lehet belépni. Záráskor a bent lévő látogató a térre kerül; sikertelen mentéskor az átlépés nem történik meg, később újrapróbálható. Mentett éjszakai boltbelsőből folytatáskor is érvényes a zárás.
+- A Falu tábla feljebb kerül, az Erdei ösvény táblája az elágazáshoz. Mindkettő tartóoszlopos, fából készült, irányt mutató világobjektum.
+- Menü → Dallam: új, vidámabb „Napsütötte reggel” kompozíció. A két korábbi zene megmarad. A választás és a némítás továbbra is helyben tárolódik.
+
+### Elfogadott kertitó-kínálat terve – 2026-10-22
+
+Ezek a következő vásárlási és tóba helyezési fejlesztés szabályai; ebben a változatban a boltokban még nem lehet vásárolni.
+
+| Áru | Vételár | Szerep |
+| --- | ---: | --- |
+| Tavirózsa | 20 gold | Elhelyezhető tavi növény |
+| Nád | 8 gold | Elhelyezhető parti növény |
+| Aranyhal | 40 gold/db | A tó halállományának része |
+| Ponty | 30 gold/db | A tó halállományának része |
+| Vadkacsafészek | 80 gold | Beköltözés után 4 naponta véletlenszerűen 2–4 tojás; eladás 13 gold/db |
+
+- Ikrából a teljes tó háromnaponta összesen egy adagot ad, nem halanként. Az aranyhal és a ponty nem ad különböző ikrafajtát. Hal nélkül nincs ikra. Az adag értéke 1–4 halnál 6 gold, 5–10 halnál 8 gold, 11 vagy több halnál 10 gold.
+- A faiskola elfogadott első kínálata: tavasszal ültethető alma-, körte-, szilva- és cseresznyecsemete. A termőidőszak külön kezelendő: cseresznye nyár elején, szilva nyár végén, alma és körte ősszel. A fajlista elfogadva; árak és növekedési idők még nincsenek véglegesítve.
+
+### Külön kirablási értesítés és vizuális reggeli elszámolás – 2026-10-22
+
+- A kirablás vagy rablási kísérlet külön értesítés, eladási sorok és egyenleg nélkül. A főhős előtte mindkét kezét az arcához kapja és egyet ugrik, rövid meglepetéshanggal. A hang a meglévő némítási beállítást követi. Az értesítés csak a játékos továbblépésére zárul be.
+- Az eladási összesítő külön, középen jelenik meg, terményikonokkal, darabszámokkal és soronkénti bevétellel. A tegnapi bevétel rövid animációval hozzáadódik a középen mutatott meglévő aranyhoz; a fejléc egyenlege is követi a számlálást. Az ablak ezután magától bezáródik. Üres ládánál is helyes, 0 goldos összesítő látható.
+- A játék ideje a reggeli értesítések alatt áll. Csökkentett mozgás beállításnál a számláló animáció nélkül frissül. Hosszú terménylista külön görgethető, hogy az egyenleg telefonon is látható maradjon.
+- Az egyenleg jóváírása a napváltás mentési tranzakciójában történik; az animáció kizárólag megjelenítés. A kirablási értesítés és a vizuális elszámolás külön mentett, nyugtázható állapot. Újratöltéskor a még meg nem nézett értesítés folytatható, a bevétel nem íródik jóvá ismét.
+- A mentés v14-re lép. A v13-as farmállapot, bokrok és reggeli értesítés megmaradnak, újrabetöltés nem ismétli meg a régi eladási jóváírást. A megváltozott bolthely vagy pad által érintett mentett karakterhely a legközelebbi szabad helyre igazodik, készlet- és aranyvesztés nélkül.

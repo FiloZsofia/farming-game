@@ -1,5 +1,7 @@
+import {LeoArt} from './leo-art';
 import Phaser from 'phaser';
-import {shopOrigins,type Shop} from './village-layout';
+import {FarmerArt} from './character';
+import {shopOrigins,shopNames,type Shop} from './village-layout';
 export function drawShop(scene:Phaser.Scene,shop:Shop){
  const y0=shopOrigins[shop],g=scene.add.graphics().setDepth(-1),nursery=shop==='nursery';
  const rect=(x:number,y:number,w:number,h:number,c:number,a=1)=>g.fillStyle(c,a).fillRect(x,y+y0,w,h);
@@ -13,9 +15,37 @@ export function drawShop(scene:Phaser.Scene,shop:Shop){
  rect(294,322,212,112,nursery?0x7b8e59:0x698c87);rect(300,328,200,100,nursery?0x9ca66c:0x8da99b);for(let x=302;x<500;x+=7){line(x,328,x,428,nursery?0xb8b986:0xb0bfaa);line(x,320,x,325,0xd5c79d);line(x,431,x,437,0xd5c79d);}
  rect(338,235,224,53,0x72523b);rect(333,227,234,14,0xb69a6b);line(337,230,561,230,0xe1c18a,2);for(let x=350;x<558;x+=22)line(x,244,x,284,0x94724b);rect(453,218,26,10,0x766849);rect(456,217,10,8,0xeee0b6);rect(468,217,10,8,0xdfcfa5);line(466,218,466,226,0x8c7753);
  const pot=(x:number,y:number,s=1)=>{oval(x+3,y+7*s,29*s,10*s,0x3a5036,.2);rect(x-9*s,y-8*s,18*s,20*s,0x9c7350);rect(x-11*s,y-10*s,22*s,5*s,0xc29869);line(x,y-10*s,x,y-43*s,0x6e6640,2*s);for(const [dx,dy]of [[-10,-28],[9,-38],[-4,-47]]){oval(x+dx*s,y+dy*s,19*s,12*s,0x557c49);oval(x+(dx-2)*s,y+(dy-2)*s,13*s,7*s,0x88a55e);}};
- const aquarium=(x:number,y:number)=>{rect(x-35,y-19,70,44,0x5c7161);rect(x-32,y-16,64,38,0x6ca5a0);rect(x-28,y-12,56,28,0x9ec5b5,.7);line(x-27,y+14,x-20,y-6,0x5d8658,2);line(x+21,y+14,x+24,y-7,0x638e61,2);oval(x+7,y+1,13,5,0xdcbb79);g.fillStyle(0xbe9c62).fillTriangle(x+12,y+y0+1,x+18,y+y0-3,x+18,y+y0+4);rect(x-36,y+24,72,4,0x6e5e44);line(x-29,y-12,x-29,y+13,0xd9e2c5);};
- for(const x of [146,648]){rect(x-37,257,76,166,0x6d5c41);for(let y=275;y<421;y+=65){rect(x-40,y,82,7,0xbd9c68);line(x-38,y+1,x+38,y+1,0xe1bf85);if(nursery){pot(x-18,y-15,.65);pot(x+18,y-18,.75);}else aquarium(x,y-28);}}
- if(nursery){pot(286,240,1);pot(612,475,1.2);rect(225,223,42,26,0x907b53);for(let i=0;i<4;i++)rect(229+i*9,227,6,17,0xdfcfa5);label(400,139,'Faiskola',16);label(168,231,'Csemeték',9);}
- else{rect(258,242,50,13,0x9e8057);oval(283,239,54,23,0xb5a16e);oval(283,239,37,13,0x756e4d);for(let i=0;i<9;i++)line(261+i*5,239,268+i*4,245,0xd9c18b);aquarium(613,476);label(400,139,'Tóparti bolt',16);label(164,226,'Halak és vízinövények',8);}
+ const aquarium=(x:number,y:number,w:number,h:number,style=0)=>{
+  rect(x-w/2-3,y-3,w+6,h+7,0x566c61);rect(x-w/2,y,w,h,style?0x6e9f94:0x699ba5);rect(x-w/2+4,y+4,w-8,h-12,0xa3c9b2,.7);
+  for(let i=0;i<7;i++)oval(x-w/2+7+i*(w-14)/6,y+h-5,8,4,i%2?0xb2a985:0x9d9b78);
+  for(let i=0;i<3;i++){const xx=x-w/2+8+i*6;line(xx,y+h-6,xx+(i-1)*5,y+h-23-i*5,0x4d8054,2);}
+  for(let i=0;i<(style?2:3);i++){const xx=x-10+i*14,yy=y+13+i*7;oval(xx,yy,10+i,4,style?0xd7b27b:0xd3cbb0);g.fillStyle(style?0xb89665:0x8daba1).fillTriangle(xx+4,yy+y0,xx+9,yy+y0-3,xx+9,yy+y0+3);}
+  line(x-w/2+3,y+3,x-w/2+3,y+h-9,0xe1e6cc,1);line(x-w/2+3,y+3,x+w/2-4,y+3,0xd3e2cf,1);
+ };
+ if(nursery){
+  for(const x of [146,648]){rect(x-37,257,76,166,0x6d5c41);for(let y=275;y<421;y+=65){rect(x-40,y,82,7,0xbd9c68);line(x-38,y+1,x+38,y+1,0xe1bf85);pot(x-18,y-15,.65);pot(x+18,y-18,.75);}}
+  pot(286,240,1);pot(612,475,1.2);rect(225,223,42,26,0x907b53);for(let i=0;i<4;i++)rect(229+i*9,227,6,17,0xdfcfa5);label(400,139,shopNames.nursery,16);label(168,231,'Csemeték',9);
+ }else{
+  // Plant-filled display tub, reeds and a woven nest replace cloned tanks.
+  rect(110,280,82,23,0x795c3e);oval(151,277,83,32,0xb39767);oval(151,274,73,25,0x5d9183);oval(137,273,23,10,0x668f52);oval(162,278,22,9,0x86a95f);
+  for(let i=0;i<6;i++)oval(159+Math.cos(i*Math.PI/3)*5,266+Math.sin(i*Math.PI/3)*3,8,4,0xe7c5b4);oval(159,266,4,3,0xe4cb79);
+  oval(145,382,49,18,0x94764f);rect(123,356,44,24,0x93734c);oval(145,356,47,15,0xc3a276);for(let i=0;i<8;i++){const x=127+i*5;line(x,355,x+(i-4)*2,318-i%3*8,0x6e8b4d,2);rect(x+(i-4)*2-1,310-i%3*8,3,12,0x7b6844);}
+  rect(113,411,73,7,0x9d7b4c);oval(150,407,58,25,0xc2a573);oval(150,404,39,14,0x716748);for(let i=0;i<10;i++)line(123+i*5,403,130+i*4,411,0xdec38a);
+  // Two different aquariums stand on purpose-built wooden furniture.
+  rect(608,286,79,27,0x88734f);for(const x of [612,678])rect(x,313,5,14,0x6b5b41);aquarium(647,238,78,45);
+  rect(618,402,61,9,0xb39561);for(const x of [624,671])rect(x,411,4,18,0x6c5f44);aquarium(648,334,54,65,1);
+  // Folded nets, plant labels and a supply chest make this a working shop.
+  line(274,236,296,190,0x92784f,3);g.lineStyle(1,0xa8bca1).strokeEllipse(300,y0+181,27,20);for(let i=0;i<4;i++)line(289+i*6,175,289+i*6,188,0xa8bca1);
+  rect(591,451,68,31,0x876d47);rect(587,444,76,11,0xb49865);line(592,449,658,449,0xd7bc86);rect(623,449,6,13,0x6c7763);
+  rect(245,119,48,48,0x8a7956);rect(249,123,40,40,0xe5d7ae);oval(269,146,27,16,0x85aa92);oval(265,144,16,6,0x709459);oval(272,138,8,5,0xe4bcae);line(255,154,282,154,0x9a9a70);
+  label(400,139,shopNames.fishShop,14);label(153,229,'Tavi növények',9);label(648,220,'Halak',9);
+ }
  rect(373,494,54,19,0x675c41);line(376,499,424,499,0xc0a575);line(376,505,424,505,0xc0a575);label(400,545,'Kijárat · E / koppintás',10);
+ {
+  const merchant=nursery?new LeoArt(scene):new FarmerArt(scene,true);if(merchant instanceof FarmerArt)merchant.equip('none');const person=scene.add.container(423,y0+235,[merchant.root]).setDepth(0).setName(nursery?'shop-leo':'shop-annie');
+  // Foreground counter hides her lower body, rather than drawing her over it.
+  const front=scene.add.graphics().setDepth(1);front.fillStyle(0x72523b).fillRect(338,y0+225,224,63);front.fillStyle(0xb69a6b).fillRect(333,y0+217,234,14);front.lineStyle(1,0xe1c18a).lineBetween(337,y0+220,561,y0+220);for(let x=350;x<558;x+=22)front.lineStyle(1,0x94724b).lineBetween(x,y0+244,x,y0+284);
+  front.fillStyle(0x6d6348).fillRect(453,y0+210,26,8);front.fillStyle(0xeadcb2).fillRect(455,y0+210,10,6);front.fillStyle(0xd7c79e).fillRect(467,y0+210,10,6);
+  return {person};
+ }
 }
