@@ -147,7 +147,7 @@ describe('Level three and starting money',()=>{
  it('starts new farms with 100 gold while preserving existing balances',()=>{start();cy.get('#game').should('have.attr','data-gold','100');start(base);cy.get('#game').should('have.attr','data-gold','37');});
  it('counts empty-soil watering and planting toward the current 36-point level',()=>{
   start({...base,seeds:{...zero,radish:4},plots:[['353,280',{crop:null,watered:false,growth:0,regrowing:false}]],skill:{...base.skill,xp:36,credited:Array.from({length:36},(_,i)=>`hoe:old${i}`)}});
-  press('Tab','Tab',9);cy.get('#skills-tab').click();cy.get('#skills-page progress').should('have.value','0').and('have.attr','max','36');cy.get('#skills-page').should('contain','ültetéssel');press('Escape','Escape',27);
+  press('Tab','Tab',9);cy.get('#skills-tab').click();cy.get('#skills-page progress').should('have.value','0').and('have.attr','max','36');cy.get('#skills-page').should('not.contain','ültetéssel');cy.get('.inventory-footer').should('not.exist');press('Escape','Escape',27);
   walk('right','x',339);cy.get('#toolbar [data-tool=water]').click();press('f','KeyF',70);cy.get('#game').should('have.attr','data-gardening-xp','37');cy.get('#skill-xp').should('have.text','1 / 36');cy.get('#toolbar [data-tool=radish]').click();press('f','KeyF',70);cy.get('#game').should('have.attr','data-gardening-xp','38');cy.get('#skill-xp').should('have.text','2 / 36');cy.get('#toolbar [data-tool=water]').click();press('f','KeyF',70);cy.get('#game').should('have.attr','data-gardening-xp','38');reloadFarm();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-gardening-xp','38');press('Tab','Tab',9);cy.get('#skills-tab').click();cy.get('#skills-page progress').should('have.value','2');cy.get('[data-skill-progress]').should('contain','34 pont');
  });
  it('awards and unlocks three new plantable vegetables at 72 XP exactly once',()=>{
@@ -169,5 +169,17 @@ describe('Start menu and separate farms',()=>{
 describe('Simplified farm creation and skills',()=>{
  it('asks only for the farm name and omits skill levels from saved-farm cards',()=>{
   start();cy.get('#menu').click();cy.get('#open-start-menu').click();cy.get('#farm-list').should('not.contain','Kertészkedés');cy.get('#new-farm').click();cy.get('label[for=farm-name]').should('have.text','Farm neve');cy.get('#farmer-name').should('not.exist');cy.get('#farm-name').type('Harmat Farm');cy.get('#start-farm').should('not.be.disabled').click();cy.get('h1').should('have.text','Harmat Farm');cy.get('#dialogue').should('not.be.visible');press('Tab','Tab',9);cy.get('#skills-tab').click();cy.get('#skills-page button').should('not.exist');
+ });
+});
+
+describe('Music choices and quiet inventory tabs',()=>{
+ it('removes the shortcut footer from every tab and remembers a muted music choice',()=>{
+  start();press('Tab','Tab',9);
+  for(const tab of ['#items-tab','#people-tab','#skills-tab']){cy.get(tab).click();cy.get('#inventory-panel').should('not.contain','Tab / Escape');}
+  cy.get('#skills-page').should('not.contain','szint jutalma').and('not.contain','ültetéssel');press('Escape','Escape',27);
+  cy.get('#menu').click();cy.get('#music-track').select('meadow');
+  cy.get('#music-toggle').then(button=>{if(button.text().includes('be'))cy.wrap(button).click();});
+  cy.get('#music-track').select('original');cy.get('#music-toggle').should('have.text','Zene: ki');cy.get('#music-track').select('meadow');
+  reloadFarm();cy.get('#menu').click();cy.get('#music-track').should('have.value','meadow');cy.get('#music-toggle').should('have.text','Zene: ki');
  });
 });

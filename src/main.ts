@@ -3,7 +3,7 @@ import './style.css';
 import { move, START,blocked } from './movement';
 import { farmLayout } from './layout';
 import {findSeeds,unlockedSeeds} from './seed-find';
-import {FarmMusic} from './music';
+import {FarmMusic,musicTracks,type MusicTrack} from './music';
 import {createGardenSkill,gainGardening,LEVEL_TWO_XP,LEVEL_THREE_XP,gardeningLevel,gardeningTarget,gardeningProgress,gardeningCredit,levelThreeSeeds,type LevelThreeSeed,rewardFruits,type RewardFruit} from './gardening-skill';
 import {FarmerArt,anniePortrait} from './character';
 import {Wildlife} from './wildlife';
@@ -245,10 +245,7 @@ class Farm extends Phaser.Scene {
   const {current,required}=gardeningProgress(this.skill);
   const meter=document.createElement('progress');meter.max=required;meter.value=current;meter.setAttribute('aria-label',`Kertészkedés: haladás a ${this.skill.rewarded?3:2}. szintig`);
   const progress=document.createElement('p');progress.dataset.skillProgress='gardening';progress.textContent=this.skill.levelThreeRewarded?'Elérted a jelenleg elérhető legmagasabb, 3. szintet.':`${current} / ${required} tapasztalatpont · Még ${gardeningTarget(this.skill)-this.skill.xp} pont a ${this.skill.rewarded?3:2}. szintig.`;
-  const info=document.createElement('p');info.textContent='Új föld felásásával, ültetéssel, üres vagy beültetett föld öntözésével, betakarítással és kézi gazszedéssel fejlődsz.';
-  const reward=document.createElement('p');reward.textContent='A 2. szint jutalma: 4 eperpalánta, 4 mézbogyócsemete és 4 áfonyacsemete; az ültetőanyagok a katalógusban is elérhetővé válnak.';
-  const third=document.createElement('p');third.textContent='A 3. szint jutalma: 4 sárgarépamag, 4 salátamag és 4 hagymamag; vásárolhatók és gazszedéskor is megtalálhatók.';
-  card.append(heading,level,meter,progress,info,reward,third);page.append(card);
+  card.append(heading,level,meter,progress);page.append(card);
  }
  private openInventory(tab:'items'|'people'|'skills'='items'){
   if(!this.ready||this.transitioning||this.collapseRemaining>0)return;
@@ -559,7 +556,11 @@ class Farm extends Phaser.Scene {
   this.actor=this.add.container(START.x,START.y).setDepth(100);
   this.shadow=this.add.ellipse(0,0,20,7,0x35442e,0.25);this.actor.add(this.shadow);
   this.body=this.add.container(0,0);this.actor.add(this.body);
-  const musicButton=document.querySelector<HTMLButtonElement>('#music-toggle')!;const updateMusic=()=>musicButton.textContent=`Zene: ${this.music.isEnabled()?'be':'ki'}`;updateMusic();musicButton.addEventListener('click',()=>{void this.music.toggle().then(updateMusic);});window.addEventListener('pointerdown',()=>void this.music.activate(),{once:true});window.addEventListener('keydown',()=>void this.music.activate(),{once:true});
+  const musicButton=document.querySelector<HTMLButtonElement>('#music-toggle')!,trackSelect=document.querySelector<HTMLSelectElement>('#music-track')!;
+  for(const [id,name]of Object.entries(musicTracks))trackSelect.append(new Option(name,id));trackSelect.value=this.music.getTrack();
+  const updateMusic=()=>{musicButton.textContent=`Zene: ${this.music.isEnabled()?'be':'ki'}`;trackSelect.value=this.music.getTrack();};updateMusic();
+  musicButton.addEventListener('click',()=>{void this.music.toggle().then(updateMusic);});trackSelect.addEventListener('change',()=>{void this.music.setTrack(trackSelect.value as MusicTrack).then(updateMusic);});
+  window.addEventListener('pointerdown',()=>void this.music.activate(),{once:true});window.addEventListener('keydown',()=>void this.music.activate(),{once:true});
   this.avatar=new FarmerArt(this);this.body=this.avatar.root;this.actor.add(this.body);
   this.wildlife=new Wildlife(this);
   this.thoughtBack=this.add.graphics().setDepth(159);

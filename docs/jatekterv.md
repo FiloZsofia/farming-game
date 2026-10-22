@@ -278,3 +278,9 @@ Nyitott javaslatok, még nem elfogadott követelmények: kapun túli gyűjtöget
 - Új farm létrehozásakor kizárólag a farm nevét kell megadni, legfeljebb 40 karakterrel. A farmer neve nem választható és nem jelenik meg a farmválasztóban. A korábbi v1–v11 mentések v12-re frissülnek, a meglévő farmhoz nem találunk ki farmernevet és nem kérünk kötelező új névadást. A jártasság, pénz, kert, rendelések és külön farmmentések megmaradnak.
 
 - A felület legutóbbi egyszerűsítése: a mentett farmok kártyáin és a Folytatás gomb alatt nincs farmernév, a kártyákon nincs kertészkedési szint. A Jártasságok fülről az ünneplések visszanézését teljesen eltávolítottuk; az automatikus szintlépési ünneplés megmarad. Új farm indításakor kizárólag a „Farm neve” mező látható és szükséges. A korábban mentett farmerneveket adatvesztés elkerülésére megtartjuk a mentésben, de nem jelenítjük meg; az új farmok farmerneve nincs kitöltve.
+
+### Egyszerűbb készletablak és választható dallam – 2026-10-22
+
+- A Jártasságok fülről lekerül a fejlődést és a 2–3. szint jutalmait részletező három bekezdés; a szint és a haladásjelző megmarad.
+- A közös „Tab / Escape: vissza a kertbe” súgó egyik készletfülön sem jelenik meg. A billentyűk továbbra is bezárják az ablakot.
+- Az eredeti zene mellé saját, „Réti séta” című instrumentális indie dallam kerül, pengetős hangzással, lágy billentyűkkel és halk ritmussal. A Menü → Dallam mezőben választható, a választás és a némítás helyben megmarad. Külső hangfelvételt nem használ.
