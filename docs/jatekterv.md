@@ -395,3 +395,5 @@ Az új farm elnevezésekor és a Menü → Történet felületen az alábbi köz
 > Az utolsó hónapokban egy szokatlan minta érkezett a laborba. Az eredmények nem illettek ahhoz, amit addig tudtak. Sam még azelőtt eljött, hogy kiderült volna, mit találtak.
 >
 > Szeretném megtudni, képes vagyok-e a saját kezemmel otthont teremteni ezen a helyen.
+
+- Az összeszedhető ikrát a nyugati sekély vízben, vízinövény szárára tapadó, áttetsző aranybarna ikraszemek csomója jelzi. A korábbi közös, nagy világos kör eltűnik; a gyűjthető kacsatojások külön, a fészekben láthatók. A gyűjtés, érték és termelési ütem változatlan.

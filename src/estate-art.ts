@@ -17,7 +17,19 @@ export function drawEstate(scene:Phaser.Scene,estate:Estate,day:number){
   else if(p.kind==='reed'){for(let i=0;i<7;i++){const x=p.x+(i-3)*3;g.lineStyle(2,0x6e8d43).lineBetween(x,p.y,x+(i-3)*2,p.y-21-i%3*7);g.lineStyle(3,0x816440).lineBetween(x+(i-3)*2,p.y-21-i%3*7,x+(i-3)*2,p.y-29-i%3*7);}}
   else{g.fillStyle(0x8e734a).fillEllipse(p.x,p.y,33,20);g.fillStyle(0xc6a474).fillEllipse(p.x,p.y-3,30,17);g.fillStyle(0x6e6446).fillEllipse(p.x,p.y-4,20,10);if(estate.duckArrivalDay!==null&&!estate.duckArrivalPending){drawDuck(g,p.x+23,p.y+8,true);drawDuck(g,p.x-20,p.y+13,false);}}
  }
- if(estate.eggs||Object.values(estate.roe).some(n=>n>0)){g.fillStyle(0xf0d9a0).fillCircle(500,425,6);g.lineStyle(1,0x7c754a).strokeCircle(500,425,7);}
+ // Spawn clings to submerged vegetation in the shallows, rather than a marker on land.
+ if(Object.values(estate.roe).some(n=>n>0)){
+  const x=526,y=443;
+  g.fillStyle(0x245d58,.25).fillEllipse(x+1,y+4,25,10);
+  g.lineStyle(2,0x718e54,.9).beginPath().moveTo(x-12,y+5).lineTo(x-3,y+1).lineTo(x+11,y-3).strokePath();
+  for(const [dx,dy]of [[-8,-2],[-3,-5],[3,-5],[8,-2],[-7,3],[-2,0],[4,0],[9,3],[-2,5],[4,5]]){
+   g.fillStyle(0xd1b878,.72).fillCircle(x+dx,y+dy,2.8);g.lineStyle(.7,0xf2e4b9,.9).strokeCircle(x+dx,y+dy,2.8);g.fillStyle(0x897044,.9).fillCircle(x+dx+.3,y+dy+.5,1);g.fillStyle(0xfff5d4,.95).fillCircle(x+dx-.9,y+dy-1,.7);
+  }
+  g.lineStyle(.7,0xafd4c5,.65).lineBetween(x-15,y+8,x-7,y+8).lineBetween(x+10,y+6,x+17,y+6);
+ }
+ const nest=estate.pond.find(p=>p.kind==='duckNest');
+ if(estate.eggs&&nest)for(let i=0;i<Math.min(4,estate.eggs);i++){const x=nest.x-6+(i%2)*9,y=nest.y-5+Math.floor(i/2)*4;g.fillStyle(0x665c40,.35).fillEllipse(x+1,y+2,7,4);g.fillStyle(0xe6dfb9).fillEllipse(x,y,6,8);g.fillStyle(0xfff0d1).fillEllipse(x-1,y-1.5,2,3);}
+
  return g;
 }
 
