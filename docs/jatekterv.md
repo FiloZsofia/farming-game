@@ -324,7 +324,40 @@ Ezek a következő vásárlási és tóba helyezési fejlesztés szabályai; ebb
 ### Külön kirablási értesítés és vizuális reggeli elszámolás – 2026-10-22
 
 - A kirablás vagy rablási kísérlet külön értesítés, eladási sorok és egyenleg nélkül. A főhős előtte mindkét kezét az arcához kapja és egyet ugrik, rövid meglepetéshanggal. A hang a meglévő némítási beállítást követi. Az értesítés csak a játékos továbblépésére zárul be.
-- Az eladási összesítő külön, középen jelenik meg, terményikonokkal, darabszámokkal és soronkénti bevétellel. A tegnapi bevétel rövid animációval hozzáadódik a középen mutatott meglévő aranyhoz; a fejléc egyenlege is követi a számlálást. Az ablak ezután magától bezáródik. Üres ládánál is helyes, 0 goldos összesítő látható.
+- Az eladási összesítő külön, középen jelenik meg, terményikonokkal, darabszámokkal és soronkénti bevétellel. A tegnapi bevétel rövid animációval hozzáadódik a középen mutatott meglévő aranyhoz; a fejléc egyenlege is követi a számlálást. Az ablak az animáció után is nyitva marad: az „Indulhat a nap” gombbal vagy Escape-pel a játékos zárja be; addig a játékidő áll. Üres ládánál is helyes, 0 goldos összesítő látható.
 - A játék ideje a reggeli értesítések alatt áll. Csökkentett mozgás beállításnál a számláló animáció nélkül frissül. Hosszú terménylista külön görgethető, hogy az egyenleg telefonon is látható maradjon.
 - Az egyenleg jóváírása a napváltás mentési tranzakciójában történik; az animáció kizárólag megjelenítés. A kirablási értesítés és a vizuális elszámolás külön mentett, nyugtázható állapot. Újratöltéskor a még meg nem nézett értesítés folytatható, a bevétel nem íródik jóvá ismét.
 - A mentés v14-re lép. A v13-as farmállapot, bokrok és reggeli értesítés megmaradnak, újrabetöltés nem ismétli meg a régi eladási jóváírást. A megváltozott bolthely vagy pad által érintett mentett karakterhely a legközelebbi szabad helyre igazodik, készlet- és aranyvesztés nélkül.
+
+
+## Vásárlás, gyümölcsfák és kerti tó
+
+- Leo szakállas, barna hajú, barátságos férfi; a portré és a bolti alak ugyanabból a rajzból készül.
+- Mindkét üzlet nappal árul. A vásárlás azonnal levonja az árat és a készletbe adja az árut, sikeres mentés után. Tab → Készlet → Elhelyezem; közeli szabad helyre kattintás/F, Escape vagy másik szerszám megszakítja az elhelyezést.
+- Egy évszak 15 játéknap; a naptár tavasz–nyár–ősz–tél sorrendben ismétlődik. A meglévő vetemények évszakváltáskor megmaradnak. Korábbi mentésnél az eltelt napokból számoljuk az évszakot; az összes eltelt napot továbbra is a mentés őrzi.
+- Mind a négy facsemete tavasszal ültethető, külön öntözés nélkül 15 nap alatt nő meg. A fák nem kerülhetnek útra, veteményre vagy másik fa mellé túl közel. A nyári fák legkorábban a 16. napon teremnek; a beérett termés szedésig megmarad. Újratermési időt a szedéstől számolunk, termés csak a megfelelő évszakban keletkezik.
+
+| Facsemete | Vételár | Hozam | Újratermés | Eladási ár/db | Termő évszak |
+|---|---:|---:|---:|---:|---|
+| Cseresznye | 300 | 3 | 3 nap | 18 | Nyár |
+| Szilva | 270 | 4 | 4 nap | 16 | Nyár |
+| Alma | 250 | 3 | 2 nap | 16 | Ősz |
+| Körte | 250 | 3 | 3 nap | 16 | Ősz |
+
+- Kertitó Szaküzlet: tavirózsa 20, nád 8, vadkacsafészek 80, aranyhal 40, ponty 30 gold. Tavi növények és halak a vízbe, egy fészek a szabad száraz tópartra tehető.
+- Az első hal telepítésétől háromnaponta **a tó összesen egy** ikraadagot ad: 1–4 halnál 6, 5–10 halnál 8, 11 vagy több halnál 10 gold értékben. Az aranyhal és a ponty közösen számít. Korábban keletkezett adag értéke a későbbi telepítéstől nem változik meg.
+- A fészek elhelyezésétől négy naponta véletlenszerűen 2–4 vadkacsatojás keletkezik, 13 gold/db eladási árral.
+- A termés, ikra és tojás közelről E/F/Szedés használatával gyűjthető; a tó termékei a partról vehetők fel. A készletből a megszokott eladóládába tehetők, másnap reggel jóváírva. A le nem szedett termékek megmaradnak.
+- Új vásárlások és begyűjtött termékek is elveszíthetők a falusi rablásnál; az elhelyezett fa, tóban élő hal, fészek és tavi növény nem a hordozott készlet része. A madárodú és az alap szerszámok továbbra is védettek.
+- Mentésformátum v15: v14 migráció megőrzi a farmot, tárgyakat, ismerősöket és függőben lévő reggeli üzeneteket; csak üres gyümölcsös/tó állapotot ad hozzá. Az áthelyezett épületben rekedt régi mentési pozíciót közeli járható helyre tesszük.
+
+
+## Bővíthető birtok és halanimációk
+
+- A korábbi 800×600-as birtok 1600×960-as területre bővül: balra és jobbra 400, északra 360 egységnyi új, bejárható kert kerül. A ház, tó, lezárt épület, meglévő kert és déli falusi kijárat koordinátái megmaradnak. A kamera követi a főhőst az új részeken is.
+- Az új részeken 72, szabálytalan helyen elosztott gaz-, ág- és kőfolt tisztítható meg a meglévő eszközökkel. A megtisztított talaj kapálható, vethető és öntözhető; gyümölcsfa és madárodú is elhelyezhető. A két napos visszanövés a nagyobb telken is működik, és elkerüli a művelt földet, fákat, fészket és más rögzített objektumokat.
+- Régi mentésben a korábbi eltakarítások és anyagok megmaradnak; csak az új terület kap új tisztítandó pontokat. A kiterjesztett koordináták, új ültetések és visszanövési helyek menthetők.
+- A haltelepítés sikeres mentés után felfelé ívelő karlendítéssel és dobással történik; a hal csobbanással és fodrokkal érkezik a kiválasztott vízfelületre. Az animáció nem fogyaszt további halat; sikertelen mentésnél nincs telepítés.
+- Nappal a tóba telepített halak időnként kiugranak a vízből, majd rövid fodrozódást hagynak. Üres tónál és éjszaka nincs ugráló hal; az aranyhal és a ponty színe különbözik. Ez hangulati animáció, nem ad új tárgyat vagy ikrát.
+
+- Annie a pultnál kezdeményezett interakciókor kedvesen megemlíti az ajándék madárodút, ha a játékos már megkapta. A szöveg figyel arra, hogy az odú már ki van-e helyezve, vagy még a készletben van. Az üzletbe belépés önmagában nem indítja ezt a megjegyzést; vásárlás után a vásárlás visszajelzése jelenik meg.

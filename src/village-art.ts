@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import {villageLayout as layout,WORLD_HEIGHT,benchPose,benchPoint,type BenchPose,shopNames} from './village-layout';
+import {villageLayout as layout,WORLD_HEIGHT,WORLD_WIDTH,benchPose,benchPoint,type BenchPose,shopNames} from './village-layout';
 // Original procedural scenery, sharing coordinates with the walkable village.
 export function drawVillage(scene:Phaser.Scene){
  const g=scene.add.graphics().setDepth(-.5),labels:Phaser.GameObjects.Text[]=[];
@@ -9,26 +9,27 @@ export function drawVillage(scene:Phaser.Scene){
  const line=(x:number,y:number,xx:number,yy:number,c:number,w=1,a=1)=>{g.lineStyle(w,c,a).lineBetween(x,y,xx,yy);};
  const poly=(p:number[],c:number,a=1)=>{g.fillStyle(c,a).fillPoints(Array.from({length:p.length/2},(_,i)=>new Phaser.Geom.Point(p[i*2],p[i*2+1])),true);};
  const label=(x:number,y:number,text:string,size=9)=>{const t=scene.add.text(x,y,text,{fontFamily:'Georgia, serif',fontSize:`${size}px`,color:'#fff1ce',backgroundColor:'#574f37',padding:{x:6,y:4}}).setOrigin(.5).setDepth(5);labels.push(t);};
- rect(0,600,800,WORLD_HEIGHT-600,0x759c48);
+ rect(-400,600,1600,WORLD_HEIGHT-600,0x759c48);rect(0,600,WORLD_WIDTH,WORLD_HEIGHT-600,0x759c48);
  oval(160,900,365,590,0x406846,.48);oval(570,1100,470,490,0x99ae60,.35);
- for(let i=0;i<4600;i++){const x=random()*800,y=600+random()*(WORLD_HEIGHT-600);rect(x,y,1+random()*2,1,[0x4f783f,0x9bb669,0xb1bf72][i%3],.6);}
- const path=(points:number[][],width:number)=>{for(const [w,c]of [[width+5,0x6e8050],[width,0xb5a17b],[width-5,0xd0b992]]){g.lineStyle(w,c).beginPath();points.forEach(([x,y],i)=>i?g.lineTo(x,y):g.moveTo(x,y));g.strokePath();for(const[x,y]of points)oval(x,y,w,w,c);}};
- path([[170,595],[174,672],[305,784],[393,909],[476,1030],[493,1320],[493,1414]],31);
+ for(let i=0;i<4600;i++){const x=random()*WORLD_WIDTH,y=600+random()*(WORLD_HEIGHT-600);rect(x,y,1+random()*2,1,[0x4f783f,0x9bb669,0xb1bf72][i%3],.6);}
+ const path=(points:number[][],width:number)=>{for(const [w,c]of [[width+5,0x738354],[width+1,0xa5936c],[width-3,0xc1ae85]]){g.lineStyle(w,c).beginPath();points.forEach(([x,y],i)=>i?g.lineTo(x,y):g.moveTo(x,y));g.strokePath();for(const[x,y]of points)oval(x,y,w,w,c);}};
+ path([[169,572],[170,600],[174,672],[305,784],[393,909],[476,1030],[493,1320],[493,1414]],32);
  path([[278,760],[150,813],[107,930],[211,1040],[356,1080]],17);
- path([[474,1016],[586,978],[591,940]],28);path([[606,1097],[631,1080],[650,1069]],25);
+ path([[474,1016],[586,978],[591,940]],28);path([[606,1097],[660,1100],[708,1100]],25);
  oval(479,1089,374,240,0x83915d);oval(476,1080,360,230,0xc3b697);
  for(let y=977;y<1183;y+=10)for(let x=298+(y%20?0:8);x<655;x+=17){if(((x-476)/176)**2+((y-1080)/109)**2>1)continue;rect(x,y,14,7,(x+y)%3?0xcabb9a:0xaeaa8e);line(x+2,y+1,x+12,y+1,0xdfcdae);}
  // A shallow stone fountain and a few pots give the square a quiet centre.
  oval(478,1089,67,30,0x485e43,.3);oval(476,1083,59,37,0x817e6b);oval(476,1078,55,31,0xc3b998);oval(476,1076,44,23,0x587e7e);oval(474,1074,36,16,0x8bb8ab);rect(472,1056,8,20,0xa9a88e);oval(476,1055,23,8,0xe0d1a9);line(476,1053,476,1063,0xc3e2cc,2);line(463,1078,470,1078,0xd2dfbc);line(484,1073,490,1073,0xd2dfbc);
  const flowers=(x:number,y:number)=>{oval(x+3,y+4,22,9,0x385d3d,.25);poly([x-9,y-7,x+9,y-7,x+6,y+7,x-6,y+7],0xa8744e);rect(x-10,y-9,20,4,0xc49764);for(let i=0;i<9;i++){const xx=x+(random()-.5)*22,yy=y-10-random()*8;line(xx,yy+5,xx,yy,0x496b3a);oval(xx,yy,4,3,[0xe7bf8e,0xc37c85,0xd6d4a1][i%3]);}};
  const bench=(pose:BenchPose)=>{
-  const p=(x:number,y:number)=>benchPoint(pose,x,y),quad=(x:number,y:number,w:number,h:number,c:number)=>{const a=p(x,y),b=p(x+w,y),d=p(x+w,y+h),e=p(x,y+h);poly([a.x,a.y,b.x,b.y,d.x,d.y,e.x,e.y],c);};
-  const shadow=p(0,9);oval(shadow.x+4,shadow.y+5,52,20,0x355c3a,.25);
-  for(const x of [-22,22]){quad(x,-13,3,28,0x465347);quad(x,-13,1,27,0x91a087);}
-  // The backrest is on the outer edge, with the seat facing the fountain.
-  for(let i=0;i<3;i++){quad(-26,-15+i*4,55,3,0x98754b);quad(-25,-15+i*4,53,1,0xd0ac74);}
-  quad(-27,0,57,9,0xb79865);quad(-27,9,57,3,0x6e573c);quad(-26,2,55,1,0xe1bf85);
-  for(const x of [-23,24])quad(x,-1,3,8,0x4d5b49);
+  const p=(x:number,y:number,z=0)=>{const q=benchPoint(pose,x,y);return {x:q.x,y:pose.y+(q.y-pose.y)*.42-z};};
+  const board=(x:number,y:number,w:number,h:number,z:number,c:number)=>{const a=p(x,y,z),b=p(x+w,y,z),d=p(x+w,y+h,z),e=p(x,y+h,z);poly([a.x,a.y,b.x,b.y,d.x,d.y,e.x,e.y],c);};
+  const post=(x:number,y:number,top:number)=>{const a=p(x,y,0),b=p(x,y,top);line(a.x,a.y,b.x,b.y,0x4b5946,3);line(a.x-1,a.y,b.x-1,b.y,0x89927a);};
+  oval(pose.x+4,pose.y+7,61,23,0x355c3a,.23);
+  for(const x of [-24,24]){post(x,-8,32);post(x,9,12);}
+  for(const z of [18,25]){const a=p(-28,-9,z),b=p(28,-9,z);line(a.x,a.y,b.x,b.y,0x72583d,7);line(a.x,a.y-1,b.x,b.y-1,0xc3a06b,4);}
+  for(const y of [-5,1,7])board(-29,y,58,5,12,0xb79762);
+  for(const x of [-26,26]){const a=p(x,-9,19),b=p(x,11,19);line(a.x,a.y,b.x,b.y,0x53614a,3);}
  };
  for(const b of layout.benches)bench(benchPose(b.angle));flowers(323,1001);flowers(617,993);flowers(627,1128);
  const house=(x:number,y:number,w:number,h:number,roof:number,wall:number)=>{
@@ -47,22 +48,17 @@ export function drawVillage(scene:Phaser.Scene){
  for(const {x,y}of layout.nurserySaplings){rect(x-6,y-7,12,12,0x92704a);line(x,y-7,x,y-36,0x765639,2);oval(x-5,y-30,18,22,0x4d7843);oval(x+4,y-39,20,24,0x66924f);oval(x+1,y-44,13,15,0x8aa75b);}
 
  rect(684,839,64,68,0x586d59);for(let i=0;i<3;i++){rect(688+i*20,845,16,55,0xa6bdb0,.8);line(689+i*20,846,701+i*20,888,0xd7dfc7);}poly([680,839,712,815,751,839],0x8da998);line(682,839,712,817,0xe0d6b2,3);line(712,817,750,839,0xe0d6b2,3);
+ // Broad long-side elevation: all walls and joinery stand upright.
  const f=layout.fishShop;
- // Three-quarter view: the entrance faces the square, on the west wall.
- poly([660,1059,782,1040,794,1085,682,1096],0x33583b,.25);
- poly([660,969,706,984,706,1078,660,1062],0xc2b994);poly([706,984,782,963,782,1058,706,1078],0xe0d0a9);
- for(let y=991;y<1061;y+=10){line(661,y,705,y+15,0xa79d7b,1,.7);line(707,y+15,781,y-6,0xb7ac86,1,.7);}
- poly([648,970,686,923,732,936,711,992],0x4e6a69);poly([686,923,755,907,790,964,711,992],0x668c8b);
- for(let y=935;y<986;y+=9){line(698,y,779,y-22,0x9eb6a2,1,.55);}
- line(648,970,711,992,0x395858,3);line(711,992,790,964,0x395858,3);line(686,923,755,907,0xa7bca5,2);
- // Recessed door, stone step and a small canopy above the lintel only.
- poly([666,1008,691,1016,691,1071,666,1063],0x63523c);poly([670,1013,687,1019,687,1067,670,1062],0x8b7750);oval(682,1044,2,3,0xe3c47c);
- poly([660,1065,692,1075,681,1084,649,1074],0xc4b693);line(653,1074,682,1082,0xe6d4af,2);
- poly([660,1003,690,1013,697,1007,667,997],0x648b82);line(660,1003,690,1013,0xb6c7a0,2);
- // A window on the long side and a hanging shop sign remain clear of the door.
- poly([724,1004,764,993,764,1035,724,1046],0x7e8268);poly([728,1007,760,998,760,1031,728,1040],0x8fb6ac);line(744,1003,744,1035,0xe1d8ae,2);line(728,1023,760,1014,0xe1d8ae,2);
- line(703,979,684,972,0x5b6047,2);label(706,964,shopNames.fishShop,9);
- oval(749,1092,33,16,0x587d6d);rect(733,1071,32,21,0x947d54);oval(749,1071,32,12,0x5b9595);oval(747,1069,24,6,0x92c4b6);line(735,1079,763,1079,0xc3ad78);
+ oval(785,1098,258,32,0x35583b,.24);rect(f.x,f.y,f.w,f.h,0xd7c9a2);rect(f.x,f.y+115,f.w,13,0x9c967b);
+ for(let y=f.y+9;y<f.y+115;y+=10)line(f.x+3,y,f.x+f.w-3,y,0xb2a783);
+ poly([650,974,677,921,882,921,910,974],0x486a64);poly([658,969,682,925,878,925,901,969],0x6c9080);
+ for(let y=930;y<969;y+=8)line(681-(y-925)*.5,y,878+(y-925)*.5,y,0x9bb29a,1,.6);
+ rect(691,1031,34,57,0x67543c);rect(695,1035,26,49,0xa18559);rect(698,1038,20,23,0x89b1a5);rect(715,1067,3,4,0xe6c778);
+ rect(684,1088,49,6,0xaea385);rect(681,1094,55,6,0xd0bf99);
+ for(const x of [753,825]){rect(x-4,1005,49,51,0xf0dfb7);rect(x,1009,41,43,0x6a9d96);line(x+20,1009,x+20,1052,0xe7dabc,3);line(x,1030,x+41,1030,0xe7dabc,3);line(x+3,1012,x+15,1026,0xc5d7be,2);rect(x-6,1057,53,6,0x796e4d);}
+ rect(680,1025,56,6,0x638776);line(680,1025,736,1025,0xb8c4a2,2);label(780,987,shopNames.fishShop,12);
+ oval(865,1107,33,16,0x587d6d);rect(849,1086,32,21,0x947d54);oval(865,1086,32,12,0x5b9595);oval(863,1084,24,6,0x92c4b6);
  const c=layout.cottage;house(c.x,c.y,c.w,c.h,0x9b7155,0xd4c1a1);flowers(331,1343);flowers(446,1344);
  // Diverse forest silhouettes: broad oak, silver birch and fir.
  const tree=(x:number,y:number,kind:number,s=1)=>{

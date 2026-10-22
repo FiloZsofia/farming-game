@@ -6,7 +6,7 @@ export class FarmerArt{
  private leftArm:Phaser.GameObjects.Container;private rightArm:Phaser.GameObjects.Container;
  private head:Phaser.GameObjects.Container;private pony:Phaser.GameObjects.Container;
  private armX:number;private armY:number;
- private tool:Phaser.GameObjects.Graphics;private action=0;private phase=0;private equipped='hoe';private actionTool='hoe';private aim={x:0,y:1};
+ private tool:Phaser.GameObjects.Graphics;private action=0;private throwing=0;private phase=0;private equipped='hoe';private actionTool='hoe';private aim={x:0,y:1};
  constructor(private scene:Phaser.Scene,neighbor=false){
   this.root=scene.add.container(0,0);
   if(!neighbor){
@@ -75,6 +75,7 @@ export class FarmerArt{
   await Promise.all([new Promise<void>(resolve=>this.scene.tweens.add({targets:this.leftArm,angle:-170,duration:160,hold:650,yoyo:true,onComplete:()=>resolve()})),new Promise<void>(resolve=>this.scene.tweens.add({targets:this.rightArm,angle:170,duration:160,hold:650,yoyo:true,onComplete:()=>resolve()}))]);
  }
  equip(name:string){this.equipped=name;this.drawTool();}
+ throwFish(dx:number){this.action=0;this.throwing=.85;this.aim={x:dx,y:0};this.equip('hand');}
  use(dx=0,dy=1,tool=this.equipped){this.actionTool=tool;this.action=WORK_SECONDS;this.aim={x:dx,y:dy};}
  private drawTool(){
   const g=this.tool;g.clear();const r=(x:number,y:number,w:number,h:number,c:number)=>{g.fillStyle(c);g.fillRect(x,y,w,h);};
@@ -89,10 +90,12 @@ export class FarmerArt{
   this.phase+=walking?dt*(running?17:11):0;this.action=Math.max(0,this.action-dt);
   const stride=walking?Math.sin(this.phase)*(running?25:18):0;
   this.leftLeg.angle=stride;this.rightLeg.angle=-stride;this.leftLeg.y=-16+(walking?Math.max(0,Math.sin(this.phase))*2:0);this.rightLeg.y=-16+(walking?Math.max(0,-Math.sin(this.phase))*2:0);
-  const look=this.action>0?this.aim:dir;
+  this.throwing=Math.max(0,this.throwing-dt);
+  const look=this.action>0||this.throwing>0?this.aim:dir;
   this.leftArm.angle=-stride*.6;this.rightArm.rotation=this.action>0?workAngle(this.aim.x,this.aim.y+12,this.action,look.x<0):Phaser.Math.DegToRad(stride*.45);
   this.rightArm.setPosition(this.action>0?0:this.armX,this.action>0?-12:this.armY);
   this.rightArm.setScale(1,this.action>0?Phaser.Math.Clamp(Math.hypot(this.aim.x,this.aim.y+12)/31,.4,1.4):1);
+  if(this.throwing>0){const t=1-this.throwing/.85;this.rightArm.setPosition(this.armX,this.armY).setScale(1);this.rightArm.rotation=-Math.sin(t*Math.PI)*2.8;this.leftArm.rotation=Math.sin(t*Math.PI)*.35;}
   this.head.y=-40+(walking?Math.abs(Math.sin(this.phase))*-.7:0);this.pony.angle=walking?Math.sin(this.phase)*12:0;this.pony.x=3;
   this.root.scaleX=look.x<0?-.98:1;this.root.scaleY=1;this.root.y=jumping?this.root.y:0;
   this.drawTool();

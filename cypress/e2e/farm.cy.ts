@@ -20,14 +20,12 @@ function reloadFarm(){
 }
 function clickWorld(x:number,y:number){
  cy.window().then(win=>cy.get('#game').then(el=>{
-  const zoom=Math.max(win.innerWidth/800,win.innerHeight/600),px=Number(el.attr('data-player-x')),py=Number(el.attr('data-player-y'));
-  const scrollX=Math.max(0,Math.min(800-win.innerWidth/zoom,px-win.innerWidth/zoom/2));
-  const scrollY=Math.max(0,Math.min(1420-win.innerHeight/zoom,py-win.innerHeight/zoom/2));
+  const zoom=Number(el.attr('data-zoom')),scrollX=Number(el.attr('data-camera-x')),scrollY=Number(el.attr('data-camera-y'));
   cy.get('canvas').click((x-scrollX)*zoom,(y-scrollY)*zoom);
  }));
 }
 function sleepTo(day:number){
- clickWorld(268,232);cy.get('#sleep').should('be.visible').click();cy.get('#game').should('have.attr','data-day',String(day));cy.get('#game',{timeout:8000}).should('have.attr','data-morning-stage','none');cy.get('#dialogue').should('not.be.visible');
+ clickWorld(268,232);cy.get('#sleep').should('be.visible').click();cy.get('#game').should('have.attr','data-day',String(day));cy.get('#dialogue-close').should('be.visible').click();cy.get('#game',{timeout:8000}).should('have.attr','data-morning-stage','none');cy.get('#dialogue').should('not.be.visible');
 }
 describe('World interactions and uncluttered UI',()=>{
  it('removes redundant buttons and keeps help in one menu',()=>{
@@ -198,15 +196,24 @@ describe('Southern village and forest',()=>{
   cy.window().then(win=>cy.stub(win.Math,'random').returns(.9));cy.get('#game').should('have.attr','data-day','3');cy.get('#dialogue-text').should('contain','6 gold');cy.get('#game').should('have.attr','data-gold','0').and('have.attr','data-gift','true').and('have.attr','data-birdhouse','false');
  });
  it('meets Annie behind the pond shop counter and keeps the acquaintance after reload',()=>{
-  start({...villageSave,player:{x:650,y:1087},story:{giftReceived:false,morningSeen:false,birdhouse:null}});press('e','KeyE',69);cy.get('#dialogue-title').should('have.text','Kertitó Szaküzlet');press('Escape','Escape',27);cy.get('#game').should('have.attr','data-shop-annie','true');press('Tab','Tab',9);cy.get('#people-tab').click();cy.get('[data-person=annie]').should('be.visible');press('Escape','Escape',27);reloadFarm();cy.get('#game').should('have.attr','data-shop-annie','true');
+  start({...villageSave,player:{x:708,y:1116},story:{giftReceived:false,morningSeen:false,birdhouse:null}});press('e','KeyE',69);cy.get('#dialogue-title').should('have.text','Kertitó Szaküzlet');press('Escape','Escape',27);cy.get('#game').should('have.attr','data-shop-annie','true');press('Tab','Tab',9);cy.get('#people-tab').click();cy.get('[data-person=annie]').should('be.visible');press('Escape','Escape',27);reloadFarm();cy.get('#game').should('have.attr','data-shop-annie','true');
  });
  it('blocks both shop entrances at night and moves an indoor visitor outside at closing time',()=>{
-  for(const player of [{x:650,y:1087},{x:591,y:975}]){start({...villageSave,player,clock:{day:2,elapsed:400,collapseAt:580}});press('e','KeyE',69);cy.get('#dialogue').should('not.be.visible');cy.get('#game').should('have.attr','data-shops-open','false').and('have.attr','data-region','village');}
+  for(const player of [{x:708,y:1116},{x:591,y:975}]){start({...villageSave,player,clock:{day:2,elapsed:400,collapseAt:580}});press('e','KeyE',69);cy.get('#dialogue').should('not.be.visible');cy.get('#game').should('have.attr','data-shops-open','false').and('have.attr','data-region','village');}
   start({...villageSave,version:13,travel:{picked:{},morning:null},player:{x:400,y:2767},clock:{day:2,elapsed:359,collapseAt:580}});cy.get('#game').should('have.attr','data-region','village').and('have.attr','data-shops-open','false');
  });
- it('keeps the robbery warning separate from the automatically closing animated settlement',()=>{
+ it('keeps the robbery warning separate from the animated settlement, which waits for dismissal',()=>{
   start({...villageSave,version:13,travel:{picked:{},morning:null},player:{x:550,y:1050},clock:{day:2,elapsed:578,collapseAt:580},economy:{gold:100,shipping:{...quantities,radish:2,potato:2},lastSale:null}});cy.window().then(win=>cy.stub(win.Math,'random').returns(.9));
   cy.get('#dialogue').should('have.attr','data-presentation','loss');cy.get('#dialogue-text').should('contain','10 gold').and('not.contain','elszámolás');cy.get('#morning-sale-panel').should('not.be.visible');cy.get('#dialogue-close').click();
-  cy.get('#morning-sale-panel').should('be.visible');cy.get('.morning-sale-table tbody tr').should('have.length',2);cy.get('#morning-balance').should('have.attr','data-start','90').and('have.attr','data-target','180');cy.get('#game',{timeout:8000}).should('have.attr','data-morning-stage','none');cy.get('#dialogue').should('not.be.visible');reloadFarm();cy.get('#game').should('have.attr','data-gold','180');cy.get('#dialogue').should('not.be.visible');
+  cy.get('#morning-sale-panel').should('be.visible');cy.get('.morning-sale-table tbody tr').should('have.length',2);cy.get('#morning-balance').should('have.attr','data-start','90').and('have.attr','data-target','180');cy.get('#dialogue-close').should('be.visible').click();cy.get('#game',{timeout:8000}).should('have.attr','data-morning-stage','none');cy.get('#dialogue').should('not.be.visible');reloadFarm();cy.get('#game').should('have.attr','data-gold','180');cy.get('#dialogue').should('not.be.visible');
  });
+ it('purchases nursery and pond goods at exact prices and restores carried stock',()=>{
+  for(const [player,good,price] of [[{x:591,y:975},'cherry',300],[{x:708,y:1116},'goldfish',40]] as const){
+   start({...villageSave,player,economy:{...villageSave.economy,gold:400}});press('e','KeyE',69);cy.get('#shop-panel').should('be.visible');cy.get(`[data-buy-good="${good}"]`).click();cy.get('#game').should('have.attr','data-gold',String(400-price));press('Escape','Escape',27);press('Tab','Tab',9);cy.get(`[data-good="${good}"]`).should('contain','1 db');press('Escape','Escape',27);reloadFarm();press('Tab','Tab',9);cy.get(`[data-place-good="${good}"]`).should('be.visible');
+  }
+ });
+ it('keeps the morning settlement open after the gold animation until the player dismisses it',()=>{
+  start({...villageSave,player:{x:250,y:242},clock:{day:2,elapsed:0,collapseAt:580},economy:{gold:100,shipping:{...quantities,radish:2},lastSale:null}});clickWorld(268,232);cy.get('#sleep').click();cy.get('#morning-balance').should('have.text','130 gold');cy.wait(4000);cy.get('#morning-sale-panel').should('be.visible');cy.get('#dialogue-close').should('have.text','Indulhat a nap').click();cy.get('#game').should('have.attr','data-morning-stage','none');reloadFarm();cy.get('#game').should('have.attr','data-gold','130');
+ });
+
 });

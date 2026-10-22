@@ -1,18 +1,19 @@
 import {blocked,type Box} from './movement';
 export const WORLD_HEIGHT=1420;
+export const WORLD_WIDTH=1000;
 export const villageLayout={
  nursery:{x:510,y:840,w:165,h:106,door:{x:591,y:954},entrance:{x:580,y:898,w:29,h:65}},
- fishShop:{x:660,y:963,w:122,h:115,door:{x:650,y:1069},entrance:{x:660,y:1003,w:38,h:81}},
+ fishShop:{x:665,y:960,w:230,h:128,door:{x:708,y:1100},entrance:{x:690,y:1030,w:35,h:76}},
  cottage:{x:315,y:1230,w:146,h:104},
  square:{x:475,y:1080,rx:181,ry:115},
  nurserySaplings:[{x:518,y:958},{x:542,y:958},{x:646,y:958},{x:670,y:958}],
  benches:[{id:'west',angle:-2.35},{id:'east',angle:-.55}],
- bushes:[{id:'fern',x:100,y:736},{id:'birch',x:238,y:821},{id:'moss',x:93,y:939},{id:'brook',x:215,y:1040}],
+ bushes:[{id:'fern',x:100,y:736},{id:'birch',x:238,y:821},{id:'moss',x:70,y:939},{id:'brook',x:191,y:1090}],
  trees:[{x:44,y:670,kind:0},{x:103,y:650,kind:1},{x:254,y:685,kind:2},{x:53,y:799,kind:2},{x:169,y:777,kind:0},{x:286,y:769,kind:1},{x:51,y:889,kind:1},{x:278,y:934,kind:0},{x:146,y:1000,kind:2},{x:40,y:1059,kind:0},{x:311,y:1120,kind:1},{x:100,y:1165,kind:2},{x:250,y:1184,kind:0}],
 } as const;
 const buildings:Box[]=[villageLayout.nursery,villageLayout.fishShop,villageLayout.cottage];
 export function villageBlocked(x:number,y:number){
- if(x<22||x>778||y<600||y>1394)return true;
+ if(x<22||x>WORLD_WIDTH-22||y<600||y>1394)return true;
  if(buildings.some(b=>x+7>b.x&&x-7<b.x+b.w&&y+3>b.y&&y-4<b.y+b.h))return true;
  if(villageLayout.trees.some(t=>Math.hypot((x-t.x)/12,(y-t.y)/9)<1))return true;
  // The basin and benches are solid; the surrounding cobbles remain walkable.

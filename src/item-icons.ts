@@ -1,7 +1,8 @@
+import {goods,extras,type Good,type Extra} from './estate';
 import type {Crop} from './gardening';
-export type IconName=Crop|'hoe'|'water'|'harvest'|'axe'|'pickaxe'|'hand'|'wood'|'stone'|'weed'|'birdhouse'|'annie'|'strawberry'|'honeyberry'|'blueberry';
+export type IconName=Good|Extra|Crop|'hoe'|'water'|'harvest'|'axe'|'pickaxe'|'hand'|'wood'|'stone'|'weed'|'birdhouse'|'annie'|'strawberry'|'honeyberry'|'blueberry';
 // Original, locally drawn interface icons; no external asset dependency.
-const artwork:Record<IconName,string>={
+const artwork:Partial<Record<IconName,string>>={
  carrot:'<path fill="#4d8547" d="m17 13-9-9 5-2 7 8 1-10 5 2-3 11 9-6 3 4-12 7z"/><path fill="#c46530" d="M10 13q10-7 17 4L12 34 5 36z"/><path fill="#ed9b47" d="M12 14q6-4 11 2L8 31z"/><path stroke="#aa512c" stroke-width="2" d="m9 22 5 2m2-7 5 2"/>',
  lettuce:'<path fill="#437943" d="M5 25Q-2 14 7 10 5 2 16 5 23-3 28 7 38 9 31 20 36 29 24 32 11 38 5 25z"/><path fill="#87b75b" d="M8 24Q2 16 12 14 7 5 18 9 27 3 27 15 36 20 26 25L18 31z"/><path fill="#b4d27a" d="M13 22Q8 15 17 16 20 8 24 18L22 26l-5 4z"/><path stroke="#deeaab" fill="none" stroke-width="2" d="m17 30 1-10m-1 7-7-5m8 2 7-4"/>',
  onion:'<path fill="#689247" d="m15 17-5-15 4-2 5 15L20 1l4 1-2 14 7-11 3 3-10 14z"/><path fill="#a87947" d="M15 14q-13 7-10 17 12 10 24 0 4-10-9-17z"/><path fill="#dab078" d="M16 15Q7 23 9 30q8 8 16-1 1-8-6-14z"/><path fill="#f1d29d" d="M17 17q-6 12-1 15 6-4 3-15z"/><path stroke="#795936" fill="none" d="m14 34-2 2m5-2v2m4-3 2 3"/>',
@@ -24,7 +25,7 @@ const artwork:Record<IconName,string>={
  pea:'<path fill="#3b6b39" d="m2 25 4-10L25 3l6-2-2 12L14 29l-9 2z"/><path fill="#6ea456" d="m5 25 5-9L27 5l-2 8-13 14z"/><circle fill="#bdd982" cx="12" cy="22" r="4"/><circle fill="#b0d575" cx="19" cy="15" r="4"/><circle fill="#c4dc8b" cx="25" cy="8" r="3"/>'
 };
 export function itemIcon(crop:IconName){
- const icon=document.createElementNS('http://www.w3.org/2000/svg','svg');icon.setAttribute('viewBox','0 0 36 36');icon.setAttribute('aria-hidden','true');icon.classList.add('item-icon');icon.innerHTML=artwork[crop];return icon;
+ const icon=document.createElementNS('http://www.w3.org/2000/svg','svg');icon.setAttribute('viewBox','0 0 36 36');icon.setAttribute('aria-hidden','true');icon.classList.add('item-icon');icon.innerHTML=artwork[crop]??estateIcon(crop);return icon;
 }
 
 export function seedIcon(crop:Crop){
@@ -33,3 +34,16 @@ export function seedIcon(crop:Crop){
  icon.innerHTML='<path fill="#775d3e" d="M6 2h24v32H6z"/><path fill="#ddc795" d="M7 3h22v30H7z"/><path fill="#b29a6b" d="M7 3h22v5H7z"/><path fill="#f2e5bd" d="M9 10h18v16H9z"/><g transform="translate(10 10) scale(.45)">'+artwork[crop]+'</g><path fill="#775436" d="m11 29 2-2 2 1-1 2zm6-1 2-1 2 2-2 2zm7 0 2-1 1 2-2 1z"/>';
  return icon;
 }
+
+function estateIcon(name:string){
+ if(name==='cherry')return '<path d="M9 22Q10 7 24 3Q16 13 25 25" stroke="#688546" stroke-width="2" fill="none"/><path d="M24 4Q35 0 31 8q-7 4-7-4" fill="#76934f"/><circle cx="9" cy="25" r="8" fill="#bd514c"/><circle cx="25" cy="27" r="8" fill="#9f454b"/><ellipse cx="6" cy="22" rx="2" ry="3" fill="#ec9c89"/><ellipse cx="22" cy="24" rx="2" ry="3" fill="#df8b86"/>';
+ if(['cherry','plum','apple','pear'].includes(name)){const c=name==='cherry'?'#bd514c':name==='plum'?'#776087':name==='apple'?'#d38d4e':'#c1b361';return `<path d="M18 15V4m0 7q12-10 13-2-5 7-13 2" fill="#72924e" stroke="#638344" stroke-width="2"/><ellipse cx="17" cy="24" rx="12" ry="${name==='pear'?12:10}" fill="${c}"/><ellipse cx="13" cy="20" rx="4" ry="5" fill="#f3d6a0" opacity=".35"/>`;}
+ if(name.startsWith('roe'))return '<path d="M4 26q13-14 28-6l-2 12H6z" fill="#668b57"/>'+[8,15,22,12,19,26].map((x,i)=>`<circle cx="${x}" cy="${19+i%3*4}" r="3" fill="#e0c58d" stroke="#ae8d58"/>`).join('');
+ if(name==='duckEgg')return '<ellipse cx="18" cy="20" rx="10" ry="14" fill="#dfdbb6"/><ellipse cx="14" cy="15" rx="4" ry="6" fill="#faf1d5"/>';
+ if(name==='goldfish'||name==='carp')return `<path d="m24 20 10-9v18z" fill="${name==='goldfish'?'#bb8547':'#6f8c79'}"/><ellipse cx="15" cy="20" rx="13" ry="8" fill="${name==='goldfish'?'#e0ae62':'#acb7a0'}"/><circle cx="8" cy="18" r="1.7" fill="#344d42"/><path d="m12 13 8-7 4 9" fill="#c4b27e"/>`;
+ if(name==='duckNest')return '<ellipse cx="18" cy="24" rx="16" ry="10" fill="#ac8958"/><ellipse cx="18" cy="21" rx="12" ry="6" fill="#736246"/><ellipse cx="15" cy="21" rx="4" ry="5" fill="#efdfb8"/><ellipse cx="23" cy="21" rx="4" ry="5" fill="#e7dbb5"/><path d="m4 25 26 3M6 30l23-7M9 32l-3-12m12 13 8-15" stroke="#d4b581" fill="none"/>';
+ if(name==='reed')return '<path d="M8 34 6 10m8 24V5m7 29 4-26m-8 26 1-16m9 16 5-17" stroke="#769546" stroke-width="3"/><path d="M6 13V3m8 6V1m11 11V2" stroke="#86633d" stroke-width="4"/>';
+ if(goods.includes(name as Good)||extras.includes(name as Extra))return '<ellipse cx="18" cy="24" rx="16" ry="8" fill="#779a54"/><path d="M9 17q9-20 18 0-9 16-18 0" fill="#e3b6bc"/><path d="M4 16q15-8 14 13Q5 29 4 16m28 0q-15-8-14 13 13 0 14-13" fill="#f0d4cd"/><circle cx="18" cy="21" r="3" fill="#e6ca75"/>';
+ return '';
+}
+export function goodIcon(good:Good){const icon=itemIcon(good);if(['cherry','plum','apple','pear'].includes(good)){const fruit=icon.innerHTML;icon.innerHTML='<path d="m9 25 18 0-3 10H12z" fill="#a37b50"/><path d="M18 27V5m0 9Q4 0 5 12q5 9 13 4m0-6Q30-1 31 9q-4 8-13 5" fill="#73934e" stroke="#658347" stroke-width="2"/><g transform="translate(21 16) scale(.4)">'+fruit+'</g>';}return icon;}

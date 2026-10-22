@@ -1,8 +1,9 @@
+import {emptyExtras,extraValue,validExtras,type ExtraCounts} from './estate';
 import type {Crop,Garden} from './gardening';
 export const salePrices:Record<Crop,number>={radish:15,potato:30,pea:12,strawberry:14,honeyberry:16,blueberry:30,carrot:22,lettuce:12,onion:32};
 export const crops:Crop[]=['radish','potato','pea','strawberry','honeyberry','blueberry','carrot','lettuce','onion'];
 export type Quantities=Record<Crop,number>;
-export type Receipt={day:number;items:Quantities;total:number};
+export type Receipt={day:number;items:Quantities;extras?:ExtraCounts;total:number};
 export type Economy={gold:number;shipping:Quantities;lastSale:Receipt|null};
 export const emptyQuantities=():Quantities=>({radish:0,potato:0,pea:0,strawberry:0,honeyberry:0,blueberry:0,carrot:0,lettuce:0,onion:0});
 export const createEconomy=():Economy=>({gold:0,shipping:emptyQuantities(),lastSale:null});
@@ -14,10 +15,10 @@ export function transferProduce(garden:Garden,economy:Economy,crop:Crop,amount:n
  if(source[crop]<amount||destination[crop]+amount>999999)return false;
  source[crop]-=amount;destination[crop]+=amount;return true;
 }
-export function settleSales(economy:Economy,day:number):Economy{
- const total=shippingValue(economy.shipping);
+export function settleSales(economy:Economy,day:number,extras:ExtraCounts=emptyExtras()):Economy{
+ const total=shippingValue(economy.shipping)+extraValue(extras);
  if(!Number.isSafeInteger(economy.gold+total))throw new Error('A gold mennyisége nem tárolható biztonságosan.');
- return {gold:economy.gold+total,shipping:emptyQuantities(),lastSale:{day,items:{...economy.shipping},total}};
+ return {gold:economy.gold+total,shipping:emptyQuantities(),lastSale:{day,items:{...economy.shipping},...(extraValue(extras)>0?{extras:{...extras}}:{}),total}};
 }
 export function validEconomy(value:unknown):value is Economy{
  if(!value||typeof value!=='object')return false;
@@ -26,5 +27,5 @@ export function validEconomy(value:unknown):value is Economy{
  if(!Number.isSafeInteger(e.gold)||e.gold<0||!counts(e.shipping))return false;
  if(e.lastSale===null)return true;
  const r=e.lastSale;
- return !!r&&Number.isSafeInteger(r.day)&&r.day>=1&&counts(r.items)&&Number.isSafeInteger(r.total)&&r.total>=0&&r.total===shippingValue(r.items);
+ return !!r&&Number.isSafeInteger(r.day)&&r.day>=1&&counts(r.items)&&Number.isSafeInteger(r.total)&&r.total>=0&&(r.extras===undefined||validExtras(r.extras))&&r.total===shippingValue(r.items)+(r.extras?extraValue(r.extras):0);
 }

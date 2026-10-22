@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import {pondRadius} from './pond-shape';
 import {activeDebris,createClearing,type Clearing} from './cleanup';
 import {createGarden,type Garden} from './gardening';
-import {farmLayout as layout} from './layout';
+import {farmLayout as layout,farmBounds} from './layout';
 
 // Original procedural artwork. World anchors stay shared with interaction/collision.
 export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),garden:Garden=createGarden(),birdhouse:{x:number;y:number}|null=null){
@@ -34,15 +34,18 @@ export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),g
    for(let j=0;j<13;j++){const fx=xx+(random()-.5)*rr*1.35,fy=yy+(random()-.6)*rr;rect(fx,fy,3+random()*3,2,[0x6f8751,0x819559,0x405e3e][j%3]);}
   }
  };
- rect(0,0,800,600,0x759c48);
- for(let i=0;i<180;i++)oval(random()*800,random()*600,35+random()*70,15+random()*35,i%2?0x5b873c:0x9eb45c,.13);
- for(let i=0;i<4200;i++){const x=random()*800,y=random()*600;rect(x,y,1+random()*2,1,[0x658b3f,0xb0bf71,0x82a851][i%3],.55);if(i%10===0)tuft(x,y,.35);}
+ const {left,top,right,bottom}=farmBounds,width=right-left,height=bottom-top;
+ rect(left,top,width,height,0x759c48);
+ for(let i=0;i<480;i++)oval(left+random()*width,top+random()*height,35+random()*70,15+random()*35,i%2?0x5b873c:0x9eb45c,.13);
+ for(let i=0;i<12500;i++){const x=left+random()*width,y=top+random()*height;rect(x,y,1+random()*2,1,[0x658b3f,0xb0bf71,0x82a851][i%3],.55);if(i%10===0)tuft(x,y,.35);}
  const pathStroke=(width:number,color:number)=>{for(const p of layout.paths){g.lineStyle(p.width+width,color);g.beginPath();p.points.forEach(([x,y],i)=>i?g.lineTo(x,y):g.moveTo(x,y));g.strokePath();for(const [x,y]of p.points)oval(x,y,p.width+width,p.width+width,color);}};
  pathStroke(5,0x738354);pathStroke(1,0xa5936c);pathStroke(-3,0xc1ae85);
  // Texture follows the paths rather than spilling over their edges.
  for(const p of layout.paths)for(let i=1;i<p.points.length;i++){const [ax,ay]=p.points[i-1],[bx,by]=p.points[i],length=Math.hypot(bx-ax,by-ay);for(let j=0;j<length;j+=3){const t=j/length,offset=(random()-.5)*(p.width-7);rect(ax+(bx-ax)*t-(by-ay)/length*offset,ay+(by-ay)*t+(bx-ax)/length*offset,2,1,j%2?0x9f916e:0xd6c29a,.7);}}
  // Boundary trees leave the usable centre and paths open.
- for(let i=0;i<30;i++){const x=random()*800,y=random()*600;if(y<48||x<27||x>779)tree(x,y,.75+random()*.3);}
+ for(let i=0;i<50;i++){const x=left+random()*width,y=top+random()*height;if(y<top+35||x<left+30||x>right-30)tree(x,y,.8+random()*.35);}
+ for(let x=left+20;x<right;x+=48)tree(x,top+10,.85+random()*.2);
+ for(let y=top+50;y<bottom-20;y+=58){tree(left+7,y,.9);tree(right-6,y,.9);}
  // Cottage: plaster, stone foundation, tiled roof, mullioned windows and porch.
  poly([132,204,347,204,375,243,159,248],0x284936,.28);oval(246,231,234,36,0x2e4333,.24);rect(132,128,215,95,0xd6cbb0);rect(132,138,215,8,0x9b927c);rect(132,211,215,12,0x817b68);
  for(let x=134;x<345;x+=17){rect(x,213,15,7,x%2?0xaaa18a:0x99947e);line(x+1,220,x+14,220,0x656d5c);}

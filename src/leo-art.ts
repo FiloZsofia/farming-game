@@ -12,7 +12,7 @@ export class LeoArt{
   rect(-2,-36,4,5,0xd7a880);g.fillStyle(0x664a34).fillEllipse(0,-43,15,18);g.fillStyle(0xe3b68d).fillEllipse(0,-40,13,17);g.fillStyle(0xf0c9a0).fillEllipse(-2,-42,8,9);
   g.fillStyle(0x745437).fillEllipse(-3,-49,11,7).fillEllipse(4,-48,8,6);g.fillStyle(0x9b774b).fillEllipse(-4,-50,7,3);
   g.fillStyle(0xf1e5c5).fillEllipse(-3,-42,3,3).fillEllipse(3,-42,3,3);g.fillStyle(0x3e4b3b).fillEllipse(-3,-42,1.6,2.4).fillEllipse(3,-42,1.6,2.4);
-  g.lineStyle(.7,0xb37f60).lineBetween(-.5,-40,.5,-39);g.lineStyle(.8,0x8b6150).beginPath().moveTo(-3,-36).lineTo(0,-35).lineTo(3,-36).strokePath();g.fillStyle(0xc29170,.5).fillEllipse(-4,-38,3,2).fillEllipse(4,-38,3,2);
+  g.fillStyle(0x65462f).fillPoints([{x:-6,y:-40},{x:-5,y:-34},{x:-2,y:-31},{x:2,y:-31},{x:5,y:-34},{x:6,y:-40},{x:3,y:-37},{x:0,y:-36},{x:-3,y:-37}],true);g.lineStyle(.9,0x6b4933).lineBetween(-5,-45,-1,-45).lineBetween(1,-45,5,-45);g.lineStyle(.7,0xb37f60).lineBetween(-.5,-40,.5,-39);g.lineStyle(.8,0x8b6150).beginPath().moveTo(-3,-36).lineTo(0,-35).lineTo(3,-36).strokePath();g.fillStyle(0xc29170,.5).fillEllipse(-4,-38,3,2).fillEllipse(4,-38,3,2);
  }
 }
 export function leoPortrait(scene:Phaser.Scene){

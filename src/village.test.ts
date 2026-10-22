@@ -26,7 +26,7 @@ describe('Southbound village route',()=>{
   for(const shop of ['nursery','fishShop'] as const){const y=shopOrigins[shop];expect(shopAt(y+467)).toBe(shop);expect(worldBlocked(400,y+467)).toBe(false);expect(worldBlocked(400,y+250)).toBe(true);expect(worldBlocked(95,y+470)).toBe(true);expect(worldBlocked(400,y+520)).toBe(true);const data=snapshot({x:400,y:y+467},createClock(),createGarden());expect(decodeSnapshot(data)).toEqual(data);}
  });
  it('rejects newer unknown saves',()=>{
-  expect(decodeSnapshot({...snapshot({x:250,y:242},createClock(),createGarden()),version:15})).toBeNull();
+  expect(decodeSnapshot({...snapshot({x:250,y:242},createClock(),createGarden()),version:16})).toBeNull();
  });
  it('allows collecting again after two days, preserving each bush independently',()=>{
   const travel=createTravel();expect(forageReady(travel,'fern',1)).toBe(true);travel.picked.fern=1;expect(forageReady(travel,'fern',2)).toBe(false);expect(forageReady(travel,'birch',2)).toBe(true);expect(forageReady(travel,'fern',3)).toBe(true);

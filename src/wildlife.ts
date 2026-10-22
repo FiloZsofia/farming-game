@@ -11,7 +11,7 @@ export class Wildlife{
    if(f.firefly){const pulse=.55+.45*Math.sin(f.t*4);g.fillStyle(0xd5ed80,.05*pulse);g.fillCircle(0,0,11);g.fillStyle(0xe5fa93,.14*pulse);g.fillCircle(0,0,6);g.fillStyle(0xf4ffc0,.5+.5*pulse);g.fillCircle(0,0,1.8);g.fillStyle(0xffffff,.7);g.fillCircle(-.3,-.3,.65);}
    else if(f.bird){g.fillStyle(0x344e58);g.fillEllipse(0,0,8,4);g.fillStyle(0xd2d2ae);g.fillEllipse(2,1,4,2);g.lineStyle(2,0x42636b);const wing=Math.sin(f.t*17)*6;g.lineBetween(-1,0,-5,wing);g.lineBetween(0,0,4,wing-1);g.fillStyle(0xcba36c);g.fillTriangle(4,-1,7,0,4,1);}
    else{const spread=1+Math.abs(Math.sin(f.t*17))*4;g.fillStyle(0x3c5140);g.fillEllipse(0,0,2,6);g.fillStyle(f.color);g.fillEllipse(-spread/2,-1,spread,6);g.fillEllipse(spread/2,-1,spread,6);g.fillStyle(0xeadc99);g.fillCircle(-spread/2,-2,1);}
-   if(f.x>850||f.x< -50||f.t>22){g.destroy();this.fliers.splice(this.fliers.indexOf(f),1);}
+   if(f.t>22){g.destroy();this.fliers.splice(this.fliers.indexOf(f),1);}
   }
   this.visit(dt,outdoors&&birds&&daylight?birdhouse:null);
   const surface=document.querySelector<HTMLElement>('#game')!;surface.dataset.fireflies=String(this.fliers.filter(f=>f.firefly).length);surface.dataset.birds=String(this.fliers.filter(f=>f.bird).length);surface.dataset.butterflies=String(this.fliers.filter(f=>!f.bird&&!f.firefly).length);

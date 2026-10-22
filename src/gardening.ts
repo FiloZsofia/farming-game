@@ -1,4 +1,4 @@
-import { farmLayout } from './layout';
+import { farmLayout,farmBounds } from './layout';
 import { blocked } from './movement';
 export const TILE=16;
 export const cropNames={radish:'Retek',potato:'Burgonya',pea:'Borsó',strawberry:'Eper',honeyberry:'Mézbogyó',blueberry:'Áfonya',carrot:'Sárgarépa',lettuce:'Saláta',onion:'Hagyma'} as const;
@@ -27,7 +27,8 @@ export function cultivable(tile:Tile):boolean{
  const bed=farmLayout.beds.find(b=>x>=b.x+4&&x+TILE<=b.x+52&&y>=b.y+2&&y+TILE<=b.y+34);
  if(bed)return true;
  // The prototype opens clear meadow patches first; trees, paths and fixtures remain protected.
- const meadow=(x>=64&&x+TILE<=160&&y>=288&&y+TILE<=464)||(x>=272&&x+TILE<=416&&y>=400&&y+TILE<=480);
+ const expansion=(x<0||x>=800||y<0)&&x>=farmBounds.left+40&&x+TILE<=farmBounds.right-40&&y>=farmBounds.top+48&&y+TILE<=568;
+ const meadow=expansion||(x>=64&&x+TILE<=160&&y>=288&&y+TILE<=464)||(x>=272&&x+TILE<=416&&y>=400&&y+TILE<=480);
  if(!meadow)return false;
  for(let px=x;px<=x+TILE;px+=4)for(let py=y;py<=y+TILE;py+=4){
   if(blocked(px,py))return false;

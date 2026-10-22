@@ -1,3 +1,4 @@
+export const farmBounds={left:-400,top:-360,right:1200,bottom:600} as const;
 // Shared world-space layout: drawing, collision and proximity prompts use the same anchors.
 export const farmLayout = {
   catalog:{x:297,y:214,w:18,h:12},

@@ -23,8 +23,15 @@ export function drawShop(scene:Phaser.Scene,shop:Shop){
   line(x-w/2+3,y+3,x-w/2+3,y+h-9,0xe1e6cc,1);line(x-w/2+3,y+3,x+w/2-4,y+3,0xd3e2cf,1);
  };
  if(nursery){
-  for(const x of [146,648]){rect(x-37,257,76,166,0x6d5c41);for(let y=275;y<421;y+=65){rect(x-40,y,82,7,0xbd9c68);line(x-38,y+1,x+38,y+1,0xe1bf85);pot(x-18,y-15,.65);pot(x+18,y-18,.75);}}
-  pot(286,240,1);pot(612,475,1.2);rect(225,223,42,26,0x907b53);for(let i=0;i<4;i++)rect(229+i*9,227,6,17,0xdfcfa5);label(400,139,shopNames.nursery,16);label(168,231,'Csemeték',9);
+  // A working potting bench, root-wrapped trees and mixed-height displays.
+  rect(112,287,78,14,0xae8b58);rect(117,301,6,111,0x745b3d);rect(176,301,6,111,0x745b3d);rect(115,384,68,7,0x92764c);
+  for(let i=0;i<3;i++){rect(119+i*21,265,18,21,0x947349);oval(128+i*21,264,19,6,0x544e35);for(let j=0;j<2;j++){line(125+i*21+j*5,264,126+i*21+j*4,250-i*4,0x648445,2);oval(123+i*21+j*7,252-i*4,9,5,0x88a659);}}
+  rect(126,365,47,18,0xa29161);for(let i=0;i<5;i++)line(130+i*8,367,130+i*8,382,0xd5c395);
+  pot(650,280,1.05);pot(631,377,.8);pot(669,417,.55);
+  oval(152,459,55,18,0x8f7750);oval(152,452,37,25,0xbfa77b);for(let i=0;i<5;i++)line(136+i*7,447,144+i*3,463,0xe0c693);line(152,444,152,397,0x6d5338,3);oval(140,412,30,23,0x5f814b);oval(161,398,31,28,0x88a45a);
+  rect(251,125,48,42,0x86724c);rect(255,129,40,34,0xe6d7ad);line(276,157,276,137,0x7b6945,2);oval(270,140,17,13,0x6f914e);oval(281,137,17,16,0x8ca35c);
+  line(316,137,359,137,0x8b7750,3);for(let i=0;i<3;i++){line(324+i*13,140,324+i*13,164,0xb7955e,2);rect(320+i*13,162,9,6,i%2?0x778c7c:0x9caa90);}
+  pot(286,240,.85);rect(609,463,68,19,0x9c8055);rect(604,456,77,8,0xb99b6b);label(400,139,shopNames.nursery,16);label(153,230,'Palántázóasztal',9);label(647,230,'Gyümölcsfák',9);
  }else{
   // Plant-filled display tub, reeds and a woven nest replace cloned tanks.
   rect(110,280,82,23,0x795c3e);oval(151,277,83,32,0xb39767);oval(151,274,73,25,0x5d9183);oval(137,273,23,10,0x668f52);oval(162,278,22,9,0x86a95f);
