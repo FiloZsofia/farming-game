@@ -384,3 +384,14 @@ Ezek a következő vásárlási és tóba helyezési fejlesztés szabályai; ebb
 - Annie és Leo beszélgetése és a pultnál elhangzó kereskedői szöveg portrés beszédpanelben jelenik meg. A név és a portré mellett világos papírszínű beszédbuborék, a portréra mutató nyíl és kézi Folytatás gomb látható. A portré a játékbeli rajzból készül.
 - Beszélgetésnél a panel a képernyő alsó részén ül; a pultnál ugyanilyen beszélőfejléc alatt, görgethető kínálattal vásárolhat a játékos. Telefonon a portré kisebb és a szöveg alatta tördelődik.
 - Más felületek (készlet, napzárás, elszámolás, menü) megőrzik a saját megjelenésüket; a beszélőjelzés bezárás és újbóli megnyitás után sem ragad rájuk.
+
+
+## Elfogadott kezdő történet — Sam
+
+Az új farm elnevezésekor és a Menü → Történet felületen az alábbi közös szöveg jelenik meg. A főhős neve Sam. A labor rejtélyének későbbi magyarázata nyitott; a bevezető nem rögzít zombis irányt. A korábbi mentésekből is elérhető a Történet menüpontban, új játék nem szükséges az elolvasásához.
+
+> Sam egy kutatólaborban dolgozott, ahol rovarokon élősködő gombákat vizsgáltak.
+>
+> Az utolsó hónapokban egy szokatlan minta érkezett a laborba. Az eredmények nem illettek ahhoz, amit addig tudtak. Sam még azelőtt eljött, hogy kiderült volna, mit találtak.
+>
+> – Szeretném megtudni, képes vagyok-e a saját kezemmel otthont teremteni ezen a helyen – sóhajtott fel.
