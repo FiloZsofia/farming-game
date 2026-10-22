@@ -39,12 +39,13 @@ function showDialogue(title:string,text:string,label='A BIRTOKON'){
  for(const id of ['preview-end-panel','shop-panel','start-panel','morning-sale-panel','level-reward-panel','farm-name-panel','shipping-panel','menu-panel','inventory-panel','catalog-panel','mailbox-panel'])document.querySelector<HTMLElement>(`#${id}`)!.hidden=true;
  document.querySelector<HTMLButtonElement>('#dialogue-close')!.hidden=false;
  document.querySelector('#dialogue-close')!.textContent='Folytatás';
- document.querySelector('#dialogue-title')!.textContent=title;
+ document.querySelector('#dialogue-title')!.textContent=title;document.querySelector<HTMLElement>('#dialogue-title')!.hidden=!title;document.querySelector<HTMLElement>('#dialogue-label')!.hidden=!label;
+ if(title){dialogue.setAttribute('aria-labelledby','dialogue-title');dialogue.removeAttribute('aria-label');}else{dialogue.removeAttribute('aria-labelledby');dialogue.setAttribute('aria-label','Sam története');}
  document.querySelector('#dialogue-text')!.textContent=text;
  document.querySelector('#dialogue-label')!.textContent=label;
  if(!dialogue.open)dialogue.showModal();
 }
-document.querySelector('#story')!.addEventListener('click',()=>showDialogue('Végre megérkeztem.',story,'EGY ÚJ KEZDET'));
+document.querySelector('#story')!.addEventListener('click',()=>showDialogue('',story,''));
 document.querySelector('#help')!.addEventListener('click',()=>showDialogue('Lassan, a saját tempódban.','Mozgás: WASD, nyilak vagy a képernyő iránygombjai. Ugrás: Space. Futás: tartsd a Shiftet. Az ugrás magasabbra és messzebbre visz; akadályokon továbbra sem lehet áthaladni.\n\nA háznál, tónál és melléképületnél az E billentyűvel vagy a megjelenő jelzésre kattintva nézhetsz körül. A napló, a magkatalógus, az eladóláda és a postaláda a világban használható: sétálj oda, majd E vagy kattintás/koppintás.\n\nTakarítás: Kéz (7) a gazhoz, Fejsze (8) az ágakhoz, Csákány (9) a kövekhez. Kattints közelről vagy F. Két nap után, műveletlen helyen újra megjelennek.\n\nKertészkedés: 1–6 vagy az alsó eszközsáv. Kattints egy közeli földkockára, vagy használd az F billentyűt az előtted lévő kockán. Kapa → ültetőanyag → öntözés. A három ágyásban és a szabad rétfoltokon dolgozhatsz.\n\n6 perc nappal után éjszaka lesz. A 2. és 3. éjszakai percben figyelmeztetés érkezik, majd 3:30–4:00 között elfáradsz és otthon ébredsz. A farmon minden holmid biztonságban van. A birtokon kívül 50% eséllyel egy nálad lévő tárgyat (az alap szerszámok és a madárodú kivételével), máskülönben legfeljebb 10 goldot veszítesz. Üres készlet vagy erszény esetén a kiválasztott rablási kísérlet sikertelen. A verandán a Naplóval korábban is lefekhetsz.\n\nA kert és az idő automatikusan mentődik ebben a böngészőben. Az öntözött növények reggel fejlődnek. Éréskor válaszd a Szedés eszközt (6), majd kattints a növényre. A leszedett termények Tab-bal vagy a Menü → Készlet pontban nézhetők meg. A veranda bal oldalán lévő eladóládába teheted a termést. Napzárásig visszavehető, reggel megkapod az árát. Retek: 15, burgonya: 30, borsó: 12 gold/db. A háznál lévő magkatalógusból rendelhetsz (retek 5, burgonya 10, borsó 15 gold/db), másnap a kapu melletti postaládából veheted át. Készlet: Tab; bezárás: Tab vagy Escape. A déli kapun át a faluba sétálhatsz; balra az erdei ösvényen áfonyát gyűjthetsz (E, F vagy koppintás), a bokrok két nap után újrateremnek. A falutéren faiskola, Kertitó Szaküzlet és pihenőpad vár. Az üzletek csak nappal tartanak nyitva, éjszakára bezárnak. A stamina még nincs bekötve.','IRÁNYÍTÁS'));
 const held=new Set<string>();
 function release(){held.clear();const run=document.querySelector<HTMLButtonElement>('#run');if(run)run.setAttribute('aria-pressed','false');document.querySelectorAll('.active').forEach(el=>el.classList.remove('active'));}
@@ -201,7 +202,7 @@ class Farm extends Phaser.Scene {
   const name=this.farmName??'A farmod';document.querySelector('h1')!.textContent=name;document.title=`${name} · farmjáték`;document.querySelector('#app')!.setAttribute('aria-label',name);
  }
  private openFarmNaming(isNew=false){
-  this.naming=true;this.draftingFarm=isNew;showDialogue('Végre megérkeztem.',story,'EGY ÚJ KEZDET');
+  this.naming=true;this.draftingFarm=isNew;showDialogue('',story,'');
   document.querySelector<HTMLElement>('#farm-name-panel')!.hidden=false;document.querySelector<HTMLButtonElement>('#dialogue-close')!.hidden=true;
   const input=document.querySelector<HTMLInputElement>('#farm-name')!;input.value='';input.focus();this.validateFarmName();
  }
@@ -806,7 +807,7 @@ class Farm extends Phaser.Scene {
   resize();this.scale.on('resize',resize);
   this.events.once('shutdown',()=>this.scale.off('resize',resize));
   dialogue.addEventListener('close',()=>{this.input.keyboard?.resetKeys();release();});
-  showDialogue('Végre megérkeztem.',story,'EGY ÚJ KEZDET');
+  showDialogue('',story,'');
   void this.initStorage();
   this.keys=this.input.keyboard!.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT,SHIFT',false) as Record<string,Phaser.Input.Keyboard.Key>;
   const inventoryTabs=['items','people','skills'] as const;

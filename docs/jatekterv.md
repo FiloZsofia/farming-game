@@ -405,3 +405,5 @@ Az új farm elnevezésekor és a Menü → Történet felületen az alábbi köz
 - A 15. nap végállapota mentődik, a következő nap növekedése, rendelései, termelése és eladási elszámolása nem fut le előre. A ládába tett termény, holmik, pénz és minden elért eredmény megmarad a későbbi folytatáshoz. A lezárt napot a meglévő óraformátum teljesen eltelt napként őrzi, új mentésverzió nélkül.
 - Visszatöltéskor ugyanez a végüzenet jelenik meg. A játékos a farmválasztáshoz térhet vissza, másik vagy új farmot indíthat, illetve letöltheti mentését. Escape nem indítja tovább a lezárt napot.
 - A korábban már nyárba vagy későbbre jutott mentéseket nem tekerjük vissza: megnyitásukkor ugyanez a fejlesztési határ fogadja a játékost, az eredeti adatait megőrizve.
+
+- A bevezetőből eltűnt az „EGY ÚJ KEZDET” és a „Végre megérkeztem.” címsor. A farmnév mezőben nincs helykitöltő, a „Farm neve” címke megmarad. Az indítógomb felirata „Tovább”. A Történet menüpont ugyanezt a cím nélküli bevezetőt mutatja.
