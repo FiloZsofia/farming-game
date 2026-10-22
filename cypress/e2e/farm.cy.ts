@@ -216,4 +216,11 @@ describe('Southern village and forest',()=>{
   start({...villageSave,player:{x:250,y:242},clock:{day:2,elapsed:0,collapseAt:580},economy:{gold:100,shipping:{...quantities,radish:2},lastSale:null}});clickWorld(268,232);cy.get('#sleep').click();cy.get('#morning-balance').should('have.text','130 gold');cy.wait(4000);cy.get('#morning-sale-panel').should('be.visible');cy.get('#dialogue-close').should('have.text','Indulhat a nap').click();cy.get('#game').should('have.attr','data-morning-stage','none');reloadFarm();cy.get('#game').should('have.attr','data-gold','130');
  });
 
+ it('separates side conversations with Annie and Leo from counter purchases',()=>{
+  for(const [origin,name] of [[2300,'Annie'],[1600,'Leo']] as const){
+   start({...villageSave,player:{x:325,y:origin+240}});press('e','KeyE',69);cy.get('#dialogue-title').should('have.text',name);cy.get('#shop-panel').should('not.be.visible');if(name==='Annie')cy.get('#dialogue-text').should('contain','madárodú');press('Escape','Escape',27);
+   walk('down','y',origin+320);walk('right','x',450);press('e','KeyE',69);cy.get('#shop-panel').should('be.visible');cy.get('#dialogue-text').should('not.contain','madárodú');if(name==='Annie')cy.get('[data-buy-good=reed]').parent().should('contain','Később kosárfonáshoz hasznosítható.');
+  }
+ });
+
 });

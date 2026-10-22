@@ -31,7 +31,7 @@ export function drawVillage(scene:Phaser.Scene){
   for(const y of [-5,1,7])board(-29,y,58,5,12,0xb79762);
   for(const x of [-26,26]){const a=p(x,-9,19),b=p(x,11,19);line(a.x,a.y,b.x,b.y,0x53614a,3);}
  };
- for(const b of layout.benches)bench(benchPose(b.angle));flowers(323,1001);flowers(617,993);flowers(627,1128);
+ for(const b of layout.benches)bench(benchPose(b.angle));flowers(300,985);flowers(666,1165);flowers(627,1128);
  const house=(x:number,y:number,w:number,h:number,roof:number,wall:number)=>{
   poly([x,y+h-3,x+w,y+h-3,x+w+23,y+h+18,x+13,y+h+21],0x33583b,.28);
   rect(x,y,w,h,wall);rect(x,y+h-10,w,10,0x9c967b);for(let xx=x+2;xx<x+w-10;xx+=15){rect(xx,y+h-9,13,5,0xb9af90);}

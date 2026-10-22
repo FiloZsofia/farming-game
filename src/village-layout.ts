@@ -60,3 +60,5 @@ export function relocateVillagePlayer(player:{x:number;y:number}){
  for(let distance=8;distance<=160;distance+=8)for(let angle=0;angle<Math.PI*2;angle+=Math.PI/8){const point={x:x+Math.cos(angle)*distance,y:y+Math.sin(angle)*distance};if(!worldBlocked(point.x,point.y))return point;}
  return {x:560,y:1100};
 }
+
+export function merchantNearby(shop:Shop,x:number,y:number){const yy=y-shopOrigins[shop];return Math.hypot(x-423,yy-235)<112&&(yy<230||x<337)&&yy<290;}

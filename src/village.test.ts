@@ -26,7 +26,7 @@ describe('Southbound village route',()=>{
   for(const shop of ['nursery','fishShop'] as const){const y=shopOrigins[shop];expect(shopAt(y+467)).toBe(shop);expect(worldBlocked(400,y+467)).toBe(false);expect(worldBlocked(400,y+250)).toBe(true);expect(worldBlocked(95,y+470)).toBe(true);expect(worldBlocked(400,y+520)).toBe(true);const data=snapshot({x:400,y:y+467},createClock(),createGarden());expect(decodeSnapshot(data)).toEqual(data);}
  });
  it('rejects newer unknown saves',()=>{
-  expect(decodeSnapshot({...snapshot({x:250,y:242},createClock(),createGarden()),version:16})).toBeNull();
+  expect(decodeSnapshot({...snapshot({x:250,y:242},createClock(),createGarden()),version:17})).toBeNull();
  });
  it('allows collecting again after two days, preserving each bush independently',()=>{
   const travel=createTravel();expect(forageReady(travel,'fern',1)).toBe(true);travel.picked.fern=1;expect(forageReady(travel,'fern',2)).toBe(false);expect(forageReady(travel,'birch',2)).toBe(true);expect(forageReady(travel,'fern',3)).toBe(true);
@@ -56,3 +56,5 @@ it('keeps nursery display saplings outside the entrance path',()=>{
  const distance=(p:{x:number;y:number},a:{x:number;y:number},b:{x:number;y:number})=>{const t=Math.max(0,Math.min(1,((p.x-a.x)*(b.x-a.x)+(p.y-a.y)*(b.y-a.y))/((b.x-a.x)**2+(b.y-a.y)**2)));return Math.hypot(p.x-a.x-(b.x-a.x)*t,p.y-a.y-(b.y-a.y)*t);};
  for(const p of villageLayout.nurserySaplings){expect(Math.hypot(p.x-591,p.y-954)).toBeGreaterThan(34);expect(distance(p,{x:474,y:1016},{x:586,y:978})).toBeGreaterThan(24);expect(distance(p,{x:586,y:978},{x:591,y:940})).toBeGreaterThan(24);}
 });
+
+ it('allows a walkable side approach for conversation without confusing it with the front counter',async()=>{const {merchantNearby,shopBlocked,shopOrigins}=await import('./village-layout');for(const shop of ['fishShop','nursery'] as const){const origin=shopOrigins[shop];expect(shopBlocked(325,origin+240)).toBe(false);expect(merchantNearby(shop,325,origin+240)).toBe(true);expect(merchantNearby(shop,450,origin+320)).toBe(false);expect(merchantNearby(shop,400,origin+467)).toBe(false);}});

@@ -346,7 +346,7 @@ Ezek a következő vásárlási és tóba helyezési fejlesztés szabályai; ebb
 
 - Kertitó Szaküzlet: tavirózsa 20, nád 8, vadkacsafészek 80, aranyhal 40, ponty 30 gold. Tavi növények és halak a vízbe, egy fészek a szabad száraz tópartra tehető.
 - Az első hal telepítésétől háromnaponta **a tó összesen egy** ikraadagot ad: 1–4 halnál 6, 5–10 halnál 8, 11 vagy több halnál 10 gold értékben. Az aranyhal és a ponty közösen számít. Korábban keletkezett adag értéke a későbbi telepítéstől nem változik meg.
-- A fészek elhelyezésétől négy naponta véletlenszerűen 2–4 vadkacsatojás keletkezik, 13 gold/db eladási árral.
+- A kacsapár a fészek kihelyezésétől számított harmadik nap reggelén költözik be. A beköltözéstől négy naponta véletlenszerűen 2–4 vadkacsatojás keletkezik, 13 gold/db eladási árral.
 - A termés, ikra és tojás közelről E/F/Szedés használatával gyűjthető; a tó termékei a partról vehetők fel. A készletből a megszokott eladóládába tehetők, másnap reggel jóváírva. A le nem szedett termékek megmaradnak.
 - Új vásárlások és begyűjtött termékek is elveszíthetők a falusi rablásnál; az elhelyezett fa, tóban élő hal, fészek és tavi növény nem a hordozott készlet része. A madárodú és az alap szerszámok továbbra is védettek.
 - Mentésformátum v15: v14 migráció megőrzi a farmot, tárgyakat, ismerősöket és függőben lévő reggeli üzeneteket; csak üres gyümölcsös/tó állapotot ad hozzá. Az áthelyezett épületben rekedt régi mentési pozíciót közeli járható helyre tesszük.
@@ -361,3 +361,17 @@ Ezek a következő vásárlási és tóba helyezési fejlesztés szabályai; ebb
 - Nappal a tóba telepített halak időnként kiugranak a vízből, majd rövid fodrozódást hagynak. Üres tónál és éjszaka nincs ugráló hal; az aranyhal és a ponty színe különbözik. Ez hangulati animáció, nem ad új tárgyat vagy ikrát.
 
 - Annie a pultnál kezdeményezett interakciókor kedvesen megemlíti az ajándék madárodút, ha a játékos már megkapta. A szöveg figyel arra, hogy az odú már ki van-e helyezve, vagy még a készletben van. Az üzletbe belépés önmagában nem indítja ezt a megjegyzést; vásárlás után a vásárlás visszajelzése jelenik meg.
+
+
+## Üzleti beszélgetések és a tó finomításai
+
+- Az üzletekben a pult előtti interakció a vásárlást nyitja. A kereskedő mellé, a pult bal oldala felől sétálva E/F vagy a szereplőre koppintás külön beszélgetést indít, vásárlási táblázat nélkül. Mind Annie, mind Leo megszólítható; első találkozáskor az ismeretség mentődik.
+- Annie korábban elfogadott madárodús mondata megmarad, kizárólag a beszélgetési ablakban. Leo a birtok új életéről és a türelmes növekedésről beszél. Nappali nyitvatartás mindkét interakcióra érvényes.
+- A nád leírása: „Később kosárfonáshoz hasznosítható.” Kosárfonás egyelőre későbbi mechanika.
+- Leo portréja és a boltban álló alakja hangsúlyosabb állvonalat, részletesebb szemeket, szemöldököt és jól látható, csukott szájú mosolyt kapott; szakálla megmarad.
+- A tér cserepes növényei a padok mellé kerülnek, az ülőfelületek szabadok. A tavirózsa bemetszett levelekkel, több sziromréteggel és sárga virágközéppel ismerhető fel.
+- A halak telepítés után nem láthatók mozdulatlanul a vízfelszínen. A dobás/csobbanás és az időnkénti nappali ugrás animációi megmaradnak; ikratermelés változatlan.
+- A vadkacsafészek kezdetben üres. Mindig a **kihelyezéstől** kell eltelnie három teljes játéknapnak, a vásárlás és a készletben tárolás ideje nem rövidíti le. Példa: 5. napi kihelyezés → 8. nap reggeli beköltözés.
+- Beköltözéskor két kacsa repül be a fészekhez, a kamera a tóra fordul; külön reggeli üdvözlő ablak jelenik meg. A felhasználó bezárása után következik a külön eladási elszámolás. A már látott érkezés nem ismétlődik visszatöltéskor; egy függőben lévő érkezés visszanézhető marad, jutalmat nem dupláz.
+- Az első 2–4 tojás a beköltözés utáni negyedik reggelen keletkezik, majd négy naponta újra. Eladási ár továbbra is 13 gold/db.
+- Mentésformátum v16: a v15-ös halak, növények, holmik, korábban keletkezett tojások és ismeretségek megmaradnak. Már kihelyezett régi fészeknél annak mentett kihelyezési napját használjuk; az érkezés a következő alkalmas reggelen történik. A még készletben lévő régi fészek ugyanúgy csak a későbbi kihelyezéstől számít három napot.
