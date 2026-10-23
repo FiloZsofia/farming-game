@@ -38,13 +38,13 @@ export function validClearing(value:unknown):value is Clearing{
  if(!s.positions||typeof s.positions!=='object'||Array.isArray(s.positions)||!Object.entries(s.positions).every(([id,p])=>debris.some(item=>item.id===id)&&p&&Number.isFinite(p.x)&&Number.isFinite(p.y)&&p.x>=farmBounds.left+40&&p.x<=farmBounds.right-40&&p.y>=farmBounds.top+48&&p.y<=560&&!blocked(p.x,p.y)))return false;
  return Number.isSafeInteger(s.weed)&&s.weed>=0&&s.weed<=999999&&Number.isSafeInteger(s.wood)&&s.wood>=0&&s.wood<=999999&&Number.isSafeInteger(s.stone)&&s.stone>=0&&s.stone<=999999&&!!s.removed&&typeof s.removed==='object'&&!Array.isArray(s.removed)&&Object.entries(s.removed).every(([id,day])=>debris.some(d=>d.id===id)&&Number.isSafeInteger(day)&&day>=1);
 }
-// Two-day renewal chooses a new, persisted place; occupied areas remain protected.
+// Three-day renewal chooses a new, persisted place; occupied areas remain protected.
 function pathDistance(x:number,y:number,a:readonly number[],b:readonly number[]){const dx=b[0]-a[0],dy=b[1]-a[1],t=Math.max(0,Math.min(1,((x-a[0])*dx+(y-a[1])*dy)/(dx*dx+dy*dy)));return Math.hypot(x-a[0]-t*dx,y-a[1]-t*dy);}
 export function regrowDebris(state:Clearing,day:number,garden:Garden,fixture:{x:number;y:number}|null=null,random=Math.random,protectedPlaces:readonly {x:number;y:number}[]=[]):Clearing{
  const next=structuredClone(state);
  const boxes=[...farmLayout.beds,farmLayout.mailbox,farmLayout.shipping,farmLayout.catalog,farmLayout.journal,farmLayout.dock,{x:487,y:245,w:17,h:102},{x:28,y:495,w:104,h:34},{x:211,y:511,w:230,h:34},{x:433,y:172,w:105,h:34},{x:691,y:217,w:80,h:34}];
  for(const item of debris){
-  const removed=next.removed[item.id];if(removed===undefined||day-removed<2)continue;
+  const removed=next.removed[item.id];if(removed===undefined||day-removed<3)continue;
   const old=next.positions[item.id]??item;
   for(let attempt=0;attempt<160;attempt++){
    const point={x:Math.round(farmBounds.left+48+random()*(farmBounds.right-farmBounds.left-96)),y:Math.round(farmBounds.top+56+random()*(560-farmBounds.top-56))};

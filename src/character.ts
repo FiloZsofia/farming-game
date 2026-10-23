@@ -1,11 +1,12 @@
 import Phaser from 'phaser';
-import {WORK_SECONDS,workAngle} from './tool-motion';
+import {WORK_SECONDS,WORK_CONTACT,workPose,workProgress,heavyTool,gentleWorkAngle} from './tool-motion';
 export class FarmerArt{
  readonly root:Phaser.GameObjects.Container;
  private leftLeg:Phaser.GameObjects.Container;private rightLeg:Phaser.GameObjects.Container;
  private leftArm:Phaser.GameObjects.Container;private rightArm:Phaser.GameObjects.Container;
  private head:Phaser.GameObjects.Container;private pony:Phaser.GameObjects.Container;
  private armX:number;private armY:number;
+ private contact:(()=>void)|null=null;private toolEnd=29;
  private tool:Phaser.GameObjects.Graphics;private action=0;private throwing=0;private phase=0;private equipped='hoe';private actionTool='hoe';private aim={x:0,y:1};
  constructor(private scene:Phaser.Scene,neighbor=false){
   this.root=scene.add.container(0,0);
@@ -71,34 +72,48 @@ export class FarmerArt{
   this.tool=scene.add.graphics();this.rightArm.add(this.tool);this.equip('hoe');
  }
  async surprise(){
-  this.action=0;this.equip('none');
+  this.cancelWork();this.equip('none');
   await Promise.all([new Promise<void>(resolve=>this.scene.tweens.add({targets:this.leftArm,angle:-170,duration:160,hold:650,yoyo:true,onComplete:()=>resolve()})),new Promise<void>(resolve=>this.scene.tweens.add({targets:this.rightArm,angle:170,duration:160,hold:650,yoyo:true,onComplete:()=>resolve()}))]);
  }
  equip(name:string){this.equipped=name;this.drawTool();}
  throwFish(dx:number){this.action=0;this.throwing=.85;this.aim={x:dx,y:0};this.equip('hand');}
- use(dx=0,dy=1,tool=this.equipped){this.actionTool=tool;this.action=WORK_SECONDS;this.aim={x:dx,y:dy};}
+ isWorking(){return this.action>0;}
+ cancelWork(){this.action=0;this.contact=null;this.leftArm.setAngle(0);this.rightArm.setAngle(0).setPosition(this.armX,this.armY).setScale(1);this.tool.setScale(1).setY(0);this.root.setPosition(0,0).setRotation(0).setScale(1);this.head.y=-40;this.pony.angle=0;this.leftLeg.angle=0;this.rightLeg.angle=0;this.drawTool();}
+ use(dx=0,dy=1,tool=this.equipped,onContact?:()=>void){this.actionTool=tool;this.action=WORK_SECONDS;this.aim={x:dx,y:dy};this.contact=onContact??null;}
+ workFrame(){if(!this.isWorking())return null;const tip=this.tool.getWorldTransformMatrix().transformPoint(0,this.toolEnd);return {tool:this.actionTool,progress:workProgress(this.action),phase:workPose(1,1,this.action).phase,tip:{x:tip.x,y:tip.y}};}
  private drawTool(){
   const g=this.tool;g.clear();const r=(x:number,y:number,w:number,h:number,c:number)=>{g.fillStyle(c);g.fillRect(x,y,w,h);};
   const name=this.action>0?this.actionTool:this.equipped;
-  if(['hoe','axe','pickaxe'].includes(name)){r(0,8,2,21,0x654b32);r(0,8,1,20,0xc6a46b);if(name==='hoe'){r(-2,25,9,3,0x8faaa2);r(4,26,3,6,0x536e69);}if(name==='axe'){g.fillStyle(0x91aaa4);g.fillTriangle(1,23,10,21,8,31);r(8,24,2,5,0xd2d9c4);}if(name==='pickaxe'){r(-7,24,17,2,0x98afa9);r(-8,26,2,3,0xc2cdba);r(9,26,2,3,0xc2cdba);}}
+  if(heavyTool(name)){const length=this.action>0?29+11*workPose(1,1,this.action).extension:29;this.toolEnd=length;
+   r(0,8,2,length-7,0x654b32);r(0,8,1,length-8,0xc6a46b);
+   if(name==='hoe'){r(-2,length-4,9,3,0x8faaa2);r(4,length-3,3,6,0x536e69);}
+   if(name==='axe'){g.fillStyle(0x91aaa4).fillTriangle(1,length-6,11,length-9,9,length+2);r(8,length-6,2,6,0xd2d9c4);}
+   if(name==='pickaxe'){r(-8,length-5,18,2,0x98afa9);r(-9,length-3,2,3,0xc2cdba);r(9,length-3,2,3,0xc2cdba);}
+  }
   else if(name==='water'){r(0,12,10,9,0x648f80);r(1,12,8,2,0xa9c4a4);g.lineStyle(2,0x8cab93);g.strokeCircle(5,11,4);g.lineBetween(9,16,15,12);r(14,10,3,4,0xc3d4b8);if(this.action>0){g.fillStyle(0x99d6df);for(let i=0;i<3;i++)g.fillEllipse(16+i*2,17+i*3,1,3);}}
   else if(name==='harvest'){r(-1,15,13,8,0xa38051);g.lineStyle(1,0xd7bc80);g.strokeCircle(5,14,5);for(let y=17;y<23;y+=3)g.lineBetween(0,y,11,y);}
   else if(['strawberry','honeyberry','blueberry'].includes(name)){r(0,16,9,7,0xb08255);r(-1,15,11,2,0xd0a575);r(4,7,1,8,0x658e49);g.fillStyle(0x8eb866);g.fillEllipse(2,10,5,3);g.fillEllipse(7,8,5,3);}
   else if(['radish','potato','pea','carrot','lettuce','onion'].includes(name)){r(0,12,9,12,0xdfc796);r(1,14,7,6,0xf2e8c7);r(3,15,3,4,name==='radish'?0xdf8791:name==='potato'?0xa58451:0x7caa55);}
  }
  update(walking:boolean,running:boolean,dir:{x:number;y:number},dt:number,jumping=false){
-  this.phase+=walking?dt*(running?17:11):0;this.action=Math.max(0,this.action-dt);
+  const previous=this.action;this.phase+=walking?dt*(running?17:11):0;this.action=Math.max(0,this.action-dt);const contact=previous>WORK_SECONDS*(1-WORK_CONTACT)&&this.action<=WORK_SECONDS*(1-WORK_CONTACT)?this.contact:null;if(contact)this.contact=null;
   const stride=walking?Math.sin(this.phase)*(running?25:18):0;
   this.leftLeg.angle=stride;this.rightLeg.angle=-stride;this.leftLeg.y=-16+(walking?Math.max(0,Math.sin(this.phase))*2:0);this.rightLeg.y=-16+(walking?Math.max(0,-Math.sin(this.phase))*2:0);
   this.throwing=Math.max(0,this.throwing-dt);
   const look=this.action>0||this.throwing>0?this.aim:dir;
-  this.leftArm.angle=-stride*.6;this.rightArm.rotation=this.action>0?workAngle(this.aim.x,this.aim.y+12,this.action,look.x<0):Phaser.Math.DegToRad(stride*.45);
-  this.rightArm.setPosition(this.action>0?0:this.armX,this.action>0?-12:this.armY);
-  this.rightArm.setScale(1,this.action>0?Phaser.Math.Clamp(Math.hypot(this.aim.x,this.aim.y+12)/31,.4,1.4):1);
+  const working=this.action>0,heavy=working&&heavyTool(this.actionTool),mirror=look.x<0;
+  const shoulderDx=this.aim.x-(mirror?-this.armX:this.armX),shoulderDy=this.aim.y-this.armY;
+  const pose=workPose(shoulderDx,shoulderDy,this.action,mirror);
+  this.leftArm.rotation=heavy?pose.angle*.78:Phaser.Math.DegToRad(-stride*.6);
+  this.rightArm.rotation=working?(heavy?pose.angle:gentleWorkAngle(shoulderDx,shoulderDy,this.action,mirror)):Phaser.Math.DegToRad(stride*.45);
+  this.rightArm.setPosition(this.armX+(heavy?pose.weight*3:0),this.armY+(heavy?Math.max(0,pose.weight)*5:0)).setScale(1);
+  this.tool.setScale(1,heavy?pose.reach:1).setY(heavy?12-12*pose.reach:0);
+  this.root.x=heavy?pose.weight*2:0;this.root.rotation=heavy?pose.weight*.045:0;
+  if(heavy&&!walking){this.leftLeg.angle=-4*pose.weight;this.rightLeg.angle=4*pose.weight;}
   if(this.throwing>0){const t=1-this.throwing/.85;this.rightArm.setPosition(this.armX,this.armY).setScale(1);this.rightArm.rotation=-Math.sin(t*Math.PI)*2.8;this.leftArm.rotation=Math.sin(t*Math.PI)*.35;}
-  this.head.y=-40+(walking?Math.abs(Math.sin(this.phase))*-.7:0);this.pony.angle=walking?Math.sin(this.phase)*12:0;this.pony.x=3;
-  this.root.scaleX=look.x<0?-.98:1;this.root.scaleY=1;this.root.y=jumping?this.root.y:0;
-  this.drawTool();
+  this.head.y=-40+(heavy?pose.weight*1.5:0)+(walking?Math.abs(Math.sin(this.phase))*-.7:0);this.pony.angle=heavy?-pose.weight*9:walking?Math.sin(this.phase)*12:0;this.pony.x=3;
+  this.root.scaleX=look.x<0?-.98:1;this.root.scaleY=1;this.root.y=jumping?this.root.y:heavy?Math.max(0,pose.weight)*1.5:0;
+  this.drawTool();if(contact)contact();
  }
 }
 

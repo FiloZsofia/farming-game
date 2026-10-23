@@ -87,7 +87,7 @@ describe('Clearing and seed packets',()=>{
  });
  it('restores cleared decorations on the second morning and retains materials',()=>{
   const data={...base,version:6,farmName:'Tesztfarm',player:{x:250,y:242},clearing:{removed:{'rock-a':1,'branch-a':1,'weed-a':1},wood:1,stone:1}};
-  start(data);sleepTo(2);cy.get('#game').should('have.attr','data-cleared','3');sleepTo(3);cy.get('#game').should('have.attr','data-cleared','0').and('have.attr','data-wood','1').and('have.attr','data-stone','1');
+  start(data);sleepTo(2);cy.get('#game').should('have.attr','data-cleared','3');sleepTo(3);cy.get('#game').should('have.attr','data-cleared','3');sleepTo(4);cy.get('#game').should('have.attr','data-cleared','0').and('have.attr','data-wood','1').and('have.attr','data-stone','1');
  });
 });
 
@@ -137,7 +137,7 @@ describe('Floating night warnings and random renewal',()=>{
   start({...base,clock:{...base.clock,elapsed}});cy.get('#night-warning').should('be.visible').then(el=>{el[0].getAnimations()[0].currentTime=6000;});cy.get('#night-warning').should(el=>expect(el[0].getBoundingClientRect().top).to.be.lessThan(160)).then(el=>el[0].getAnimations()[0].finish());cy.get('#night-warning').should('not.be.visible');
  });
  it('stores new scattered positions instead of returning to the old locations',()=>{
-  start({...base,clock:{...base.clock,elapsed:0},clearing:{removed:{'rock-a':1,'branch-a':1,'weed-a':1},wood:1,stone:1,weed:1}});sleepTo(3);cy.get('#game').should('have.attr','data-cleared','0');
+  start({...base,clock:{...base.clock,elapsed:0},clearing:{removed:{'rock-a':1,'branch-a':1,'weed-a':1},wood:1,stone:1,weed:1}});sleepTo(3);cy.get('#game').should('have.attr','data-cleared','3');sleepTo(4);cy.get('#game').should('have.attr','data-cleared','0');
   cy.window().then(win=>new Cypress.Promise<any>(resolve=>{const request=win.indexedDB.open('erdoszeli-birtok',1);request.onsuccess=()=>{const tx=request.result.transaction('saves');const read=tx.objectStore('saves').get('active');read.onsuccess=()=>resolve(read.result.clearing.positions);tx.oncomplete=()=>request.result.close();};})).then(positions=>{expect(Object.keys(positions)).to.have.length(3);expect(Math.hypot(positions['rock-a'].x-86,positions['rock-a'].y-365)).to.be.at.least(52);});
  });
 });
@@ -258,5 +258,9 @@ describe('Southern village and forest',()=>{
  });
 
  it('returns focus to the game after closing the menu so Space jumps immediately',()=>{start({...villageSave,player:{x:250,y:242}});cy.get('#menu').focus().click();cy.get('#dialogue-close').click();cy.focused().should('have.prop','tagName','CANVAS');press(' ','Space',32);cy.get('#game').should('have.attr','data-jumping','true');cy.get('#dialogue').should('not.be.visible');cy.get('#menu').focus().click();press('Escape','Escape',27);cy.focused().should('have.prop','tagName','CANVAS');walk('down','y',260);});
+
+ it('keeps Shift held across menu closure and releases running normally',()=>{start({...villageSave,player:{x:250,y:242}});cy.get('body').trigger('keydown',{key:'Shift',code:'ShiftLeft',keyCode:16,which:16,shiftKey:true});cy.get('#menu').click();cy.get('#dialogue-close').click();cy.get('body').trigger('keydown',{key:'s',code:'KeyS',keyCode:83,which:83,shiftKey:true});cy.get('#game').should('have.attr','data-running','true').and('have.attr','data-walking','true');cy.get('body').trigger('keyup',{key:'s',code:'KeyS',keyCode:83,which:83,shiftKey:true});cy.get('body').trigger('keyup',{key:'Shift',code:'ShiftLeft',keyCode:16,which:16,shiftKey:false});cy.get('#game').should('have.attr','data-running','false');});
+
+ it('plays an overhead tool action and saves each collected branch only once',()=>{start({...villageSave,version:17,travel:{...createTravel(),weatherSeed:13},player:{x:312,y:409}});cy.get('#toolbar [data-tool=axe]').click();clickWorld(312,435);cy.get('#game').should('have.attr','data-working','true');cy.get('#game').should('have.attr','data-working','false');cy.get('#game').should('have.attr','data-wood','1');clickWorld(312,435);cy.get('#game').should('have.attr','data-wood','1');reloadFarm();cy.get('#game').should('have.attr','data-wood','1');});
 
 });
