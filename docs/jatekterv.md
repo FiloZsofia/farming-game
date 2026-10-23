@@ -446,3 +446,5 @@ Az új farm elnevezésekor és a Menü → Történet felületen az alábbi köz
 - Tab → **Célok**: negyedik fül a Készlet, Ismerősök és Jártasságok mellett. A teljesített lépések megmaradnak, díszített pipával. A teljesítések a meglévő mentett történeti állapotból következnek, új mentésformátum nélkül. Tab és Escape innen is bezár.
 - A gondozás kijelzett, négy napos számlálója a mai öntözést is beleszámítja, amint mind a hat virág megkapta az adott gondozási napot. A tényleges növekedés továbbra is napváltáskor történik. A mai öntözött virágok darabszáma nem jelenik meg.
 - A méh megfigyelésének célja rövid marad; nincs hozzá feltételeket magyarázó szöveg. A megfigyelési mechanika nem változott.
+
+- A melléképület célja a kulcs átvétele és a redőny felhúzása után is változatlanul „Fedezd fel, mit rejt a lezárt melléképület”. Sem a HUD, sem a Célok fül nem ad hozzá belépési, redőnyös vagy gépvizsgálati útmutatást.

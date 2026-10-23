@@ -2,7 +2,7 @@ import {FLOWER_DAYS,type Research} from './research';
 import {tileKey,type Garden} from './gardening';
 export type QuestEntry={id:string;title:string;detail:string;done:boolean};
 export function questEntries(r:Research,garden:Garden,_day:number,_elapsed:number):QuestEntry[]{
- const entries:QuestEntry[]=[{id:'locked-building',title:'Fedezd fel, mit rejt a lezárt melléképület',detail:r.discovered?'Felfedezted a régi műhelyt.':r.key?(r.shutter?'Nézz körül a műhelyben, és vizsgáld meg a gépet.':'Lépj be a melléképületbe, és húzd fel a redőnyt.'):'',done:r.discovered}];
+ const entries:QuestEntry[]=[{id:'locked-building',title:'Fedezd fel, mit rejt a lezárt melléképület',detail:'',done:r.discovered}];
  if(!r.gifted)return entries;
  entries.push({id:'plant-flowers',title:'Ültess el 6 tasak vadvirágmagot',detail:`Elültetve: ${r.flowers.length} / 6.`,done:r.flowers.length===6});
  if(r.flowers.length===6){
