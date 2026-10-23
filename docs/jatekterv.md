@@ -407,3 +407,5 @@ Az új farm elnevezésekor és a Menü → Történet felületen az alábbi köz
 - A korábban már nyárba vagy későbbre jutott mentéseket nem tekerjük vissza: megnyitásukkor ugyanez a fejlesztési határ fogadja a játékost, az eredeti adatait megőrizve.
 
 - A bevezetőből eltűnt az „EGY ÚJ KEZDET” és a „Végre megérkeztem.” címsor. A farmnév mezőben nincs helykitöltő, a „Farm neve” címke megmarad. Az indítógomb felirata „Tovább”. A Történet menüpont ugyanezt a cím nélküli bevezetőt mutatja.
+
+- A fejlesztési határ véglegesített üzenete: „FOLYTATÁS KÖVETKEZIK” / „Itt tart most a történet.” / „Elérted a játék jelenlegi változatának végét. A következő napot egy későbbi frissítésben folytathatod. Köszönöm, hogy játszottál! 🙂”

@@ -277,7 +277,7 @@ class Farm extends Phaser.Scene {
  }
 
  private showPreviewEnd(){
-  showDialogue('Itt tart most a történet.','Elérted a játék jelenlegi változatának végét. A tavasz utolsó napja után a nyár következne, de a nyári növények, az időjárás és a további történet még készülnek.\n\nA mentésed megmaradt. A következő napot és az ahhoz tartozó elszámolást egy későbbi frissítésben folytathatod. Köszönöm, hogy játszottál!','FOLYTATÁSA KÖVETKEZIK');
+  showDialogue('Itt tart most a történet.','Elérted a játék jelenlegi változatának végét. A következő napot egy későbbi frissítésben folytathatod. Köszönöm, hogy játszottál! 🙂','FOLYTATÁS KÖVETKEZIK');
   dialogue.dataset.presentation='development-end';document.querySelector<HTMLElement>('#preview-end-panel')!.hidden=false;document.querySelector<HTMLButtonElement>('#dialogue-close')!.hidden=true;document.querySelector<HTMLButtonElement>('#export-save')!.hidden=false;
  }
  private async finishSpringPreview(){
