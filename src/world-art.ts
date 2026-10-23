@@ -103,10 +103,6 @@ export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),g
  oval(c.x+8,c.y+1,4,2,0x6c9651);oval(c.x+12,c.y,4,2,0x81a75a);
  rect(c.x+7,c.y+8,6,1,0xe4cb88);
  const m=layout.mailbox;rect(m.x+10,m.y+m.h,5,20,0x80613e);rect(m.x,m.y,m.w,m.h,0x536e72);rect(m.x+2,m.y+2,m.w-4,4,0x94a7a2);rect(m.x+8,m.y+9,8,2,0x273f40);
- const ox=layout.shedOffset.x,oy=layout.shedOffset.y;
- poly([601+ox,183+oy,719+ox,183+oy,741+ox,218+oy,620+ox,224+oy],0x284936,.3);oval(662+ox,205+oy,137,21,0x273c32,.25);rect(601+ox,133+oy,118,68,0x9b8662);for(let x=604;x<719;x+=9){line(x+ox,136+oy,x+ox,200+oy,0x61553f,2);line(x+ox+3,140+oy,x+ox+3,194+oy,0xb39b71);}
- rect(636+ox,151+oy,43,50,0x63513a);for(let x=640;x<679;x+=8)line(x+ox,153+oy,x+ox,199+oy,0x8b7352);line(639+ox,157+oy,676+ox,194+oy,0x9e855a,3);rect(655+ox,152+oy,3,49,0x332f29);rect(650+ox,172+oy,13,4,0x817f6b);rect(655+ox,175+oy,6,7,0xc5ae69);
- poly([562,121,592,84,685,84,710,121],0x665b44);for(let y=89;y<121;y+=7){const d=(y-84)*.8;line(592-d,y,685+d*.65,y,0x8e805b,4);}line(562,122,710,122,0x454c3c,3);
  // Water keeps the exact collision ellipse; only shoreline detail extends outward.
  const p=layout.pond;
  const shoreline=(inset:number)=>{const points:number[]=[];for(let i=0;i<64;i++){const a=i/64*Math.PI*2;const wobble=pondRadius(a);points.push(p.x+Math.cos(a)*(p.rx+inset)*wobble,p.y+Math.sin(a)*(p.ry+inset)*wobble);}return points;};

@@ -478,3 +478,10 @@ Az új farm elnevezésekor és a Menü → Történet felületen az alábbi köz
 - A javításra váró kivonatkészítő látványosan romosabb: rozsdafoltok és repedés a tartályon, sérült tartóbak, megszakadt csövek, hiányos szűrő, elmozdult és hiányos spirál, üvegszilánkok. A négy vizsgálható rész továbbra is felismerhető. Javítás után ép csőhálózat, rendezett spirál, szűrő, üvegedény és új kőalap látszik.
 - A sikeres javítás ablakának hátterében finom cseresznyevirág-szirmok hullanak. A következő párbeszédbe nem kerülnek át, és csökkentett mozgás beállításnál nem animálódnak.
 - Ellenőrző képek és a játékban megjelenített mozdulatfázisokból összeállított GIF-ek a `docs/concepts` mappában találhatók. A Cypress-esetek a visszatérésre, Shift-kezelésre és az egyszeri gyűjtési jutalomra is frissültek; a futtató binárisa ebben a környezetben továbbra sem érhető el.
+
+### A régi műhely külseje
+- Megtartott hely és bejárat; kő lábazat, kopott faburkolat, enyhén aszimmetrikus, részletes cseréptető, kevés moha, eresz és lefolyó.
+- Vaskilincs, kulcslyuk, kopott küszöb, sarokban borostyán, a bejárat mellett agyagcserepek. A redőnyös ablak kívülről is követi a benti redőny állapotát.
+- Oldalsó falilámpa: alkonyattól fokozatosan erősödő, meleg fény a lámpás körül és a talajon. A mentések és az interakciók változatlanok.
+- Saját, programmal rajzolt grafika. Ellenőrző képek: `docs/concepts/workshop-exterior-day-final.png`, `workshop-exterior-open-final.png`, `workshop-exterior-night-final.png`.
+- A képernyőn követett célok fekete pöttyöt kapnak a gondolatjel helyett. A megfigyelés elmesélésének célja csak „Meséld el Leonak a megfigyelésedet”; a Leo mellé lépést magyarázó mondat törölve a képernyőről és a Célok fülről. A cél megnevezése nem tartalmazhatja a megoldás részletes útmutatóját.

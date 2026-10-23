@@ -11,7 +11,7 @@ export function questEntries(r:Research,garden:Garden,_day:number,_elapsed:numbe
   entries.push({id:'grow-flowers',title:'Gondozd a vadvirágokat',detail:bloomed?'Mind a hat vadvirág kivirágzott.':`${progress} / 4 megöntözött nap`,done:bloomed});
   if(bloomed)entries.push({id:'observe-bee',title:'Figyeld meg a virágokhoz látogató szarvas faliméhet',detail:'',done:!!r.observation});
  }
- if(r.observation)entries.push({id:'report-bee',title:'Meséld el Leónak a megfigyelésedet',detail:r.key?'Beszámoltál a látottakról.':'A faiskolában lépj Leo mellé, és kezdeményezz beszélgetést.',done:r.key});
+ if(r.observation)entries.push({id:'report-bee',title:'Meséld el Leonak a megfigyelésedet',detail:r.key?'Beszámoltál a látottakról.':'',done:r.key});
  if(r.discovered)entries.push({id:'repair-machine',title:'Javítsd meg a régi berendezést',detail:r.repaired?'A növényi kivonatkészítő ismét egyben van.':'',done:r.repaired});
  return entries;
 }
