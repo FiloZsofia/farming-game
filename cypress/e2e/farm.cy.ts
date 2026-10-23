@@ -238,7 +238,7 @@ describe('Southern village and forest',()=>{
  });
 
  it('shows the first-day locked-building goal without giving a solution',()=>{
-  start();cy.get('#quest-tracker').should('be.visible').and('have.text','– Fedezd fel, mit rejt a lezárt melléképület');cy.get('#quest-tracker').should('not.contain','Leo').and('not.contain','kulcs');
+  start();cy.get('#quest-tracker').should('be.visible').and('contain','Fedezd fel, mit rejt a lezárt melléképület');cy.get('#quest-tracker').should('not.contain','Leo').and('not.contain','kulcs');
  });
  it('receives Leo’s separate flower quest on day four without revealing the key',()=>{
   start({...villageSave,player:{x:296,y:275},clock:{day:4,elapsed:0,collapseAt:580}});cy.get('#dialogue',{timeout:30000}).should('be.visible');cy.get('#speaker-name').should('have.text','Leo');cy.get('#dialogue-text').should('contain','szarvas faliméh').and('not.contain','kulcs');cy.get('#dialogue-close').click();cy.get('#toolbar [data-tool=wildflower]').should('be.visible').and('contain','6');cy.get('#quest-tracker').should('contain','Elültetve: 0 / 6').and('contain','Fedezd fel, mit rejt a lezárt melléképület');
@@ -247,7 +247,7 @@ describe('Southern village and forest',()=>{
  it('explores the dark workshop, remembers the shutter and requires inspection before repair',()=>{
   const travel=createTravel(),flowers=Array.from({length:6},(_,i)=>({x:-160+i*16,y:-96,growth:4}));travel.research={...travel.research,gifted:true,seeds:0,flowers,beeDay:9,observation:{day:9,seasonDay:9,plant:'Tavaszi vadvirágkeverék'},key:true};
   const data={...villageSave,version:17,travel,player:{x:400,y:3470},clock:{day:10,elapsed:20,collapseAt:580},plots:flowers.map(f=>[`${f.x},${f.y}`,{crop:null,growth:0,regrowing:false,watered:false}])};
-  start(data);cy.get('#game').should('have.attr','data-region','workshop').and('have.attr','data-shutter','false');walk('left','x',245);walk('up','y',3245);walk('left','x',208);press('e','KeyE',69);cy.get('#dialogue-title').should('have.text','Redőny');cy.get('#dialogue-close').click();cy.get('#game').should('have.attr','data-shutter','true');reloadFarm();cy.get('#game').should('have.attr','data-shutter','true');
+  start(data);cy.get('#game').should('have.attr','data-region','workshop').and('have.attr','data-shutter','false');walk('left','x',285);press('e','KeyE',69);cy.get('#dialogue-title').should('have.text','Ajtó melletti redőny');cy.get('#dialogue-close').click();cy.get('#game').should('have.attr','data-entrance-shutter','true');walk('left','x',245);walk('up','y',3245);walk('left','x',208);press('e','KeyE',69);cy.get('#dialogue-title').should('have.text','Redőny');cy.get('#dialogue-close').click();cy.get('#game').should('have.attr','data-shutter','true');reloadFarm();cy.get('#game').should('have.attr','data-shutter','true');
   walk('down','y',3378);walk('right','x',337);press('e','KeyE',69);cy.get('#dialogue-title').should('have.text','Üstszerű tartály');cy.get('#research-panel').should('contain','Fa: 0 / 35').and('contain','Ócskavas: 0 / 18');cy.get('#repair-machine').should('be.enabled').click();cy.get('#repair-warning').should('be.visible').and('have.text','Nincs nálad elég nyersanyag.');
  });
 

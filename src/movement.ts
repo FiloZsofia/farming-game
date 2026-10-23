@@ -4,7 +4,7 @@ export type Box = { x: number; y: number; w: number; h: number };
 export const START = { x: 250, y: 242 };
 export const obstacles: Box[] = [
   farmLayout.shipping,
-  {x:132,y:110,w:215,h:113}, {x:601+farmLayout.shedOffset.x,y:112+farmLayout.shedOffset.y,w:118,h:89},
+  farmLayout.houseBounds, farmLayout.shedBounds,
 
 ];
 export function blocked(x:number,y:number):boolean {

@@ -4,7 +4,7 @@ import {weatherOnDay,weatherNames,randomWeatherSeed,waterFromRain} from './weath
 import {questEntries} from './quest-log';
 import {DuckLife} from './duck-life';
 import {drawResearch,drawWorkshop} from './research-art';
-import {WORKSHOP_ORIGIN,inWorkshop,salvageSites,researchMaterials,researchNames,repairNeeds,workshopObjects,inspectWorkshop,startResearch,plantFlower,flowerAt,advanceResearch,beeAvailable,beeAnchor,observeBee,grantKey,collectSalvage,supplyMaterial,repairMachine,type Research} from './research';
+import {WORKSHOP_ORIGIN,inWorkshop,salvageSites,researchMaterials,researchNames,repairNeeds,workshopObjects,inspectWorkshop,entranceShutterOpen,workshopLit,remainingWebs,clearCobweb,startResearch,plantFlower,flowerAt,advanceResearch,beeAvailable,beeAnchor,observeBee,grantKey,collectSalvage,supplyMaterial,repairMachine,type Research} from './research';
 import {PondLife} from './pond-life';
 import {drawEstate,drawDuck} from './estate-art';
 import {goods,treeKinds,trees,goodNames,goodPrices,extraNames,extraPrices,extras,extraValue,emptyExtras,buyGood,placeGood,collectEstate,advanceEstate,seasons,seasonIndex,seasonDay,type Good,type Extra,type Estate} from './estate';
@@ -27,6 +27,7 @@ import {FarmerArt,anniePortrait} from './character';
 import {Wildlife} from './wildlife';
 import {createStory,type FarmStory} from './story-events';
 import {drawFarm} from './world-art';
+import {HouseExterior} from './house-exterior';
 import {WorkshopExterior} from './workshop-exterior';
 import {createClearing,activeDebris,clearDebris,debrisAt,neededTool,debrisNames,regrowDebris,type ClearingTool} from './cleanup';
 import {drawCrop} from './crop-art';
@@ -69,6 +70,7 @@ document.querySelectorAll<HTMLButtonElement>('[data-dir]').forEach(button=>{
 type FarmTool=Tool|ClearingTool|'birdhouse'|'wildflower';
 class Farm extends Phaser.Scene {
  private researchArt:Phaser.GameObjects.Container|null=null;
+ private houseExterior:HouseExterior|null=null;
  private workshopExterior:WorkshopExterior|null=null;
  private workshopArt:Phaser.GameObjects.Container|null=null;
  private leoVisitor:Phaser.GameObjects.Container|null=null;
@@ -744,7 +746,7 @@ class Farm extends Phaser.Scene {
   if(r.discovered&&!r.repaired)for(const [k,n]of Object.entries(repairNeeds)){const held=k==='wood'?this.clearing.wood:k==='stone'?this.clearing.stone:r.materials[k as keyof Research['materials']];materials.push(`• ${k==='wood'?'Fa':k==='stone'?'Kő':researchNames[k as keyof Research['materials']]}: ${Math.min(held,n)} / ${n}`);}
   if(materials.length)lines.push(materials.join('\n'));
   const text=lines.join('\n\n');if(el.dataset.content!==text){el.dataset.content=text;el.replaceChildren();for(const q of active){const line=document.createElement('p');line.className='hud-quest';const bullet=document.createElement('span');bullet.className='quest-bullet';bullet.textContent='•';bullet.setAttribute('aria-hidden','true');line.append(bullet,document.createTextNode(`${q.title}${q.detail?'\n'+q.detail:''}`));el.append(line);}if(materials.length){const list=document.createElement('ul');list.className='quest-material-list';for(const item of materials){const row=document.createElement('li');row.textContent=item.slice(2);list.append(row);}el.append(list);}}
-  const game=document.querySelector<HTMLElement>('#game')!;game.dataset.researchStage=r.repaired?'repaired':r.discovered?'repair':r.key?'workshop':r.observation?'report':r.gifted?'flowers':'waiting';game.dataset.calendarDay=String(calendarDay(this.clock.day,this.farmName));game.dataset.shutter=String(r.shutter);
+  const game=document.querySelector<HTMLElement>('#game')!;game.dataset.researchStage=r.repaired?'repaired':r.discovered?'repair':r.key?'workshop':r.observation?'report':r.gifted?'flowers':'waiting';game.dataset.calendarDay=String(calendarDay(this.clock.day,this.farmName));game.dataset.shutter=String(r.shutter);game.dataset.entranceShutter=String(entranceShutterOpen(r));game.dataset.clearedWebs=String(r.clearedWebs?.length??0);
  }
  private async commitResearch(research:Research,wood=this.clearing.wood,stone=this.clearing.stone){
   if(this.transitioning)return false;this.transitioning=true;this.saveRevision++;const travel=structuredClone(this.travel);travel.research=research;const clearing={...this.clearing,wood,stone};
@@ -772,7 +774,8 @@ class Farm extends Phaser.Scene {
   const r=this.travel.research,near=(x:number,y:number,d=48)=>Math.hypot(this.actor.x-x,this.actor.y-y)<d;
   if(inWorkshop(this.actor.y)){
    if(near(400,3500,38))return 'workshop-exit';
-   const object=workshopObjects.filter(o=>r.shutter||o.id==='shutter').map(o=>({o,d:Math.hypot(this.actor.x-o.x,this.actor.y-o.y)})).sort((a,b)=>a.d-b.d)[0];
+   const web=remainingWebs(r).filter(w=>near(w.x,w.y,50)).sort((a,b)=>Math.hypot(this.actor.x-a.x,this.actor.y-a.y)-Math.hypot(this.actor.x-b.x,this.actor.y-b.y))[0];if(web)return `cobweb:${web.id}`;
+   const object=workshopObjects.filter(o=>workshopLit(r)||o.id==='shutter'&&!r.shutter||o.id==='entrance-shutter'&&!entranceShutterOpen(r)).map(o=>({o,d:Math.hypot(this.actor.x-o.x,this.actor.y-o.y)})).sort((a,b)=>a.d-b.d)[0];
    return object&&object.d<76?`examine:${object.o.id}`:'';
   }
   if(this.leoVisitor&&near(this.leoVisitor.x,this.leoVisitor.y,55)&&!r.gifted)return 'leo-visit';
@@ -780,12 +783,13 @@ class Farm extends Phaser.Scene {
   const salvage=salvageSites.find(s=>!r.picked.includes(s.id)&&near(s.x,s.y,50));if(salvage)return `salvage:${salvage.id}`;
   return '';
  }
- private researchHint(){const n=this.nearby;if(n==='leo-visit')return 'Leo · Beszélgetés · E / F';if(n==='observe-bee')return 'Szarvas faliméh · Megfigyelés · E / F';if(n==='workshop-exit')return 'Vissza a kertbe · E / F';if(n.startsWith('examine:'))return `${workshopObjects.find(o=>o.id===n.slice(8))?.name} · Megvizsgálom · E / F`;if(n.startsWith('salvage:'))return 'Régi alkatrészek · Begyűjtés · E / F';if(n==='shed'&&this.travel.research.key)return 'Melléképület · Belépés · E';return '';}
+ private researchHint(){const n=this.nearby;if(n.startsWith('cobweb:'))return 'Pókháló · Kézzel leszedhető · E / F';if(n==='leo-visit')return 'Leo · Beszélgetés · E / F';if(n==='observe-bee')return 'Szarvas faliméh · Megfigyelés · E / F';if(n==='workshop-exit')return 'Vissza a kertbe · E / F';if(n.startsWith('examine:'))return `${workshopObjects.find(o=>o.id===n.slice(8))?.name} · Megvizsgálom · E / F`;if(n.startsWith('salvage:'))return 'Régi alkatrészek · Begyűjtés · E / F';if(n==='shed'&&this.travel.research.key)return 'Melléképület · Belépés · E';return '';}
  private researchInteraction(){
   if(!this.canInteract())return false;const n=this.researchNearby();
   if(n==='workshop-exit'){void this.travelTo({x:632,y:224});return true;}
   if(n==='leo-visit'){void this.receiveFlowers();return true;}
   if(n==='observe-bee'){void this.observeResearchBee();return true;}
+  if(n.startsWith('cobweb:')){void this.removeCobweb(n.slice(7));return true;}
   if(n.startsWith('examine:')){void this.examineWorkshop(n.slice(8));return true;}
   if(n.startsWith('salvage:')){void this.gatherSalvage(n.slice(8));return true;}
   return false;
@@ -807,9 +811,13 @@ class Farm extends Phaser.Scene {
   else{next=supplyMaterial(this.travel.research,shop==='nursery'?'leo':'annie');text=shop==='nursery'?'A régi berendezéshez szűrő kell? Van egy darab tiszta lenszövetem. Vidd csak el — kíváncsi vagyok, mire jutsz vele!':'Egy ép üvegedényre van szükséged? Ezt szívesen neked adom. Jó látni, hogy a régi műhely ismét életre kel.';}
   if(!next)return false;if(await this.commitResearch(next)){showDialogue(shop==='nursery'?'Leo':'Annie',text,'EGY KEDVES SZÓ');this.showSpeaker(shop);}return true;
  }
+ private async removeCobweb(id:string){
+  if(!this.canInteract()||!inWorkshop(this.actor.y))return;const web=remainingWebs(this.travel.research).find(w=>w.id===id);if(!web)return;const next=clearCobweb(this.travel.research,id,this.actor,this.tool);if(!next){this.notice('Ezt kézzel le tudom szedni.');return;}
+  if(await this.commitResearch(next)){this.avatar.use(web.x-this.actor.x,web.y-this.actor.y,'hand');this.notice('A pókháló eltűnt.');}
+ }
  private async examineWorkshop(id:string){
   if(!this.canInteract()||!inWorkshop(this.actor.y))return;const object=workshopObjects.find(o=>o.id===id);if(!object||Math.hypot(this.actor.x-object.x,this.actor.y-object.y)>78)return;const next=inspectWorkshop(this.travel.research,id);if(!next)return;
-  if(await this.commitResearch(next)){showDialogue(object.name,id==='shutter'&&this.travel.research.shutter?'A felhúzott redőnyön át meleg fény éri a régi műhelyt. Most már alaposan körülnézhetek.':this.travel.research.repaired&&['vat','pipes','filter','coil'].includes(id)?'A helyreállított kivonatkészítő egyik része. A berendezés újra egyben van; a használatát egy későbbi fejezetben fedezhetem fel.':object.text,'A RÉGI MŰHELY');if(id==='vat'&&!next.repaired)this.openRepairPanel();}
+  if(await this.commitResearch(next)){showDialogue(object.name,['shutter','entrance-shutter'].includes(id)?object.text:this.travel.research.repaired&&['vat','pipes','filter','coil'].includes(id)?'A helyreállított kivonatkészítő egyik része. A berendezés újra egyben van; a használatát egy későbbi fejezetben fedezhetem fel.':object.text,'A RÉGI MŰHELY');if(id==='vat'&&!next.repaired)this.openRepairPanel();}
  }
  private showMachinePetals(){
   dialogue.dataset.presentation='machine-restored';const petals=document.createElement('div');petals.className='reward-petals machine-petals';petals.setAttribute('aria-hidden','true');
@@ -833,7 +841,7 @@ class Farm extends Phaser.Scene {
   if(anchor&&beeAvailable(r,this.clock.day,this.clock.elapsed)){const t=this.clock.elapsed,x=anchor.x+Math.sin(t*2)*5,y=anchor.y-12+Math.cos(t*3)*2,g=this.beeArt;g.fillStyle(0xcbdede,.7).fillEllipse(x-2,y-3,5,3).fillEllipse(x+2,y-3,5,3);g.fillStyle(0xa26939).fillEllipse(x,y,7,5);g.fillStyle(0x3c3b30).fillCircle(x+3,y-1,2);g.lineStyle(.7,0x443c31).lineBetween(x-1,y-2,x-1,y+2);}
  }
 
- private redrawScenery(){this.workshopExterior?.destroy();this.workshopExterior=new WorkshopExterior(this);this.redrawResearch();this.estateArt?.destroy();this.estateArt=drawEstate(this,this.travel.estate,this.clock.day);this.scenery?.destroy();this.scenery=drawFarm(this,this.clearing,this.garden,this.story.birdhouse).setDepth(-1);this.villageForage?.destroy();this.villageForage=drawForage(this,this.travel.picked,this.clock.day);}
+ private redrawScenery(){this.houseExterior?.destroy();this.houseExterior=new HouseExterior(this);this.workshopExterior?.destroy();this.workshopExterior=new WorkshopExterior(this);this.redrawResearch();this.estateArt?.destroy();this.estateArt=drawEstate(this,this.travel.estate,this.clock.day);this.scenery?.destroy();this.scenery=drawFarm(this,this.clearing,this.garden,this.story.birdhouse).setDepth(-1);this.villageForage?.destroy();this.villageForage=drawForage(this,this.travel.picked,this.clock.day);}
  private animateWork(x:number,y:number,tool:string,kind:ImpactKind,contact:()=>void){
   this.workEffects??=new WorkEffects(this);this.avatar.use(x-this.actor.x,y-this.actor.y,tool,()=>{contact();this.workEffects?.impact(x,y,kind);});
  }
@@ -1014,7 +1022,7 @@ class Farm extends Phaser.Scene {
  update(time:number,delta:number){
   if(!this.actor)return;
   if(this.cameraRegion!==(inWorkshop(this.actor.y)?'workshop':shopAt(this.actor.y)??'outside'))this.fitCamera();
-  this.actor.setAlpha(inWorkshop(this.actor.y)&&!this.travel.research.shutter?.3:1);this.updateLocation();this.updateResearchGoal();
+  this.actor.setAlpha(inWorkshop(this.actor.y)&&!this.travel.research.shutter&&!entranceShutterOpen(this.travel.research)?.3:1);this.updateLocation();this.updateResearchGoal();
   this.shopAnnie?.person.setVisible(shopsOpen(this.clock.elapsed));this.shopLeo?.person.setVisible(shopsOpen(this.clock.elapsed));
   if(performance.now()>this.skillUntil)document.querySelector<HTMLElement>('#gardening-skill')!.hidden=true;
   const now=performance.now();const seconds=Math.max(0,(now-this.lastTick)/1000);this.lastTick=now;
@@ -1022,7 +1030,8 @@ class Farm extends Phaser.Scene {
   document.querySelector('#day-number')!.textContent=`${seasonDay(calendarDay(this.clock.day,this.farmName))}.`;document.querySelector('#season-name')!.textContent=seasons[seasonIndex(calendarDay(this.clock.day,this.farmName))];
   document.querySelector('#clock-label')!.textContent=clockLabel(this.clock);
   document.querySelector<HTMLElement>('#night-shade')!.style.opacity=String(nightOpacity(this.clock));
-  this.workshopExterior?.update(this.travel.research.shutter,nightOpacity(this.clock));
+  this.houseExterior?.update(nightOpacity(this.clock));
+  this.workshopExterior?.update(entranceShutterOpen(this.travel.research),nightOpacity(this.clock));
   const weather=this.currentWeather(),outdoors=!shopAt(this.actor.y)&&!inWorkshop(this.actor.y),playing=this.ready&&!dialogue.open&&!this.transitioning&&!this.choosingFarm&&!document.hidden&&document.hasFocus()&&!springPreviewComplete(this.clock,this.farmName);
   document.querySelector<HTMLElement>('#sunlight')!.style.opacity=String(outdoors?(1-Math.min(1,nightOpacity(this.clock)/.55))*(weather==='sunny'?1:weather==='cloudy'?.18:0):0);
   document.querySelector('#weather-label')!.textContent=weatherNames[weather];
@@ -1056,7 +1065,7 @@ class Farm extends Phaser.Scene {
   const next=move(before.x,before.y,dx,dy,delta/1000,movementSpeed(this.jumpRemaining>0,shiftHeld),(x,y)=>rockBlocked(x,y)||this.travel.estate.trees.some(t=>Math.hypot(x-t.x,y-t.y)<12)||this.travel.estate.pond.some(p=>p.kind==='duckNest'&&Math.hypot(x-p.x,y-p.y)<12),worldBlocked);this.actor.setPosition(next.x,next.y);
   surface.dataset.cleared=String(Object.keys(this.clearing.removed).length);surface.dataset.wood=String(this.clearing.wood);surface.dataset.stone=String(this.clearing.stone);surface.dataset.running=String(shiftHeld);surface.dataset.jumpHeight=String(height);
   const insideShop=shopAt(next.y);
-  this.actor.setAlpha(inWorkshop(this.actor.y)&&!this.travel.research.shutter?.3:1);this.updateLocation();this.updateResearchGoal();
+  this.actor.setAlpha(inWorkshop(this.actor.y)&&!this.travel.research.shutter&&!entranceShutterOpen(this.travel.research)?.3:1);this.updateLocation();this.updateResearchGoal();
   surface.dataset.playerX=String(Math.round(next.x));surface.dataset.playerY=String(Math.round(next.y));
   if(dx)this.facing=dx>0?1:-1;
   if(dx||dy){this.direction={x:dx,y:dy};this.aimAhead();}

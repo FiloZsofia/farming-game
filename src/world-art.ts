@@ -6,7 +6,7 @@ import {farmLayout as layout,farmBounds} from './layout';
 
 // Original procedural artwork. World anchors stay shared with interaction/collision.
 export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),garden:Garden=createGarden(),birdhouse:{x:number;y:number}|null=null){
- const g=scene.add.graphics();
+ let g=scene.add.graphics();const ground=g;
  let seed=71;const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
  const rect=(x:number,y:number,w:number,h:number,c:number,a=1)=>{g.fillStyle(c,a);g.fillRect(Math.round(x),Math.round(y),w,h);};
  const oval=(x:number,y:number,w:number,h:number,c:number,a=1)=>{g.fillStyle(c,a);g.fillEllipse(x,y,w,h);};
@@ -46,19 +46,7 @@ export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),g
  for(let i=0;i<50;i++){const x=left+random()*width,y=top+random()*height;if(y<top+35||x<left+30||x>right-30)tree(x,y,.8+random()*.35);}
  for(let x=left+20;x<right;x+=48)tree(x,top+10,.85+random()*.2);
  for(let y=top+50;y<bottom-20;y+=58){tree(left+7,y,.9);tree(right-6,y,.9);}
- // Cottage: plaster, stone foundation, tiled roof, mullioned windows and porch.
- poly([132,204,347,204,375,243,159,248],0x284936,.28);oval(246,231,234,36,0x2e4333,.24);rect(132,128,215,95,0xd6cbb0);rect(132,138,215,8,0x9b927c);rect(132,211,215,12,0x817b68);
- for(let x=134;x<345;x+=17){rect(x,213,15,7,x%2?0xaaa18a:0x99947e);line(x+1,220,x+14,220,0x656d5c);}
- for(let i=0;i<100;i++)rect(135+random()*208,148+random()*60,2,1,0xb3ac92,.45);
- poly([116,138,154,83,325,83,365,138],0x604e3d);poly([120,134,156,85,323,85,359,134],0x965f47);
- for(let row=0;row<6;row++){const y=88+row*8,left=154-row*5.8,right=325+row*5.6;line(left,y+6,right,y+6,0x704937,2);for(let x=left+row%2*8;x<right-4;x+=16){line(x,y,x-2,y+6,0x704937);line(x+2,y+1,x+12,y+1,0xb37e58);}}
- rect(116,136,249,4,0x554b3b);rect(173,75,18,32,0xaca591);for(let y=78;y<107;y+=7){line(173,y,191,y,0x827f70);line(y%2?178:185,y,y%2?178:185,y+7,0x827f70);}rect(170,72,24,6,0x6c7166);
- rect(222,166,35,57,0x8c7c5d);rect(226,170,27,53,0x66503c);for(let x=230;x<253;x+=6)line(x,172,x,221,0x8e7150);rect(246,196,3,4,0xd7ba70);
- for(const x of [161,287]){rect(x-3,158,33,35,0xede1bf);rect(x,161,27,28,0x5a665f);rect(x+3,164,21,22,0x8eaaa4);poly([x+3,164,x+24,164,x+3,185],0xbaccc0,.6);line(x+13,164,x+13,186,0xe7ddc0,2);line(x+3,175,x+24,175,0xe7ddc0,2);rect(x-4,190,35,4,0x8d7958);}
- rect(190,222,95,29,0x635140);rect(193,223,89,26,0xa0825a);for(let y=225;y<251;y+=5){line(193,y,282,y,0x6c5942);line(196,y+1,278,y+1,0xb99b70);}
- rect(215,251,48,7,0x927858);rect(221,258,36,5,0xae9771);line(215,251,263,251,0xcabb92);
- for(const x of [190,280]){rect(x,184,5,65,0x65513c);rect(x,185,2,62,0xb29467);rect(x-2,245,9,5,0x70664f);}
- poly([179,190,237,153,295,190],0x704d39);poly([183,187,237,155,291,187],0xa16e4a);for(let y=169;y<188;y+=6){const d=(y-153)*1.56;line(237-d,y,237+d,y,0x6c4b37);}
+ const fixtures=scene.add.graphics().setDepth(-.7);ground.once('destroy',()=>fixtures.destroy());g=fixtures;
  // Porch journal: a real open book on a small writing desk, with a ribbon and pen.
  const j=layout.journal;
  oval(j.x+11,j.y+15,31,7,0x283c2e,.3);
@@ -103,6 +91,7 @@ export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),g
  oval(c.x+8,c.y+1,4,2,0x6c9651);oval(c.x+12,c.y,4,2,0x81a75a);
  rect(c.x+7,c.y+8,6,1,0xe4cb88);
  const m=layout.mailbox;rect(m.x+10,m.y+m.h,5,20,0x80613e);rect(m.x,m.y,m.w,m.h,0x536e72);rect(m.x+2,m.y+2,m.w-4,4,0x94a7a2);rect(m.x+8,m.y+9,8,2,0x273f40);
+ g=ground;
  // Water keeps the exact collision ellipse; only shoreline detail extends outward.
  const p=layout.pond;
  const shoreline=(inset:number)=>{const points:number[]=[];for(let i=0;i<64;i++){const a=i/64*Math.PI*2;const wobble=pondRadius(a);points.push(p.x+Math.cos(a)*(p.rx+inset)*wobble,p.y+Math.sin(a)*(p.ry+inset)*wobble);}return points;};

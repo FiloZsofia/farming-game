@@ -6,6 +6,9 @@ export const farmLayout = {
   mailbox:{x:112,y:474,w:24,h:16},
   shipping: {x:158,y:244,w:32,h:24},
   pond: { x: 638, y: 464, rx: 153, ry: 113 },
+  houseBounds:{x:119,y:99,w:241,h:124},
+  shedScale:1.23,
+  shedBounds:{x:563,y:72,w:146,h:109},
   shedOffset: { x: -25, y: -20 },
   beds: [
     { x: 349, y: 278, w: 57, h: 37 },

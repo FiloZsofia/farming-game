@@ -46,6 +46,14 @@ export function validSnapshot(value:unknown):value is Snapshot{
 }
 // Migrate known formats without discarding the original backup until a v17 write succeeds.
 export function decodeSnapshot(value:unknown):Snapshot|null{
+ // Relocate only positions newly covered by the enlarged buildings; retain all farm data.
+ if(value&&typeof value==='object'&&'version' in value&&value.version===17){
+  const old=value as Snapshot,p=old.player,boxes=[farmLayout.shedBounds,farmLayout.houseBounds],previous=[{x:576,y:92,w:118,h:89},{x:132,y:110,w:215,h:113}];
+  if(p&&finite(p.x)&&finite(p.y)){
+   const overlaps=(b:{x:number;y:number;w:number;h:number})=>p.x+7>b.x&&p.x-7<b.x+b.w&&p.y+3>b.y&&p.y-4<b.y+b.h;
+   if(boxes.some(overlaps)&&!previous.some(overlaps)){const moved={...old,player:{x:p.x,y:p.x<400?280:224}};if(validSnapshot(moved))return structuredClone(moved);}
+  }
+ }
  if(validSnapshot(value))return structuredClone(value);
  if(!value||typeof value!=='object'||!('version' in value)||(value.version!==1&&value.version!==2&&value.version!==3&&value.version!==4&&value.version!==5&&value.version!==6&&value.version!==7&&value.version!==8&&value.version!==9&&value.version!==10&&value.version!==11&&value.version!==12&&value.version!==13&&value.version!==14&&value.version!==15&&value.version!==16))return null;
  const legacy=value as {clearing?:Clearing;version:number;plots?:unknown;player?:{x:number;y:number}};

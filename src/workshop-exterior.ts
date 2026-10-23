@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import {farmLayout} from './layout';
 
-// Original procedural art; the doorway and collision footprint remain unchanged.
+// Original procedural art, enlarged around the same doorway anchor.
 export class WorkshopExterior {
  private art:Phaser.GameObjects.Graphics;
  private window:Phaser.GameObjects.Graphics;
@@ -12,6 +12,7 @@ export class WorkshopExterior {
  constructor(scene:Phaser.Scene){
   const x=601+farmLayout.shedOffset.x,y=133+farmLayout.shedOffset.y;
   this.scene=scene;this.art=scene.add.graphics().setDepth(-.9);this.window=scene.add.graphics().setDepth(-.8);this.light=document.createElement('div');this.light.className='workshop-lamp-light';this.light.setAttribute('aria-hidden','true');for(const name of ['halo','pool','core']){const part=document.createElement('i');part.className=name;this.light.append(part);}document.querySelector('#game')!.append(this.light);
+  const scale=farmLayout.shedScale;for(const art of [this.art,this.window])art.setScale(scale).setPosition(632*(1-scale),181*(1-scale));
   const g=this.art;
   const rect=(a:number,b:number,w:number,h:number,c:number)=>{g.fillStyle(c).fillRect(x+a,y+b,w,h);};
   const line=(a:number,b:number,c:number,d:number,color:number,width=1)=>{g.lineStyle(width,color).lineBetween(x+a,y+b,x+c,y+d);};
@@ -52,7 +53,7 @@ export class WorkshopExterior {
    else{g.fillStyle(0x87795a).fillRect(x+89,y+19,17,23);for(let i=20;i<43;i+=3)g.lineStyle(1,0x5e5943).lineBetween(x+89,y+i,x+106,y+i);}
    g.fillStyle(0xb8a17a).fillRect(x+84,y+45,27,3);
   }
-  const camera=this.scene.cameras.main,z=camera.zoom;this.light.style.transform=`translate(${(x+119-camera.worldView.x)*z}px,${(y+31-camera.worldView.y)*z}px) scale(${z})`;this.light.style.opacity=String(Math.min(1,Math.max(0,darkness/.55)));this.light.hidden=!camera.worldView.contains(x+119,y+31);
+  const camera=this.scene.cameras.main,z=camera.zoom,scale=farmLayout.shedScale,lx=632+(x+119-632)*scale,ly=181+(y+31-181)*scale;this.light.style.transform=`translate(${(lx-camera.worldView.x)*z}px,${(ly-camera.worldView.y)*z}px) scale(${z*scale})`;this.light.style.opacity=String(Math.min(1,Math.max(0,darkness/.55)));this.light.hidden=!camera.worldView.contains(lx,ly);
  }
  destroy(){this.art.destroy();this.window.destroy();this.light.remove();}
 }

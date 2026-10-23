@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import {salvageSites,type Research} from './research';
+import {salvageSites,entranceShutterOpen,remainingWebs,type Research} from './research';
 export function drawResearch(scene:Phaser.Scene,r:Research){
  const root=scene.add.container(0,0).setDepth(3),g=scene.add.graphics();root.add(g);
  for(const s of salvageSites){if(r.picked.includes(s.id))continue;g.fillStyle(0x33452c,.25).fillEllipse(s.x+3,s.y+4,29,10);
@@ -54,12 +54,20 @@ export function drawWorkshop(scene:Phaser.Scene,r:Research){
   g.lineStyle(2,0x3b4034).beginPath().moveTo(375,283).lineTo(368,295).lineTo(375,303).lineTo(367,314).strokePath();
   g.fillStyle(0x8a8067).fillPoints([{x:298,y:275},{x:327,y:277},{x:340,y:314},{x:329,y:311},{x:331,y:327},{x:320,y:321},{x:313,y:337},{x:300,y:325}],true);g.lineStyle(1,0xb1a082).lineBetween(306,282,315,321);
   g.lineStyle(3,0x514e3d).lineBetween(508,241,546,314);g.lineStyle(2,0x6a4e36).lineBetween(511,265,529,278).lineBetween(540,293,554,301);
-  g.lineStyle(.65,0xbcb69a,.45).beginPath().moveTo(379,237).lineTo(406,266).lineTo(406,237).lineTo(379,237).moveTo(387,246).lineTo(406,245).moveTo(394,254).lineTo(406,253).strokePath();
+
   for(let i=0;i<8;i++)g.fillStyle(i%2?0x847458:0x70654d).fillRect(286+i*11,367+i%3*3,5+i%3,2);
  }
 
+ // Front-wall window: interior view reverses the outside left/right relation.
+ const frontOpen=entranceShutterOpen(r);
+ g.fillStyle(0x3e3b31).fillRoundedRect(238,453,95,53,3);g.fillStyle(0xa18b64).fillRect(242,457,87,45);
+ if(frontOpen){g.fillStyle(0xa7bb9b).fillRect(247,463,77,35);g.lineStyle(3,0x776a50).lineBetween(285,463,285,498).lineBetween(247,480,324,480);g.fillStyle(0xc3b38d).fillRoundedRect(241,452,89,12,3);g.fillStyle(0xf0d49c,.13).fillTriangle(247,498,324,498,302,390);}
+ else{g.fillStyle(0x72664e).fillRect(247,461,77,37);for(let y=464;y<498;y+=5)g.lineStyle(2,0x9a8864).lineBetween(248,y,323,y);}
+ g.fillStyle(0xc0aa7b).fillRect(236,502,99,4);g.lineStyle(1,0xc9b997).lineBetween(337,460,337,494);g.fillStyle(0xbba16f).fillCircle(337,495,3);
+ // Persistent, reachable cobwebs can each be swept away by hand once.
+ for(const web of remainingWebs(r)){const x=web.x,y=web.y-3000-22;g.lineStyle(.9,0xe1ddc3,.6);for(let i=0;i<5;i++){const a=i*Math.PI/8;g.lineBetween(x,y,x+Math.cos(a)*30,y+Math.sin(a)*30);}for(const radius of [10,19,29]){g.beginPath();for(let i=0;i<5;i++){const a=i*Math.PI/8;i?g.lineTo(x+Math.cos(a)*radius,y+Math.sin(a)*radius):g.moveTo(x+radius,y);}g.strokePath();}}
  g.fillStyle(0x302e26).fillRect(373,501,54,13);g.fillStyle(0xa28a62).fillRoundedRect(369,498,62,5,2);
  if(r.shutter)for(let i=0;i<30;i++){const x=170+(i*37)%180,y=225+(i*29)%220;if(x<170+(y-210)*.7)g.fillStyle(0xffe3a8,.24).fillCircle(x,y,.6+i%2*.3);}
- if(!r.shutter){g.fillStyle(0x111b20,.94).fillRect(88,138,624,388);g.fillStyle(0xd6c99c,.35).fillRect(159,208,92,2);g.fillStyle(0xd6c99c,.12).fillTriangle(159,210,251,210,215,255);}
+ if(!r.shutter||!frontOpen){g.fillStyle(0x111b20,!r.shutter&&!frontOpen?.94:.42).fillRect(88,138,624,388);g.fillStyle(0xd6c99c,.35).fillRect(159,208,92,2);g.fillStyle(0xd6c99c,.12).fillTriangle(159,210,251,210,215,255);}
  return root;
 }

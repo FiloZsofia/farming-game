@@ -485,3 +485,12 @@ Az új farm elnevezésekor és a Menü → Történet felületen az alábbi köz
 - Oldalsó falilámpa: alkonyattól fokozatosan erősödő, meleg fény a lámpás körül és a talajon. A mentések és az interakciók változatlanok.
 - Saját, programmal rajzolt grafika. Ellenőrző képek: `docs/concepts/workshop-exterior-day-final.png`, `workshop-exterior-open-final.png`, `workshop-exterior-night-final.png`.
 - A képernyőn követett célok fekete pöttyöt kapnak a gondolatjel helyett. A megfigyelés elmesélésének célja csak „Meséld el Leonak a megfigyelésedet”; a Leo mellé lépést magyarázó mondat törölve a képernyőről és a Célok fülről. A cél megnevezése nem tartalmazhatja a megoldás részletes útmutatóját.
+
+### Nagyobb épületek, két redőny és műhelytakarítás
+- A melléképület külseje kb. 23%-kal nagyobb, ugyanahhoz a bejárathoz igazítva; ütközése és esti lámpájának fénye követi a méretet.
+- Belül a meglévő bal felső ablak megmarad. Az ajtó mellé is ablak került; az ellenkező nézési irány miatt belül balra, kívül jobbra látszik. Új felfedezéskor mindkét redőnyt külön kell felhúzni, egyenként világosítják a helyiséget. A gép részei a teljes világosságban vizsgálhatók.
+- A korábbi mentésben már feltárt műhely második redőnye is nyitott marad. Az új állapotok opcionális, visszafelé kompatibilis mentésmezők.
+- A javítatlan műhelyben három kézzel leszedhető pókháló van. Kéz eszközzel, közelről E/F vagy a művelet indításával eltávolíthatók; leszedésük mentődik és nem térnek vissza.
+- A lakóház is kissé nagyobb lett, külön szélesebb és mélyebb verandával, széles lépcsőkkel. Törtfehér vakolat, kő lábazat, részletes cseréptető, téglakémény, fa ablakkeretek, mohazöld spaletták, virágos ablakládák, eresz, kopott lábtörlő és sáros csizma díszíti. Az ajtó melletti lámpás este meleg fényt ad. A napló és a magkatalógus megközelítése megmarad.
+- Ha egy korábbi mentésben a játékos helyét az épületek új széle elfoglalná, betöltéskor eléjük kerül; készlete és farmja megmarad.
+- Saját rajzolt grafika. Képek: `farm-home-larger-day.png`, `farm-home-larger-night.png`, `workshop-larger-exterior.png`, `workshop-two-shutters-dark.png`, `workshop-two-shutters-partial.png`, `workshop-two-shutters-open.png`, `workshop-cobweb-cleared.png` a `docs/concepts` mappában.
