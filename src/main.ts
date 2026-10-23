@@ -23,7 +23,7 @@ import {drawFarm} from './world-art';
 import {createClearing,activeDebris,clearDebris,debrisAt,neededTool,debrisNames,regrowDebris,type ClearingTool} from './cleanup';
 import {drawCrop} from './crop-art';
 import { createGarden, targetTile, cultivable, reachable, work, TILE, type Tile, type Tool, nextDayGarden, isRipe, growthTarget, cropNames } from './gardening';
-import { createClock, SPRING_PREVIEW_LAST_DAY, springPreviewComplete, advanceClock, clockLabel, nightOpacity, type Clock } from './clock';
+import { createClock, SPRING_PREVIEW_LAST_DAY, isTestingFarm, springPreviewComplete, advanceClock, clockLabel, nightOpacity, type Clock } from './clock';
 import { JUMP_DURATION, JUMP_COOLDOWN, jumpHeight, movementSpeed } from './jump';
 import {itemIcon,seedIcon,goodIcon} from './item-icons';
 import {normalizeFarmName} from './farm-name';
@@ -163,7 +163,7 @@ class Farm extends Phaser.Scene {
   if(!this.ready||this.transitioning)return;
   this.choosingFarm=true;this.naming=false;this.draftingFarm=false;this.transitioning=true;release();
   this.warningAnimation?.cancel();document.querySelector<HTMLElement>('#night-warning')!.hidden=true;this.seedFindAnimation?.cancel();document.querySelector<HTMLElement>('#seed-find')!.hidden=true;
-  showDialogue('Erdőszéli birtok','Folytasd a kerted gondozását, vagy kezdj új életet egy másik farmon.','JÓ ITT LENNI');
+  showDialogue('Erdőszéli birtok','Folytasd a kerted gondozását, vagy kezdj új életet egy másik farmon.','');
   document.querySelector<HTMLElement>('#start-panel')!.hidden=false;document.querySelector<HTMLButtonElement>('#dialogue-close')!.hidden=true;
   const list=document.querySelector<HTMLElement>('#farm-list')!,error=document.querySelector<HTMLElement>('#farm-list-error')!,retry=document.querySelector<HTMLButtonElement>('#retry-farms')!,resume=document.querySelector<HTMLButtonElement>('#continue-farm')!,create=document.querySelector<HTMLButtonElement>('#new-farm')!;
   list.replaceChildren();error.textContent='Mentések betöltése…';resume.disabled=true;create.disabled=true;retry.hidden=true;
@@ -173,17 +173,34 @@ class Farm extends Phaser.Scene {
    document.querySelector('#continue-farm-name')!.textContent=this.hasFarm?`${this.farmName??'Névtelen farm'} · ${this.clock.day}. nap`:'';
    for(const farm of farms){
     const card=document.createElement('article');card.className='farm-save-card';card.dataset.farmId=farm.id;const info=document.createElement('div'),name=document.createElement('h3'),details=document.createElement('p'),date=document.createElement('small');name.textContent=farm.name;details.textContent=`${farm.day}. nap · ${farm.gold} gold`;date.textContent=`Mentve: ${new Date(farm.updatedAt).toLocaleString('hu-HU')}`;info.append(name);info.append(details,date);
-    const play=document.createElement('button');play.type='button';play.textContent=farm.id===this.store.selectedFarmId?'Folytatom':'Megnyitom';play.addEventListener('click',()=>void this.chooseFarm(farm.id));card.append(info,play);list.append(card);
+    const play=document.createElement('button');play.type='button';play.textContent=farm.id===this.store.selectedFarmId?'Folytatom':'Megnyitom';play.addEventListener('click',()=>void this.chooseFarm(farm.id));const actions=document.createElement('div');actions.className='farm-card-actions';const remove=document.createElement('button');remove.type='button';remove.textContent='Törlés';remove.dataset.deleteFarm=farm.id;remove.className='delete-farm';remove.setAttribute('aria-label',`${farm.name} törlése`);remove.addEventListener('click',()=>this.confirmFarmDeletion(farm.id,farm.name));actions.append(play,remove);card.append(info,actions);list.append(card);
    }
    if(!farms.length){const empty=document.createElement('p');empty.className='farm-list-empty';empty.textContent='Még nincs mentett farmod. Az első kerted rád vár.';list.append(empty);}
    (this.hasFarm?resume:create).focus();
   }catch{error.textContent='A mentések betöltése vagy az aktuális farm mentése nem sikerült. A farmokat megőriztem; próbáld újra.';retry.hidden=false;resume.hidden=true;create.disabled=true;}
   finally{this.transitioning=false;this.lastTick=performance.now();}
  }
+ private confirmFarmDeletion(id:string,name:string){
+  if(!this.ready||this.transitioning||!this.choosingFarm)return;
+  const popup=document.querySelector<HTMLDialogElement>('#delete-farm-dialog')!,cancel=document.querySelector<HTMLButtonElement>('#cancel-delete-farm')!,confirm=document.querySelector<HTMLButtonElement>('#confirm-delete-farm')!;
+  document.querySelector('#delete-farm-name')!.textContent=name;document.querySelector('#delete-farm-error')!.textContent='';cancel.disabled=false;confirm.disabled=false;
+  cancel.onclick=()=>popup.close();confirm.onclick=()=>void this.removeFarm(id);popup.oncancel=event=>{if(this.transitioning)event.preventDefault();};popup.showModal();cancel.focus();
+ }
+ private async removeFarm(id:string){
+  if(!this.ready||this.transitioning||!this.choosingFarm)return;
+  this.transitioning=true;const popup=document.querySelector<HTMLDialogElement>('#delete-farm-dialog')!,selected=this.store.selectedFarmId===id;
+  document.querySelector<HTMLButtonElement>('#confirm-delete-farm')!.disabled=true;document.querySelector<HTMLButtonElement>('#cancel-delete-farm')!.disabled=true;
+  try{
+   await this.store.deleteFarm(id);popup.close();
+   if(selected){this.ready=false;try{sessionStorage.removeItem('farm-resume-once');}catch{}this.store.close();this.lockRelease?.();location.reload();return;}
+   this.transitioning=false;await this.openStartMenu(false);
+  }catch{document.querySelector('#delete-farm-error')!.textContent='A törlés nem sikerült. A farmod megmaradt; próbáld újra.';document.querySelector<HTMLButtonElement>('#confirm-delete-farm')!.disabled=false;document.querySelector<HTMLButtonElement>('#cancel-delete-farm')!.disabled=false;}
+  finally{this.transitioning=false;this.lastTick=performance.now();}
+ }
  private resumeCurrentFarm(){
   this.choosingFarm=false;document.querySelector<HTMLElement>('#start-panel')!.hidden=true;this.lastTick=performance.now();release();
   if(!this.farmName){this.openFarmNaming();return;}
-  if(springPreviewComplete(this.clock)){this.showPreviewEnd();return;}
+  if(springPreviewComplete(this.clock,this.farmName)){this.showPreviewEnd();return;}
   if(this.loadRecovered){this.loadRecovered=false;showDialogue('Az előző mentésből folytatjuk.','A legutóbbi mentés hibás volt. Az előző érvényes állapotot sikerült visszaállítani.','MENTÉS HELYREÁLLÍTVA');}
   else if(this.travel.morning||this.travel.sale||this.travel.estate.duckArrivalPending){dialogue.close();void this.presentMorning();}
   else dialogue.close();
@@ -240,7 +257,7 @@ class Farm extends Phaser.Scene {
  }
  private async finishDay(forced:boolean){
   if(this.transitioning||!this.ready)return;
-  if(this.clock.day>=SPRING_PREVIEW_LAST_DAY){await this.finishSpringPreview();return;}
+  if(this.clock.day>=SPRING_PREVIEW_LAST_DAY&&!isTestingFarm(this.farmName)){await this.finishSpringPreview();return;}
   this.transitioning=true;this.saveRevision++;
   const nextClock=createClock(this.clock.day+1);
   const exhausted=forced||this.clock.elapsed>=this.clock.collapseAt;
@@ -486,7 +503,7 @@ class Farm extends Phaser.Scene {
  }
  private async gatherEstate(){if(!this.canInteract())return;const next=collectEstate(this.travel.estate,this.actor.x,this.actor.y,this.clock.day);if(next)await this.commitEstate(next,'Begyűjtve! A termés a készletedbe került.');}
 
- private canInteract(){return this.ready&&!dialogue.open&&!this.transitioning&&!this.fishThrowPlaying&&!springPreviewComplete(this.clock)&&this.collapseRemaining<=0&&this.jumpRemaining<=0;}
+ private canInteract(){return this.ready&&!dialogue.open&&!this.transitioning&&!this.fishThrowPlaying&&!springPreviewComplete(this.clock,this.farmName)&&this.collapseRemaining<=0&&this.jumpRemaining<=0;}
  private materialName(crop:string){return crop==='potato'?'vetőgumó':crop==='strawberry'?'palánta':['honeyberry','blueberry'].includes(crop)?'csemete':'mag';}
  private openCatalog(){
   if(!this.canInteract())return;if(!this.nearObject(farmLayout.catalog)){this.notice('Sétálj a ház jobb oldali ablaka melletti magkatalógushoz.');return;}
@@ -814,6 +831,7 @@ class Farm extends Phaser.Scene {
   for(const [index,id] of inventoryTabs.entries()){const tab=document.querySelector<HTMLButtonElement>(`#${id}-tab`)!;tab.addEventListener('click',()=>this.inventoryTab(id));tab.addEventListener('keydown',event=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(event.key)){event.preventDefault();const next=event.key==='Home'?0:event.key==='End'?inventoryTabs.length-1:(index+(event.key==='ArrowRight'?1:-1)+inventoryTabs.length)%inventoryTabs.length;this.inventoryTab(inventoryTabs[next]);document.querySelector<HTMLButtonElement>(`#${inventoryTabs[next]}-tab`)!.focus();}});}
   document.querySelector('#produce')!.addEventListener('click',()=>this.openInventory());
   window.addEventListener('keydown',event=>{
+   if(document.querySelector<HTMLDialogElement>('#delete-farm-dialog')!.open){if(event.code==='Escape'&&this.transitioning)event.preventDefault();return;}
    if(event.code==='Escape'&&!dialogue.open&&this.placing){this.placing=null;this.notice('Elhelyezés megszakítva.');return;}
    if(event.code==='Escape'&&dialogue.open){event.preventDefault();if(dialogue.dataset.presentation==='development-end')return;if(!this.naming&&!this.choosingFarm)dialogue.close();return;}
    if(event.code!=='Tab'||event.repeat||this.naming||this.choosingFarm)return;
@@ -853,9 +871,9 @@ class Farm extends Phaser.Scene {
   document.querySelector<HTMLElement>('#night-shade')!.style.opacity=String(nightOpacity(this.clock));
   document.querySelector<HTMLElement>('#sunlight')!.style.opacity=String(1-Math.min(1,nightOpacity(this.clock)/.55));
   const surface=document.querySelector<HTMLElement>('#game')!;surface.dataset.cameraX=String(this.cameras.main.worldView.x);surface.dataset.cameraY=String(this.cameras.main.worldView.y);surface.dataset.zoom=String(this.cameras.main.zoom);surface.dataset.placing=this.placing??'';surface.dataset.fish=String(this.travel.estate.fish.goldfish+this.travel.estate.fish.carp);surface.dataset.trees=String(this.travel.estate.trees.length);surface.dataset.morningStage=this.morningStage;surface.dataset.shopLeo=String(Boolean(this.shopLeo?.person.visible&&shopAt(this.actor.y)==='nursery'));surface.dataset.shopsOpen=String(shopsOpen(this.clock.elapsed));surface.dataset.shopAnnie=String(Boolean(this.shopAnnie?.person.visible&&shopAt(this.actor.y)==='fishShop'));surface.dataset.pendingSeeds=String(quantityTotal(this.orders.pending));surface.dataset.mailSeeds=String(quantityTotal(this.orders.mailbox));surface.dataset.gardeningXp=String(this.skill.xp);surface.dataset.gardeningReward=String(this.skill.rewarded);surface.dataset.gift=String(this.story.giftReceived);surface.dataset.birdhouse=String(Boolean(this.story.birdhouse));surface.dataset.morningSeen=String(this.story.morningSeen);surface.dataset.gold=String(this.economy.gold);surface.dataset.shipping=String(shippingValue(this.economy.shipping));surface.dataset.day=String(this.clock.day);surface.dataset.elapsed=String(this.clock.elapsed);surface.dataset.ready=String(this.ready);surface.dataset.jumping=String(this.jumpRemaining>0);
-  surface.dataset.previewComplete=String(springPreviewComplete(this.clock));
-  if(this.ready&&!this.choosingFarm&&!dialogue.open&&!this.transitioning&&springPreviewComplete(this.clock))this.showPreviewEnd();
-  if(!this.ready||dialogue.open||this.transitioning||springPreviewComplete(this.clock)||document.hidden||!document.hasFocus()){this.input.keyboard?.resetKeys();this.selection.setVisible(false);return;}
+  surface.dataset.previewComplete=String(springPreviewComplete(this.clock,this.farmName));
+  if(this.ready&&!this.choosingFarm&&!dialogue.open&&!this.transitioning&&springPreviewComplete(this.clock,this.farmName))this.showPreviewEnd();
+  if(!this.ready||dialogue.open||this.transitioning||springPreviewComplete(this.clock,this.farmName)||document.hidden||!document.hasFocus()){this.input.keyboard?.resetKeys();this.selection.setVisible(false);return;}
   if(this.collapseRemaining>0){
    this.collapseRemaining=Math.max(.001,this.collapseRemaining-seconds);this.actor.setAngle(75);document.querySelector<HTMLElement>('#sleep-shade')!.style.opacity=String(1-this.collapseRemaining);
    if(this.collapseRemaining<=.001)void this.finishDay(true);return;

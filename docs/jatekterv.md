@@ -409,3 +409,11 @@ Az új farm elnevezésekor és a Menü → Történet felületen az alábbi köz
 - A bevezetőből eltűnt az „EGY ÚJ KEZDET” és a „Végre megérkeztem.” címsor. A farmnév mezőben nincs helykitöltő, a „Farm neve” címke megmarad. Az indítógomb felirata „Tovább”. A Történet menüpont ugyanezt a cím nélküli bevezetőt mutatja.
 
 - A fejlesztési határ véglegesített üzenete: „FOLYTATÁS KÖVETKEZIK” / „Itt tart most a történet.” / „Elérted a játék jelenlegi változatának végét. A következő napot egy későbbi frissítésben folytathatod. Köszönöm, hogy játszottál! 🙂”
+
+
+## Farmtörlés és a saját tesztfarm
+
+- A kezdőmenüben nincs „JÓ ITT LENNI” felirat.
+- A mentett farmok mellett Törlés gomb jelenik meg. Előbb külön megerősítő ablakban látszik a farm neve és a kért figyelmeztetés: „Biztosan törölni szeretnéd ezt a farmot? A farm törlés után nem visszaállítható.” Alapból a Mégse kap fókuszt; Mégse/Escape semmit nem töröl.
+- Megerősítéskor csak az adott farm és saját biztonsági mentése törlődik, egyetlen adatbázis-tranzakcióban. A többi farm változatlan marad. Aktív farm törlésekor az aktív/biztonsági másolat aliasai is eltűnnek; a játék farmválasztásra tölt újra, nem hozza vissza a törölt farmot. Az utolsó farm is törölhető, utána új játék indítható. Sikertelen tranzakció esetén a teljes farm és a lista megmarad.
+- Az **Erdőszéli birtok** nevű farm a felhasználó tesztfarmjaként továbbjátszható a tavasz után is. A kivétel a farm nevéhez kötött (ékezetes név, kis/nagybetű és szélső szóköz normalizálásával), tehát minden ilyen nevű mentésre érvényes. Más farmokon a 15 napos korlát marad. A tesztfarm meglévő napja, pénze, készlete és kertje nem áll vissza, a napváltás és eladási elszámolás a szokásos szabályok szerint folytatódik; mentésverzió-váltás nem szükséges.

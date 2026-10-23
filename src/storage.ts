@@ -74,7 +74,7 @@ function validCatalogue(value:unknown):value is FarmCatalogue{
  if(c.version!==1||!Array.isArray(c.farms))return false;
  const ids=new Set<string>();
  for(const f of c.farms){if(!f||typeof f.id!=='string'||! /^(legacy|farm-[a-zA-Z0-9-]{1,80})$/.test(f.id)||ids.has(f.id)||typeof f.name!=='string'||!normalizeFarmName(f.name)||(f.farmerName!==undefined&&f.farmerName!==null&&(typeof f.farmerName!=='string'||normalizeFarmName(f.farmerName)!==f.farmerName))||!Number.isSafeInteger(f.day)||f.day<1||!Number.isSafeInteger(f.gold)||f.gold<0||![1,2,3].includes(f.level)||!Number.isSafeInteger(f.updatedAt)||f.updatedAt<0)return false;ids.add(f.id);}
- return c.selected===null?c.farms.length===0:ids.has(c.selected);
+ return c.selected===null||ids.has(c.selected);
 }
 function summary(id:string,data:Snapshot):FarmSummary{return {id,name:data.farmName??'Névtelen farm',farmerName:data.farmerName,day:data.clock.day,gold:data.economy.gold,level:gardeningLevel(data.skill),updatedAt:Date.now()};}
 function decodePair(active:unknown,backup:unknown){
@@ -147,6 +147,16 @@ export class SaveStore{
    const id=`farm-${crypto.randomUUID()}`;if(this.catalogue!.farms.some(f=>f.id===id))throw new Error('Nem sikerült új mentésazonosítót létrehozni. Próbáld újra.');const next:FarmCatalogue={...structuredClone(this.catalogue!),selected:id};next.farms.push(summary(id,copy));
    await this.write(store=>{store.put({active:copy,backup:copy},farmKey(id));store.put(copy,'active');store.put(copy,'backup');store.put(next,CATALOGUE_KEY);});
    this.last=copy;this.backup=copy;this.catalogue=next;return id;
+  });
+ }
+ async deleteFarm(id:string):Promise<void>{
+  await this.listFarms();
+  return this.enqueue(async()=>{
+   if(!this.catalogue!.farms.some(f=>f.id===id))throw new Error('Ez a farm nem található a mentések között.');
+   const selected=this.catalogue!.selected===id,next=structuredClone(this.catalogue!);next.farms=next.farms.filter(f=>f.id!==id);if(selected)next.selected=null;
+   // Delete the farm and both recovery aliases atomically, so it cannot reappear.
+   await this.write(store=>{store.delete(farmKey(id));if(selected){store.delete('active');store.delete('backup');}store.put(next,CATALOGUE_KEY);});
+   this.catalogue=next;if(selected){this.last=null;this.backup=null;}
   });
  }
  async selectFarm(id:string):Promise<{data:Snapshot;recovered:boolean}>{

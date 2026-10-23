@@ -18,3 +18,7 @@ describe('spring preview boundary',()=>{
   const later={day:21,elapsed:12,collapseAt:580};expect(springPreviewComplete(later)).toBe(true);expect(later).toEqual({day:21,elapsed:12,collapseAt:580});
  });
 });
+
+it('lets the named testing farm continue while the other farms retain the spring limit',async()=>{
+ const {springPreviewComplete,isTestingFarm}=await import('./clock');const end={day:15,elapsed:580,collapseAt:580};expect(isTestingFarm('Erdőszéli birtok')).toBe(true);expect(springPreviewComplete(end,'Erdőszéli birtok')).toBe(false);expect(springPreviewComplete({...end,day:21},'Erdőszéli birtok')).toBe(false);expect(springPreviewComplete(end,'Másik farm')).toBe(true);expect(springPreviewComplete(end,null)).toBe(true);
+});

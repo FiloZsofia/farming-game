@@ -16,4 +16,5 @@ export function clockLabel(clock:Clock){
 
 // Keep the prototype at the end of its first spring; later saves stay intact.
 export const SPRING_PREVIEW_LAST_DAY=15;
-export const springPreviewComplete=(clock:Clock)=>clock.day>SPRING_PREVIEW_LAST_DAY||clock.day===SPRING_PREVIEW_LAST_DAY&&clock.elapsed>=clock.collapseAt;
+export const isTestingFarm=(name?:string|null)=>name?.normalize('NFC').trim().toLocaleLowerCase('hu-HU')==='erdőszéli birtok';
+export const springPreviewComplete=(clock:Clock,farmName?:string|null)=>!isTestingFarm(farmName)&&(clock.day>SPRING_PREVIEW_LAST_DAY||clock.day===SPRING_PREVIEW_LAST_DAY&&clock.elapsed>=clock.collapseAt);

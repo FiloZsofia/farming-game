@@ -227,4 +227,11 @@ describe('Southern village and forest',()=>{
   start({...villageSave,player:{x:250,y:242},clock:{day:15,elapsed:100,collapseAt:580},economy:{gold:100,shipping:{...quantities,radish:2},lastSale:null}});clickWorld(268,232);cy.get('#sleep').click();cy.get('#dialogue').should('have.attr','data-presentation','development-end');cy.get('#game').should('have.attr','data-day','15').and('have.attr','data-gold','100').and('have.attr','data-shipping','30');press('Escape','Escape',27);cy.get('#dialogue').should('be.visible');cy.reload();cy.get('#continue-farm').should('be.visible').and('not.be.disabled').click();cy.get('#dialogue').should('have.attr','data-presentation','development-end');cy.get('#preview-farms').click();cy.get('#start-panel').should('be.visible');cy.get('#new-farm').should('not.be.disabled');
  });
 
+ it('confirms farm deletion and supports cancelling without removing the save',()=>{
+  start({...villageSave,farmName:'Törlési próba'});cy.get('#menu').click();cy.get('#open-start-menu').click();cy.get('#dialogue-label').should('not.be.visible');cy.get('.delete-farm').click();cy.get('#delete-farm-dialog').should('be.visible');cy.get('#delete-farm-warning').should('have.text','Biztosan törölni szeretnéd ezt a farmot? A farm törlés után nem visszaállítható.');cy.focused().should('have.id','cancel-delete-farm');cy.get('#cancel-delete-farm').click();cy.get('.farm-save-card').should('have.length',1);cy.get('.delete-farm').click();cy.get('#confirm-delete-farm').click();cy.get('#game').should('have.attr','data-ready','true');cy.get('.farm-save-card').should('not.exist');cy.get('#continue-farm').should('not.be.visible');cy.reload();cy.get('#new-farm').should('not.be.disabled');cy.get('.farm-save-card').should('not.exist');
+ });
+ it('lets Erdőszéli birtok continue beyond spring for testing',()=>{
+  start({...villageSave,farmName:'Erdőszéli birtok',clock:{day:16,elapsed:20,collapseAt:580}});cy.get('#game').should('have.attr','data-preview-complete','false').and('have.attr','data-day','16');reloadFarm();cy.get('#dialogue').should('not.be.visible');
+ });
+
 });

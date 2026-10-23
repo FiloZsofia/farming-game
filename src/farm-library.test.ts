@@ -72,3 +72,24 @@ describe('separate farm saves',()=>{
  });
 
 });
+
+describe('permanent farm deletion',()=>{
+ it('deletes only the chosen unselected farm and its backup',async()=>{
+  const factory=new IDBFactory(),store=new SaveStore(factory);await store.load();const a=await store.createFarm(fresh('A')),bData=fresh('B'),b=await store.createFarm(bData);await store.deleteFarm(a);expect(await access(factory,`farm:${a}`)).toBeUndefined();expect(store.selectedFarmId).toBe(b);expect(await access(factory,'active')).toEqual(bData);expect(await store.listFarms()).toMatchObject([{id:b,name:'B'}]);await expect(store.selectFarm(a)).rejects.toThrow('nem található');store.close();
+ });
+ it('removes active and backup aliases when deleting the selected farm, without selecting another',async()=>{
+  const factory=new IDBFactory(),store=new SaveStore(factory);await store.load();const aData=fresh('A'),a=await store.createFarm(aData),b=await store.createFarm(fresh('B'));await store.deleteFarm(b);expect(store.selectedFarmId).toBeNull();expect(await access(factory,'active')).toBeUndefined();expect(await access(factory,'backup')).toBeUndefined();expect(await access(factory,`farm:${b}`)).toBeUndefined();store.close();const reader=new SaveStore(factory);expect((await reader.load()).data).toBeNull();expect(await reader.listFarms()).toMatchObject([{id:a}]);expect((await reader.selectFarm(a)).data).toEqual(aData);reader.close();
+ });
+ it('can delete the last farm and create a new one without resurrecting deleted data',async()=>{
+  const factory=new IDBFactory(),store=new SaveStore(factory);await store.load();const id=await store.createFarm(fresh());await store.deleteFarm(id);store.close();const reader=new SaveStore(factory);expect((await reader.load()).data).toBeNull();expect(await reader.listFarms()).toEqual([]);const next=await reader.createFarm(fresh('Új'));expect(next).not.toBe(id);expect(await access(factory,`farm:${id}`)).toBeUndefined();reader.close();
+ });
+ it('does not resurrect an archived legacy save through its old recovery keys',async()=>{
+  const factory=new IDBFactory(),store=new SaveStore(factory);await store.load();await store.save(fresh('Régi'));await store.save(fresh('Régi'));await store.listFarms();await store.deleteFarm('legacy');store.close();const reader=new SaveStore(factory);expect((await reader.load()).data).toBeNull();expect(await reader.listFarms()).toEqual([]);expect(await access(factory,'backup')).toBeUndefined();reader.close();
+ });
+ it('rolls back the farm, catalogue and recovery aliases if deletion aborts',async()=>{
+  const factory=new IDBFactory(),store=new SaveStore(factory);await store.load();const data=fresh('Megmarad'),id=await store.createFarm(data),before=await store.listFarms(),spy=abortWrites(store);await expect(store.deleteFarm(id)).rejects.toThrow();spy.mockRestore();expect(await store.listFarms()).toEqual(before);expect(store.selectedFarmId).toBe(id);expect(await access(factory,`farm:${id}`)).toEqual({active:data,backup:data});expect(await access(factory,'active')).toEqual(data);expect(await access(factory,'backup')).toEqual(data);store.close();
+ });
+ it('rejects saves after deletion rather than recreating a deleted farm',async()=>{
+  const factory=new IDBFactory(),store=new SaveStore(factory);await store.load();const data=fresh(),id=await store.createFarm(data);const deletion=store.deleteFarm(id);await deletion;await expect(store.save(data)).rejects.toThrow('válassz');expect(await access(factory,`farm:${id}`)).toBeUndefined();expect(await store.listFarms()).toEqual([]);await expect(store.deleteFarm('missing')).rejects.toThrow('nem található');store.close();
+ });
+});
