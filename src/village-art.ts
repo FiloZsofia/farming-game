@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import {villageLayout as layout,WORLD_HEIGHT,WORLD_WIDTH,benchPose,benchPoint,type BenchPose,shopNames} from './village-layout';
+import {villageLayout as layout,forestTrees,WORLD_HEIGHT,WORLD_WIDTH,benchPose,benchPoint,type BenchPose,shopNames} from './village-layout';
 // Original procedural scenery, sharing coordinates with the walkable village.
 export function drawVillage(scene:Phaser.Scene){
  const g=scene.add.graphics().setDepth(-.5),labels:Phaser.GameObjects.Text[]=[];
@@ -10,6 +10,11 @@ export function drawVillage(scene:Phaser.Scene){
  const poly=(p:number[],c:number,a=1)=>{g.fillStyle(c,a).fillPoints(Array.from({length:p.length/2},(_,i)=>new Phaser.Geom.Point(p[i*2],p[i*2+1])),true);};
  const label=(x:number,y:number,text:string,size=9)=>{const t=scene.add.text(x,y,text,{fontFamily:'Georgia, serif',fontSize:`${size}px`,color:'#fff1ce',backgroundColor:'#574f37',padding:{x:6,y:4}}).setOrigin(.5).setDepth(5);labels.push(t);};
  rect(-400,600,1600,WORLD_HEIGHT-600,0x759c48);rect(0,600,WORLD_WIDTH,WORLD_HEIGHT-600,0x759c48);
+ // Layered hill shoulders: cool lower slopes and sunlit rounded crowns.
+ for(const [x,y,w,h]of [[40,760,440,220],[110,965,470,280],[20,1160,450,210]]){
+  oval(x+8,y+30,w,h,0x44683f,.55);oval(x-7,y+8,w*.98,h*.82,0x638743,.7);oval(x-35,y-8,w*.8,h*.56,0x8ba352,.5);
+  g.lineStyle(2,0xa5b16c,.26).beginPath().arc(x-20,y-2,w*.31,Math.PI*1.12,Math.PI*1.84).strokePath();
+ }
  oval(160,900,365,590,0x406846,.48);oval(570,1100,470,490,0x99ae60,.35);
  for(let i=0;i<4600;i++){const x=random()*WORLD_WIDTH,y=600+random()*(WORLD_HEIGHT-600);rect(x,y,1+random()*2,1,[0x4f783f,0x9bb669,0xb1bf72][i%3],.6);}
  const path=(points:number[][],width:number)=>{for(const [w,c]of [[width+5,0x738354],[width+1,0xa5936c],[width-3,0xc1ae85]]){g.lineStyle(w,c).beginPath();points.forEach(([x,y],i)=>i?g.lineTo(x,y):g.moveTo(x,y));g.strokePath();for(const[x,y]of points)oval(x,y,w,w,c);}};
@@ -75,7 +80,8 @@ export function drawVillage(scene:Phaser.Scene){
  };
  // Backdrop foliage frames the route without filling its walking spaces.
  for(let i=0;i<18;i++){tree(18+random()*750,700+Math.floor(i/9)*660,i%3,.65);}
- for(const t of layout.trees)tree(t.x,t.y,t.kind);
+ for(let i=0;i<25;i++)tree(-170+(i%4)*47,695+Math.floor(i/4)*83,i%3,.85+(i%3)*.08);
+ for(const t of [...layout.trees,...forestTrees].sort((a,b)=>a.y-b.y))tree(t.x,t.y,t.kind);
  for(const[x,y,k]of [[410,750,0],[746,766,1],[762,1178,0],[738,1337,2],[559,1372,1],[273,1375,0]])tree(x,y,k,.9);
  // Ferns, fallen leaves and meadow flowers along the shaded fork.
  for(let i=0;i<70;i++){const x=45+random()*240,y=660+random()*520;for(let j=0;j<4;j++)line(x,y,x+(j-1.5)*4,y-5-random()*8,0x63894e);if(i%3===0)oval(x,y,4,2,0xc6b77c,.7);}

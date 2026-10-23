@@ -18,3 +18,5 @@ export function clockLabel(clock:Clock){
 export const SPRING_PREVIEW_LAST_DAY=15;
 export const isTestingFarm=(name?:string|null)=>name?.normalize('NFC').trim().toLocaleLowerCase('hu-HU')==='erdőszéli birtok';
 export const springPreviewComplete=(clock:Clock,farmName?:string|null)=>!isTestingFarm(farmName)&&(clock.day>SPRING_PREVIEW_LAST_DAY||clock.day===SPRING_PREVIEW_LAST_DAY&&clock.elapsed>=clock.collapseAt);
+
+export const calendarDay=(day:number,farmName?:string|null)=>isTestingFarm(farmName)?15:day;

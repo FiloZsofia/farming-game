@@ -1,3 +1,4 @@
+import {calendarDay} from './clock';
 import {farmLayout,farmBounds} from './layout';
 import {pondRadius} from './pond-shape';
 export const seasons=['Tavasz','Nyár','Ősz','Tél'] as const;
@@ -34,16 +35,16 @@ export function buyGood(estate:Estate,gold:number,good:Good,amount=1,day=1){
 }
 export function waterAt(x:number,y:number){const p=farmLayout.pond,dx=(x-p.x)/p.rx,dy=(y-p.y)/p.ry;return Math.hypot(dx,dy)<pondRadius(Math.atan2(dy,dx))*.92;}
 export function shoreAt(x:number,y:number){const p=farmLayout.pond;return Math.abs(Math.hypot((x-p.x)/p.rx,(y-p.y)/p.ry)-pondRadius(Math.atan2((y-p.y)/p.ry,(x-p.x)/p.rx)))<.23;}
-export function placeGood(estate:Estate,good:Good,x:number,y:number,day:number,freeLand:boolean){
+export function placeGood(estate:Estate,good:Good,x:number,y:number,day:number,freeLand:boolean,farmName?:string|null){
  if(estate.goods[good]<1)return null;const next=structuredClone(estate);
- if(treeKinds.includes(good as TreeKind)){if(seasonIndex(day)!==0||!freeLand||next.trees.length>=200||next.trees.some(t=>Math.hypot(x-t.x,y-t.y)<64))return null;next.trees.push({kind:good as TreeKind,x,y,planted:day,last:0,fruit:0});}
+ if(treeKinds.includes(good as TreeKind)){if(seasonIndex(calendarDay(day,farmName))!==0||!freeLand||next.trees.length>=200||next.trees.some(t=>Math.hypot(x-t.x,y-t.y)<64))return null;next.trees.push({kind:good as TreeKind,x,y,planted:day,last:0,fruit:0});}
  else if(good==='goldfish'||good==='carp'){if(!waterAt(x,y)||next.fish[good]>=999999)return null;if(next.fish.goldfish+next.fish.carp===0)next.roeDay=day;next.fish[good]++;}
  else{if(next.pond.length>=200||next.pond.some(p=>Math.hypot(p.x-x,p.y-y)<22))return null;if(good==='duckNest'){if(next.pond.some(p=>p.kind==='duckNest')||!shoreAt(x,y)||!freeLand)return null;next.eggDay=day;if(next.duckPurchaseDay===null)next.duckPurchaseDay=day;}else if(!waterAt(x,y))return null;next.pond.push({kind:good as PondPlace['kind'],x,y,day});}
  next.goods[good]--;return next;
 }
-export function advanceEstate(estate:Estate,day:number,random=Math.random){
+export function advanceEstate(estate:Estate,day:number,random=Math.random,farmName?:string|null){
  const next=structuredClone(estate);
- for(const t of next.trees){const spec=trees[t.kind];if(day-t.planted>=15&&seasonIndex(day)===spec.season&&t.fruit===0&&(t.last===0||day-t.last>=spec.repeat))t.fruit=spec.yield;}
+ for(const t of next.trees){const spec=trees[t.kind];if(day-t.planted>=15&&seasonIndex(calendarDay(day,farmName))===spec.season&&t.fruit===0&&(t.last===0||day-t.last>=spec.repeat))t.fruit=spec.yield;}
  const fish=next.fish.goldfish+next.fish.carp;
  if(fish>0&&day-next.roeDay>=3){const type:Extra=fish<=4?'roe6':fish<=10?'roe8':'roe10';next.roe[type]=Math.min(999999,next.roe[type]+1);next.roeDay=day;}
  if(next.pond.some(p=>p.kind==='duckNest'&&day-p.day>=3)&&next.duckArrivalDay===null){next.duckArrivalDay=day;next.duckArrivalPending=true;next.eggDay=day;}

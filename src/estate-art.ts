@@ -15,7 +15,7 @@ export function drawEstate(scene:Phaser.Scene,estate:Estate,day:number){
    g.fillStyle(0xffeee0).fillEllipse(p.x,p.y-8,9,9);g.fillStyle(0xe5bd55).fillEllipse(p.x,p.y-5,6,4);
   }
   else if(p.kind==='reed'){for(let i=0;i<7;i++){const x=p.x+(i-3)*3;g.lineStyle(2,0x6e8d43).lineBetween(x,p.y,x+(i-3)*2,p.y-21-i%3*7);g.lineStyle(3,0x816440).lineBetween(x+(i-3)*2,p.y-21-i%3*7,x+(i-3)*2,p.y-29-i%3*7);}}
-  else{g.fillStyle(0x8e734a).fillEllipse(p.x,p.y,33,20);g.fillStyle(0xc6a474).fillEllipse(p.x,p.y-3,30,17);g.fillStyle(0x6e6446).fillEllipse(p.x,p.y-4,20,10);if(estate.duckArrivalDay!==null&&!estate.duckArrivalPending){drawDuck(g,p.x+23,p.y+8,true);drawDuck(g,p.x-20,p.y+13,false);}}
+  else{g.fillStyle(0x8e734a).fillEllipse(p.x,p.y,33,20);g.fillStyle(0xc6a474).fillEllipse(p.x,p.y-3,30,17);g.fillStyle(0x6e6446).fillEllipse(p.x,p.y-4,20,10);}
  }
  // Spawn clings to submerged vegetation in the shallows, rather than a marker on land.
  if(Object.values(estate.roe).some(n=>n>0)){
@@ -34,5 +34,5 @@ export function drawEstate(scene:Phaser.Scene,estate:Estate,day:number){
 }
 
 export function drawDuck(g:Phaser.GameObjects.Graphics,x:number,y:number,male:boolean,wing=0){
- g.fillStyle(0x334f43,.18).fillEllipse(x+2,y+4,24,7);g.fillStyle(male?0xb6b29b:0x9b8059).fillEllipse(x,y-2,23,13);g.fillStyle(male?0x647f77:0xc0a074).fillEllipse(x-2,y-4,15,8);g.fillStyle(male?0x426b51:0x92724d).fillCircle(x+9,y-10,5);g.fillStyle(0xe4c176).fillTriangle(x+13,y-11,x+20,y-9,x+13,y-7);g.fillStyle(0x273e32).fillCircle(x+10,y-11,1);if(male)g.lineStyle(1,0xe4dac0).lineBetween(x+6,y-6,x+12,y-6);if(wing)g.lineStyle(3,0x8d9b85).lineBetween(x,y-5,x-10,y-5-wing);
+ g.fillStyle(0x334f43,.18).fillEllipse(x+2,y+4,24,7);g.fillStyle(male?0xb6b29b:0x9b8059).fillEllipse(x,y-2,23,13);g.fillStyle(male?0x647f77:0xc0a074).fillEllipse(x-2,y-4,15,8);g.fillStyle(male?0x426b51:0x92724d).fillCircle(x+9,y-10,5);g.fillStyle(0xe4c176).fillTriangle(x+13,y-11,x+20,y-9,x+13,y-7);g.fillStyle(0x273e32).fillCircle(x+10,y-11,1);if(male)g.lineStyle(1,0xe4dac0).lineBetween(x+6,y-6,x+12,y-6);g.fillStyle(0xf4e3b7).fillCircle(x+10.3,y-11.4,.35);g.lineStyle(.8,male?0x466b75:0x70563b).lineBetween(x-7,y-4,x+2,y-1);if(!male)for(let i=0;i<4;i++)g.lineStyle(.7,0x70563f).lineBetween(x-7+i*3,y-4,x-5+i*3,y-2);g.fillStyle(0x444e42).fillTriangle(x-10,y-4,x-17,y-6,x-12,y);if(wing)g.lineStyle(3,0x8d9b85).lineBetween(x,y-5,x-10,y-5-wing);
 }

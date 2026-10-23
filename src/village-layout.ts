@@ -1,3 +1,4 @@
+import {inWorkshop,WORKSHOP_ORIGIN} from './research';
 import {blocked,type Box} from './movement';
 export const WORLD_HEIGHT=1420;
 export const WORLD_WIDTH=1000;
@@ -11,19 +12,24 @@ export const villageLayout={
  bushes:[{id:'fern',x:100,y:736},{id:'birch',x:238,y:821},{id:'moss',x:70,y:939},{id:'brook',x:191,y:1090}],
  trees:[{x:44,y:670,kind:0},{x:103,y:650,kind:1},{x:254,y:685,kind:2},{x:53,y:799,kind:2},{x:169,y:777,kind:0},{x:286,y:769,kind:1},{x:51,y:889,kind:1},{x:278,y:934,kind:0},{x:146,y:1000,kind:2},{x:40,y:1059,kind:0},{x:311,y:1120,kind:1},{x:100,y:1165,kind:2},{x:250,y:1184,kind:0}],
 } as const;
+// Trunks stay clear of the winding paths and every berry bush.
+const forestRoute=[[278,760],[150,813],[107,930],[211,1040],[356,1080]],road=[[169,572],[170,600],[174,672],[305,784],[393,909]];
+const segmentGap=(x:number,y:number,a:number[],b:number[])=>{const dx=b[0]-a[0],dy=b[1]-a[1],t=Math.max(0,Math.min(1,((x-a[0])*dx+(y-a[1])*dy)/(dx*dx+dy*dy)));return Math.hypot(x-a[0]-t*dx,y-a[1]-t*dy);};
+export const forestTrees=Array.from({length:72},(_,i)=>({x:28+i%8*37+(i%3)*6,y:675+Math.floor(i/8)*61,kind:i%3})).filter(t=>[forestRoute,road].every(route=>route.slice(1).every((b,i)=>segmentGap(t.x,t.y,route[i],b)>34))&&villageLayout.bushes.every(b=>Math.hypot(t.x-b.x,t.y-b.y)>40)&&villageLayout.trees.every(b=>Math.hypot(t.x-b.x,t.y-b.y)>32));
 const buildings:Box[]=[villageLayout.nursery,villageLayout.fishShop,villageLayout.cottage];
 export function villageBlocked(x:number,y:number){
  if(x<22||x>WORLD_WIDTH-22||y<600||y>1394)return true;
  if(buildings.some(b=>x+7>b.x&&x-7<b.x+b.w&&y+3>b.y&&y-4<b.y+b.h))return true;
- if(villageLayout.trees.some(t=>Math.hypot((x-t.x)/12,(y-t.y)/9)<1))return true;
+ if([...villageLayout.trees,...forestTrees].some(t=>Math.hypot((x-t.x)/12,(y-t.y)/9)<1))return true;
  // The basin and benches are solid; the surrounding cobbles remain walkable.
  if(villageLayout.benches.some(b=>benchContains(benchPose(b.angle),x,y)))return true;
  if(((x-476)/28)**2+((y-1081)/19)**2<1)return true;
  return false;
 }
-export const outsideFarm=(y:number)=>y>=600;
+export const outsideFarm=(y:number)=>y>=600&&!inWorkshop(y);
 
 export function worldBlocked(x:number,y:number){
+ if(inWorkshop(y))return x<108||x>692||y<WORKSHOP_ORIGIN+198||y>WORKSHOP_ORIGIN+510||(x>282&&x<567&&y>WORKSHOP_ORIGIN+250&&y<WORKSHOP_ORIGIN+357);
  if(y>=1600)return shopBlocked(x,y);
  if(y>=600)return villageBlocked(x,y);
  if(y>=560&&x>=146&&x<=196)return false;
@@ -55,7 +61,7 @@ export function benchContains(b:BenchPose,x:number,y:number){const dx=x-b.x,dy=y
 // Move only positions affected by those changes, preserving every possession.
 export function relocateVillagePlayer(player:{x:number;y:number}){
  const {x,y}=player,b=villageLayout.fishShop;
- const changed=(x+7>b.x&&x-7<b.x+b.w&&y+3>b.y&&y-4<b.y+b.h)||villageLayout.benches.some(p=>benchContains(benchPose(p.angle),x,y));
+ const changed=forestTrees.some(t=>Math.hypot((x-t.x)/12,(y-t.y)/9)<1)||(x+7>b.x&&x-7<b.x+b.w&&y+3>b.y&&y-4<b.y+b.h)||villageLayout.benches.some(p=>benchContains(benchPose(p.angle),x,y));
  if(!changed||!worldBlocked(x,y))return player;
  for(let distance=8;distance<=160;distance+=8)for(let angle=0;angle<Math.PI*2;angle+=Math.PI/8){const point={x:x+Math.cos(angle)*distance,y:y+Math.sin(angle)*distance};if(!worldBlocked(point.x,point.y))return point;}
  return {x:560,y:1100};

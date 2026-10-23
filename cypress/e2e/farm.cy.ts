@@ -1,3 +1,4 @@
+import {createTravel} from '../../src/travel';
 const press=(key:string,code:string,keyCode:number)=>{
  cy.get('body').trigger('keydown',{key,code,keyCode,which:keyCode});
  cy.get('body').trigger('keyup',{key,code,keyCode,which:keyCode});
@@ -231,7 +232,21 @@ describe('Southern village and forest',()=>{
   start({...villageSave,farmName:'Törlési próba'});cy.get('#menu').click();cy.get('#open-start-menu').click();cy.get('#dialogue-label').should('not.be.visible');cy.get('.delete-farm').click();cy.get('#delete-farm-dialog').should('be.visible');cy.get('#delete-farm-warning').should('have.text','Biztosan törölni szeretnéd ezt a farmot? A farm törlés után nem visszaállítható.');cy.focused().should('have.id','cancel-delete-farm');cy.get('#cancel-delete-farm').click();cy.get('.farm-save-card').should('have.length',1);cy.get('.delete-farm').click();cy.get('#confirm-delete-farm').click();cy.get('#game').should('have.attr','data-ready','true');cy.get('.farm-save-card').should('not.exist');cy.get('#continue-farm').should('not.be.visible');cy.reload();cy.get('#new-farm').should('not.be.disabled');cy.get('.farm-save-card').should('not.exist');
  });
  it('lets Erdőszéli birtok continue beyond spring for testing',()=>{
-  start({...villageSave,farmName:'Erdőszéli birtok',clock:{day:16,elapsed:20,collapseAt:580}});cy.get('#game').should('have.attr','data-preview-complete','false').and('have.attr','data-day','16');reloadFarm();cy.get('#dialogue').should('not.be.visible');
+  start({...villageSave,farmName:'Erdőszéli birtok',clock:{day:16,elapsed:20,collapseAt:580}});cy.get('#game').should('have.attr','data-preview-complete','false').and('have.attr','data-day','16').and('have.attr','data-calendar-day','15');cy.get('#season-name').should('have.text','Tavasz');cy.get('#day-number').should('have.text','15.');reloadFarm();cy.get('#dialogue').should('not.be.visible');
+ });
+
+ it('shows the first-day locked-building goal without giving a solution',()=>{
+  start();cy.get('#quest-tracker').should('be.visible').and('have.text','Fedezd fel, mit rejt a lezárt melléképület');cy.get('#quest-tracker').should('not.contain','Leo').and('not.contain','kulcs');
+ });
+ it('receives Leo’s separate flower quest on day four without revealing the key',()=>{
+  start({...villageSave,player:{x:296,y:275},clock:{day:4,elapsed:0,collapseAt:580}});cy.get('#dialogue',{timeout:30000}).should('be.visible');cy.get('#speaker-name').should('have.text','Leo');cy.get('#dialogue-text').should('contain','szarvas faliméh').and('not.contain','kulcs');cy.get('#dialogue-close').click();cy.get('#toolbar [data-tool=wildflower]').should('be.visible').and('contain','6');cy.get('#quest-tracker').should('contain','Ültess vadvirágokat: 0 / 6').and('contain','Fedezd fel, mit rejt a lezárt melléképület');
+ });
+
+ it('explores the dark workshop, remembers the shutter and requires inspection before repair',()=>{
+  const travel=createTravel(),flowers=Array.from({length:6},(_,i)=>({x:-160+i*16,y:-96,growth:4}));travel.research={...travel.research,gifted:true,seeds:0,flowers,beeDay:9,observation:{day:9,seasonDay:9,plant:'Tavaszi vadvirágkeverék'},key:true};
+  const data={...villageSave,version:17,travel,player:{x:400,y:3470},clock:{day:10,elapsed:20,collapseAt:580},plots:flowers.map(f=>[`${f.x},${f.y}`,{crop:null,growth:0,regrowing:false,watered:false}])};
+  start(data);cy.get('#game').should('have.attr','data-region','workshop').and('have.attr','data-shutter','false');walk('left','x',245);walk('up','y',3245);walk('left','x',208);press('e','KeyE',69);cy.get('#dialogue-title').should('have.text','Redőny');cy.get('#dialogue-close').click();cy.get('#game').should('have.attr','data-shutter','true');reloadFarm();cy.get('#game').should('have.attr','data-shutter','true');
+  walk('down','y',3378);walk('right','x',337);press('e','KeyE',69);cy.get('#dialogue-title').should('have.text','Üstszerű tartály');cy.get('#research-panel').should('contain','Fa: 0 / 35').and('contain','Ócskavas: 0 / 18');cy.get('#repair-machine').should('be.disabled');
  });
 
 });
