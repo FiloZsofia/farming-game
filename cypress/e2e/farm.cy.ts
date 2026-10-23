@@ -236,10 +236,10 @@ describe('Southern village and forest',()=>{
  });
 
  it('shows the first-day locked-building goal without giving a solution',()=>{
-  start();cy.get('#quest-tracker').should('be.visible').and('have.text','Fedezd fel, mit rejt a lezárt melléképület');cy.get('#quest-tracker').should('not.contain','Leo').and('not.contain','kulcs');
+  start();cy.get('#quest-tracker').should('be.visible').and('have.text','– Fedezd fel, mit rejt a lezárt melléképület');cy.get('#quest-tracker').should('not.contain','Leo').and('not.contain','kulcs');
  });
  it('receives Leo’s separate flower quest on day four without revealing the key',()=>{
-  start({...villageSave,player:{x:296,y:275},clock:{day:4,elapsed:0,collapseAt:580}});cy.get('#dialogue',{timeout:30000}).should('be.visible');cy.get('#speaker-name').should('have.text','Leo');cy.get('#dialogue-text').should('contain','szarvas faliméh').and('not.contain','kulcs');cy.get('#dialogue-close').click();cy.get('#toolbar [data-tool=wildflower]').should('be.visible').and('contain','6');cy.get('#quest-tracker').should('contain','Ültess vadvirágokat: 0 / 6').and('contain','Fedezd fel, mit rejt a lezárt melléképület');
+  start({...villageSave,player:{x:296,y:275},clock:{day:4,elapsed:0,collapseAt:580}});cy.get('#dialogue',{timeout:30000}).should('be.visible');cy.get('#speaker-name').should('have.text','Leo');cy.get('#dialogue-text').should('contain','szarvas faliméh').and('not.contain','kulcs');cy.get('#dialogue-close').click();cy.get('#toolbar [data-tool=wildflower]').should('be.visible').and('contain','6');cy.get('#quest-tracker').should('contain','Elültetve: 0 / 6').and('contain','Fedezd fel, mit rejt a lezárt melléképület');
  });
 
  it('explores the dark workshop, remembers the shutter and requires inspection before repair',()=>{
@@ -248,5 +248,7 @@ describe('Southern village and forest',()=>{
   start(data);cy.get('#game').should('have.attr','data-region','workshop').and('have.attr','data-shutter','false');walk('left','x',245);walk('up','y',3245);walk('left','x',208);press('e','KeyE',69);cy.get('#dialogue-title').should('have.text','Redőny');cy.get('#dialogue-close').click();cy.get('#game').should('have.attr','data-shutter','true');reloadFarm();cy.get('#game').should('have.attr','data-shutter','true');
   walk('down','y',3378);walk('right','x',337);press('e','KeyE',69);cy.get('#dialogue-title').should('have.text','Üstszerű tartály');cy.get('#research-panel').should('contain','Fa: 0 / 35').and('contain','Ócskavas: 0 / 18');cy.get('#repair-machine').should('be.disabled');
  });
+
+ it('offers a Goals tab with an independent locked-building objective and closes with Tab',()=>{start();press('Tab','Tab',9);cy.get('#goals-tab').click();cy.get('#goals-page').should('be.visible');cy.get('[data-quest=locked-building]').should('contain','Fedezd fel, mit rejt a lezárt melléképület').and('not.have.class','completed');press('Tab','Tab',9);cy.get('#dialogue').should('not.be.visible');});
 
 });

@@ -438,3 +438,11 @@ Az új farm elnevezésekor és a Menü → Történet felületen az alábbi köz
 - A beköltözött két vadkacsa reggel a parton keresgél, napközben úszik, tollászkodik, majd éjszakára a fészekhez tér pihenni. Folyamatos mozgás és vízgyűrűk, finomabb tollminták és arc szerepelnek; az érkezés és a tojások üteme változatlan.
 - Az Erdei ösvény körül többféle sűrűbb facsoport és egymás mögötti lankák erősítik az erdei hangulatot. A törzsek kerülik az ösvényt és a bogyós bokrokat. Új törzsre eső régi mentési pozícióból a hős közeli szabad helyre kerül, tárgyvesztés nélkül.
 - A grafika saját Phaser-rajz, új külső asset vagy függőség nélkül.
+
+## Célok és a vadvirágok gondozásának visszajelzése
+
+- Az alsó eszközsáv felirata egyszer szerepel: „Vadvirág magok”.
+- A képernyőn megjelenő önálló célok mindegyike gondolatjellel kezdődik; a lezárt melléképület és a virágos feladat elkülönül.
+- Tab → **Célok**: negyedik fül a Készlet, Ismerősök és Jártasságok mellett. A teljesített lépések megmaradnak, díszített pipával. A teljesítések a meglévő mentett történeti állapotból következnek, új mentésformátum nélkül. Tab és Escape innen is bezár.
+- A gondozás kijelzett, négy napos számlálója a mai öntözést is beleszámítja, amint mind a hat virág megkapta az adott gondozási napot. A tényleges növekedés továbbra is napváltáskor történik. A mai öntözött virágok darabszáma nem jelenik meg.
+- A méh megfigyelésének célja rövid marad; nincs hozzá feltételeket magyarázó szöveg. A megfigyelési mechanika nem változott.
