@@ -448,3 +448,11 @@ Az új farm elnevezésekor és a Menü → Történet felületen az alábbi köz
 - A méh megfigyelésének célja rövid marad; nincs hozzá feltételeket magyarázó szöveg. A megfigyelési mechanika nem változott.
 
 - A melléképület célja a kulcs átvétele és a redőny felhúzása után is változatlanul „Fedezd fel, mit rejt a lezárt melléképület”. Sem a HUD, sem a Célok fül nem ad hozzá belépési, redőnyös vagy gépvizsgálati útmutatást.
+
+## A műhely vizsgálatának egyszerűsítése és tárgyikonok
+
+- A szűrőház, hűtőspirál és csőhálózat megvizsgálása csak az adott tárgy szövegét mutatja. A szűrőház leírásából eltűnt a „Leo és Annie talán tudnak segíteni.” mondat.
+- Az anyagszükséglet és a javítás gombja csak az üstszerű tartálynál jelenik meg. A „Megvizsgált géprészek: … / 4” számláló külön, lejjebb kerül, elválasztva az anyaglistától. Nincs hozzá vizsgálatra felszólító útmutatás.
+- A beszerzési helyek és szereplők felsorolása sem a vizsgálati ablakban, sem a célok között nem jelenik meg. A javítás céljához nincs gyűjtésre felszólító magyarázat; a HUD anyagai előtt gondolatjel áll.
+- A javítás gombja hiányzó anyaggal is megnyomható. Ekkor az ablakban „Nincs nálad elég nyersanyag.” figyelmeztetés jelenik meg, anyaglevonás nélkül. A sikeres javítás feltételei változatlanok.
+- Az ócskavas, rézcső, üvegedény, lenszövet és melléképületkulcs saját, a meglévő készletgrafikához illő SVG-ikont kapott. Saját rajzok, külső asset nélkül.

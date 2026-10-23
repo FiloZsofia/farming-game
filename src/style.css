@@ -53,3 +53,5 @@
 
 #app:has(#game[data-region="workshop"]) #toolbar{visibility:hidden}
 .quest-card{display:flex;gap:14px;margin:12px 0;padding:16px;border:1px solid #a7b08655;border-radius:10px;background:#172e2355}.quest-card .quest-mark{flex-shrink:0;display:grid;place-items:center;width:30px;height:30px;border:1px solid #bcae7a;border-radius:50%;color:#ead7a2;font-size:21px}.quest-card.completed .quest-mark{background:#839b5f;color:#fff4ce;border-color:#c6d39a;box-shadow:0 0 12px #b5cb6a22}.quest-card h3{margin:0!important;font-size:16px!important;letter-spacing:0!important;color:#f0e1b9!important}.quest-card p{font-size:14px;line-height:1.7;margin:8px 0 0;white-space:pre-line}.quest-card.completed{border-color:#91aa6655}#goals-page[hidden]{display:none}.inventory-tabs{flex-wrap:wrap}
+
+#research-panel .inspected-parts{margin-top:24px;padding-top:14px;border-top:1px solid #cbb89455}#research-panel #repair-warning{margin:14px 0;color:#ffd295;font-weight:600}#repair-warning[hidden]{display:none}

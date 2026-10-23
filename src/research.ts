@@ -32,7 +32,7 @@ export function grantKey(r:Research){if(!r.observation||r.key)return null;return
 export function collectSalvage(r:Research,id:string,player:{x:number;y:number}){const site=salvageSites.find(s=>s.id===id);if(!site||r.picked.includes(id)||Math.hypot(site.x-player.x,site.y-player.y)>52)return null;const next=structuredClone(r);next.picked.push(id);next.materials[site.kind]+=site.kind==='scrap'?2:1;return next;}
 export function supplyMaterial(r:Research,who:'annie'|'leo'){if(!r.discovered||r.repaired)return null;const key=who==='annie'?'glass':'linen';if(r.materials[key]>0)return null;const next=structuredClone(r);next.materials[key]++;return next;}
 export function repairMachine(r:Research,materials:{wood:number;stone:number}){if(!r.discovered||!r.shutter||!['vat','pipes','filter','coil'].every(id=>r.examined.includes(id))||r.repaired||Object.entries(repairNeeds).some(([k,n])=>(k==='wood'||k==='stone'?materials[k]:r.materials[k as ResearchMaterial])<n))return null;const next=structuredClone(r);for(const k of researchMaterials)next.materials[k]-=repairNeeds[k];next.repaired=true;return {research:next,wood:materials.wood-repairNeeds.wood,stone:materials.stone-repairNeeds.stone};}
-export function researchGoal(r:Research){if(!r.gifted)return null;if(r.repaired)return {title:'A régi berendezés',text:'✓ Kerti kivonatfőző helyreállítva.',progress:[]};if(r.discovered)return {title:'Hozd rendbe a berendezést',text:'Gyűjtsd össze a javítás kellékeit.',progress:[]};if(r.key)return {title:'A melléképület titka',text:'Nyisd ki a melléképületet, és vizsgáld meg a gépet.',progress:[]};if(r.observation)return {title:'A faliméhek nyomában',text:'Meséld el Leónak, mit figyeltél meg.',progress:[]};if(r.flowers.length<6)return {title:'A faliméhek nyomában',text:`Ültess vadvirágokat: ${r.flowers.length} / 6`,progress:[]};if(r.flowers.some(f=>f.growth<FLOWER_DAYS))return {title:'A faliméhek nyomában',text:`Gondozd a virágokat: ${Math.min(...r.flowers.map(f=>f.growth))} / 4 megöntözött nap`,progress:[]};return {title:'A faliméhek nyomában',text:'Figyeld meg közelről a virágokhoz látogató szarvas faliméhet.',progress:[]};}
+
 
 export const workshopObjects=[
  {id:'shutter',x:205,y:3240,name:'Redőny',text:'A redőny megakad, aztán lassan felgördül. Meleg fény csorog be az ablakon. A levegőben apró porszemek táncolnak.'},
@@ -40,7 +40,7 @@ export const workshopObjects=[
  {id:'notes',x:625,y:3375,name:'Megkopott jegyzet',text:'Préselt levelek és kézzel rajzolt virágok. „Előbb figyeld meg, mire van szüksége a kertnek.” A többi lap egyelőre olvashatatlan.'},
  {id:'vat',x:337,y:3377,name:'Üstszerű tartály',text:'Nagy, kettős falú tartály. A tartóbak korhadt, a tömítések elengedtek. Meg kell erősítenem az alapját.'},
  {id:'pipes',x:287,y:3330,name:'Csőhálózat',text:'A csövek egy része megrepedt. Az egyenes csőszakasz hiányzik; egy régi öntözőszivattyúból talán pótolhatom.'},
- {id:'filter',x:447,y:3377,name:'Szűrőház',text:'A finom szűrő helye üres. Lenszövet és egy ép üvegedény kellene hozzá. Leo és Annie talán tudnak segíteni.'},
+ {id:'filter',x:447,y:3377,name:'Szűrőház',text:'A finom szűrő helye üres. Lenszövet és egy ép üvegedény kellene hozzá.'},
  {id:'coil',x:524,y:3330,name:'Hűtőspirál',text:'A spirál még egyben van, de rozsdás rögzítők tartják. Ócskavasból új bilincseket készíthetek. Vajon mit hűtöttek vele?'}
 ] as const;
 export function inspectWorkshop(r:Research,id:string){

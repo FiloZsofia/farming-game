@@ -12,6 +12,6 @@ export function questEntries(r:Research,garden:Garden,_day:number,_elapsed:numbe
   if(bloomed)entries.push({id:'observe-bee',title:'Figyeld meg a virágokhoz látogató szarvas faliméhet',detail:'',done:!!r.observation});
  }
  if(r.observation)entries.push({id:'report-bee',title:'Meséld el Leónak a megfigyelésedet',detail:r.key?'Beszámoltál a látottakról.':'A faiskolában lépj Leo mellé, és kezdeményezz beszélgetést.',done:r.key});
- if(r.discovered)entries.push({id:'repair-machine',title:'Javítsd meg a régi berendezést',detail:r.repaired?'A növényi kivonatkészítő ismét egyben van.':'Vizsgáld meg mind a négy géprészt, és gyűjtsd össze a javítás kellékeit.',done:r.repaired});
+ if(r.discovered)entries.push({id:'repair-machine',title:'Javítsd meg a régi berendezést',detail:r.repaired?'A növényi kivonatkészítő ismét egyben van.':'',done:r.repaired});
  return entries;
 }

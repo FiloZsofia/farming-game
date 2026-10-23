@@ -725,7 +725,7 @@ class Farm extends Phaser.Scene {
   const active=questEntries(r,this.garden,this.clock.day,this.clock.elapsed).filter(q=>!q.done);
   el.hidden=this.choosingFarm||dialogue.open||!this.ready||!active.length;
   const lines=active.map(q=>`– ${q.title}${q.detail?'\n'+q.detail:''}`);
-  if(r.discovered&&!r.repaired){for(const [k,n]of Object.entries(repairNeeds)){const held=k==='wood'?this.clearing.wood:k==='stone'?this.clearing.stone:r.materials[k as keyof Research['materials']];lines.push(`${k==='wood'?'Fa':k==='stone'?'Kő':researchNames[k as keyof Research['materials']]}: ${Math.min(held,n)} / ${n}`);}lines.push('Üvegedény: Annie · Lenszövet: Leo');}
+  if(r.discovered&&!r.repaired){for(const [k,n]of Object.entries(repairNeeds)){const held=k==='wood'?this.clearing.wood:k==='stone'?this.clearing.stone:r.materials[k as keyof Research['materials']];lines.push(`– ${k==='wood'?'Fa':k==='stone'?'Kő':researchNames[k as keyof Research['materials']]}: ${Math.min(held,n)} / ${n}`);}}
   const text=lines.join('\n\n');if(el.textContent!==text)el.textContent=text;
   const game=document.querySelector<HTMLElement>('#game')!;game.dataset.researchStage=r.repaired?'repaired':r.discovered?'repair':r.key?'workshop':r.observation?'report':r.gifted?'flowers':'waiting';game.dataset.calendarDay=String(calendarDay(this.clock.day,this.farmName));game.dataset.shutter=String(r.shutter);
  }
@@ -746,10 +746,10 @@ class Farm extends Phaser.Scene {
  }
  private appendResearchInventory(){
   const r=this.travel.research,materials=document.querySelector<HTMLElement>('#inventory-materials')!;
-  const card=(name:string,quantity:number,icon:string)=>{const el=document.createElement('div');el.className='inventory-card';const image=document.createElement('span');image.className='research-icon';image.textContent=icon;const label=document.createElement('span');label.textContent=`${name} · ${quantity} db`;el.append(image,label);return el;};
+  const card=(name:string,quantity:number,icon:string)=>{const el=document.createElement('div');el.className='inventory-card';const drawn=icon==='scrap'||icon==='workshopKey'||icon==='copperPipe'||icon==='linenCloth'||icon==='glassJar';const image=drawn?itemIcon(icon):document.createElement('span');if(!drawn){image.setAttribute('class','research-icon');image.textContent=icon;}const label=document.createElement('span');label.textContent=`${name} · ${quantity} db`;el.append(image,label);return el;};
   if(r.seeds){const el=card('Vadvirágmag',r.seeds,'✿'),button=document.createElement('button');button.type='button';button.textContent='Elültetem';button.onclick=()=>{dialogue.close();this.selectTool('wildflower');};el.append(button);document.querySelector('#inventory-seeds')!.append(el);}
-  for(const k of researchMaterials)if(r.materials[k])materials.append(card(researchNames[k],r.materials[k],{scrap:'⚙',copper:'∩',glass:'♧',linen:'▧'}[k]));
-  if(r.key)materials.append(card('Melléképület kulcsa',1,'⚿'));
+  for(const k of researchMaterials)if(r.materials[k])materials.append(card(researchNames[k],r.materials[k],{scrap:'scrap',copper:'copperPipe',glass:'glassJar',linen:'linenCloth'}[k]));
+  if(r.key)materials.append(card('Melléképület kulcsa',1,'workshopKey'));
  }
  private researchNearby(){
   const r=this.travel.research,near=(x:number,y:number,d=48)=>Math.hypot(this.actor.x-x,this.actor.y-y)<d;
@@ -792,14 +792,14 @@ class Farm extends Phaser.Scene {
  }
  private async examineWorkshop(id:string){
   if(!this.canInteract()||!inWorkshop(this.actor.y))return;const object=workshopObjects.find(o=>o.id===id);if(!object||Math.hypot(this.actor.x-object.x,this.actor.y-object.y)>78)return;const next=inspectWorkshop(this.travel.research,id);if(!next)return;
-  if(await this.commitResearch(next)){showDialogue(object.name,id==='shutter'&&this.travel.research.shutter?'A felhúzott redőnyön át meleg fény éri a régi műhelyt. Most már alaposan körülnézhetek.':this.travel.research.repaired&&['vat','pipes','filter','coil'].includes(id)?'A helyreállított kivonatkészítő egyik része. A berendezés újra egyben van; a használatát egy későbbi fejezetben fedezhetem fel.':object.text,'A RÉGI MŰHELY');if(['vat','pipes','filter','coil'].includes(id)&&!next.repaired)this.openRepairPanel();}
+  if(await this.commitResearch(next)){showDialogue(object.name,id==='shutter'&&this.travel.research.shutter?'A felhúzott redőnyön át meleg fény éri a régi műhelyt. Most már alaposan körülnézhetek.':this.travel.research.repaired&&['vat','pipes','filter','coil'].includes(id)?'A helyreállított kivonatkészítő egyik része. A berendezés újra egyben van; a használatát egy későbbi fejezetben fedezhetem fel.':object.text,'A RÉGI MŰHELY');if(id==='vat'&&!next.repaired)this.openRepairPanel();}
  }
  private openRepairPanel(){
   const panel=document.querySelector<HTMLElement>('#research-panel')!;panel.hidden=false;panel.replaceChildren();
   for(const [k,n]of Object.entries(repairNeeds)){const line=document.createElement('p');line.textContent=`${k==='wood'?'Fa':k==='stone'?'Kő':researchNames[k as keyof Research['materials']]}: ${k==='wood'?this.clearing.wood:k==='stone'?this.clearing.stone:this.travel.research.materials[k as keyof Research['materials']]} / ${n}`;panel.append(line);}
-  const inspected=document.createElement('p');inspected.textContent=`Megvizsgált géprészek: ${['vat','pipes','filter','coil'].filter(id=>this.travel.research.examined.includes(id)).length} / 4. Javítás előtt vizsgáld meg mind a négy részt.`;panel.append(inspected);
-  const hint=document.createElement('p');hint.textContent='Fa, kő és ócskavas: a birtokon. Rézcső: a régi szivattyúnál. Üvegedény: Annie. Lenszövet: Leo.';panel.append(hint);
-  const button=document.createElement('button');button.type='button';button.id='repair-machine';button.textContent='Megjavítom a berendezést';button.disabled=!repairMachine(this.travel.research,this.clearing);button.onclick=async()=>{if(this.transitioning||!inWorkshop(this.actor.y)||panel.hidden)return;const fixed=repairMachine(this.travel.research,this.clearing);if(!fixed)return;button.disabled=true;if(await this.commitResearch(fixed.research,fixed.wood,fixed.stone))showDialogue('Növényi kivonatkészítő berendezés','A tartály stabil, a csövek ismét zárnak, a szűrő és a hűtőspirál is a helyére került. Most már felismerem: növényi kivonatok készítésére használták.\n\nTalán a régi jegyzetekből később azt is megtudhatom, hogyan segíthetett vele a kert élővilágán. A helyi méhek megfogyatkozásának okát még fel kell derítenem.','A MŰHELY ÚJRA ÉLETRE KEL');else button.disabled=false;};panel.append(button);
+  const inspected=document.createElement('p');inspected.className='inspected-parts';inspected.textContent=`Megvizsgált géprészek: ${['vat','pipes','filter','coil'].filter(id=>this.travel.research.examined.includes(id)).length} / 4`;panel.append(inspected);
+  const warning=document.createElement('p');warning.id='repair-warning';warning.setAttribute('role','alert');warning.hidden=true;panel.append(warning);
+  const button=document.createElement('button');button.type='button';button.id='repair-machine';button.textContent='Megjavítom a berendezést';button.onclick=async()=>{if(this.transitioning||!inWorkshop(this.actor.y)||panel.hidden)return;const fixed=repairMachine(this.travel.research,this.clearing);if(!fixed){warning.hidden=false;warning.textContent=Object.entries(repairNeeds).some(([k,n])=>(k==='wood'?this.clearing.wood:k==='stone'?this.clearing.stone:this.travel.research.materials[k as keyof Research['materials']])<n)?'Nincs nálad elég nyersanyag.':'Még nem vizsgáltad meg a berendezés minden részét.';return;}button.disabled=true;if(await this.commitResearch(fixed.research,fixed.wood,fixed.stone))showDialogue('Növényi kivonatkészítő berendezés','A tartály stabil, a csövek ismét zárnak, a szűrő és a hűtőspirál is a helyére került. Most már felismerem: növényi kivonatok készítésére használták.\n\nTalán a régi jegyzetekből később azt is megtudhatom, hogyan segíthetett vele a kert élővilágán. A helyi méhek megfogyatkozásának okát még fel kell derítenem.','A MŰHELY ÚJRA ÉLETRE KEL');else button.disabled=false;};panel.append(button);
  }
  private updateResearchLife(dt:number){
   const r=this.travel.research;
