@@ -11,6 +11,8 @@ function walk(direction:keyof typeof directions,axis:'x'|'y',target:number){
 }
 function start(data?:object){
  cy.visit('/',{onBeforeLoad(win){
+  // Keep existing interaction scenarios sunny on days 1–5; weather cases use explicit saved seeds.
+  cy.stub(win.crypto,'getRandomValues').callsFake((array:Uint32Array)=>{array.fill(13);return array;});
   win.indexedDB.deleteDatabase('erdoszeli-birtok');
   if(data){const r=win.indexedDB.open('erdoszeli-birtok',1);r.onupgradeneeded=()=>r.result.createObjectStore('saves');r.onsuccess=()=>{const tx=r.result.transaction('saves','readwrite');tx.objectStore('saves').put(data,'active');tx.oncomplete=()=>r.result.close();};}
  }});
@@ -250,5 +252,11 @@ describe('Southern village and forest',()=>{
  });
 
  it('offers a Goals tab with an independent locked-building objective and closes with Tab',()=>{start();press('Tab','Tab',9);cy.get('#goals-tab').click();cy.get('#goals-page').should('be.visible');cy.get('[data-quest=locked-building]').should('contain','Fedezd fel, mit rejt a lezárt melléképület').and('not.have.class','completed');press('Tab','Tab',9);cy.get('#dialogue').should('not.be.visible');});
+
+ it('keeps a saved rainy day stable and waters existing crops and freshly tilled soil',()=>{
+  start({...villageSave,version:17,travel:{...createTravel(),weatherSeed:13},player:{x:369,y:330},clock:{day:6,elapsed:20,collapseAt:580},plots:[['353,280',{crop:'radish',growth:0,regrowing:false,watered:false}]]});cy.get('#game').should('have.attr','data-weather','rain').and('have.attr','data-watered','1');cy.get('#weather-label').should('have.text','Esős');cy.get('#toolbar [data-tool=hoe]').click();clickWorld(377,288);cy.get('#game').should('have.attr','data-watered','2');reloadFarm();cy.get('#game').should('have.attr','data-weather','rain').and('have.attr','data-watered','2');
+ });
+
+ it('returns focus to the game after closing the menu so Space jumps immediately',()=>{start({...villageSave,player:{x:250,y:242}});cy.get('#menu').focus().click();cy.get('#dialogue-close').click();cy.focused().should('have.prop','tagName','CANVAS');press(' ','Space',32);cy.get('#game').should('have.attr','data-jumping','true');cy.get('#dialogue').should('not.be.visible');cy.get('#menu').focus().click();press('Escape','Escape',27);cy.focused().should('have.prop','tagName','CANVAS');walk('down','y',260);});
 
 });

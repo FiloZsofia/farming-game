@@ -4,8 +4,8 @@ export class Wildlife{
  private fliers:Flier[]=[];private birdWait=3;private butterflyWait=2;private fireflyWait=1;
  private visitorWait=4;private visitor:{g:Phaser.GameObjects.Graphics;x:number;y:number;startX:number;startY:number;t:number}|null=null;
  constructor(private scene:Phaser.Scene){}
- update(dt:number,birds:boolean,daylight:boolean,birdhouse:{x:number;y:number}|null=null,outdoors=true){
-  if(outdoors&&daylight){this.butterflyWait-=dt;if(this.butterflyWait<=0){this.spawn(false);this.butterflyWait=12+Math.random()*15;}if(birds){this.birdWait-=dt;if(this.birdWait<=0){this.spawn(true);this.birdWait=18+Math.random()*20;}}}
+ update(dt:number,birds:boolean,daylight:boolean,birdhouse:{x:number;y:number}|null=null,outdoors=true,activity=1){
+  if(outdoors&&daylight){this.butterflyWait-=dt*activity;if(this.butterflyWait<=0){this.spawn(false);this.butterflyWait=12+Math.random()*15;}if(birds){this.birdWait-=dt;if(this.birdWait<=0){this.spawn(true);this.birdWait=18+Math.random()*20;}}}
   if(outdoors&&!daylight){this.fireflyWait-=dt;if(this.fireflyWait<=0){this.spawn(false,true);this.fireflyWait=3+Math.random()*5;}}
   for(const f of [...this.fliers]){f.t+=dt;f.x+=f.speed*dt;const yy=f.y+Math.sin(f.t*(f.bird?3:5))*(f.bird?5:10),g=f.g;g.setVisible(outdoors);g.clear();g.setPosition(f.x,yy).setScale(f.speed<0?-1:1,1);g.setAlpha(f.firefly?(daylight?0:1):daylight?1:.25);
    if(f.firefly){const pulse=.55+.45*Math.sin(f.t*4);g.fillStyle(0xd5ed80,.05*pulse);g.fillCircle(0,0,11);g.fillStyle(0xe5fa93,.14*pulse);g.fillCircle(0,0,6);g.fillStyle(0xf4ffc0,.5+.5*pulse);g.fillCircle(0,0,1.8);g.fillStyle(0xffffff,.7);g.fillCircle(-.3,-.3,.65);}

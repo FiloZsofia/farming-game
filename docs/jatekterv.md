@@ -456,3 +456,14 @@ Az új farm elnevezésekor és a Menü → Történet felületen az alábbi köz
 - A beszerzési helyek és szereplők felsorolása sem a vizsgálati ablakban, sem a célok között nem jelenik meg. A javítás céljához nincs gyűjtésre felszólító magyarázat; a HUD anyagai előtt gondolatjel áll.
 - A javítás gombja hiányzó anyaggal is megnyomható. Ekkor az ablakban „Nincs nálad elég nyersanyag.” figyelmeztetés jelenik meg, anyaglevonás nélkül. A sikeres javítás feltételei változatlanok.
 - Az ócskavas, rézcső, üvegedény, lenszövet és melléképületkulcs saját, a meglévő készletgrafikához illő SVG-ikont kapott. Saját rajzok, külső asset nélkül.
+
+## Tavaszi időjárás és a célok tömörítése
+
+- A tavasz 15 napja véletlen sorrendben **9 napos, 3 felhős és 3 esős napból** áll. A farm saját sorsolási magja a mentésbe kerül; frissítés és visszatöltés nem sorsolja újra. Régi mentés az első betöltéskor egyszer kap saját magot. Ez a v17 formátum visszafelé kompatibilis, opcionális bővítése.
+- **Napos:** meleg fény, több látható lepke/beporzó. **Felhős:** lágyabb fény és lassan mozgó felhőárnyékok. **Esős:** saját szintetizált esőhang, esőcsíkok, gyűrűk a tó vizén és nedves föld. Az épületek belsejében nem esik az eső.
+- Az eső megöntözi az üres felkapált földet, a veteményt és a vadvirágok földjét is, beleértve az esős napon újonnan felkapált földet. Nem ad külön növekedési bónuszt vagy jártasságpontot: a kézi öntözést helyettesíti, a fejlődés továbbra is egyszer, reggel történik. Száraz napon a következő napi földet újra öntözni kell.
+- **Nincs másnapi időjárás-előrejelzés.** Csak a mai állapot látszik a dátum mellett. Vihar, terméskár és új nyári mechanika nem került bevezetésre.
+- Az Erdőszéli birtok tesztfarm belső napjaihoz kapcsolódik az időjárás; a kijelzett Tavasz 15. változatlan. Minden következő 15 belső nap ugyanilyen arányú, új sorrendet kap. Más farmokon a fejlesztési határ változatlan, a lezárt állapot nem fejlődik tovább.
+- A javítási cél nyersanyagai fekete pöttyös listában, normál sorközzel jelennek meg. A „Vadvirág magok” felirat két sorra törik, a gomb szélessége megegyezik a többi eszközével.
+- Ellenőrzés: 206 egységteszt, build, valamint közvetlen Chromium-ellenőrzések a három időjárásra, visszatöltésre, esős öntözésre és napváltásra. A Cypress futtató binárisa hiányzik a környezetből; a Cypress-esetek kiegészültek, de itt nem futtathatók.
+- A Menü és más játékablakok bezárásakor a billentyűzet fókusza visszatér a játéktérre. A Space azonnal ugrást indít; nem aktiválja újra a korábban fókuszált Menü gombot. Bezárógombbal és Escape-pel is ellenőrizve.
