@@ -63,3 +63,5 @@
 #quest-tracker .quest-bullet{color:#111;margin-right:7px}
 
 .workshop-lamp-light{position:absolute;left:0;top:0;width:0;height:0;transform-origin:0 0;pointer-events:none;z-index:2}.workshop-lamp-light i{position:absolute;display:block}.workshop-lamp-light .halo{left:-25px;top:-25px;width:50px;height:50px;background:radial-gradient(circle,#ffdb9c66 0%,#ffcf7922 40%,#ffcf7900 72%)}.workshop-lamp-light .pool{left:-39px;top:12px;width:78px;height:43px;background:radial-gradient(ellipse,#efc67b42 0%,#efc67b1c 45%,#efc67b00 72%)}.workshop-lamp-light .core{left:-2.5px;top:-4px;width:5px;height:8px;background:linear-gradient(90deg,#f9cc75,#fff3bd,#f9cc75);box-shadow:0 0 5px #ffda8b;border-radius:1px}
+
+.home-bedside-light .core{width:22px;height:9px;left:-11px;top:-5px;border-radius:0;clip-path:polygon(20% 0,80% 0,100% 100%,0 100%);background:linear-gradient(#ffe8a9,#fff5ce 65%,#f3cf81)}.home-bedside-light .halo{left:-34px;top:-32px;width:68px;height:64px;background:radial-gradient(ellipse,#ffdc986b,#ffce7529 42%,#ffcf7900 73%)}

@@ -512,3 +512,11 @@ Az új farm elnevezésekor és a Menü → Történet felületen az alábbi köz
 - A veranda tetője magasabban, a két ablak spalettái között fut; az oszlopok különítik el az alacsonyabb járófelülettől. A virágládákat és a tető vonalát egymástól elválasztottuk.
 - Az ágyások szélesebb földszegélyt, magasabb fa oldalfalat, szegeket és talajárnyékot kapnak. Az ösvény és a mentett ültetések helye megmarad; a művelési szabályok nem változnak.
 - Képek: `docs/concepts/farm-porch-raised-roof-and-planters.png`, `docs/concepts/farm-porch-raised-roof-night.png`.
+
+### Hátrébb helyezett lakóház és otthoni textilek
+- A teljes lakóház, az esti fali fények, a verandai napló, az eladóláda és a magkatalógus 48 világponttal északabbra került. Az ajtó interakciója, a reggeli indulás, a belsőből való kilépés és az ösvény rövid bekötése együtt követi az elrendezést.
+- Az előtető alsó éle az ajtó teteje fölött fut, a teljes ajtó látható. A csizmák a ház falánál, az ajtótól balra vannak, a lépcsőt szabadon hagyva.
+- A kinti szőnyeg narancssárga, rojtos széllel. A benti szőnyeg élénkebb türkiz alapot, meleg szegélyt és szőtt mintát kapott.
+- Az ágy mellé fiókos éjjeliszekrény és textilbúrás lámpa került. A lámpa alkonyatkor fokozatosan meleg fényt ad; az ablakból érkező nappali fénysáv ezzel párhuzamosan elhalványul, éjjel eltűnik.
+- Az ágy továbbra sem ad mentési vagy napzárási lehetőséget. A régi mentésben az új éjjeliszekrény helyén álló játékos közvetlenül mellé kerül, a farm tartalma megmarad. Az ajtó és a napló közül az E a közelebbire hat.
+- Ellenőrizhető képek: `farm-house-setback-orange-rug.png`, `farm-house-setback-night.png`, `home-colourful-rug-bedside-day.png`, `home-colourful-rug-bedside-night.png` a `docs/concepts` mappában.

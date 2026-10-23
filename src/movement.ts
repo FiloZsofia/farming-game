@@ -1,7 +1,7 @@
 import {pondRadius} from './pond-shape';
 import { farmLayout,farmBounds } from './layout';
 export type Box = { x: number; y: number; w: number; h: number };
-export const START = { x: 250, y: 242 };
+export const START = { x: 250, y: 194 };
 export const obstacles: Box[] = [
   farmLayout.shipping,
   farmLayout.houseBounds, farmLayout.shedBounds,

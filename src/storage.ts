@@ -1,3 +1,4 @@
+import {atHomeBedside} from './home';
 import {createResearch} from './research';
 import {createEstate} from './estate';
 import {createTravel,validTravel,type Travel} from './travel';
@@ -54,6 +55,7 @@ export function decodeSnapshot(value:unknown):Snapshot|null{
   const old=value as Snapshot,boxes=[farmLayout.shedBounds,farmLayout.houseBounds,farmLayout.shipping],previous=[{x:576,y:92,w:118,h:89},{x:132,y:110,w:215,h:113},{x:158,y:244,w:32,h:24}];
   const newlyCovered=(p:{x:number;y:number})=>{if(!p||!finite(p.x)||!finite(p.y))return false;const overlaps=(b:{x:number;y:number;w:number;h:number})=>p.x+7>b.x&&p.x-7<b.x+b.w&&p.y+3>b.y&&p.y-4<b.y+b.h;return boxes.some(overlaps)&&!previous.some(overlaps)&&blocked(p.x,p.y);};
   const migrated=structuredClone(old);let changed=false;
+  if(old.player&&finite(old.player.x)&&finite(old.player.y)&&atHomeBedside(old.player.x,old.player.y)){migrated.player={x:320,y:old.player.y};changed=true;}
   const freePlace=(p:{x:number;y:number},id:string)=>{
    const allowed=(q:{x:number;y:number})=>!blocked(q.x,q.y)&&!blocked(q.x-16,q.y)&&!blocked(q.x+16,q.y)&&!blocked(q.x,q.y-16)&&!blocked(q.x,q.y+16)&&q.x>=farmBounds.left+40&&q.x<=farmBounds.right-40&&q.y>=farmBounds.top+48&&q.y<=560&&(!Array.isArray(old.plots)||old.plots.every(row=>{if(!Array.isArray(row)||typeof row[0]!=='string')return true;const [x,y]=row[0].split(',').map(Number);return Math.abs(q.x-x-8)>=28||Math.abs(q.y-y-8)>=28;}))&&(!migrated.story?.birdhouse||id==='birdhouse'||Math.hypot(q.x-migrated.story.birdhouse.x,q.y-migrated.story.birdhouse.y)>28)&&Object.entries(migrated.clearing?.positions??{}).every(([key,v])=>key===id||!v||!finite(v.x)||!finite(v.y)||Math.hypot(q.x-v.x,q.y-v.y)>=28)&&(Array.isArray(migrated.travel?.estate?.trees)?migrated.travel.estate.trees:[]).every(t=>Math.hypot(q.x-t.x,q.y-t.y)>28);
    for(let d=8;d<=512;d+=8)for(let i=0;i<32;i++){const q={x:Math.round(p.x+Math.cos(i*Math.PI/16)*d),y:Math.round(p.y+Math.sin(i*Math.PI/16)*d)};if(allowed(q))return q;}return null;

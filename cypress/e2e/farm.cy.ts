@@ -28,7 +28,7 @@ function clickWorld(x:number,y:number){
  }));
 }
 function sleepTo(day:number){
- clickWorld(275,246);cy.get('#sleep').should('be.visible').click();cy.get('#game').should('have.attr','data-day',String(day));cy.get('#dialogue-close').should('be.visible').click();cy.get('#game',{timeout:8000}).should('have.attr','data-morning-stage','none');cy.get('#dialogue').should('not.be.visible');
+ clickWorld(275,198);cy.get('#sleep').should('be.visible').click();cy.get('#game').should('have.attr','data-day',String(day));cy.get('#dialogue-close').should('be.visible').click();cy.get('#game',{timeout:8000}).should('have.attr','data-morning-stage','none');cy.get('#dialogue').should('not.be.visible');
 }
 describe('World interactions and uncluttered UI',()=>{
  it('removes redundant buttons and keeps help in one menu',()=>{
@@ -50,8 +50,8 @@ describe('World interactions and uncluttered UI',()=>{
 });
 describe('Catalogue and mailbox',()=>{
  it('pays now, delivers tomorrow and collects exactly once',()=>{
-  start({version:3,player:{x:330,y:242},clock:{day:1,elapsed:0,collapseAt:580},seeds:{radish:4,potato:4,pea:4},produce:{radish:0,potato:0,pea:0},plots:[],economy:{gold:100,shipping:{radish:0,potato:0,pea:0},lastSale:null}});
-  clickWorld(355,244);cy.get('[data-order-crop=radish]').clear().type('2');cy.get('[data-order-crop=pea]').clear().type('1');cy.get('#catalog-total').should('contain','25 gold');cy.get('#place-order').click();
+  start({version:3,player:{x:330,y:194},clock:{day:1,elapsed:0,collapseAt:580},seeds:{radish:4,potato:4,pea:4},produce:{radish:0,potato:0,pea:0},plots:[],economy:{gold:100,shipping:{radish:0,potato:0,pea:0},lastSale:null}});
+  clickWorld(355,196);cy.get('[data-order-crop=radish]').clear().type('2');cy.get('[data-order-crop=pea]').clear().type('1');cy.get('#catalog-total').should('contain','25 gold');cy.get('#place-order').click();
   cy.get('#game').should('have.attr','data-gold','75').and('have.attr','data-pending-seeds','3');cy.get('#dialogue-close').click();
   walk('left','x',252);sleepTo(2);cy.get('#game').should('have.attr','data-mail-seeds','3');
   walk('down','y',478);walk('left','x',166);clickWorld(124,482);cy.get('#collect-package').click();
@@ -59,9 +59,9 @@ describe('Catalogue and mailbox',()=>{
   reloadFarm();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-gold','75').and('have.attr','data-mail-seeds','0');
  });
  it('keeps the HUD readable and the catalogue within a mobile screen',()=>{
-  start({version:3,player:{x:330,y:242},clock:{day:1,elapsed:200,collapseAt:580},seeds:{radish:4,potato:4,pea:4},produce:{radish:0,potato:0,pea:0},plots:[],economy:{gold:100,shipping:{radish:0,potato:0,pea:0},lastSale:null}});
+  start({version:3,player:{x:330,y:194},clock:{day:1,elapsed:200,collapseAt:580},seeds:{radish:4,potato:4,pea:4},produce:{radish:0,potato:0,pea:0},plots:[],economy:{gold:100,shipping:{radish:0,potato:0,pea:0},lastSale:null}});
   cy.viewport(390,844);cy.get('#clock-label').should('contain','Délután').and('have.css','font-size','17px');cy.get('.gold-line').should('have.css','font-size','20px');
-  clickWorld(355,244);cy.get('#catalog-panel').should('be.visible');cy.document().then(doc=>expect(doc.documentElement.scrollWidth).to.equal(390));
+  clickWorld(355,196);cy.get('#catalog-panel').should('be.visible');cy.document().then(doc=>expect(doc.documentElement.scrollWidth).to.equal(390));
  });
 });
 
@@ -70,8 +70,8 @@ describe('Visual shipping and farm name',()=>{
   start();cy.get('h1').should('have.text','Tesztfarm');reloadFarm();cy.get('#game').should('have.attr','data-ready','true');cy.get('h1').should('have.text','Tesztfarm');cy.get('#dialogue').should('not.be.visible');
  });
  it('moves illustrated stacks and individual items in both directions',()=>{
-  start({version:4,player:{x:170,y:280},clock:{day:1,elapsed:200,collapseAt:580},seeds:{radish:4,potato:4,pea:4},produce:{radish:3,potato:2,pea:4},plots:[],economy:{gold:100,shipping:{radish:0,potato:0,pea:0},lastSale:null},orders:{pending:{radish:0,potato:0,pea:0},mailbox:{radish:0,potato:0,pea:0}}});
-  clickWorld(128,264);cy.get('#shipping-inventory button svg').should('have.length',3);cy.get('[data-item=inventory-radish]').click();cy.get('[data-item=crate-radish] .slot-count').should('have.text','3');cy.get('[data-item=inventory-radish]').should('not.exist');
+  start({version:4,player:{x:170,y:232},clock:{day:1,elapsed:200,collapseAt:580},seeds:{radish:4,potato:4,pea:4},produce:{radish:3,potato:2,pea:4},plots:[],economy:{gold:100,shipping:{radish:0,potato:0,pea:0},lastSale:null},orders:{pending:{radish:0,potato:0,pea:0},mailbox:{radish:0,potato:0,pea:0}}});
+  clickWorld(128,216);cy.get('#shipping-inventory button svg').should('have.length',3);cy.get('[data-item=inventory-radish]').click();cy.get('[data-item=crate-radish] .slot-count').should('have.text','3');cy.get('[data-item=inventory-radish]').should('not.exist');
   cy.get('[data-item=crate-radish]').click({shiftKey:true});cy.get('[data-item=crate-radish] .slot-count').should('have.text','2');cy.get('[data-item=inventory-radish] .slot-count').should('have.text','1');cy.get('#shipping-total').should('contain','30 gold');
  });
 });
@@ -216,7 +216,7 @@ describe('Southern village and forest',()=>{
   }
  });
  it('keeps the morning settlement open after the gold animation until the player dismisses it',()=>{
-  start({...villageSave,player:{x:250,y:242},clock:{day:2,elapsed:0,collapseAt:580},economy:{gold:100,shipping:{...quantities,radish:2},lastSale:null}});clickWorld(275,246);cy.get('#sleep').click();cy.get('#morning-balance').should('have.text','130 gold');cy.wait(4000);cy.get('#morning-sale-panel').should('be.visible');cy.get('#dialogue-close').should('have.text','Indulhat a nap').click();cy.get('#game').should('have.attr','data-morning-stage','none');reloadFarm();cy.get('#game').should('have.attr','data-gold','130');
+  start({...villageSave,player:{x:250,y:242},clock:{day:2,elapsed:0,collapseAt:580},economy:{gold:100,shipping:{...quantities,radish:2},lastSale:null}});clickWorld(275,198);cy.get('#sleep').click();cy.get('#morning-balance').should('have.text','130 gold');cy.wait(4000);cy.get('#morning-sale-panel').should('be.visible');cy.get('#dialogue-close').should('have.text','Indulhat a nap').click();cy.get('#game').should('have.attr','data-morning-stage','none');reloadFarm();cy.get('#game').should('have.attr','data-gold','130');
  });
 
  it('separates side conversations with Annie and Leo from counter purchases',()=>{
@@ -227,7 +227,7 @@ describe('Southern village and forest',()=>{
  });
 
  it('stops after the final spring day and preserves the saved farm on reload',()=>{
-  start({...villageSave,player:{x:250,y:242},clock:{day:15,elapsed:100,collapseAt:580},economy:{gold:100,shipping:{...quantities,radish:2},lastSale:null}});clickWorld(275,246);cy.get('#sleep').click();cy.get('#dialogue').should('have.attr','data-presentation','development-end');cy.get('#game').should('have.attr','data-day','15').and('have.attr','data-gold','100').and('have.attr','data-shipping','30');press('Escape','Escape',27);cy.get('#dialogue').should('be.visible');cy.reload();cy.get('#continue-farm').should('be.visible').and('not.be.disabled').click();cy.get('#dialogue').should('have.attr','data-presentation','development-end');cy.get('#preview-farms').click();cy.get('#start-panel').should('be.visible');cy.get('#new-farm').should('not.be.disabled');
+  start({...villageSave,player:{x:250,y:242},clock:{day:15,elapsed:100,collapseAt:580},economy:{gold:100,shipping:{...quantities,radish:2},lastSale:null}});clickWorld(275,198);cy.get('#sleep').click();cy.get('#dialogue').should('have.attr','data-presentation','development-end');cy.get('#game').should('have.attr','data-day','15').and('have.attr','data-gold','100').and('have.attr','data-shipping','30');press('Escape','Escape',27);cy.get('#dialogue').should('be.visible');cy.reload();cy.get('#continue-farm').should('be.visible').and('not.be.disabled').click();cy.get('#dialogue').should('have.attr','data-presentation','development-end');cy.get('#preview-farms').click();cy.get('#start-panel').should('be.visible');cy.get('#new-farm').should('not.be.disabled');
  });
 
  it('confirms farm deletion and supports cancelling without removing the save',()=>{
