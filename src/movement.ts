@@ -16,7 +16,8 @@ export function blocked(x:number,y:number):boolean {
 }
 export function move(x:number,y:number,dx:number,dy:number,seconds:number,speedMultiplier=1,extraBlocked:(x:number,y:number)=>boolean=()=>false,terrainBlocked=blocked){
   const length=Math.hypot(dx,dy); if(!length)return {x,y};
-  const distance=95*speedMultiplier*Math.min(Math.max(seconds,0),0.05), steps=Math.max(1,Math.ceil(distance/2));
+  // Keep speed consistent on slower frames; two-pixel substeps still prevent tunnelling.
+  const distance=95*speedMultiplier*Math.min(Math.max(seconds,0),0.1), steps=Math.max(1,Math.ceil(distance/2));
   for(let i=0;i<steps;i++){
     const nx=x+dx/length*distance/steps;
     if(!terrainBlocked(nx,y)&&!extraBlocked(nx,y))x=nx;

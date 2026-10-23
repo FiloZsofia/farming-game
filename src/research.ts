@@ -36,7 +36,7 @@ export function repairMachine(r:Research,materials:{wood:number;stone:number}){i
 
 export const workshopObjects=[
  {id:'shutter',x:205,y:3240,name:'Redőny',text:'A redőny megakad, aztán lassan felgördül. Meleg fény csorog be az ablakon. A levegőben apró porszemek táncolnak.'},
- {id:'entrance-shutter',x:285,y:3460,name:'Ajtó melletti redőny',text:'A redőny felgördül. Az ajtó melletti ablakon át újabb fénysáv érkezik a műhelybe.'},
+ {id:'entrance-shutter',x:495,y:3470,name:'Ajtó melletti redőny',text:'A redőny felgördül. Az ajtó melletti ablakon át újabb fénysáv érkezik a műhelybe.'},
  {id:'bench',x:175,y:3390,name:'Régi munkapad',text:'Gondosan elrendezett szerszámnyomok a fában. Valaki sok időt töltött itt. A fiók üres, de a munkapad még használható.'},
  {id:'notes',x:625,y:3375,name:'Megkopott jegyzet',text:'Préselt levelek és kézzel rajzolt virágok. „Előbb figyeld meg, mire van szüksége a kertnek.” A többi lap egyelőre olvashatatlan.'},
  {id:'vat',x:337,y:3377,name:'Üstszerű tartály',text:'Nagy, kettős falú tartály. A tartóbak korhadt, a tömítések elengedtek. Meg kell erősítenem az alapját.'},

@@ -48,10 +48,10 @@ export function validSnapshot(value:unknown):value is Snapshot{
 export function decodeSnapshot(value:unknown):Snapshot|null{
  // Relocate only positions newly covered by the enlarged buildings; retain all farm data.
  if(value&&typeof value==='object'&&'version' in value&&value.version===17){
-  const old=value as Snapshot,p=old.player,boxes=[farmLayout.shedBounds,farmLayout.houseBounds],previous=[{x:576,y:92,w:118,h:89},{x:132,y:110,w:215,h:113}];
+  const old=value as Snapshot,p=old.player,boxes=[farmLayout.shedBounds,farmLayout.houseBounds,farmLayout.shipping],previous=[{x:576,y:92,w:118,h:89},{x:132,y:110,w:215,h:113},{x:158,y:244,w:32,h:24}];
   if(p&&finite(p.x)&&finite(p.y)){
    const overlaps=(b:{x:number;y:number;w:number;h:number})=>p.x+7>b.x&&p.x-7<b.x+b.w&&p.y+3>b.y&&p.y-4<b.y+b.h;
-   if(boxes.some(overlaps)&&!previous.some(overlaps)){const moved={...old,player:{x:p.x,y:p.x<400?280:224}};if(validSnapshot(moved))return structuredClone(moved);}
+   if(boxes.some(overlaps)&&!previous.some(overlaps)){const moved={...old,player:{x:p.x,y:overlaps(farmLayout.shipping)?farmLayout.shipping.y+farmLayout.shipping.h+8:p.x<400?280:224}};if(validSnapshot(moved))return structuredClone(moved);}
   }
  }
  if(validSnapshot(value))return structuredClone(value);

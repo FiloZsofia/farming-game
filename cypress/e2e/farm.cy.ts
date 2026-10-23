@@ -28,7 +28,7 @@ function clickWorld(x:number,y:number){
  }));
 }
 function sleepTo(day:number){
- clickWorld(268,232);cy.get('#sleep').should('be.visible').click();cy.get('#game').should('have.attr','data-day',String(day));cy.get('#dialogue-close').should('be.visible').click();cy.get('#game',{timeout:8000}).should('have.attr','data-morning-stage','none');cy.get('#dialogue').should('not.be.visible');
+ clickWorld(275,246);cy.get('#sleep').should('be.visible').click();cy.get('#game').should('have.attr','data-day',String(day));cy.get('#dialogue-close').should('be.visible').click();cy.get('#game',{timeout:8000}).should('have.attr','data-morning-stage','none');cy.get('#dialogue').should('not.be.visible');
 }
 describe('World interactions and uncluttered UI',()=>{
  it('removes redundant buttons and keeps help in one menu',()=>{
@@ -50,8 +50,8 @@ describe('World interactions and uncluttered UI',()=>{
 });
 describe('Catalogue and mailbox',()=>{
  it('pays now, delivers tomorrow and collects exactly once',()=>{
-  start({version:3,player:{x:285,y:242},clock:{day:1,elapsed:0,collapseAt:580},seeds:{radish:4,potato:4,pea:4},produce:{radish:0,potato:0,pea:0},plots:[],economy:{gold:100,shipping:{radish:0,potato:0,pea:0},lastSale:null}});
-  clickWorld(306,220);cy.get('[data-order-crop=radish]').clear().type('2');cy.get('[data-order-crop=pea]').clear().type('1');cy.get('#catalog-total').should('contain','25 gold');cy.get('#place-order').click();
+  start({version:3,player:{x:330,y:242},clock:{day:1,elapsed:0,collapseAt:580},seeds:{radish:4,potato:4,pea:4},produce:{radish:0,potato:0,pea:0},plots:[],economy:{gold:100,shipping:{radish:0,potato:0,pea:0},lastSale:null}});
+  clickWorld(355,244);cy.get('[data-order-crop=radish]').clear().type('2');cy.get('[data-order-crop=pea]').clear().type('1');cy.get('#catalog-total').should('contain','25 gold');cy.get('#place-order').click();
   cy.get('#game').should('have.attr','data-gold','75').and('have.attr','data-pending-seeds','3');cy.get('#dialogue-close').click();
   walk('left','x',252);sleepTo(2);cy.get('#game').should('have.attr','data-mail-seeds','3');
   walk('down','y',478);walk('left','x',166);clickWorld(124,482);cy.get('#collect-package').click();
@@ -59,9 +59,9 @@ describe('Catalogue and mailbox',()=>{
   reloadFarm();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-gold','75').and('have.attr','data-mail-seeds','0');
  });
  it('keeps the HUD readable and the catalogue within a mobile screen',()=>{
-  start({version:3,player:{x:285,y:242},clock:{day:1,elapsed:200,collapseAt:580},seeds:{radish:4,potato:4,pea:4},produce:{radish:0,potato:0,pea:0},plots:[],economy:{gold:100,shipping:{radish:0,potato:0,pea:0},lastSale:null}});
+  start({version:3,player:{x:330,y:242},clock:{day:1,elapsed:200,collapseAt:580},seeds:{radish:4,potato:4,pea:4},produce:{radish:0,potato:0,pea:0},plots:[],economy:{gold:100,shipping:{radish:0,potato:0,pea:0},lastSale:null}});
   cy.viewport(390,844);cy.get('#clock-label').should('contain','Délután').and('have.css','font-size','17px');cy.get('.gold-line').should('have.css','font-size','20px');
-  clickWorld(306,220);cy.get('#catalog-panel').should('be.visible');cy.document().then(doc=>expect(doc.documentElement.scrollWidth).to.equal(390));
+  clickWorld(355,244);cy.get('#catalog-panel').should('be.visible');cy.document().then(doc=>expect(doc.documentElement.scrollWidth).to.equal(390));
  });
 });
 
@@ -70,8 +70,8 @@ describe('Visual shipping and farm name',()=>{
   start();cy.get('h1').should('have.text','Tesztfarm');reloadFarm();cy.get('#game').should('have.attr','data-ready','true');cy.get('h1').should('have.text','Tesztfarm');cy.get('#dialogue').should('not.be.visible');
  });
  it('moves illustrated stacks and individual items in both directions',()=>{
-  start({version:4,player:{x:210,y:280},clock:{day:1,elapsed:200,collapseAt:580},seeds:{radish:4,potato:4,pea:4},produce:{radish:3,potato:2,pea:4},plots:[],economy:{gold:100,shipping:{radish:0,potato:0,pea:0},lastSale:null},orders:{pending:{radish:0,potato:0,pea:0},mailbox:{radish:0,potato:0,pea:0}}});
-  clickWorld(174,256);cy.get('#shipping-inventory button svg').should('have.length',3);cy.get('[data-item=inventory-radish]').click();cy.get('[data-item=crate-radish] .slot-count').should('have.text','3');cy.get('[data-item=inventory-radish]').should('not.exist');
+  start({version:4,player:{x:170,y:280},clock:{day:1,elapsed:200,collapseAt:580},seeds:{radish:4,potato:4,pea:4},produce:{radish:3,potato:2,pea:4},plots:[],economy:{gold:100,shipping:{radish:0,potato:0,pea:0},lastSale:null},orders:{pending:{radish:0,potato:0,pea:0},mailbox:{radish:0,potato:0,pea:0}}});
+  clickWorld(128,264);cy.get('#shipping-inventory button svg').should('have.length',3);cy.get('[data-item=inventory-radish]').click();cy.get('[data-item=crate-radish] .slot-count').should('have.text','3');cy.get('[data-item=inventory-radish]').should('not.exist');
   cy.get('[data-item=crate-radish]').click({shiftKey:true});cy.get('[data-item=crate-radish] .slot-count').should('have.text','2');cy.get('[data-item=inventory-radish] .slot-count').should('have.text','1');cy.get('#shipping-total').should('contain','30 gold');
  });
 });
@@ -216,7 +216,7 @@ describe('Southern village and forest',()=>{
   }
  });
  it('keeps the morning settlement open after the gold animation until the player dismisses it',()=>{
-  start({...villageSave,player:{x:250,y:242},clock:{day:2,elapsed:0,collapseAt:580},economy:{gold:100,shipping:{...quantities,radish:2},lastSale:null}});clickWorld(268,232);cy.get('#sleep').click();cy.get('#morning-balance').should('have.text','130 gold');cy.wait(4000);cy.get('#morning-sale-panel').should('be.visible');cy.get('#dialogue-close').should('have.text','Indulhat a nap').click();cy.get('#game').should('have.attr','data-morning-stage','none');reloadFarm();cy.get('#game').should('have.attr','data-gold','130');
+  start({...villageSave,player:{x:250,y:242},clock:{day:2,elapsed:0,collapseAt:580},economy:{gold:100,shipping:{...quantities,radish:2},lastSale:null}});clickWorld(275,246);cy.get('#sleep').click();cy.get('#morning-balance').should('have.text','130 gold');cy.wait(4000);cy.get('#morning-sale-panel').should('be.visible');cy.get('#dialogue-close').should('have.text','Indulhat a nap').click();cy.get('#game').should('have.attr','data-morning-stage','none');reloadFarm();cy.get('#game').should('have.attr','data-gold','130');
  });
 
  it('separates side conversations with Annie and Leo from counter purchases',()=>{
@@ -227,7 +227,7 @@ describe('Southern village and forest',()=>{
  });
 
  it('stops after the final spring day and preserves the saved farm on reload',()=>{
-  start({...villageSave,player:{x:250,y:242},clock:{day:15,elapsed:100,collapseAt:580},economy:{gold:100,shipping:{...quantities,radish:2},lastSale:null}});clickWorld(268,232);cy.get('#sleep').click();cy.get('#dialogue').should('have.attr','data-presentation','development-end');cy.get('#game').should('have.attr','data-day','15').and('have.attr','data-gold','100').and('have.attr','data-shipping','30');press('Escape','Escape',27);cy.get('#dialogue').should('be.visible');cy.reload();cy.get('#continue-farm').should('be.visible').and('not.be.disabled').click();cy.get('#dialogue').should('have.attr','data-presentation','development-end');cy.get('#preview-farms').click();cy.get('#start-panel').should('be.visible');cy.get('#new-farm').should('not.be.disabled');
+  start({...villageSave,player:{x:250,y:242},clock:{day:15,elapsed:100,collapseAt:580},economy:{gold:100,shipping:{...quantities,radish:2},lastSale:null}});clickWorld(275,246);cy.get('#sleep').click();cy.get('#dialogue').should('have.attr','data-presentation','development-end');cy.get('#game').should('have.attr','data-day','15').and('have.attr','data-gold','100').and('have.attr','data-shipping','30');press('Escape','Escape',27);cy.get('#dialogue').should('be.visible');cy.reload();cy.get('#continue-farm').should('be.visible').and('not.be.disabled').click();cy.get('#dialogue').should('have.attr','data-presentation','development-end');cy.get('#preview-farms').click();cy.get('#start-panel').should('be.visible');cy.get('#new-farm').should('not.be.disabled');
  });
 
  it('confirms farm deletion and supports cancelling without removing the save',()=>{
@@ -247,8 +247,8 @@ describe('Southern village and forest',()=>{
  it('explores the dark workshop, remembers the shutter and requires inspection before repair',()=>{
   const travel=createTravel(),flowers=Array.from({length:6},(_,i)=>({x:-160+i*16,y:-96,growth:4}));travel.research={...travel.research,gifted:true,seeds:0,flowers,beeDay:9,observation:{day:9,seasonDay:9,plant:'Tavaszi vadvirágkeverék'},key:true};
   const data={...villageSave,version:17,travel,player:{x:400,y:3470},clock:{day:10,elapsed:20,collapseAt:580},plots:flowers.map(f=>[`${f.x},${f.y}`,{crop:null,growth:0,regrowing:false,watered:false}])};
-  start(data);cy.get('#game').should('have.attr','data-region','workshop').and('have.attr','data-shutter','false');walk('left','x',285);press('e','KeyE',69);cy.get('#dialogue-title').should('have.text','Ajtó melletti redőny');cy.get('#dialogue-close').click();cy.get('#game').should('have.attr','data-entrance-shutter','true');walk('left','x',245);walk('up','y',3245);walk('left','x',208);press('e','KeyE',69);cy.get('#dialogue-title').should('have.text','Redőny');cy.get('#dialogue-close').click();cy.get('#game').should('have.attr','data-shutter','true');reloadFarm();cy.get('#game').should('have.attr','data-shutter','true');
-  walk('down','y',3378);walk('right','x',337);press('e','KeyE',69);cy.get('#dialogue-title').should('have.text','Üstszerű tartály');cy.get('#research-panel').should('contain','Fa: 0 / 35').and('contain','Ócskavas: 0 / 18');cy.get('#repair-machine').should('be.enabled').click();cy.get('#repair-warning').should('be.visible').and('have.text','Nincs nálad elég nyersanyag.');
+  start(data);cy.get('#game').should('have.attr','data-region','workshop').and('have.attr','data-shutter','false');walk('right','x',495);press('e','KeyE',69);cy.get('#dialogue-title').should('have.text','Ajtó melletti redőny');cy.get('#dialogue-close').click();cy.get('#game').should('have.attr','data-entrance-shutter','true');walk('left','x',245);walk('up','y',3245);walk('left','x',208);press('e','KeyE',69);cy.get('#dialogue-title').should('have.text','Redőny');cy.get('#dialogue-close').click();cy.get('#game').should('have.attr','data-shutter','true');reloadFarm();cy.get('#game').should('have.attr','data-shutter','true');
+  walk('down','y',3390);walk('left','x',145);press('e','KeyE',69);cy.get('#game').should('have.attr','data-cleared-webs','1');reloadFarm();cy.get('#game').should('have.attr','data-cleared-webs','1');walk('up','y',3378);walk('right','x',337);press('e','KeyE',69);cy.get('#dialogue-title').should('have.text','Üstszerű tartály');cy.get('#research-panel').should('contain','Fa: 0 / 35').and('contain','Ócskavas: 0 / 18');cy.get('#repair-machine').should('be.enabled').click();cy.get('#repair-warning').should('be.visible').and('have.text','Nincs nálad elég nyersanyag.');
  });
 
  it('offers a Goals tab with an independent locked-building objective and closes with Tab',()=>{start();press('Tab','Tab',9);cy.get('#goals-tab').click();cy.get('#goals-page').should('be.visible');cy.get('[data-quest=locked-building]').should('contain','Fedezd fel, mit rejt a lezárt melléképület').and('not.have.class','completed');press('Tab','Tab',9);cy.get('#dialogue').should('not.be.visible');});
@@ -263,4 +263,8 @@ describe('Southern village and forest',()=>{
 
  it('plays an overhead tool action and saves each collected branch only once',()=>{start({...villageSave,version:17,travel:{...createTravel(),weatherSeed:13},player:{x:312,y:409}});cy.get('#toolbar [data-tool=axe]').click();clickWorld(312,435);cy.get('#game').should('have.attr','data-working','true');cy.get('#game').should('have.attr','data-working','false');cy.get('#game').should('have.attr','data-wood','1');clickWorld(312,435);cy.get('#game').should('have.attr','data-wood','1');reloadFarm();cy.get('#game').should('have.attr','data-wood','1');});
 
+});
+
+describe('The farmhouse interior',()=>{
+ it('enters the house, reloads its saved position and leaves the bed without save controls',()=>{start();press('e','KeyE',69);cy.get('#game').should('have.attr','data-region','home');cy.get('#dialogue').should('not.be.visible');cy.get('#sleep').should('not.be.visible');reloadFarm();cy.get('#game').should('have.attr','data-region','home');press('e','KeyE',69);cy.get('#game').should('have.attr','data-region','farm');});
 });

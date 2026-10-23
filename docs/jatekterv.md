@@ -488,9 +488,20 @@ Az új farm elnevezésekor és a Menü → Történet felületen az alábbi köz
 
 ### Nagyobb épületek, két redőny és műhelytakarítás
 - A melléképület külseje kb. 23%-kal nagyobb, ugyanahhoz a bejárathoz igazítva; ütközése és esti lámpájának fénye követi a méretet.
-- Belül a meglévő bal felső ablak megmarad. Az ajtó mellé is ablak került; az ellenkező nézési irány miatt belül balra, kívül jobbra látszik. Új felfedezéskor mindkét redőnyt külön kell felhúzni, egyenként világosítják a helyiséget. A gép részei a teljes világosságban vizsgálhatók.
+- Belül a meglévő bal felső ablak megmarad. Az ajtó jobb oldalán belül is ablak van; a takart első falból csak keskeny ablakrész és párkány látszik. Új felfedezéskor mindkét redőnyt külön kell felhúzni, egyenként világosítják a helyiséget. A gép részei a teljes világosságban vizsgálhatók.
 - A korábbi mentésben már feltárt műhely második redőnye is nyitott marad. Az új állapotok opcionális, visszafelé kompatibilis mentésmezők.
 - A javítatlan műhelyben három kézzel leszedhető pókháló van. Kéz eszközzel, közelről E/F vagy a művelet indításával eltávolíthatók; leszedésük mentődik és nem térnek vissza.
 - A lakóház is kissé nagyobb lett, külön szélesebb és mélyebb verandával, széles lépcsőkkel. Törtfehér vakolat, kő lábazat, részletes cseréptető, téglakémény, fa ablakkeretek, mohazöld spaletták, virágos ablakládák, eresz, kopott lábtörlő és sáros csizma díszíti. Az ajtó melletti lámpás este meleg fényt ad. A napló és a magkatalógus megközelítése megmarad.
 - Ha egy korábbi mentésben a játékos helyét az épületek új széle elfoglalná, betöltéskor eléjük kerül; készlete és farmja megmarad.
 - Saját rajzolt grafika. Képek: `farm-home-larger-day.png`, `farm-home-larger-night.png`, `workshop-larger-exterior.png`, `workshop-two-shutters-dark.png`, `workshop-two-shutters-partial.png`, `workshop-two-shutters-open.png`, `workshop-cobweb-cleared.png` a `docs/concepts` mappában.
+
+
+### Épületjavítások és bejárható otthon
+- A lakóház teljes homlokzata nagyobb lett (az eredeti szélesség 135%-a), külön, alacsonyabb előtetővel a veranda felett. Az ablakládák az előtető fölött, a magkatalógus a veranda jobb oldalán, az eladóláda az oszloptól balra, szabadon áll. A két falilámpa a homlokzat két szélén van.
+- A műhely külseje az eredeti 150%-a lett; a bejárat horgonya megmarad, az ütközés és lámpafény követi a méretet.
+- Az E-s pókhálós interakció automatikusan kézzel történik, nem igényli a Kéz eszköz előzetes kiválasztását. Eltávolítása továbbra is végleges.
+- A futás fizikai billentyűállapotot követ a párbeszédek és átmenetek alatt is. Monoton eltelt idővel mozog, legfeljebb 100 ms-os lépést kezel, kis ütközésvizsgáló részlépésekkel; lassabb képkockák után sem vész el a mozgásidő.
+- A ház ajtajánál E-vel vagy az ajtóra kattintva be lehet lépni. Egyszerű belső: ágy, könyvespolc könyvekkel és jegyzetekkel, utazótáska, dobozok, szőnyeg, ablak és függöny. A könyvespolc és a táska megvizsgálható. Első belépéskor Sam gondolata: „Még elég üres. Idővel szeretném igazán otthonossá tenni.”
+- Az ágy berendezési tárgy, nem nyit mentést vagy napzárást. A mentés továbbra is automatikus, a napzárás a verandai naplónál marad. A ház a biztonságos farm része, nincs kirablás; a belső helyzet és az első látogatás mentődik, korábbi farmok kompatibilisek.
+- Ellenőrizhető képek: `farm-buildings-separated-day.png`, `farm-buildings-separated-night.png`, `home-interior-first-entry.png`, `workshop-window-right-cutaway.png`, `workshop-web-e-fixed.png` a `docs/concepts` mappában.
+- Ellenőrzés: 217 egységteszt és build sikeres. Közvetlen Chromium-ellenőrzés: E-s pókhálószedés kapa mellett és újratöltés; házba be-/kilépés, benti mentés, könyvespolc, dekoratív ágy és verandai napló; séta/futás a műhelyben és folyamatos Shift a kilépésnél. 600 ms alatt kb. 62 egység séta és 100 egység futás; kilépés után 250 ms alatt kb. 45 egység futás, késleltetés nélkül. A Cypress tesztek igazítva az új helyekhez, de a futtatást a környezetben hiányzó Cypress bináris blokkolja.

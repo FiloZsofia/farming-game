@@ -1,3 +1,4 @@
+import {inHome,homeBlocked} from './home';
 import {inWorkshop,WORKSHOP_ORIGIN} from './research';
 import {blocked,type Box} from './movement';
 export const WORLD_HEIGHT=1420;
@@ -26,9 +27,10 @@ export function villageBlocked(x:number,y:number){
  if(((x-476)/28)**2+((y-1081)/19)**2<1)return true;
  return false;
 }
-export const outsideFarm=(y:number)=>y>=600&&!inWorkshop(y);
+export const outsideFarm=(y:number)=>y>=600&&!inWorkshop(y)&&!inHome(y);
 
 export function worldBlocked(x:number,y:number){
+ if(inHome(y))return homeBlocked(x,y);
  if(inWorkshop(y))return x<108||x>692||y<WORKSHOP_ORIGIN+198||y>WORKSHOP_ORIGIN+510||(x>282&&x<567&&y>WORKSHOP_ORIGIN+250&&y<WORKSHOP_ORIGIN+357);
  if(y>=1600)return shopBlocked(x,y);
  if(y>=600)return villageBlocked(x,y);

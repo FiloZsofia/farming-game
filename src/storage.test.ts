@@ -86,7 +86,7 @@ describe('persistent farm state',()=>{
   expect(data.version).toBe(17);expect(data.produce).toEqual(old.produce);expect(data.plots).toEqual(old.plots);expect(data.economy).toEqual(createEconomy());reader.close();
  });
  it('moves old players out of the newly introduced crate without losing their farm',()=>{
-  const old={...fresh(),version:2,player:{x:174,y:256}};const upgraded=decodeSnapshot(old)!;expect(upgraded.player).toEqual({x:174,y:276});expect(upgraded.seeds).toEqual(old.seeds);
+  const old={...fresh(),version:2,player:{x:128,y:264}};const upgraded=decodeSnapshot(old)!;expect(upgraded.player).toEqual({x:128,y:284});expect(upgraded.seeds).toEqual(old.seeds);
  });
  it('restores a pending crate and a paid morning without crediting sales twice',async()=>{
   const factory=new IDBFactory(),writer=new SaveStore(factory);await writer.load();const garden=createGarden(),e=createEconomy();e.gold=25;e.shipping.pea=3;
