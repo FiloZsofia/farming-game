@@ -104,7 +104,16 @@ export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),g
  for(const [x,y]of [[570,443],[731,480],[620,540]]){oval(x+2,y+2,18,8,0x345e52);oval(x,y,16,7,0x7b9a64);line(x-5,y,x+4,y,0xa1b27e);oval(x+3,y-3,5,4,0xe2cfb1);}
  for(let i=0;i<17;i++){const x=557+i*6,y=358-Math.sin(i*.3)*5;line(x,y,x-2,y-17,0x4c6945);rect(x-3,y-21,2,7,0x735e3d);}
  const d=layout.dock;oval(d.x+34,d.y+27,76,17,0x2f5047,.35);rect(d.x,d.y,d.w,d.h,0x5f503c);for(let x=d.x+2;x<d.x+d.w;x+=8){rect(x,d.y+2,6,d.h-4,0xa18a61);line(x+2,d.y+5,x+2,d.y+d.h-6,0xc0ab7a);rect(x+2,d.y+4,1,1,0x4a4a3a);}for(const x of [d.x,d.x+d.w-5]){rect(x,d.y-5,5,11,0x735337);rect(x,d.y+d.h-6,5,11,0x735337);rect(x,d.y-5,5,2,0xc2aa78);}
- for(const b of layout.beds){rect(b.x,b.y,b.w,b.h,0x655638);rect(b.x+2,b.y+2,b.w-4,b.h-4,0x846846);for(let y=b.y+6;y<b.y+b.h-3;y+=5){line(b.x+4,y,b.x+b.w-4,y,0x5f4d36);line(b.x+4,y+1,b.x+b.w-4,y+1,0xa08055);}rect(b.x,b.y,b.w,2,0xb29a6b);}
+ for(const b of layout.beds){
+  // Taller timber sides and a broader soil lip keep existing crop tiles in place.
+  oval(b.x+b.w/2+3,b.y+b.h+7,b.w+16,12,0x30412d,.24);
+  rect(b.x-2,b.y,b.w+10,b.h+8,0x795b38);rect(b.x,b.y+2,b.w+6,b.h-2,0x846846);
+  for(let y=b.y+6;y<b.y+b.h-3;y+=5){line(b.x+4,y,b.x+b.w+2,y,0x5f4d36);line(b.x+4,y+1,b.x+b.w+2,y+1,0xa08055);}
+  rect(b.x-3,b.y,b.w+12,3,0xc0a479);rect(b.x-3,b.y+3,3,b.h+4,0xa38458);rect(b.x+b.w+6,b.y+2,3,b.h+6,0x695135);
+  rect(b.x-2,b.y+b.h,b.w+10,8,0x946e43);line(b.x,b.y+b.h+2,b.x+b.w+6,b.y+b.h+2,0xc09a64);line(b.x,b.y+b.h+6,b.x+b.w+6,b.y+b.h+6,0x674f34);
+  for(const x of [b.x+1,b.x+b.w+4]){rect(x,b.y+b.h+2,1,3,0x454d3a);}
+ }
+
  for(const item of activeDebris(clearing,garden).filter(d=>d.kind==='rock'))rock(item.x,item.y,item.scale);
  // Clearly legible fallen branches, with bark, cut ends and ground shadows.
  for(const {x,y}of activeDebris(clearing,garden).filter(d=>d.kind==='branch')){line(x-16,y+4,x+18,y+1,0x364b35,7,.24);line(x-16,y,x+18,y-3,0x574431,5);line(x-16,y-1,x+18,y-4,0xa08354,2);line(x+2,y-2,x+9,y-12,0x70573b,3);oval(x-16,y,4,5,0xc0a477);tuft(x+18,y+3,.8);}

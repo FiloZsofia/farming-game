@@ -143,6 +143,7 @@ class Farm extends Phaser.Scene {
  private jumpCooldown=0;
  private clock:Clock=createClock();
  private store=new SaveStore();
+ private loadFailed=false;
  private ready=false;
  private transitioning=false;
  private collapseRemaining=0;
@@ -170,8 +171,9 @@ class Farm extends Phaser.Scene {
     if(resume&&resume===this.store.selectedFarmId&&this.hasFarm)this.resumeCurrentFarm();
     else await this.openStartMenu(false);
    }catch(error){
-    document.querySelector('#save-state')!.textContent='A mentés nem tölthető be';
+    this.loadFailed=true;document.querySelector('#save-state')!.textContent='A mentés nem tölthető be';
     showDialogue('A mentésedet megőriztem.',error instanceof Error?error.message:'A böngésző tárhelye nem érhető el. A játékot nem indítom el mentés nélkül.','MENTÉSI HIBA');
+    const exportButton=document.querySelector<HTMLButtonElement>('#export-save')!;exportButton.hidden=false;exportButton.textContent='Eredeti mentés letöltése';
    }
   };
   if(!navigator.locks){document.querySelector('#save-state')!.textContent='A böngésző nem támogatott';showDialogue('A mentés nem indítható.','A biztonságos mentéshez friss Chrome, Brave, Firefox vagy Safari szükséges.');return;}
@@ -1024,9 +1026,10 @@ class Farm extends Phaser.Scene {
   document.querySelector('#place-order')!.addEventListener('click',()=>void this.placeOrder());
   document.querySelector('#collect-package')!.addEventListener('click',()=>void this.collectMail());
   document.querySelector('#sleep')!.addEventListener('click',()=>void this.finishDay(false));
-  document.querySelector('#export-save')!.addEventListener('click',()=>{
-   const blob=new Blob([JSON.stringify(snapshot(this.actor,this.clock,this.garden,this.economy,this.orders,this.farmName,this.clearing,this.story,this.skill,this.farmerName,this.travel),null,2)],{type:'application/json'});
-   const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download=`erdoszeli-birtok-${this.clock.day}.json`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  document.querySelector('#export-save')!.addEventListener('click',async()=>{
+   const content=this.loadFailed?await this.store.exportOriginal():JSON.stringify(snapshot(this.actor,this.clock,this.garden,this.economy,this.orders,this.farmName,this.clearing,this.story,this.skill,this.farmerName,this.travel),null,2);
+   const blob=new Blob([content],{type:'application/json'});
+   const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download=this.loadFailed?'eredeti-farmmentes.json':`erdoszeli-birtok-${this.clock.day}.json`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
   });
  }
  private currentWeather(){return weatherOnDay(this.travel.weatherSeed??0,this.clock.day);}

@@ -17,20 +17,21 @@ export class HouseExterior {
  for(let row=0;row<6;row++){const y=88+row*8,left=154-row*5.8,right=325+row*5.6;line(left,y+6,right,y+6,0x704937,2);for(let x=left+row%2*8;x<right-4;x+=16){line(x,y,x-2,y+6,0x704937);line(x+2,y+1,x+12,y+1,0xb37e58);}}
  rect(116,136,249,4,0x554b3b);rect(173,75,18,32,0xaca591);for(let y=78;y<107;y+=7){line(173,y,191,y,0x827f70);line(y%2?178:185,y,y%2?178:185,y+7,0x827f70);}rect(170,72,24,6,0x6c7166);
  rect(222,166,35,57,0x8c7c5d);rect(226,170,27,53,0x66503c);for(let x=230;x<253;x+=6)line(x,172,x,221,0x8e7150);rect(246,196,3,4,0xd7ba70);
- for(const x of [161,287]){rect(x-3,158,33,35,0xede1bf);rect(x,161,27,28,0x5a665f);rect(x+3,164,21,22,0x8eaaa4);poly([x+3,164,x+24,164,x+3,185],0xbaccc0,.6);line(x+13,164,x+13,186,0xe7ddc0,2);line(x+3,175,x+24,175,0xe7ddc0,2);rect(x-4,190,35,4,0x8d7958);}
+ for(const x of [145,306]){rect(x-3,158,33,35,0xede1bf);rect(x,161,27,28,0x5a665f);rect(x+3,164,21,22,0x8eaaa4);poly([x+3,164,x+24,164,x+3,185],0xbaccc0,.6);line(x+13,164,x+13,186,0xe7ddc0,2);line(x+3,175,x+24,175,0xe7ddc0,2);rect(x-4,190,35,4,0x8d7958);}
  rect(175,222,130,35,0x635140);rect(178,223,124,32,0xa0825a);for(let y=225;y<257;y+=5){line(178,y,302,y,0x6c5942);line(181,y+1,299,y+1,0xb99b70);}
  rect(207,257,67,7,0x927858);rect(215,264,51,6,0xae9771);line(207,257,274,257,0xcabb92);
- for(const x of [175,300]){rect(x,218,5,37,0x65513c);rect(x,219,2,34,0xb29467);rect(x-2,253,9,5,0x70664f);}
- // Shallow porch canopy sits below the window boxes, with clear side aisles.
- poly([164,220,180,207,298,207,310,220],0x704d39);poly([168,217,181,209,297,209,306,217],0xa16e4a);for(let x=181;x<297;x+=12)line(x,209,x+8,217,0x6c4b37);line(165,220,309,220,0xb99062,2);
+ for(const x of [190,286]){rect(x,188,5,67,0x65513c);rect(x,189,2,64,0xb29467);rect(x-2,253,9,5,0x70664f);}
+ // Raised lean-to roof, tall posts and a separate low deck leave the doorway readable.
+ poly([185,190,195,174,281,174,292,190],0x5e4934);poly([189,187,197,176,279,176,288,187],0x9b6e4b);
+ for(let x=198;x<278;x+=12)line(x,177,x+7,186,0x6c4b37);line(186,190,291,190,0xbd9666,2);
  // Moss-green shutters, small flowers and timber window boxes.
- for(const x of [161,287]){for(const dx of [-12,30]){rect(x+dx,159,8,30,0x566c48);for(let y=164;y<186;y+=5)line(x+dx+1,y,x+dx+6,y,0x8c9a67);line(x+dx,159,x+dx,189,0x354d3b);}
+ for(const x of [145,306]){for(const dx of [-12,30]){rect(x+dx,159,8,30,0x566c48);for(let y=164;y<186;y+=5)line(x+dx+1,y,x+dx+6,y,0x8c9a67);line(x+dx,159,x+dx,189,0x354d3b);}
  rect(x-2,193,31,7,0x8b6545);line(x-1,194,x+28,194,0xc29b66);for(let i=0;i<5;i++){const fx=x+2+i*5;line(fx,193,fx-1,188-i%2*3,0x4f7544);oval(fx-1,187-i%2*3,4,3,i%2?0xe2c67b:0xc89397);}}
  // Brick chimney, gutter, a worn doormat and muddy work boots.
  rect(173,75,18,30,0xa07d60);for(let y=77;y<103;y+=6){line(173,y,191,y,0xc1aa85);line(y%2?179:185,y,y%2?179:185,y+6,0x725d48);}rect(170,72,24,5,0x717363);
  line(116,138,365,138,0x535e50,3);line(345,140,345,209,0x697260,2);line(346,141,346,208,0xa7a68a);
  oval(236,241,30,10,0x765e3d);for(let i=0;i<6;i++)line(224+i*4,238,225+i*4,243,0x9a8155);
- for(const x of [187,194]){g.fillStyle(0x4e5a40).fillRoundedRect(x,241,5,9,1).fillRoundedRect(x-2,247,7,4,2);line(x+1,242,x+3,242,0xa09168);oval(x,250,3,1,0x8b704d);}
+ for(const x of [207,214]){g.fillStyle(0x4e5a40).fillRoundedRect(x,241,5,9,1).fillRoundedRect(x-2,247,7,4,2);line(x+1,242,x+3,242,0xa09168);oval(x,250,3,1,0x8b704d);}
  // Two wall-mounted lamps sit outside the veranda roof and window boxes.
  for(const x of [134,344]){line(x-3,185,x+2,185,0x3d493c,2);rect(x-3,188,8,12,0x46503f);rect(x-1,190,4,8,0xc3b17b);poly([x-5,188,x+1,183,x+7,188],0x4e5845);rect(x-4,200,10,2,0x3d493c);
  const light=document.createElement('div');light.className='workshop-lamp-light';light.setAttribute('aria-hidden','true');for(const name of ['halo','pool','core']){const el=document.createElement('i');el.className=name;light.append(el);}document.querySelector('#game')!.append(light);this.lights.push(light);}
