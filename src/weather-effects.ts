@@ -23,8 +23,8 @@ export class RainSound{
  private onVisibility=()=>{if(document.hidden){this.update(false);void this.context?.suspend();}else if(this.context)void this.activate();};
  private onBlur=()=>this.update(false);
  constructor(){document.addEventListener('visibilitychange',this.onVisibility);window.addEventListener('blur',this.onBlur);}
- private context:AudioContext|null=null;private gain:GainNode|null=null;private wanted=false;
+ private context:AudioContext|null=null;private gain:GainNode|null=null;private wanted=false;private applied:boolean|null=null;
  async activate(){try{if(!this.context){const c=this.context=new AudioContext(),buffer=c.createBuffer(1,c.sampleRate*3,c.sampleRate),samples=buffer.getChannelData(0);for(let i=0;i<samples.length;i++)samples[i]=Math.random()*2-1;const source=c.createBufferSource(),filter=c.createBiquadFilter();source.buffer=buffer;source.loop=true;filter.type='lowpass';filter.frequency.value=1500;this.gain=c.createGain();this.gain.gain.value=0;source.connect(filter);filter.connect(this.gain);this.gain.connect(c.destination);source.start();}await this.context.resume();}catch{/* Browsers may keep audio muted until a user gesture. */}}
- update(raining:boolean){this.wanted=raining;const c=this.context;if(!c||!this.gain)return;this.gain.gain.setTargetAtTime(this.wanted?.065:0,c.currentTime,.25);}
+ update(raining:boolean){this.wanted=raining;const c=this.context;if(!c||!this.gain||this.applied===raining)return;this.applied=raining;this.gain.gain.setTargetAtTime(this.wanted?.065:0,c.currentTime,.25);}
  destroy(){document.removeEventListener('visibilitychange',this.onVisibility);window.removeEventListener('blur',this.onBlur);void this.context?.close();}
 }

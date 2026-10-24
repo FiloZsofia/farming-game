@@ -46,7 +46,7 @@ export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),g
  for(let i=0;i<50;i++){const x=left+random()*width,y=top+random()*height;if(y<top+35||x<left+30||x>right-30)tree(x,y,.8+random()*.35);}
  for(let x=left+20;x<right;x+=48)tree(x,top+10,.85+random()*.2);
  for(let y=top+50;y<bottom-20;y+=58){tree(left+7,y,.9);tree(right-6,y,.9);}
- const fixtures=scene.add.graphics().setDepth(-.7);ground.once('destroy',()=>fixtures.destroy());g=fixtures;
+ const fixtures=scene.add.graphics().setDepth(-.7);g=fixtures;
  // Porch journal: a real open book on a small writing desk, with a ribbon and pen.
  const j=layout.journal;
  oval(j.x+11,j.y+15,31,7,0x283c2e,.3);
@@ -114,13 +114,22 @@ export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),g
   for(const x of [b.x+1,b.x+b.w+4]){rect(x,b.y+b.h+2,1,3,0x454d3a);}
  }
 
- for(const item of activeDebris(clearing,garden).filter(d=>d.kind==='rock'))rock(item.x,item.y,item.scale);
  // Clearly legible fallen branches, with bark, cut ends and ground shadows.
- for(const {x,y}of activeDebris(clearing,garden).filter(d=>d.kind==='branch')){line(x-16,y+4,x+18,y+1,0x364b35,7,.24);line(x-16,y,x+18,y-3,0x574431,5);line(x-16,y-1,x+18,y-4,0xa08354,2);line(x+2,y-2,x+9,y-12,0x70573b,3);oval(x-16,y,4,5,0xc0a477);tuft(x+18,y+3,.8);}
  const fence=(x:number,y:number,count:number)=>{for(let i=0;i<count;i++){rect(x+i*25,y+8,25,4,0x9b8560);rect(x+i*25,y+18,25,3,0x796c4d);line(x+i*25,y+8,x+(i+1)*25,y+8,0xbca77a);}for(let i=0;i<=count;i++){poly([x+i*25,y+28,x+i*25,y+2,x+i*25+2,y-1,x+i*25+5,y+2,x+i*25+5,y+28],0x6f6047);rect(x+i*25+1,y+3,2,23,0xac956b);}};
- fence(28,499,4);fence(211,515,9);fence(433,176,4);fence(691,221,3);rect(490,249,3,94,0x846c45);rect(498,249,3,94,0x9c8050);for(let y=249;y<=343;y+=23)rect(487,y,16,5,0x765f3e);rect(132,492,6,37,0x715436);rect(201,505,6,37,0x715436);rect(121,504,4,25,0x947348);
+ fence(28,499,4);fence(211,515,9);fence(433,176,4);fence(691,221,3);rect(132,492,6,37,0x715436);rect(201,505,6,37,0x715436);rect(121,504,4,25,0x947348);
  for(let i=0;i<110;i++){const x=45+random()*710,y=275+random()*265;if(Math.abs(x-215)<65||x>480&&y>340||x>325&&x<495&&y<380)continue;tuft(x,y,.6+random()*.4);if(i%4===0){line(x,y-3,x,y-9,0x4e7149);oval(x,y-10,4,3,i%2?0xd9cfac:0xb5a5bd);}}
+ // Bake the static landscape once; its thousands of marks become one draw per frame.
+ const terrain=scene.add.renderTexture(left,top,width,height).setOrigin(0).setDepth(-1);
+ terrain.draw(ground,-left,-top);ground.destroy();terrain.setVisible(false);
+ const landscape=scene.add.renderTexture(left,top,width,height).setOrigin(0).setDepth(-1);
+ const clutter=scene.add.graphics().setVisible(false);
+ const redraw=(clearing:Clearing,garden:Garden,birdhouse:{x:number;y:number}|null)=>{g=clutter;clutter.clear();
+ for(const item of activeDebris(clearing,garden).filter(d=>d.kind==='rock'))rock(item.x,item.y,item.scale);
+ for(const {x,y}of activeDebris(clearing,garden).filter(d=>d.kind==='branch')){line(x-16,y+4,x+18,y+1,0x364b35,7,.24);line(x-16,y,x+18,y-3,0x574431,5);line(x-16,y-1,x+18,y-4,0xa08354,2);line(x+2,y-2,x+9,y-12,0x70573b,3);oval(x-16,y,4,5,0xc0a477);tuft(x+18,y+3,.8);}
  for(const {x,y}of activeDebris(clearing,garden).filter(d=>d.kind==='weed')){oval(x+2,y+2,25,9,0x314c2b,.3);for(let i=-2;i<=2;i++){tuft(x+i*3,y-Math.abs(i),1.3);line(x+i*2,y,x+i*3,y-13+Math.abs(i),0x3d7137,2);}oval(x-4,y-9,6,3,0x78a844);oval(x+5,y-7,7,3,0x9cbd57);}
  if(birdhouse){const {x,y}=birdhouse;oval(x+4,y+3,23,8,0x31472f,.3);rect(x-1,y-22,3,25,0x725639);rect(x-8,y-34,17,16,0xc69c64);rect(x-7,y-32,3,13,0xdfb77a);poly([x-12,y-33,x,y-45,x+13,y-33,x+10,y-30,x,y-39,x-9,y-30],0x80523c);oval(x+1,y-27,7,7,0x304a3b);rect(x,y-21,3,2,0xe5c88c);}
- return g;
+  landscape.clear().draw(terrain,0,0).draw(clutter,-left,-top);clutter.clear();
+ };
+ redraw(clearing,garden,birdhouse);
+ return {redraw,destroy(){landscape.destroy();terrain.destroy();clutter.destroy();fixtures.destroy();}};
 }

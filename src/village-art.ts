@@ -95,7 +95,9 @@ export function drawVillage(scene:Phaser.Scene){
  sign(220,667,207,608,57,'Falu','right');sign(292,810,220,759,88,'Erdei ösvény','left');
 
  rect(416,930,4,42,0x615940);rect(409,925,18,18,0xd9c994);rect(408,924,20,3,0x5b6550);poly([406,924,418,913,430,924],0x566650);
- return {graphics:g,labels};
+ // This scenery is static too; keep tree canopies and paving out of the per-frame geometry pass.
+ const terrain=scene.add.renderTexture(-400,540,1600,WORLD_HEIGHT-540).setOrigin(0).setDepth(-.5);terrain.draw(g,400,-540);g.destroy();
+ return {graphics:terrain,labels};
 }
 export function drawForage(scene:Phaser.Scene,picked:Record<string,number>,day:number){
  const g=scene.add.graphics().setDepth(2);

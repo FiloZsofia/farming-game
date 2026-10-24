@@ -28,7 +28,7 @@ function clickWorld(x:number,y:number){
  }));
 }
 function sleepTo(day:number){
- clickWorld(275,198);cy.get('#sleep').should('be.visible').click();cy.get('#game').should('have.attr','data-day',String(day));cy.get('#dialogue-close').should('be.visible').click();cy.get('#game',{timeout:8000}).should('have.attr','data-morning-stage','none');cy.get('#dialogue').should('not.be.visible');
+ clickWorld(281,193);cy.get('#sleep').should('be.visible').click();cy.get('#game').should('have.attr','data-day',String(day));cy.get('#dialogue-close').should('be.visible').click();cy.get('#game',{timeout:8000}).should('have.attr','data-morning-stage','none');cy.get('#dialogue').should('not.be.visible');
 }
 describe('World interactions and uncluttered UI',()=>{
  it('removes redundant buttons and keeps help in one menu',()=>{
@@ -216,7 +216,7 @@ describe('Southern village and forest',()=>{
   }
  });
  it('keeps the morning settlement open after the gold animation until the player dismisses it',()=>{
-  start({...villageSave,player:{x:250,y:242},clock:{day:2,elapsed:0,collapseAt:580},economy:{gold:100,shipping:{...quantities,radish:2},lastSale:null}});clickWorld(275,198);cy.get('#sleep').click();cy.get('#morning-balance').should('have.text','130 gold');cy.wait(4000);cy.get('#morning-sale-panel').should('be.visible');cy.get('#dialogue-close').should('have.text','Indulhat a nap').click();cy.get('#game').should('have.attr','data-morning-stage','none');reloadFarm();cy.get('#game').should('have.attr','data-gold','130');
+  start({...villageSave,player:{x:250,y:242},clock:{day:2,elapsed:0,collapseAt:580},economy:{gold:100,shipping:{...quantities,radish:2},lastSale:null}});clickWorld(281,193);cy.get('#sleep').click();cy.get('#morning-balance').should('have.text','130 gold');cy.wait(4000);cy.get('#morning-sale-panel').should('be.visible');cy.get('#dialogue-close').should('have.text','Indulhat a nap').click();cy.get('#game').should('have.attr','data-morning-stage','none');reloadFarm();cy.get('#game').should('have.attr','data-gold','130');
  });
 
  it('separates side conversations with Annie and Leo from counter purchases',()=>{
@@ -227,7 +227,7 @@ describe('Southern village and forest',()=>{
  });
 
  it('stops after the final spring day and preserves the saved farm on reload',()=>{
-  start({...villageSave,player:{x:250,y:242},clock:{day:15,elapsed:100,collapseAt:580},economy:{gold:100,shipping:{...quantities,radish:2},lastSale:null}});clickWorld(275,198);cy.get('#sleep').click();cy.get('#dialogue').should('have.attr','data-presentation','development-end');cy.get('#game').should('have.attr','data-day','15').and('have.attr','data-gold','100').and('have.attr','data-shipping','30');press('Escape','Escape',27);cy.get('#dialogue').should('be.visible');cy.reload();cy.get('#continue-farm').should('be.visible').and('not.be.disabled').click();cy.get('#dialogue').should('have.attr','data-presentation','development-end');cy.get('#preview-farms').click();cy.get('#start-panel').should('be.visible');cy.get('#new-farm').should('not.be.disabled');
+  start({...villageSave,player:{x:250,y:242},clock:{day:15,elapsed:100,collapseAt:580},economy:{gold:100,shipping:{...quantities,radish:2},lastSale:null}});clickWorld(281,193);cy.get('#sleep').click();cy.get('#dialogue').should('have.attr','data-presentation','development-end');cy.get('#game').should('have.attr','data-day','15').and('have.attr','data-gold','100').and('have.attr','data-shipping','30');press('Escape','Escape',27);cy.get('#dialogue').should('be.visible');cy.reload();cy.get('#continue-farm').should('be.visible').and('not.be.disabled').click();cy.get('#dialogue').should('have.attr','data-presentation','development-end');cy.get('#preview-farms').click();cy.get('#start-panel').should('be.visible');cy.get('#new-farm').should('not.be.disabled');
  });
 
  it('confirms farm deletion and supports cancelling without removing the save',()=>{
@@ -267,4 +267,9 @@ describe('Southern village and forest',()=>{
 
 describe('The farmhouse interior',()=>{
  it('enters the house, reloads its saved position and leaves the bed without save controls',()=>{start();press('e','KeyE',69);cy.get('#game').should('have.attr','data-region','home');cy.get('#dialogue').should('not.be.visible');cy.get('#sleep').should('not.be.visible');reloadFarm();cy.get('#game').should('have.attr','data-region','home');press('e','KeyE',69);cy.get('#game').should('have.attr','data-region','farm');});
+});
+
+describe('Escape start-menu shortcut',()=>{
+ it('opens and closes the start menu and preserves the inventory Escape shortcut',()=>{start();press('Escape','Escape',27);cy.get('#start-panel').should('be.visible');cy.get('#continue-farm').should('not.be.disabled');cy.get('#dialogue-title').should('have.text','Kezdőmenü');cy.get('#open-start-menu').should('have.text','Kezdőmenü');press('Escape','Escape',27);cy.get('#dialogue').should('not.be.visible');press('Tab','Tab',9);cy.get('#inventory-panel').should('be.visible');press('Escape','Escape',27);cy.get('#dialogue').should('not.be.visible');});
+ it('closes after a quick second Escape while the current farm is being saved',()=>{start();cy.window().then(win=>{for(let i=0;i<2;i++){win.dispatchEvent(new win.KeyboardEvent('keydown',{key:'Escape',code:'Escape',bubbles:true}));win.dispatchEvent(new win.KeyboardEvent('keyup',{key:'Escape',code:'Escape',bubbles:true}));}});cy.get('#dialogue').should('not.be.visible');cy.get('#start-panel').should('not.be.visible');});
 });

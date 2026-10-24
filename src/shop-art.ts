@@ -53,6 +53,7 @@ export function drawShop(scene:Phaser.Scene,shop:Shop){
   // Foreground counter hides her lower body, rather than drawing her over it.
   const front=scene.add.graphics().setDepth(1);front.fillStyle(0x72523b).fillRect(338,y0+225,224,63);front.fillStyle(0xb69a6b).fillRect(333,y0+217,234,14);front.lineStyle(1,0xe1c18a).lineBetween(337,y0+220,561,y0+220);for(let x=350;x<558;x+=22)front.lineStyle(1,0x94724b).lineBetween(x,y0+244,x,y0+284);
   front.fillStyle(0x6d6348).fillRect(453,y0+210,26,8);front.fillStyle(0xeadcb2).fillRect(455,y0+210,10,6);front.fillStyle(0xd7c79e).fillRect(467,y0+210,10,6);
-  return {person};
+  const background=scene.add.renderTexture(0,y0,800,600).setOrigin(0).setDepth(-1);background.draw(g,0,-y0);g.destroy();
+  return {person,background,front};
  }
 }

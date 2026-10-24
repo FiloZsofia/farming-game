@@ -42,7 +42,7 @@ export function validClearing(value:unknown):value is Clearing{
 function pathDistance(x:number,y:number,a:readonly number[],b:readonly number[]){const dx=b[0]-a[0],dy=b[1]-a[1],t=Math.max(0,Math.min(1,((x-a[0])*dx+(y-a[1])*dy)/(dx*dx+dy*dy)));return Math.hypot(x-a[0]-t*dx,y-a[1]-t*dy);}
 export function regrowDebris(state:Clearing,day:number,garden:Garden,fixture:{x:number;y:number}|null=null,random=Math.random,protectedPlaces:readonly {x:number;y:number}[]=[]):Clearing{
  const next=structuredClone(state);
- const boxes=[...farmLayout.beds,farmLayout.mailbox,farmLayout.shipping,farmLayout.catalog,farmLayout.journal,farmLayout.dock,{x:487,y:245,w:17,h:102},{x:28,y:495,w:104,h:34},{x:211,y:511,w:230,h:34},{x:433,y:172,w:105,h:34},{x:691,y:217,w:80,h:34}];
+ const boxes=[...farmLayout.beds,farmLayout.mailbox,farmLayout.shipping,farmLayout.catalog,farmLayout.journal,farmLayout.dock,{x:28,y:495,w:104,h:34},{x:211,y:511,w:230,h:34},{x:433,y:172,w:105,h:34},{x:691,y:217,w:80,h:34}];
  for(const item of debris){
   const removed=next.removed[item.id];if(removed===undefined||day-removed<3)continue;
   const old=next.positions[item.id]??item;

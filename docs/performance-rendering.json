@@ -1,0 +1,21 @@
+{
+  "environment": "Chromium, 1280x900, identical sunny spring farm, 8-second samples. Local measurement; not a guarantee for other devices.",
+  "before": {
+    "durationSeconds": 8.005799999976158,
+    "frames": 90,
+    "fps": 11.24,
+    "medianFrameMs": 83.4,
+    "p95FrameMs": 100.1,
+    "longTaskCount": 89,
+    "runtimeErrors": []
+  },
+  "after": {
+    "durationSeconds": 8.0369,
+    "frames": 200,
+    "fps": 24.89,
+    "medianFrameMs": 33.4,
+    "p95FrameMs": 50.1,
+    "longTaskCount": 2,
+    "runtimeErrors": []
+  }
+}

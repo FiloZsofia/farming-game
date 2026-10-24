@@ -3,7 +3,7 @@ export const farmBounds={left:-400,top:-360,right:1200,bottom:600} as const;
 export const farmLayout = {
   houseOffset:{x:0,y:-48},
   catalog:{x:346,y:190,w:18,h:12},
-  journal:{x:266,y:191,w:18,h:13},
+  journal:{x:272,y:186,w:18,h:13},
   mailbox:{x:112,y:474,w:24,h:16},
   shipping: {x:112,y:204,w:32,h:24},
   pond: { x: 638, y: 464, rx: 153, ry: 113 },
