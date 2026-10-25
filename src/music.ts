@@ -28,6 +28,7 @@ export class FarmMusic{
   document.querySelector<HTMLElement>('#app')!.dataset.musicTrack=track;
   if(this.enabled)await this.activate();
  }
+ async playHarvest(){if(!this.enabled)return;await this.activate();if(this.context?.state!=='running')return;const t=this.context.currentTime+.01;this.acoustic(76,t,'guitar',.17,.16);this.acoustic(83,t+.055,'keys',.12,.22);}
  async playSurprise(){if(!this.enabled)return;await this.activate();if(this.context?.state!=='running')return;const time=this.context.currentTime+.02;this.acoustic(79,time,'keys',.2,.13);this.acoustic(72,time+.12,'keys',.17,.3);}
  private stopNotes(){for(const source of this.sources){try{source.stop((this.context?.currentTime??0)+.025);}catch{}}this.sources.clear();}
  private async resume(){

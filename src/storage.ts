@@ -1,3 +1,5 @@
+import {enlargeGarden} from './garden-migration';
+import {legacyTargetTile,legacyCultivable} from './legacy-garden-grid';
 import {migrateForest} from './forest';
 import {atHomeBedside} from './home';
 import {createResearch} from './research';
@@ -15,15 +17,16 @@ import {createGardenSkill,migrateGardenSkill,validGardenSkill,gardeningLevel,rew
 import {blocked} from './movement';
 import { farmLayout,farmBounds } from './layout';
 export const DB_NAME='erdoszeli-birtok';
-export type Snapshot={version:17;travel:Travel;skill:GardenSkill;story:FarmStory;clearing:Clearing;farmName:string|null;farmerName:string|null;orders:Orders;economy:Economy;produce:Garden['produce'];player:{x:number;y:number};clock:Clock;seeds:Garden['seeds'];plots:[string,Plot][]};
+export type Snapshot={version:18;travel:Travel;skill:GardenSkill;story:FarmStory;clearing:Clearing;farmName:string|null;farmerName:string|null;orders:Orders;economy:Economy;produce:Garden['produce'];player:{x:number;y:number};clock:Clock;seeds:Garden['seeds'];plots:[string,Plot][]};
 export function snapshot(player:{x:number;y:number},clock:Clock,garden:Garden,economy:Economy=createEconomy(),orders:Orders=createOrders(),farmName:string|null=null,clearing:Clearing=createClearing(),story:FarmStory=createStory(),skill:GardenSkill=createGardenSkill(),farmerName:string|null=null,travel:Travel=createTravel()):Snapshot{
- return structuredClone({version:17,travel,skill,story,clearing,farmName,farmerName,orders,economy,produce:garden.produce,player:{x:player.x,y:player.y},clock,seeds:garden.seeds,plots:[...garden.plots]});
+ return structuredClone({version:18,travel,skill,story,clearing,farmName,farmerName,orders,economy,produce:garden.produce,player:{x:player.x,y:player.y},clock,seeds:garden.seeds,plots:[...garden.plots]});
 }
 const finite=(n:unknown):n is number=>typeof n==='number'&&Number.isFinite(n);
-export function validSnapshot(value:unknown):value is Snapshot{
+export function validSnapshot(value:unknown):value is Snapshot{return validSnapshotRecord(value,false);}
+function validSnapshotRecord(value:unknown,legacy=false):value is Snapshot{
  if(!value||typeof value!=='object')return false;
  const v=value as Snapshot;
- if(v.version!==17||!validTravel(v.travel,v.clock?.day)||!validGardenSkill(v.skill)||!validStory(v.story)||!validClearing(v.clearing)||!v.player||!finite(v.player.x)||!finite(v.player.y)||worldBlocked(v.player.x,v.player.y))return false;
+ if(v.version!==(legacy?17:18)||!validTravel(v.travel,v.clock?.day,legacy)||!validGardenSkill(v.skill)||!validStory(v.story)||!validClearing(v.clearing)||!v.player||!finite(v.player.x)||!finite(v.player.y)||worldBlocked(v.player.x,v.player.y))return false;
  if(!validEconomy(v.economy)||v.economy.lastSale&&v.economy.lastSale.day>=v.clock?.day)return false;
  if(!validOrders(v.orders)||crops.some(k=>{const c=k as keyof Garden['seeds'];return !v.seeds||!Number.isSafeInteger(v.seeds[c])||v.seeds[c]+v.orders.pending[c]+v.orders.mailbox[c]>999999;}))return false;
  if(v.farmName!==null&&(typeof v.farmName!=='string'||normalizeFarmName(v.farmName)!==v.farmName))return false;
@@ -40,7 +43,7 @@ export function validSnapshot(value:unknown):value is Snapshot{
   const [key,plot]=row;if(typeof key!=='string'||keys.has(key))return false;
   keys.add(key);const parts=key.split(',');if(parts.length!==2)return false;
   const [x,y]=parts.map(Number);
-  if(!finite(x)||!finite(y)||tileKey({x,y})!==key||tileKey(targetTile(x+1,y+1))!==key||!cultivable({x,y}))return false;
+  if(!finite(x)||!finite(y)||tileKey({x,y})!==key||tileKey((legacy?legacyTargetTile:targetTile)(x+1,y+1))!==key||!(legacy?legacyCultivable:cultivable)({x,y}))return false;
   if(!plot||typeof plot!=='object'||typeof plot.watered!=='boolean'||!(plot.crop===null||crops.includes(plot.crop)))return false;
   if(!Number.isSafeInteger(plot.growth)||plot.growth<0||plot.growth>1000||typeof plot.regrowing!=='boolean'||(plot.regrowing&&!['pea','strawberry','honeyberry','blueberry'].includes(plot.crop??''))||(!plot.crop&&plot.growth!==0))return false;
  }
@@ -48,11 +51,11 @@ export function validSnapshot(value:unknown):value is Snapshot{
  if(v.travel.research.flowers.some(f=>!v.plots.some(([key,p])=>key===tileKey(f)&&p.crop===null)))return false;
  return true;
 }
-// Migrate known formats without discarding the original backup until a v17 write succeeds.
+// Migrate known formats without discarding the original backup until a v18 write succeeds.
 export function decodeSnapshot(value:unknown):Snapshot|null{
- if(value&&typeof value==='object'&&'version' in value&&value.version===17){const old=value as Snapshot;if(old.player?.x> -910&&old.player.x< -860&&old.player.y>=695&&old.player.y<=1340&&worldBlocked(old.player.x,old.player.y)){const next=structuredClone(old);next.player.x=-840;return decodeSnapshot(next);}}
+ if(value&&typeof value==='object'&&'version' in value&&(value.version===17||value.version===18)){const old=value as unknown as Snapshot;if(old.player?.x> -910&&old.player.x< -860&&old.player.y>=695&&old.player.y<=1340&&worldBlocked(old.player.x,old.player.y)){const next=structuredClone(old);next.player.x=-840;return decodeSnapshot(next);}}
  // New pathside trunks may cover an old village position; preserve every possession.
- if(value&&typeof value==='object'&&'version' in value&&value.version===17){const old=value as Snapshot;if(old.player&&Number.isFinite(old.player.x)&&Number.isFinite(old.player.y)&&old.player.y>=600&&old.player.y<1400){const player=relocateVillagePlayer(old.player);if(player!==old.player){const next=structuredClone(old);next.player=player;if(validSnapshot(next))return decodeSnapshot(next);}}}
+ if(value&&typeof value==='object'&&'version' in value&&(value.version===17||value.version===18)){const old=value as unknown as Snapshot;if(old.player&&Number.isFinite(old.player.x)&&Number.isFinite(old.player.y)&&old.player.y>=600&&old.player.y<1400){const player=relocateVillagePlayer(old.player);if(player!==old.player){const next=structuredClone(old);next.player=player;if(validSnapshotRecord(next,old.version!==18))return decodeSnapshot(next);}}}
  // Extend existing pond/fruit counts with new forage types without touching possessions.
  if(value&&typeof value==='object'){
   const old=value as Snapshot,estate=old.travel?.estate;
@@ -66,7 +69,7 @@ export function decodeSnapshot(value:unknown):Snapshot|null{
  if(validSnapshot(value)){const result=structuredClone(value);result.skill=migrateGardenSkill(result.skill);if(result.travel.forest)result.travel.forest=migrateForest(result.travel.forest);if(result.travel.research.supplied===undefined&&(result.travel.research.materials.glass>0||result.travel.research.materials.linen>0))result.travel.research.supplied=[...(result.travel.research.materials.glass>0?['annie' as const]:[]),...(result.travel.research.materials.linen>0?['leo' as const]:[])];return result;}
  // Layout changes can cover saved debris and a placed birdhouse as well as the player.
  // Move only objects in the newly occupied strips; never reset the farm or its resources.
- if(value&&typeof value==='object'&&'version' in value&&value.version===17){
+ if(value&&typeof value==='object'&&'version' in value&&(value.version===17||value.version===18)){
   const old=value as Snapshot,boxes=[farmLayout.shedBounds,farmLayout.houseBounds,farmLayout.shipping],previous=[{x:576,y:92,w:118,h:89},{x:132,y:110,w:215,h:113},{x:158,y:244,w:32,h:24}];
   const newlyCovered=(p:{x:number;y:number})=>{if(!p||!finite(p.x)||!finite(p.y))return false;const overlaps=(b:{x:number;y:number;w:number;h:number})=>p.x+7>b.x&&p.x-7<b.x+b.w&&p.y+3>b.y&&p.y-4<b.y+b.h;return boxes.some(overlaps)&&!previous.some(overlaps)&&blocked(p.x,p.y);};
   const migrated=structuredClone(old);let changed=false;
@@ -78,8 +81,9 @@ export function decodeSnapshot(value:unknown):Snapshot|null{
   if(newlyCovered(old.player)){const p={x:old.player.x,y:old.player.y+3>farmLayout.shipping.y&&old.player.y-4<farmLayout.shipping.y+farmLayout.shipping.h&&old.player.x+7>farmLayout.shipping.x&&old.player.x-7<farmLayout.shipping.x+farmLayout.shipping.w?farmLayout.shipping.y+farmLayout.shipping.h+8:old.player.x<400?280:224};if(!blocked(p.x,p.y)){migrated.player=p;changed=true;}}
   if(old.story?.birdhouse&&newlyCovered(old.story.birdhouse)){const p=freePlace(old.story.birdhouse,'birdhouse');if(p){migrated.story.birdhouse=p;changed=true;}}
   if(old.clearing?.positions&&typeof old.clearing.positions==='object'&&!Array.isArray(old.clearing.positions))for(const [id,p]of Object.entries(old.clearing.positions)){if(newlyCovered(p)){const q=freePlace(p,id);if(q){migrated.clearing.positions[id]=q;changed=true;}}}
-  if(changed&&validSnapshot(migrated)){migrated.skill=migrateGardenSkill(migrated.skill);if(migrated.travel.forest)migrated.travel.forest=migrateForest(migrated.travel.forest);return migrated;}
+  if(changed&&validSnapshotRecord(migrated,old.version!==18)){migrated.skill=migrateGardenSkill(migrated.skill);if(migrated.travel.forest)migrated.travel.forest=migrateForest(migrated.travel.forest);return decodeSnapshot(migrated);}
  }
+ if(value&&typeof value==='object'&&'version' in value&&value.version===17&&validSnapshotRecord(value,true)){const enlarged=enlargeGarden(value);return enlarged&&validSnapshot(enlarged)?decodeSnapshot(enlarged):null;}
  if(!value||typeof value!=='object'||!('version' in value)||(value.version!==1&&value.version!==2&&value.version!==3&&value.version!==4&&value.version!==5&&value.version!==6&&value.version!==7&&value.version!==8&&value.version!==9&&value.version!==10&&value.version!==11&&value.version!==12&&value.version!==13&&value.version!==14&&value.version!==15&&value.version!==16))return null;
  const legacy=value as {clearing?:Clearing;version:number;plots?:unknown;player?:{x:number;y:number}};
  if(!Array.isArray(legacy.plots)||legacy.plots.some(row=>!Array.isArray(row)||row.length!==2||!row[1]||typeof row[1]!=='object'))return null;
@@ -114,7 +118,7 @@ function validCatalogue(value:unknown):value is FarmCatalogue{
 function summary(id:string,data:Snapshot):FarmSummary{return {id,name:data.farmName??'Névtelen farm',farmerName:data.farmerName,day:data.clock.day,gold:data.economy.gold,level:gardeningLevel(data.skill),updatedAt:Date.now()};}
 function decodePair(active:unknown,backup:unknown){
  const decoded=decodeSnapshot(active);if(decoded)return {data:decoded,recovered:false,raw:active};
- if(active&&typeof active==='object'&&'version' in active&&(!Number.isInteger(active.version)||Number(active.version)<1||Number(active.version)>17))throw new Error('Ez a mentés másik játékverzióhoz tartozik. Megőriztem, nem írtam felül.');
+ if(active&&typeof active==='object'&&'version' in active&&(!Number.isInteger(active.version)||Number(active.version)<1||Number(active.version)>18))throw new Error('Ez a mentés másik játékverzióhoz tartozik. Megőriztem, nem írtam felül.');
  const previous=decodeSnapshot(backup);if(previous)return {data:previous,recovered:true,raw:backup};
  throw new Error('A mentés nem olvasható. Megőriztem az eredetit; nem indítok rá új játékot.');
 }

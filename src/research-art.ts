@@ -1,12 +1,12 @@
+import {TILE} from './gardening';
 import Phaser from 'phaser';
 import {salvageSites,entranceShutterOpen,remainingWebs,type Research} from './research';
 export function drawResearch(scene:Phaser.Scene,r:Research){
  const root=scene.add.container(0,0).setDepth(3),g=scene.add.graphics();root.add(g);
- for(const s of salvageSites){if(r.picked.includes(s.id))continue;g.fillStyle(0x33452c,.25).fillEllipse(s.x+3,s.y+4,29,10);
-  if(s.kind==='scrap'){for(let i=0;i<4;i++){g.fillStyle(i%2?0x807f70:0x9a6548).fillRoundedRect(s.x-13+i*6,s.y-9+i%2*4,11,9,2);g.lineStyle(1,0xc09a6c).lineBetween(s.x-12+i*6,s.y-8+i%2*4,s.x-5+i*6,s.y-8+i%2*4);}g.lineStyle(2,0x69766e).strokeCircle(s.x+1,s.y-10,7);}
-  else{g.fillStyle(0x777d68).fillRoundedRect(s.x-10,s.y-20,20,23,4);g.lineStyle(4,0xa47e52).beginPath().moveTo(s.x,s.y-18).lineTo(s.x,s.y-30).lineTo(s.x+18,s.y-30).lineTo(s.x+18,s.y-20).strokePath();g.lineStyle(2,0xb7b093).strokeCircle(s.x,s.y-9,6);}
+ for(const s of salvageSites){if(s.kind==='scrap'||r.picked.includes(s.id))continue;g.fillStyle(0x33452c,.25).fillEllipse(s.x+3,s.y+4,29,10);
+  {g.fillStyle(0x777d68).fillRoundedRect(s.x-10,s.y-20,20,23,4);g.lineStyle(4,0xa47e52).beginPath().moveTo(s.x,s.y-18).lineTo(s.x,s.y-30).lineTo(s.x+18,s.y-30).lineTo(s.x+18,s.y-20).strokePath();g.lineStyle(2,0xb7b093).strokeCircle(s.x,s.y-9,6);}
  }
- for(const f of r.flowers){const x=f.x+8,y=f.y+10;for(let i=0;i<3;i++){const dx=(i-1)*4,h=4+f.growth*2;g.lineStyle(1,0x456a38).lineBetween(x+dx,y,x+dx-1,y-h);g.fillStyle(0x6e984d).fillEllipse(x+dx+2,y-4,5,2);if(f.growth===4){const c=[0xe9bf64,0xc99aaa,0xd6d9ee][i];for(let a=0;a<5;a++)g.fillStyle(c).fillCircle(x+dx-1+Math.cos(a*1.257)*2,y-h+Math.sin(a*1.257)*2,1.7);g.fillStyle(0xd9a34f).fillCircle(x+dx-1,y-h,1);}}}
+ for(const f of r.flowers){g.save().translateCanvas(f.x,f.y).scaleCanvas(TILE/16,TILE/16);const x=8,y=10;for(let i=0;i<3;i++){const dx=(i-1)*4,h=4+f.growth*2;g.lineStyle(1,0x456a38).lineBetween(x+dx,y,x+dx-1,y-h);g.fillStyle(0x6e984d).fillEllipse(x+dx+2,y-4,5,2);if(f.growth===4){const c=[0xe9bf64,0xc99aaa,0xd6d9ee][i];for(let a=0;a<5;a++)g.fillStyle(c).fillCircle(x+dx-1+Math.cos(a*1.257)*2,y-h+Math.sin(a*1.257)*2,1.7);g.fillStyle(0xd9a34f).fillCircle(x+dx-1,y-h,1);}}g.restore();}
  return root;
 }
 export function drawWorkshop(scene:Phaser.Scene,r:Research){

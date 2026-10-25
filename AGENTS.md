@@ -11,3 +11,7 @@
 - A Készlet tárgykártyáin csak a tárgy vagy növény neve jelenjen meg. Ne adj hozzá árat, leírást, „Eszköz”, „Küldetéstárgy” vagy „1 db” toldalékot. A szükséges mennyiséget külön számozott jelvény jelezheti; a receptek a Tervrajzok fülre tartoznak.
 
 - A történeti célok és Sam gondolatai ne árulják el a megoldás helyét vagy lépéseit. Ne adj hozzá „menj ide”, „beszélj vele”, „itt keresd” útmutatást vagy korábbi felfedezésre alapozott célzott tippet külön felhasználói kérés nélkül. A már elfogadott cél- és gondolatszövegeket őrizd meg; az új mechanikai feltétel nem engedély ezek átírására.
+
+- Az összekapcsolódó ösvények egyetlen hálózatként készüljenek: előbb az összes külső szegély, utána az összes belső réteg. Tilos külön, teljesen körvonalazott útdarabokat egymásra rajzolni, mert az elágazásban belső ív vagy varrat marad. Az új és módosított csomópontokat közeli böngészős képen ellenőrizd, a farmkapunál és az erdei elágazásnál is.
+- Az irányjelző deszkája és felirata együtt kövesse a ténylegesen továbbvezető ösvény irányát; a tartóoszlop függőleges maradjon. Ne tekints elegendőnek egy minimális forgatást, ha a felirat és a nyíl továbbra is természetellenesen áll.
+- A pusztán ablakot bezáró, játékba visszalépő gomb neve Vissza vagy Vissza a játékba legyen, soha ne Folytatás. A Folytatás név csak tényleges folytatást jelentsen, például mentett farm megnyitását. Vásárlásnál/rendelésnél a végrehajtó és a kilépő gomb egyértelműen különüljön el.

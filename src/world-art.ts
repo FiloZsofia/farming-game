@@ -105,13 +105,13 @@ export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),g
  for(let i=0;i<17;i++){const x=557+i*6,y=358-Math.sin(i*.3)*5;line(x,y,x-2,y-17,0x4c6945);rect(x-3,y-21,2,7,0x735e3d);}
  const d=layout.dock;oval(d.x+34,d.y+27,76,17,0x2f5047,.35);rect(d.x,d.y,d.w,d.h,0x5f503c);for(let x=d.x+2;x<d.x+d.w;x+=8){rect(x,d.y+2,6,d.h-4,0xa18a61);line(x+2,d.y+5,x+2,d.y+d.h-6,0xc0ab7a);rect(x+2,d.y+4,1,1,0x4a4a3a);}for(const x of [d.x,d.x+d.w-5]){rect(x,d.y-5,5,11,0x735337);rect(x,d.y+d.h-6,5,11,0x735337);rect(x,d.y-5,5,2,0xc2aa78);}
  for(const b of layout.beds){
-  // Equal rims around the existing 3 × 2 planting grid; no unused right-hand strip.
-  oval(b.x+28,b.y+42,65,10,0x30412d,.24);
-  rect(b.x,b.y+1,56,42,0x795b38);rect(b.x+3,b.y+2,50,32,0x846846);
-  for(let y=b.y+6;y<b.y+34;y+=5){line(b.x+4,y,b.x+52,y,0x5f4d36);line(b.x+4,y+1,b.x+52,y+1,0xa08055);}
-  rect(b.x,b.y,56,2,0xc0a479);rect(b.x,b.y+2,3,33,0xa38458);rect(b.x+53,b.y+2,3,33,0x80603d);
-  rect(b.x,b.y+34,56,8,0x946e43);line(b.x+2,b.y+36,b.x+54,b.y+36,0xc09a64);line(b.x+2,b.y+40,b.x+54,b.y+40,0x674f34);
-  for(const x of [b.x+2,b.x+53])rect(x,b.y+36,1,3,0x454d3a);
+  const width=b.w,height=b.h;
+  oval(b.x+width/2,b.y+height+3,width+9,10,0x30412d,.24);
+  rect(b.x,b.y+1,width,height,0x795b38);rect(b.x+3,b.y+2,width-6,height-6,0x846846);
+  for(let y=b.y+6;y<b.y+height-4;y+=6){line(b.x+4,y,b.x+width-4,y,0x5f4d36);line(b.x+4,y+1,b.x+width-4,y+1,0xa08055);}
+  rect(b.x,b.y,width,2,0xc0a479);rect(b.x,b.y+2,3,height-3,0xa38458);rect(b.x+width-3,b.y+2,3,height-3,0x80603d);
+  rect(b.x,b.y+height-3,width,8,0x946e43);line(b.x+2,b.y+height-1,b.x+width-2,b.y+height-1,0xc09a64);line(b.x+2,b.y+height+3,b.x+width-2,b.y+height+3,0x674f34);
+  for(const x of [b.x+2,b.x+width-3])rect(x,b.y+height-1,1,3,0x454d3a);
  }
 
  // Clearly legible fallen branches, with bark, cut ends and ground shadows.
@@ -134,7 +134,7 @@ export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),g
  const redraw=(clearing:Clearing,garden:Garden,birdhouse:{x:number;y:number}|null)=>{g=clutter;clutter.clear();
  // Low, soil-bound stone groups replace identical loose boulders.
  for(const item of activeDebris(clearing,garden).filter(d=>d.kind==='rock')){
-  const {x,y,scale:s}=item,k=[...item.id].reduce((n,c)=>n+c.charCodeAt(0),0);
+  const {x,y,scale:baseScale}=item,s=baseScale*1.3,k=[...item.id].reduce((n,c)=>n+c.charCodeAt(0),0);
   oval(x,y+2,40*s,19*s,0x85754f,.58);oval(x-3*s,y+5*s,32*s,10*s,0x4b603c,.48);
   for(let i=0;i<3;i++){const xx=x+(i-1)*11*s,yy=y+(i===1?-5:2)*s,w=(i===1?12:8)*s,h=(i===1?9:6)*s;
    poly([xx-w,yy+3*s,xx-w*.85,yy-h*.5,xx-w*.25,yy-h,xx+w*.6,yy-h*.8,xx+w,yy,xx+w*.6,yy+4*s],k%2?0x7c8576:0x85847a);
@@ -143,8 +143,9 @@ export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),g
   }tuft(x-18*s,y+4*s,.55*s);tuft(x+17*s,y+5*s,.55*s);
  }
  for(const item of activeDebris(clearing,garden).filter(d=>d.kind==='branch')){
-  const {x,y,scale:s}=item,k=[...item.id].reduce((n,c)=>n+c.charCodeAt(0),0)%3;oval(x+2*s,y+5*s,42*s,13*s,0x344b33,.25);
+  const {x,y,scale:baseScale}=item,s=baseScale*1.3,k=[...item.id].reduce((n,c)=>n+c.charCodeAt(0),0)%3;oval(x+2*s,y+5*s,42*s,13*s,0x344b33,.25);
   if(k===0){ // Reclaimed fence boards: splintered ends, nail holes and weathered grain.
+   for(const dx of [-12,13]){line(x+dx*s,y-14*s,x+(dx+2)*s,y+11*s,0x755439,5*s);line(x+(dx-1)*s,y-13*s,x+(dx+1)*s,y+10*s,0xb08c5e,s);}line(x-14*s,y+8*s,x+15*s,y-12*s,0x8c6b46,3*s);
    for(let i=0;i<3;i++){const yy=y+(i-1)*5*s,xx=x+(i%2?3:-2)*s;poly([xx-19*s,yy-3*s,xx+17*s,yy-6*s,xx+14*s,yy-2*s,xx+18*s,yy,xx-18*s,yy+3*s,xx-14*s,yy],i%2?0x8e7754:0xa28a65);line(xx-14*s,yy,xx+12*s,yy-2*s,0xc0a47b,s);oval(xx-10*s,yy,1.5*s,1.5*s,0x4d5141);oval(xx+11*s,yy-2*s,1.5*s,1.5*s,0x4d5141);}
   }else if(k===1){ // A small, uneven stack of fallen hardwood.
    for(let i=0;i<3;i++){const yy=y+(i===2?-6:i*4)*s,xx=x+(i===2?3:-2)*s;line(xx-15*s,yy,xx+14*s,yy-4*s,0x6c5037,7*s);line(xx-13*s,yy-2*s,xx+12*s,yy-6*s,0xa08253,2*s);oval(xx-15*s,yy,7*s,8*s,0xc8ad79);oval(xx-15*s,yy,4*s,5*s,0x917149);line(xx-17*s,yy,xx-14*s,yy+2*s,0x715a3e,s);}
@@ -153,6 +154,7 @@ export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),g
   }tuft(x+18*s,y+5*s,.6*s);oval(x-4*s,y+6*s,11*s,3*s,0x6e8348);
  }
  for(const {x,y}of activeDebris(clearing,garden).filter(d=>d.kind==='weed')){oval(x+2,y+2,25,9,0x314c2b,.3);for(let i=-2;i<=2;i++){tuft(x+i*3,y-Math.abs(i),1.3);line(x+i*2,y,x+i*3,y-13+Math.abs(i),0x3d7137,2);}oval(x-4,y-9,6,3,0x78a844);oval(x+5,y-7,7,3,0x9cbd57);}
+ for(const item of activeDebris(clearing,garden)){const progress=clearing.progress?.[item.id];if(!progress)continue;for(let i=0;i<3;i++){oval(item.x+(i-1)*6,item.y+15,4,3,i<progress?0xe6c67c:0x3f5237);}}
  if(birdhouse){const {x,y}=birdhouse;oval(x+4,y+3,23,8,0x31472f,.3);rect(x-1,y-22,3,25,0x725639);rect(x-8,y-34,17,16,0xc69c64);rect(x-7,y-32,3,13,0xdfb77a);poly([x-12,y-33,x,y-45,x+13,y-33,x+10,y-30,x,y-39,x-9,y-30],0x80523c);oval(x+1,y-27,7,7,0x304a3b);rect(x,y-21,3,2,0xe5c88c);}
   landscape.clear().draw(terrain,0,0).draw(clutter,-left,-top);clutter.clear();
  };

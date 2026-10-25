@@ -1,8 +1,8 @@
 import {blocked} from './movement';
 import {farmLayout,farmBounds} from './layout';
-import type {Garden} from './gardening';
+import {TILE,type Garden} from './gardening';
 export type ClearingTool='hand'|'axe'|'pickaxe';
-export type Clearing={removed:Record<string,number>;positions:Record<string,{x:number;y:number}>;wood:number;stone:number;weed:number};
+export type Clearing={progress?:Record<string,number>;removed:Record<string,number>;positions:Record<string,{x:number;y:number}>;wood:number;stone:number;weed:number};
 export const createClearing=():Clearing=>({removed:{},positions:{},wood:0,stone:0,weed:0});
 const originalDebris=[
  {id:'rock-a',kind:'rock',x:86,y:365,scale:1},{id:'rock-b',kind:'rock',x:529,y:291,scale:1},{id:'rock-c',kind:'rock',x:451,y:501,scale:1.1},{id:'rock-d',kind:'rock',x:102,y:330,scale:.5},{id:'rock-e',kind:'rock',x:551,y:265,scale:.55},
@@ -21,20 +21,26 @@ function expansionDebris(){
  return result;
 }
 const expandedDebris=expansionDebris();
-export const debris=[...originalDebris,...expandedDebris];
+// Extra permanent projects also give long-running saves enough new material for the workshop.
+function restorationProjects(){let seed=10161;const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};const result:{id:string;kind:'branch'|'rock';x:number;y:number;scale:number}[]=[];
+ for(let i=0;i<18;i++)for(let attempt=0;attempt<500;attempt++){const zone=i%3,x=Math.round(zone===0?-340+random()*260:zone===1?860+random()*260:20+random()*740),y=Math.round(zone===2?-280+random()*190:-240+random()*770);if(blocked(x,y)||[...originalDebris,...expandedDebris,...result].some(d=>Math.hypot(d.x-x,d.y-y)<47))continue;result.push({id:`restoration-${i}`,kind:i<12?'branch':'rock',x,y,scale:1.1});break;}return result;}
+export const debris=[...originalDebris,...expandedDebris,...restorationProjects()];
 
 export type Debris={id:typeof debris[number]['id'];kind:'rock'|'branch'|'weed';x:number;y:number;scale:number};
-export const neededTool={rock:'pickaxe',branch:'axe',weed:'hand'} as const;
-export const debrisNames={rock:'Kő',branch:'Faanyag',weed:'Gaz'};
-export function hasPlantAt(item:Debris,garden:Garden){return [...garden.plots.keys()].some(key=>{const [x,y]=key.split(',').map(Number);return Math.abs(x+8-item.x)<(item.kind==='rock'?24:20)&&Math.abs(y+8-item.y)<20;});}
+export const neededTool={rock:'hand',branch:'hand',weed:'hand'} as const;
+export const debrisNames={rock:'Régi kőrakás',branch:'Elhagyott faanyag',weed:'Gaz'};
+export function hasPlantAt(item:Debris,garden:Garden){return [...garden.plots.keys()].some(key=>{const [x,y]=key.split(',').map(Number);return Math.abs(x+TILE/2-item.x)<(item.kind==='rock'?24:20)&&Math.abs(y+TILE/2-item.y)<20;});}
 export const activeDebris=(state:Clearing,garden:Garden)=>debris.map(item=>({...item,...state.positions[item.id]})).filter(item=>state.removed[item.id]===undefined&&!hasPlantAt(item,garden));
 export function debrisAt(state:Clearing,garden:Garden,x:number,y:number){return activeDebris(state,garden).find(item=>Math.hypot(item.x-x,item.y-y)<(item.kind==='weed'?15:24));}
 export function clearDebris(state:Clearing,item:Debris,tool:string,player:{x:number;y:number},day:number):Clearing|null{
  if(state.removed[item.id]!==undefined||tool!==neededTool[item.kind]||Math.hypot(player.x-item.x,player.y-item.y)>44)return null;
- return {positions:structuredClone(state.positions),removed:{...state.removed,[item.id]:day},wood:state.wood+(item.kind==='branch'?1:0),stone:state.stone+(item.kind==='rock'?1:0),weed:state.weed+(item.kind==='weed'?1:0)};
+ const next=structuredClone(state);
+ if(item.kind!=='weed'){const progress=(next.progress?.[item.id]??0)+1;next.progress??={};if(progress<3){next.progress[item.id]=progress;return next;}delete next.progress[item.id];}
+ next.removed[item.id]=day;if(item.kind==='branch')next.wood+=6;else if(item.kind==='rock')next.stone+=6;else next.weed++;return next;
 }
 export function validClearing(value:unknown):value is Clearing{
  if(!value||typeof value!=='object')return false;const s=value as Clearing;
+ if(s.progress!==undefined&&(!s.progress||typeof s.progress!=='object'||Array.isArray(s.progress)||!Object.entries(s.progress).every(([id,n])=>debris.some(d=>d.id===id&&d.kind!=='weed')&&Number.isSafeInteger(n)&&n>=1&&n<=2&&s.removed?.[id]===undefined)))return false;
  if(!s.positions||typeof s.positions!=='object'||Array.isArray(s.positions)||!Object.entries(s.positions).every(([id,p])=>debris.some(item=>item.id===id)&&p&&Number.isFinite(p.x)&&Number.isFinite(p.y)&&p.x>=farmBounds.left+40&&p.x<=farmBounds.right-40&&p.y>=farmBounds.top+48&&p.y<=560&&!blocked(p.x,p.y)))return false;
  return Number.isSafeInteger(s.weed)&&s.weed>=0&&s.weed<=999999&&Number.isSafeInteger(s.wood)&&s.wood>=0&&s.wood<=999999&&Number.isSafeInteger(s.stone)&&s.stone>=0&&s.stone<=999999&&!!s.removed&&typeof s.removed==='object'&&!Array.isArray(s.removed)&&Object.entries(s.removed).every(([id,day])=>debris.some(d=>d.id===id)&&Number.isSafeInteger(day)&&day>=1);
 }
@@ -44,6 +50,7 @@ export function regrowDebris(state:Clearing,day:number,garden:Garden,fixture:{x:
  const next=structuredClone(state);
  const boxes=[...farmLayout.beds,farmLayout.mailbox,farmLayout.shipping,farmLayout.catalog,farmLayout.journal,farmLayout.dock,{x:farmBounds.left,y:554,w:farmLayout.southGate.x-farmBounds.left,h:46},{x:farmLayout.southGate.x+farmLayout.southGate.w,y:554,w:farmBounds.right-farmLayout.southGate.x-farmLayout.southGate.w,h:46}];
  for(const item of debris){
+  if(item.kind!=='weed')continue;
   const removed=next.removed[item.id];if(removed===undefined||day-removed<3)continue;
   const old=next.positions[item.id]??item;
   for(let attempt=0;attempt<160;attempt++){

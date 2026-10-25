@@ -114,8 +114,12 @@ export class FarmerArt{
   this.root.x=heavy?pose.weight*2:0;this.root.rotation=heavy?pose.weight*.045:0;
   if(heavy&&!walking){this.leftLeg.angle=-4*pose.weight;this.rightLeg.angle=4*pose.weight;}
   if(this.throwing>0){const t=1-this.throwing/.85;this.rightArm.setPosition(this.armX,this.armY).setScale(1);this.rightArm.rotation=-Math.sin(t*Math.PI)*2.8;this.leftArm.rotation=Math.sin(t*Math.PI)*.35;}
+  if(working&&['harvest','restore','search'].includes(this.actionTool)){
+   const t=workProgress(this.action),gather=this.actionTool==='harvest',bend=Math.sin(Math.min(1,t/.6)*Math.PI/2)*(t<.6?1:1-(t-.6)/.4),pull=gather?Math.sin(Math.max(0,(t-.45)/.55)*Math.PI):0;
+   this.root.y=4*bend-3*pull;this.root.rotation=(mirror?-.07:.07)*bend;this.leftLeg.angle=-9*bend;this.rightLeg.angle=9*bend;this.leftArm.rotation=gentleWorkAngle(shoulderDx,shoulderDy,this.action,mirror)*.7-.28*bend;this.rightArm.rotation=gentleWorkAngle(shoulderDx,shoulderDy,this.action,mirror)-pull*.7;
+  }
   this.head.y=-40+(heavy?pose.weight*1.5:0)+(walking?Math.abs(Math.sin(this.phase))*-.7:0);this.pony.angle=heavy?-pose.weight*9:walking?Math.sin(this.phase)*12:0;this.pony.x=3;
-  this.root.scaleX=look.x<0?-.98:1;this.root.scaleY=1;this.root.y=jumping?this.root.y:heavy?Math.max(0,pose.weight)*1.5:0;
+  this.root.scaleX=look.x<0?-.98:1;this.root.scaleY=1;this.root.y=jumping||working&&['harvest','restore','search'].includes(this.actionTool)?this.root.y:heavy?Math.max(0,pose.weight)*1.5:0;
   this.drawTool();if(contact)contact();
  }
 }

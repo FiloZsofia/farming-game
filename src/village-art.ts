@@ -1,3 +1,4 @@
+import {drawPathNetwork} from './path-art';
 import {farmBounds} from './layout';
 import {paintForest} from './forest-art';
 import {FOREST_LEFT} from './forest';
@@ -23,9 +24,7 @@ export function drawVillage(scene:Phaser.Scene){
  for(let i=0;i<9200;i++){const x=FOREST_LEFT+random()*(1200-FOREST_LEFT),y=600+random()*(WORLD_HEIGHT-600);rect(x,y,1+random()*2,1,[0x4f783f,0x9bb669,0xb1bf72][i%3],.6);}
  // Northern woodland backdrop continues beyond the farm's left edge, instead of blank green.
  for(let i=0;i<4700;i++){const x=FOREST_LEFT+random()*(-400-FOREST_LEFT),y=farmBounds.top+random()*(600-farmBounds.top);rect(x,y,1+random()*2,1,[0x4f783f,0x9bb669,0xb1bf72][i%3],.6);}
- const path=(points:number[][],width:number,openStart=false)=>{for(const [w,c]of [[width+5,0x738354],[width+1,0xa5936c],[width-3,0xc1ae85]]){g.lineStyle(w,c).beginPath();points.forEach(([x,y],i)=>i?g.lineTo(x,y):g.moveTo(x,y));g.strokePath();for(const[x,y]of (openStart?points.slice(1):points))oval(x,y,w,w,c);}};
- // The road starts with a straight continuation at the farm edge, without an overlapping end cap.
- for(const [i,p]of villagePaths.slice(0,4).entries())path(p.points,p.width,i===0);
+ paintForest(g,random,()=>drawPathNetwork(g,villagePaths));
  oval(479,1089,374,240,0x83915d);oval(476,1080,360,230,0xc3b697);
  for(let y=977;y<1183;y+=10)for(let x=298+(y%20?0:8);x<655;x+=17){if(((x-476)/176)**2+((y-1080)/109)**2>1)continue;rect(x,y,14,7,(x+y)%3?0xcabb9a:0xaeaa8e);line(x+2,y+1,x+12,y+1,0xdfcdae);}
  // A shallow stone fountain and a few pots give the square a quiet centre.
@@ -85,7 +84,6 @@ export function drawVillage(scene:Phaser.Scene){
  rect(632,1187,4,40,0x615940);rect(626,1180,17,18,0xd9c994);rect(624,1178,21,3,0x5b6550);poly([623,1178,634,1168,646,1178],0x566650);
  // Diverse forest silhouettes: broad oak, silver birch and fir.
  const tree=(x:number,y:number,kind:number,s=1)=>{if(woodlandTreeClear(x,y,s,kind))drawWoodlandTree(g,random,x,y,kind,s);};
- paintForest(g,random);
  for(let row=0;row<17;row++)for(let column=0;column<9;column++){const x=FOREST_LEFT+25+column*77+(row%2)*24,y=farmBounds.top+50+row*65;if(x< -445)tree(x,y,(row+column)%3,.85+(column%3)*.08);}
 
  // Backdrop foliage frames the route without filling its walking spaces.
@@ -98,7 +96,7 @@ export function drawVillage(scene:Phaser.Scene){
  // Supported wooden signs at the road and its forest fork, rather than text in grass.
  const sign=(postX:number,groundY:number,left:number,top:number,width:number,text:string,direction:'left'|'right'|'down')=>{
   oval(postX+4,groundY+3,19,7,0x35553a,.22);rect(postX-2,top+10,5,groundY-top-8,0x6b5438);rect(postX-1,top+12,2,groundY-top-10,0xac8858);
-  const tilt=direction==='down'?-.3:0,pivotX=postX,pivotY=top+14;g.save();g.translateCanvas(pivotX,pivotY).rotateCanvas(tilt).translateCanvas(-pivotX,-pivotY);
+  const tilt=direction==='down'?-.86:0,pivotX=postX,pivotY=top+14;g.save();g.translateCanvas(pivotX,pivotY).rotateCanvas(tilt).translateCanvas(-pivotX,-pivotY);
   const arrow=direction==='down'?[left,top,left+width,top,left+width,top+51,left+width/2,top+65,left,top+51]:direction==='right'?[left,top,left+width-10,top,left+width,top+11,left+width-10,top+22,left,top+22]:[left+10,top,left+width,top,left+width,top+22,left+10,top+22,left,top+11];
   poly(arrow,0x604f35);poly(arrow.map((v,i)=>v+(i%2? -1:0)),0xa98a59);if(direction==='down'){line(left+3,top+4,left+3,top+48,0xcfb17b);line(left+width-3,top+4,left+width-3,top+48,0x735b3c);}else line(left+12,top+3,left+width-12,top+3,0xcfb17b);if(direction!=='down')line(left+12,top+19,left+width-12,top+19,0x735b3c);oval(postX,top+6,2,2,0x5c5b45);oval(postX,top+16,2,2,0x5c5b45);
   g.restore();

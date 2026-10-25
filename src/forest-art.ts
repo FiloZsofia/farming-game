@@ -1,16 +1,16 @@
+import {natureSites,natureReady} from './nature-resources';
 import {drawWoodlandTree} from './woodland-tree';
 import Phaser from 'phaser';
 import {FOREST_LEFT,forestNest,forestPlants,walkingStick,type Forest} from './forest';
 // Paint into the village's own cached terrain: no overlay rectangle or separate palette.
-export function paintForest(g:Phaser.GameObjects.Graphics,random:()=>number){
+export function paintForest(g:Phaser.GameObjects.Graphics,random:()=>number,paintPaths?:()=>void){
  const oval=(x:number,y:number,w:number,h:number,c:number,a=1)=>g.fillStyle(c,a).fillEllipse(x,y,w,h);
  for(const [x,y,w,h]of [[-850,785,440,205],[-850,1210,440,220],[-380,730,570,145]]){
   oval(x+8,y+25,w,h,0x44683f,.38);oval(x-7,y+8,w*.98,h*.82,0x638743,.5);oval(x-35,y-8,w*.8,h*.56,0x8ba352,.36);
  }
  // Small overlapping shade patches deepen the hollow gradually, without straight edges.
  for(let i=0;i<100;i++){const x=-1080+random()*1060,y=690+random()*670;oval(x,y,45+random()*110,18+random()*35,0x406846,.05+Math.max(0,-x-200)/3000);}
- const path=[{x:107,y:930},{x:40,y:930},{x:-120,y:938},{x:-270,y:1000},{x:-450,y:995},{x:-570,y:962},{x:-660,y:978},{x:-780,y:984},{x:-940,y:1010}];
- for(const [width,color]of [[24,0x738354],[20,0xa5936c],[16,0xc1ae85]]){g.lineStyle(width,color).strokePoints(path);for(const p of path)oval(p.x,p.y,width,width,color);}
+ paintPaths?.();
  // Curved banks, exposed stones and bright broken reflections make the brook readable.
  const brook=new Phaser.Curves.Spline([new Phaser.Math.Vector2(-1060,1285),new Phaser.Math.Vector2(-780,1250),new Phaser.Math.Vector2(-600,1207),new Phaser.Math.Vector2(-440,1195),new Phaser.Math.Vector2(-260,1240),new Phaser.Math.Vector2(-30,1320)]).getPoints(90);
  for(const [width,color]of [[40,0x617347],[32,0x9c9a70],[25,0x3c7778],[17,0x70aaa5]]){g.lineStyle(width,color).strokePoints(brook);for(const p of brook)oval(p.x,p.y,width,width,color);}
@@ -40,7 +40,7 @@ export function paintForest(g:Phaser.GameObjects.Graphics,random:()=>number){
  for(const [dx,dy,plug]of [[-33,-20,0],[-18,-10,1],[-4,-23,1],[13,-13,0],[28,-25,1]]){oval(n.x+dx,n.y+dy,9,10,0x493c29);oval(n.x+dx-1,n.y+dy-1,6,7,plug?0xa39368:0x282e24);if(plug)g.lineStyle(.7,0xc4b687).lineBetween(n.x+dx-2,n.y+dy,n.x+dx+2,n.y+dy-1);}
  oval(n.x-9,n.y-34,46,9,0x62804a);for(let i=0;i<9;i++)oval(n.x-30+i*5,n.y-36+(i%2)*3,5,3,0x8fa057);
 }
-export function drawForestObjects(scene:Phaser.Scene,f:Forest,day:number){
+export function drawForestObjects(scene:Phaser.Scene,f:Forest,day:number,weatherSeed=0){
  const g=scene.add.graphics().setDepth(1);
  for(const p of forestPlants){if(f.picked[p.id]!==undefined&&day-f.picked[p.id]<3)continue;g.fillStyle(0x2f4f32,.22).fillEllipse(p.x,p.y+2,27,9);
   if(p.kind==='thyme'){for(let i=0;i<9;i++){const x=p.x+(i%3-1)*6,y=p.y-Math.floor(i/3)*4;g.lineStyle(1.5,0x527449).lineBetween(x,y+3,x,y-7);g.fillStyle(i%2?0xa789b5:0xc3a4c4).fillCircle(x,y-7,2);}}
@@ -55,6 +55,11 @@ export function drawForestObjects(scene:Phaser.Scene,f:Forest,day:number){
     g.fillStyle(0x8caa60).fillTriangle(x-3,p.y-h+5,x,p.y-h-3,x+3,p.y-h+5);
    }
   }
+ }
+ for(const p of natureSites){if(!natureReady(f,p,day,weatherSeed))continue;
+  g.fillStyle(0x314a34,.28).fillEllipse(p.x+2,p.y+5,34,12);
+  if(p.kind==='wood'){g.lineStyle(5,0x725039).strokePoints([{x:p.x-15,y:p.y+3},{x:p.x+12,y:p.y-4},{x:p.x+19,y:p.y-12}]);g.lineStyle(2,0xb28b59).lineBetween(p.x-13,p.y+1,p.x+12,p.y-6);g.lineStyle(3,0x78573d).lineBetween(p.x-2,p.y,p.x-6,p.y-11);g.fillStyle(0xcdb083).fillEllipse(p.x-15,p.y+3,5,6);g.fillStyle(0x86995b).fillEllipse(p.x-5,p.y-12,9,4);}
+  else{for(const [dx,dy,w,h,c]of [[-8,2,17,10,0xa7a99b],[7,0,14,11,0x89998e],[0,-5,12,8,0xc4c5b2]]){g.fillStyle(c).fillEllipse(p.x+dx,p.y+dy,w,h);g.lineStyle(.8,0xd9d4b9).lineBetween(p.x+dx-w*.25,p.y+dy-2,p.x+dx+2,p.y+dy-3);}g.lineStyle(1.2,0x67949a,.7).lineBetween(p.x-12,p.y+5,p.x-6,p.y+5).lineBetween(p.x+5,p.y+5,p.x+12,p.y+5);}
  }
  if(!f.stick){g.lineStyle(4,0x715238).strokePoints([{x:walkingStick.x-20,y:walkingStick.y+4},{x:walkingStick.x+12,y:walkingStick.y-4},{x:walkingStick.x+22,y:walkingStick.y-13}]);g.lineStyle(1,0xc6aa78).lineBetween(walkingStick.x-18,walkingStick.y+2,walkingStick.x+12,walkingStick.y-6);}
  return g;

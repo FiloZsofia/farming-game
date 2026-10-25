@@ -1,3 +1,4 @@
+import {natureSites,natureTreeClear} from './nature-resources';
 import {forestBlocked,forestPlants} from './forest';
 import {farmLayout} from './layout';
 import {inHome,homeBlocked} from './home';
@@ -24,6 +25,7 @@ export const villagePaths=[
 ];
 // Match the crown silhouette, leaving room under/along its tapered edges.
 export function woodlandTreeClear(x:number,y:number,scale=1,kind=0){
+ if(!natureTreeClear(x,y,scale))return false;
  const crowns=kind===2?Array.from({length:4},(_,i)=>({x:0,y:-90+i*19+22,rx:15+i*8,ry:24})):[{x:-18,y:-48,rx:22.5,ry:19.5},{x:12,y:-56,rx:25.5,ry:23.5},{x:-3,y:-76,rx:24.5,ry:19.5},{x:0,y:-38,rx:28,ry:16}];
  return villagePaths.every(path=>path.points.slice(1).every((b,i)=>{const a=path.points[i],steps=Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/3),margin=path.width/2+4;for(let j=0;j<=steps;j++){const xx=a[0]+(b[0]-a[0])*j/steps,yy=a[1]+(b[1]-a[1])*j/steps;if(Math.hypot(xx-Math.max(x-5*scale,Math.min(x+6*scale,xx)),yy-Math.max(y-44*scale,Math.min(y+7*scale,yy)))<margin)return false;if(crowns.some(c=>((xx-x-c.x*scale)/(c.rx*scale+margin))**2+((yy-y-c.y*scale)/(c.ry*scale+margin))**2<1))return false;}return true;}));
 }
@@ -41,7 +43,7 @@ for(const original of candidates){
 // The western entrance grows denser toward the woodland, on both sides of its narrow trail.
 for(let row=0;row<7;row++)for(let column=0;column<10;column++){
  const t={x:-365+column*47+(row%2)*16,y:835+row*55,kind:(row+column)%3};
- if(woodlandTreeClear(t.x,t.y,1,t.kind)&&forestPlants.every(p=>Math.hypot(p.x-t.x,p.y-t.y)>42)&&villageLayout.bushes.every(p=>Math.hypot(p.x-t.x,p.y-t.y)>38)&&[...villageTrees,...forestTrees].every(p=>Math.hypot(p.x-t.x,p.y-t.y)>34))forestTrees.push(t);
+ if(woodlandTreeClear(t.x,t.y,1,t.kind)&&natureSites.every(p=>Math.hypot(p.x-t.x,p.y-t.y)>35)&&forestPlants.every(p=>Math.hypot(p.x-t.x,p.y-t.y)>42)&&villageLayout.bushes.every(p=>Math.hypot(p.x-t.x,p.y-t.y)>38)&&[...villageTrees,...forestTrees].every(p=>Math.hypot(p.x-t.x,p.y-t.y)>34))forestTrees.push(t);
 }
 const buildings:Box[]=[villageLayout.nursery,villageLayout.fishShop];
 export function villageBlocked(x:number,y:number){

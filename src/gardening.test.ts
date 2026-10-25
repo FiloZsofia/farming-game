@@ -19,11 +19,11 @@ describe('gardening actions',()=>{
   expect(g.plots.get(tileKey(tile))).toEqual({crop:'pea',watered:true,growth:0,regrowing:false});
  });
  it('rejects a fifth seed without creating a crop',()=>{
-  const g=createGarden();for(let i=0;i<5;i++){const t={x:353+(i%3)*16,y:280+Math.floor(i/3)*16};const p={x:t.x,y:t.y};work(g,'hoe',t,p);const result=work(g,'radish',t,p);expect(result.ok).toBe(i<4);}
+  const g=createGarden();for(let i=0;i<5;i++){const t={x:341+(i%3)*24,y:272+Math.floor(i/3)*24};const p={x:t.x,y:t.y};work(g,'hoe',t,p);const result=work(g,'radish',t,p);expect(result.ok).toBe(i<4);}
   expect(g.seeds.radish).toBe(0);expect([...g.plots.values()].filter(p=>p.crop)).toHaveLength(4);
  });
  it('protects paths, pond, house and bed frames',()=>{
-  for(const [x,y] of [[250,260],[638,464],[225,180],[349,278]])expect(cultivable(targetTile(x,y))).toBe(false);
+  for(const [x,y] of [[250,260],[638,464],[225,180],[337,270]])expect(cultivable(targetTile(x,y))).toBe(false);
  });
  it('keeps adjacent bed cells distinct and allows meadow soil',()=>{
   expect(tileKey(targetTile(360,286))).not.toBe(tileKey(targetTile(376,286)));

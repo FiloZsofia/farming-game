@@ -632,3 +632,25 @@ A három láda oldalkerete a meglévő, 3 × 2 darab 16-os ültetőrácsot szimm
 A keskeny, hosszúkás Falu nyíl deszkája és felirata enyhén, körülbelül 17 fokkal az ösvény folytatása felé dől; a tartóoszlop függőleges marad. Az Erdei ösvény táblája változatlan.
 
 A falu utcai lámpái erősebb, meleg fényudvart és a talajon látható fényfoltot kapnak. A két bolt ablakai este aranyló fényt adnak. A fények az éjszakai kék árnyékolás fölött, a kezelőfelület alatt jelennek meg, kamerahelyzethez és nagyításhoz igazítva. Nappal eltűnnek, szürkületkor fokozatosan erősödnek. A fényréteg a játékterület szélén levágódik, és nem fogja el a kattintásokat.
+
+### Nagyobb kertészkedés és egységes ösvények – véglegesített pontosítás
+
+Az ültetőhely mérete 16-ról 24 egységre nő, a növényrajzok másfélszeres méretben jelennek meg. A három láda továbbra is 3 × 2 helyet ad, nagyobb, szimmetrikus kerettel. A szabad földön is 24-es a rács. A 18-as mentésformátum a régi rács növényeit külön-külön áthelyezi a nagyobb rácsra: terményt, nedvességet, növekedést, újratermést, vadvirágokat, magokat, aranyat és küldetésállapotot megőriz. Ha két korábbi szabadföldi hely ugyanarra az új cellára esne, a legközelebbi érvényes szabad helyet keressük; nem vonunk össze és nem dobunk el növényt. A biztonsági mentés eredetije a sikeres új mentésig megmarad.
+
+Szüretkor Sam lehajol, nyúl és visszahúzó mozdulatot tesz; felúszó, felismerhető terményikon és +1 jelzés jelenik meg, rövid, halk hanggal. A kézi gyűjtögetés és helyreállítás is lehajló, keresgélő mozdulatot kap. Az érettségjelzők továbbra is minden növény után rajzolódnak.
+
+A falusi és erdei utak egyetlen hálózatként készülnek, minden külső szegélyük előbb, minden belső rétegük utána. Az erdei elágazásba nem rajzolódhat külön körvonal vagy végződés. Ez az AGENTS.md kötelező szabálya is. A Falu nyíl az ösvény délkeleti folytatásának irányába mutat, a hosszú deszkával együtt forgatott, jól olvasható felirattal; az oszlopa függőleges.
+
+### A gyűjtögetés reformja – az új szabály felülírja a korábbi fa/kő visszanövést
+
+A farm faanyag- és kőrakásai tartós helyreállítási helyek. Három közeli, kézi munkafázis után a faanyag 6 fát és 2 ócskavasat, a kőrakás 6 követ ad. A félbehagyott munka mentődik, a jutalom csak a harmadik fázisban jár, egyszer. A kész hely végleg megtisztul. A régi szögnyomos kerítésmaradványok, farakások és földbe süllyedt kőcsoportok jól felismerhető rajzot kapnak. E betűvel is dolgozhatunk rajtuk, nem kell szerszámot váltogatva csapkodni.
+
+Az udvaron szétszórt ócskavashalmok megszűnnek; a régi begyűjtési állapot és a már birtokolt ócskavas megmarad, az utánpótlás a faanyag bontásából jön. A rézcsőhöz tartozó egyedi régi szivattyú megmarad. A gyűjtött ócskavas nem jelenik meg újra külön kupacban.
+
+További 12 állandó faanyaghely és 6 kőrakás biztosítja, hogy már korábban kitakarított mentésben is elérhető legyen a géphez és egy tárolóládához szükséges alapanyag: 72 fa, 24 ócskavas és 36 kő. A gép költsége változatlanul 35 fa, 30 kő, 18 ócskavas, rézcső, üvegedény és lenszövet; a láda 20 fa és 5 ócskavas.
+
+Az erdei utánpótlás hat lehullottág-helyen és hat patakparti kavicsos helyen gyűjthető, kézzel, alkalmanként 1 fával vagy 1 kővel. A kövek három nap után szedhetők újra; ágaknál legalább három nap és közben esős vagy szeles/felhős nap szükséges. A meglévő három időjárásállapot megmarad. A természetes ágak nem adnak ócskavasat. A begyűjtési dátumok mentődnek. A tárgyak körül a lombkoronák nem takarhatják el a talajt és a felszedhető mintát. A farm gaznövényei továbbra is három nap után újulnak meg.
+
+### Kilépőgombok és magkatalógus
+
+A játékba visszatérő gomb neve Vissza vagy Vissza a játékba, soha nem Folytatás. Ez az AGENTS.md-ben is rögzített szabály. A Magkatalógusban a Vissza csak bezár; a még el nem küldött mennyiségek az adott játékfolyamatban megmaradnak az újbóli megnyitásig. A Megrendelem hajtja végre és fizeti ki a rendelést; sikeres rendelés után ürül a választás, sikertelen mentésnél megmarad.

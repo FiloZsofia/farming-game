@@ -1,31 +1,10 @@
 import {describe,it,expect} from 'vitest';
 import {createGarden} from './gardening';
 import {createClearing,clearDebris,debris,regrowDebris,activeDebris,validClearing,hasPlantAt} from './cleanup';
-describe('farm clearing',()=>{
- it('requires the correct tool and close range, without mutating the old state',()=>{
-  const state=createClearing(),rock=debris[0];
-  expect(clearDebris(state,rock,'axe',rock,1)).toBeNull();expect(clearDebris(state,rock,'pickaxe',{x:250,y:242},1)).toBeNull();
-  const next=clearDebris(state,rock,'pickaxe',rock,1)!;expect(next.stone).toBe(1);expect(state).toEqual(createClearing());expect(clearDebris(next,rock,'pickaxe',rock,1)).toBeNull();
- });
- it('collects wood from branches and removes weeds by hand',()=>{
-  const branch=debris.find(d=>d.kind==='branch')!,weed=debris.find(d=>d.kind==='weed')!;
-  const state=clearDebris(createClearing(),branch,'axe',branch,1)!;expect(state.wood).toBe(1);
-  const clean=clearDebris(state,weed,'hand',weed,1)!;expect(clean.weed).toBe(1);expect(clean.wood).toBe(1);expect(clean.stone).toBe(0);expect(activeDebris(clean,createGarden())).not.toContainEqual(weed);
- });
- it('restores every decorative kind after exactly three days without losing materials',()=>{
-  let state=createClearing();for(const item of debris)state=clearDebris(state,item,item.kind==='rock'?'pickaxe':item.kind==='branch'?'axe':'hand',item,1)!;
-  expect(Object.keys(regrowDebris(state,3,createGarden()).removed)).toHaveLength(debris.length);
-  let seed=71;const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};const regrown=regrowDebris(state,4,createGarden(),null,random);expect(Object.keys(regrown.positions)).toHaveLength(debris.length);expect(validClearing(regrown)).toBe(true);expect(regrown.removed).toEqual({});expect(regrown.wood).toBe(state.wood);expect(regrown.stone).toBe(state.stone);
- });
- it('relocates regrowth away from worked soil',()=>{
-  const garden=createGarden(),weed=debris.find(d=>d.id==='weed-c')!,state=clearDebris(createClearing(),weed,'hand',weed,1)!;
-  garden.plots.set('288,448',{crop:'pea',growth:0,watered:false,regrowing:false});
-  const regrown=regrowDebris(state,4,garden);expect(regrown.removed[weed.id]).toBeUndefined();const moved=activeDebris(regrown,garden).find(d=>d.id===weed.id)!;expect(hasPlantAt(moved,garden)).toBe(false);expect(Math.hypot(moved.x-weed.x,moved.y-weed.y)).toBeGreaterThanOrEqual(52);
- });
- it('rejects corrupt material counts and removal records',()=>{
-  expect(validClearing({removed:[],wood:0,stone:0})).toBe(false);expect(validClearing({removed:{'rock-a':0},wood:0,stone:0})).toBe(false);expect(validClearing({removed:{},wood:-1,stone:0})).toBe(false);
- });
-});
-describe('decorative regrowth around placed objects',()=>{
- it('keeps the birdhouse clear of returning debris',()=>{const item=debris[0],state=clearDebris(createClearing(),item,'pickaxe',item,1)!;const regrown=regrowDebris(state,4,createGarden(),item);expect(regrown.removed[item.id]).toBeUndefined();const p=regrown.positions[item.id];expect(Math.hypot(p.x-item.x,p.y-item.y)).toBeGreaterThanOrEqual(38);});
+const complete=(state:ReturnType<typeof createClearing>,item:typeof debris[number],day=1)=>{for(let i=0;i<(item.kind==='weed'?1:3);i++)state=clearDebris(state,item,'hand',item,day)!;return state;};
+describe('permanent farm restoration',()=>{
+ it('requires close manual work and persists three phases before rewarding six resources',()=>{const state=createClearing(),rock=debris.find(d=>d.kind==='rock')!;expect(clearDebris(state,rock,'axe',rock,1)).toBeNull();expect(clearDebris(state,rock,'hand',{x:250,y:242},1)).toBeNull();const a=clearDebris(state,rock,'hand',rock,1)!;expect(a.progress?.[rock.id]).toBe(1);expect(a.stone).toBe(0);expect(a.removed[rock.id]).toBeUndefined();expect(validClearing(a)).toBe(true);const b=clearDebris(a,rock,'hand',rock,1)!;expect(b.progress?.[rock.id]).toBe(2);const c=clearDebris(b,rock,'hand',rock,1)!;expect(c.stone).toBe(6);expect(c.removed[rock.id]).toBe(1);expect(c.progress?.[rock.id]).toBeUndefined();expect(clearDebris(c,rock,'hand',rock,1)).toBeNull();expect(state).toEqual(createClearing());});
+ it('permanently clears wood and stone while weeds renew after three days',()=>{let state=createClearing();for(const item of debris)state=complete(state,item);expect(activeDebris(state,createGarden())).toHaveLength(0);expect(Object.keys(regrowDebris(state,3,createGarden()).removed)).toHaveLength(debris.length);const regrown=regrowDebris(state,4,createGarden());expect(activeDebris(regrown,createGarden()).every(d=>d.kind==='weed')).toBe(true);expect(regrown.wood).toBe(state.wood);expect(regrown.stone).toBe(state.stone);expect(validClearing(regrown)).toBe(true);for(const item of debris.filter(d=>d.kind!=='weed'))expect(regrown.removed[item.id]).toBe(1);});
+ it('keeps the birdhouse and cultivated ground free of returning weeds',()=>{const garden=createGarden(),weed=debris.find(d=>d.kind==='weed')!,state=complete(createClearing(),weed);garden.plots.set('288,432',{crop:'pea',growth:0,watered:false,regrowing:false});const regrown=regrowDebris(state,4,garden,weed);const moved=activeDebris(regrown,garden).find(d=>d.id===weed.id)!;expect(hasPlantAt(moved,garden)).toBe(false);expect(Math.hypot(moved.x-weed.x,moved.y-weed.y)).toBeGreaterThanOrEqual(38);});
+ it('rejects invalid work phases and material totals',()=>{for(const progress of [{'rock-a':3},{'weed-a':1},{unknown:1}])expect(validClearing({...createClearing(),progress})).toBe(false);expect(validClearing({...createClearing(),wood:-1})).toBe(false);});
 });

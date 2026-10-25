@@ -1,6 +1,6 @@
 import { farmLayout,farmBounds } from './layout';
 import { blocked } from './movement';
-export const TILE=16;
+export const TILE=24;
 export const cropNames={radish:'Retek',potato:'Burgonya',pea:'Borsó',strawberry:'Eper',honeyberry:'Mézbogyó',blueberry:'Áfonya',carrot:'Sárgarépa',lettuce:'Saláta',onion:'Hagyma'} as const;
 export type Crop=keyof typeof cropNames;
 export type Tool='hoe'|'water'|'harvest'|Crop;
@@ -13,7 +13,7 @@ export const createGarden=():Garden=>({plots:new Map(),seeds:{radish:4,potato:4,
 export const tileKey=(tile:Tile)=>`${tile.x},${tile.y}`;
 export function targetTile(x:number,y:number):Tile{
  for(const b of farmLayout.beds){
-  if(x>=b.x+4&&x<b.x+52&&y>=b.y+2&&y<b.y+34)
+  if(x>=b.x+4&&x<b.x+4+3*TILE&&y>=b.y+2&&y<b.y+2+2*TILE)
    return {x:b.x+4+Math.floor((x-b.x-4)/TILE)*TILE,y:b.y+2+Math.floor((y-b.y-2)/TILE)*TILE};
  }
  return {x:Math.floor(x/TILE)*TILE,y:Math.floor(y/TILE)*TILE};
@@ -24,7 +24,7 @@ function segmentDistance(x:number,y:number,a:readonly number[],b:readonly number
 }
 export function cultivable(tile:Tile):boolean{
  const {x,y}=tile;
- const bed=farmLayout.beds.find(b=>x>=b.x+4&&x+TILE<=b.x+52&&y>=b.y+2&&y+TILE<=b.y+34);
+ const bed=farmLayout.beds.find(b=>x>=b.x+4&&x+TILE<=b.x+4+3*TILE&&y>=b.y+2&&y+TILE<=b.y+2+2*TILE);
  if(bed)return true;
  // The prototype opens clear meadow patches first; trees, paths and fixtures remain protected.
  const expansion=(x<0||x>=800||y<0)&&x>=farmBounds.left+40&&x+TILE<=farmBounds.right-40&&y>=farmBounds.top+48&&y+TILE<=568;

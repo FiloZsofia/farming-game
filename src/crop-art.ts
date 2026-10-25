@@ -1,7 +1,8 @@
 import type Phaser from 'phaser';
-import {growthTarget,isRipe,type Plot} from './gardening';
+import {TILE,growthTarget,isRipe,type Plot} from './gardening';
 
-export function drawCrop(g:Phaser.GameObjects.Graphics,x:number,y:number,plot:Plot){
+export function drawCrop(g:Phaser.GameObjects.Graphics,x:number,y:number,plot:Plot){g.save().translateCanvas(x,y).scaleCanvas(TILE/16,TILE/16);drawCropGlyph(g,0,0,plot);g.restore();}
+function drawCropGlyph(g:Phaser.GameObjects.Graphics,x:number,y:number,plot:Plot){
  if(!plot.crop)return;
  const stage=Math.min(1,plot.growth/growthTarget(plot)),cx=x+8,cy=y+10;
  const leaf=(px:number,py:number,w:number,h:number,color:number)=>{g.fillStyle(color);g.fillEllipse(px,py,w,h);};

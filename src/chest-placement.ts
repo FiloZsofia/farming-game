@@ -1,3 +1,4 @@
+import {TILE} from './gardening';
 import {farmLayout,farmBounds} from './layout';
 import {blocked} from './movement';
 import {HOME_ORIGIN,inHome,homeBlocked,homeObjects} from './home';
@@ -17,7 +18,7 @@ export function canPlaceChestAt(p:Point,s:{player:Point;garden:Garden;clearing:C
  const overlaps=(b:{x:number;y:number;w:number;h:number},pad=3)=>footprint.x<b.x+b.w+pad&&footprint.x+footprint.w>b.x-pad&&footprint.y<b.y+b.h+pad&&footprint.y+footprint.h>b.y-pad;
  // Reserve actual footprints and entrance lanes, rather than broad distance circles or entire paths.
  if([farmLayout.houseBounds,farmLayout.shedBounds,farmLayout.journal,farmLayout.catalog,farmLayout.mailbox,farmLayout.shipping,{x:170,y:174,w:12,h:44},{x:300,y:174,w:12,h:44},{x:215,y:177,w:48,h:68},{x:610,y:173,w:44,h:57}].some(b=>overlaps(b)))return false;
- if([...garden.plots.keys()].some(k=>{const[x,y]=k.split(',').map(Number);return overlaps({x,y,w:16,h:16},1);}))return false;
+ if([...garden.plots.keys()].some(k=>{const[x,y]=k.split(',').map(Number);return overlaps({x,y,w:TILE,h:TILE},1);}))return false;
  if(travel.estate.trees.some(t=>Math.hypot(t.x-p.x,t.y-p.y)<27)||travel.estate.pond.some(t=>Math.hypot(t.x-p.x,t.y-p.y)<25)||salvageSites.some(t=>Math.hypot(t.x-p.x,t.y-p.y)<27)||story.birdhouse&&Math.hypot(story.birdhouse.x-p.x,story.birdhouse.y-p.y)<25)return false;
  return [[-17,-10],[17,-10],[-17,9],[17,9]].every(([dx,dy])=>!blocked(p.x+dx,p.y+dy));
 }
