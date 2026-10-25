@@ -4,9 +4,10 @@ import {farmLayout} from './layout';
 import {inHome,homeBlocked} from './home';
 import {inWorkshop,WORKSHOP_ORIGIN} from './research';
 import {blocked,type Box} from './movement';
-export const WORLD_HEIGHT=1420;
+export const WORLD_HEIGHT=1520;
 export const WORLD_WIDTH=1000;
 export const villageLayout={
+ craftShop:{x:560,y:1220,w:200,h:112,door:{x:660,y:1341},entrance:{x:645,y:1290,w:34,h:57}},
  nursery:{x:510,y:840,w:165,h:106,door:{x:591,y:954},entrance:{x:580,y:898,w:29,h:65}},
  fishShop:{x:665,y:960,w:230,h:128,door:{x:708,y:1100},entrance:{x:690,y:1030,w:35,h:76}},
  square:{x:475,y:1080,rx:181,ry:115},
@@ -17,14 +18,16 @@ export const villageLayout={
 } as const;
 // Drawing and canopy clearance use the same full routes.
 export const villagePaths=[
- {width:32,points:[[170,600],[174,672],[305,784],[393,909],[476,1030],[493,1320],[493,1414]]},
+ {width:32,points:[[170,600],[174,672],[305,784],[393,909],[476,1030],[493,1320],[493,WORLD_HEIGHT-6]]},
  {width:17,points:[[278,760],[150,813],[107,930],[211,1040],[356,1080]]},
  {width:28,points:[[474,1016],[586,978],[591,940]]},
  {width:25,points:[[606,1097],[660,1100],[708,1100]]},
+ {width:23,points:[[493,1320],[493,1364],[660,1364],[660,1341]]},
  {width:20,points:[[107,930],[40,930],[-120,938],[-270,1000],[-450,995],[-570,962],[-660,978],[-780,984],[-940,1010]]},
 ];
 // Match the crown silhouette, leaving room under/along its tapered edges.
 export function woodlandTreeClear(x:number,y:number,scale=1,kind=0){
+ const building=villageLayout.craftShop;if(x+42*scale>building.x-12&&x-42*scale<building.x+building.w+12&&y+12*scale>building.y-40&&y-110*scale<building.y+building.h+12)return false;
  if(!natureTreeClear(x,y,scale))return false;
  const crowns=kind===2?Array.from({length:4},(_,i)=>({x:0,y:-90+i*19+22,rx:15+i*8,ry:24})):[{x:-18,y:-48,rx:22.5,ry:19.5},{x:12,y:-56,rx:25.5,ry:23.5},{x:-3,y:-76,rx:24.5,ry:19.5},{x:0,y:-38,rx:28,ry:16}];
  return villagePaths.every(path=>path.points.slice(1).every((b,i)=>{const a=path.points[i],steps=Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/3),margin=path.width/2+4;for(let j=0;j<=steps;j++){const xx=a[0]+(b[0]-a[0])*j/steps,yy=a[1]+(b[1]-a[1])*j/steps;if(Math.hypot(xx-Math.max(x-5*scale,Math.min(x+6*scale,xx)),yy-Math.max(y-44*scale,Math.min(y+7*scale,yy)))<margin)return false;if(crowns.some(c=>((xx-x-c.x*scale)/(c.rx*scale+margin))**2+((yy-y-c.y*scale)/(c.ry*scale+margin))**2<1))return false;}return true;}));
@@ -45,11 +48,11 @@ for(let row=0;row<7;row++)for(let column=0;column<10;column++){
  const t={x:-365+column*47+(row%2)*16,y:835+row*55,kind:(row+column)%3};
  if(woodlandTreeClear(t.x,t.y,1,t.kind)&&natureSites.every(p=>Math.hypot(p.x-t.x,p.y-t.y)>35)&&forestPlants.every(p=>Math.hypot(p.x-t.x,p.y-t.y)>42)&&villageLayout.bushes.every(p=>Math.hypot(p.x-t.x,p.y-t.y)>38)&&[...villageTrees,...forestTrees].every(p=>Math.hypot(p.x-t.x,p.y-t.y)>34))forestTrees.push(t);
 }
-const buildings:Box[]=[villageLayout.nursery,villageLayout.fishShop];
+const buildings:Box[]=[villageLayout.nursery,villageLayout.fishShop,villageLayout.craftShop];
 export function villageBlocked(x:number,y:number){
  if(forestTrees.some(t=>Math.hypot((x-t.x)/12,(y-t.y)/9)<1))return true;
  if(x<22&&y>=695&&y<=1340)return forestBlocked(x,y);
- if(x<22||x>WORLD_WIDTH-22||y<600||y>1394)return true;
+ if(x<22||x>WORLD_WIDTH-22||y<600||y>WORLD_HEIGHT-26)return true;
  if(buildings.some(b=>x+7>b.x&&x-7<b.x+b.w&&y+3>b.y&&y-4<b.y+b.h))return true;
  if([...villageTrees,...forestTrees].some(t=>Math.hypot((x-t.x)/12,(y-t.y)/9)<1))return true;
  // The basin and benches are solid; the surrounding cobbles remain walkable.
@@ -68,9 +71,9 @@ export function worldBlocked(x:number,y:number){
  return blocked(x,y);
 }
 
-export type Shop='nursery'|'fishShop';
-export const shopOrigins:Record<Shop,number>={nursery:1600,fishShop:2300};
-export function shopAt(y:number):Shop|null{return y>=1600&&y<2200?'nursery':y>=2300&&y<2900?'fishShop':null;}
+export type Shop='nursery'|'fishShop'|'craftShop';
+export const shopOrigins:Record<Shop,number>={nursery:1600,fishShop:2300,craftShop:4400};
+export function shopAt(y:number):Shop|null{return y>=1600&&y<2200?'nursery':y>=2300&&y<2900?'fishShop':y>=4400&&y<5000?'craftShop':null;}
 export function shopBlocked(x:number,y:number){
  const shop=shopAt(y);if(!shop)return true;const yy=y-shopOrigins[shop];
  if(x<108||x>692||yy<198||yy>510)return true;
@@ -80,7 +83,7 @@ export function shopBlocked(x:number,y:number){
  return false;
 }
 
-export const shopNames={nursery:'Faiskola',fishShop:'Kertitó Szaküzlet'} as const;
+export const shopNames={nursery:'Faiskola',fishShop:'Kertitó Szaküzlet',craftShop:'Műhelybolt'} as const;
 export const shopsOpen=(elapsed:number)=>elapsed<360;
 export type BenchPose={x:number;y:number;inX:number;inY:number;sideX:number;sideY:number};
 export function benchPose(angle:number):BenchPose{
@@ -93,7 +96,7 @@ export function benchContains(b:BenchPose,x:number,y:number){const dx=x-b.x,dy=y
 // Move only positions affected by those changes, preserving every possession.
 export function relocateVillagePlayer(player:{x:number;y:number}){
  const {x,y}=player,b=villageLayout.fishShop;
- const changed=[...villageTrees,...forestTrees].some(t=>Math.hypot((x-t.x)/12,(y-t.y)/9)<1)||(x+7>b.x&&x-7<b.x+b.w&&y+3>b.y&&y-4<b.y+b.h)||villageLayout.benches.some(p=>benchContains(benchPose(p.angle),x,y));
+ const changed=buildings.some(b=>x+7>b.x&&x-7<b.x+b.w&&y+3>b.y&&y-4<b.y+b.h)||[...villageTrees,...forestTrees].some(t=>Math.hypot((x-t.x)/12,(y-t.y)/9)<1)||(x+7>b.x&&x-7<b.x+b.w&&y+3>b.y&&y-4<b.y+b.h)||villageLayout.benches.some(p=>benchContains(benchPose(p.angle),x,y));
  if(!changed||!worldBlocked(x,y))return player;
  for(let distance=8;distance<=160;distance+=8)for(let angle=0;angle<Math.PI*2;angle+=Math.PI/8){const point={x:x+Math.cos(angle)*distance,y:y+Math.sin(angle)*distance};if(!worldBlocked(point.x,point.y))return point;}
  return {x:560,y:1100};

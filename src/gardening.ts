@@ -7,7 +7,7 @@ export type Tool='hoe'|'water'|'harvest'|Crop;
 // Agreed initial playtest values; revisit after playing.
 export const growthRules={radish:3,potato:5,pea:6,peaRegrowth:3,strawberry:4,honeyberry:5,blueberry:6,fruitRegrowth:2,carrot:4,lettuce:2,onion:5};
 export type Tile={x:number;y:number};
-export type Plot={watered:boolean;crop:Crop|null;growth:number;regrowing:boolean};
+export type Plot={watered:boolean;crop:Crop|null;growth:number;regrowing:boolean;mulched?:boolean;moisture?:number};
 export type Garden={plots:Map<string,Plot>;seeds:Record<Crop,number>;produce:Record<Crop,number>};
 export const createGarden=():Garden=>({plots:new Map(),seeds:{radish:4,potato:4,pea:4,strawberry:0,honeyberry:0,blueberry:0,carrot:0,lettuce:0,onion:0},produce:{radish:0,potato:0,pea:0,strawberry:0,honeyberry:0,blueberry:0,carrot:0,lettuce:0,onion:0}});
 export const tileKey=(tile:Tile)=>`${tile.x},${tile.y}`;
@@ -37,6 +37,7 @@ export function cultivable(tile:Tile):boolean{
  }
  return true;
 }
+export function waterPlot(plot:Plot){plot.watered=true;if(plot.mulched)plot.moisture=3;}
 export const reachable=(tile:Tile,player:{x:number;y:number})=>Math.hypot(tile.x+TILE/2-player.x,tile.y+TILE/2-player.y)<=44;
 export function work(garden:Garden,tool:Tool,tile:Tile,player:{x:number;y:number}):{ok:boolean;message:string}{
  if(!reachable(tile,player))return {ok:false,message:'Sétálj közelebb a kijelölt földkockához.'};
@@ -60,7 +61,7 @@ export function work(garden:Garden,tool:Tool,tile:Tile,player:{x:number;y:number
  if(!plot)return {ok:false,message:'Előbb ásd fel a földet a kapával.'};
  if(tool==='water'){
   if(plot.watered)return {ok:false,message:'Ez a föld már meg van öntözve.'};
-  plot.watered=true;return {ok:true,message:'Megöntözted a földet.'};
+  waterPlot(plot);return {ok:true,message:'Megöntözted a földet.'};
  }
  if(plot.crop)return {ok:false,message:'Ide már ültettél. Válassz egy üres földkockát.'};
  if(garden.seeds[tool]<=0)return {ok:false,message:'Ebből elfogyott az ültetőanyag.'};
@@ -72,6 +73,6 @@ export function isRipe(plot:Plot,rules=growthRules){return Boolean(plot.crop&&pl
 export function nextDayGarden(garden:Garden,rules=growthRules):Garden{
  return {seeds:{...garden.seeds},produce:{...garden.produce},plots:new Map([...garden.plots].map(([key,p])=>{
   const plot={...p};if(plot.crop&&plot.watered&&!isRipe(plot,rules))plot.growth=Math.min(growthTarget(plot,rules),plot.growth+1);
-  plot.watered=false;return [key,plot];
+  if(plot.mulched){plot.moisture=Math.max(0,(plot.moisture??(plot.watered?3:0))-1);plot.watered=plot.moisture>0;}else plot.watered=false;return [key,plot];
  }))};
 }

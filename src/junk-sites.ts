@@ -1,3 +1,4 @@
+import {createCrafting} from './crafting';
 import type {Snapshot} from './storage';
 import type {Clearing} from './cleanup';
 import {farmBounds,farmLayout} from './layout';
@@ -19,7 +20,7 @@ export const junkWorkPoint=(c:Clearing,id:JunkId,day:number)=>{const p=junkPoint
 export const junkTool=(_part:number)=>'crowbar' as const;
 export function strikeJunk(state:Snapshot,id:JunkId):{state:Snapshot;kind:'wood'|'stone';reward:boolean;complete:boolean}|null{
  if(!junkSites.some(s=>s.id===id))return null;const p=junkProgress(state.clearing,id,state.clock.day),target=junkWorkPoint(state.clearing,id,state.clock.day);if(p.part===4||Math.hypot(state.player.x-target.x,state.player.y-target.y)>78)return null;
- const next=structuredClone(state),stone=junkParts[p.part].stone;p.hits++;const reward=p.hits===3;if(reward){p.hits=0;p.part++;if(stone)next.clearing.stone+=6;else{next.clearing.wood+=4;next.travel.research.materials.scrap+=2;}if(p.part===4)p.completedDay=state.clock.day;}
+ const next=structuredClone(state),stone=junkParts[p.part].stone;p.hits++;const reward=p.hits===3;if(reward){p.hits=0;p.part++;if(stone)next.clearing.stone+=6;else{next.clearing.wood+=4;next.travel.research.materials.scrap+=2;}if(p.part===4){p.completedDay=state.clock.day;if(id==='trailer')next.travel.research.materials.copper++;else{next.travel.crafting??=createCrafting();next.travel.crafting.items.gear++;}}}
  next.clearing.junk??={};next.clearing.junk[id]=p;return{state:next,kind:stone?'stone':'wood',reward,complete:p.part===4};
 }
 export function validJunk(c:JunkStorage){return(c.junk===undefined||!!c.junk&&typeof c.junk==='object'&&!Array.isArray(c.junk)&&Object.entries(c.junk).every(([id,p])=>junkSites.some(s=>s.id===id)&&p&&(p.revision===undefined||p.revision===2)&&Number.isSafeInteger(p.part)&&p.part>=0&&p.part<=(p.revision===2?4:6)&&Number.isSafeInteger(p.hits)&&p.hits>=0&&p.hits<=2&&(p.part!==(p.revision===2?4:6)||p.hits===0&&Number.isSafeInteger(p.completedDay)&&Number(p.completedDay)>=1)&&(p.completedDay===undefined||Number.isSafeInteger(p.completedDay)&&p.completedDay>=1)&&(p.cycle===undefined||Number.isSafeInteger(p.cycle)&&p.cycle>=0)))&&(c.junkPositions===undefined||!!c.junkPositions&&typeof c.junkPositions==='object'&&!Array.isArray(c.junkPositions)&&Object.entries(c.junkPositions).every(([id,p])=>junkSites.some(s=>s.id===id)&&p&&Number.isFinite(p.x)&&Number.isFinite(p.y)&&p.x>=farmBounds.left+80&&p.x<=farmBounds.right-80&&p.y>=farmBounds.top+70&&p.y<=510));}

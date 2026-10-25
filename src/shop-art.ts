@@ -1,8 +1,10 @@
+import {drawCraftShop} from './craft-shop-art';
 import {LeoArt} from './leo-art';
 import Phaser from 'phaser';
 import {FarmerArt} from './character';
 import {shopOrigins,shopNames,type Shop} from './village-layout';
 export function drawShop(scene:Phaser.Scene,shop:Shop){
+ if(shop==='craftShop')return drawCraftShop(scene);
  const y0=shopOrigins[shop],g=scene.add.graphics().setDepth(-1),nursery=shop==='nursery';
  const rect=(x:number,y:number,w:number,h:number,c:number,a=1)=>g.fillStyle(c,a).fillRect(x,y+y0,w,h);
  const oval=(x:number,y:number,w:number,h:number,c:number,a=1)=>g.fillStyle(c,a).fillEllipse(x,y+y0,w,h);

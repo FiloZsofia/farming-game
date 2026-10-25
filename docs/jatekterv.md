@@ -679,3 +679,28 @@ A Tervrajzok fülön nincs külön hiányt vagy minden alapanyag meglétét köz
 Az előző hatrészes bontást felváltja négy rész, továbbra is részenként három csapással. Három rész egyenként 4 fát és 2 ócskavasat ad, egy rész 6 követ. Egy teljes roncs 12 fa, 6 ócskavas és 6 kő; a három együtt 36 fa, 18 ócskavas és 18 kő háromnaponta. Az újragyűjtés továbbra is a teljes bontás befejezésétől számított három eltelt játéknap után indul. A korábban szerzett alapanyagokat nem vonjuk vissza; a régi részmunka arányosan négy részre igazodik, a csapásszám megmarad, a régi teljes bontás megújulási dátuma változatlan.
 
 A roncsok megjelenése 18%-kal nagyobb. Mind a hat korábbi külön rajzolt darab megmarad; csak négy bontható, két darab a váz részeként állandó dekoráció. A soron következő részt finom körvonal jelzi. A három csík ehhez a részhez tartozik, külön előtéri rétegen, a karakter fejét és testét kerülő elhelyezéssel. Minden harmadik csapás találati pillanatában nyersanyagikonok és +4/+2, illetve +6 jelzések úsznak fel. Rövid leválási animáció után eltűnik a bontott darab és a következő rész kap kiemelést. A mentés a találati animáció előtt biztosítja a jutalmat; sikertelen mentésnél nem jelenik meg jutalomjelzés.
+
+### Falusi műhelybolt és kézművesség
+
+A falutér déli részén Műhelybolt nyílik, már az első játéknaptól. Éjszaka ez is zárva, a benti játékost záráskor kikíséri. A bejárat bekötött ösvényt, a homlokzat esti ablak- és lámpafényt kap. Belseje fa pult, szerszámfal, tervrajzok, kosarak, alkatrészek és munkapadok köré épül. Az eladó neve **Simon**; elfogadott külseje negyvenes férfi, erős alkat, kissé szögletes, barátságos arc, barna szem, enyhe borosta, rövid, kissé hullámos sötétbarna haj, néhány ősz halántékszál. Fakókék feltűrt ujjú inget, mogyoróbarna munkakötényt, sötétszürke nadrágot és kopott bakancsot visel, zsebében ceruzával és mérőléccel. A bolti karakter és az arckép ugyanabból a rajzból készül. Beszélgetés után az Ismerősök közé kerül. A bolt kínálata jelenleg tervrajzokból áll; további kész berendezések vagy külön megvásárolható alkatrészek még nincsenek elfogadva.
+
+| Tervrajz | Ár | Elkészítés |
+| --- | ---: | --- |
+| Komposztáló | 200 gold | 20 fa, 4 ócskavas, 6 kő |
+| Nádkosárkészítő | 420 gold | 24 fa, 6 ócskavas, 8 nád, 2 fogaskerék |
+| Beporzó-fészkelőhely | 380 gold, későbbre | 16 fa, 12 nád, 4 agyag |
+| Öntözőrendszer | 700 gold | 10 ócskavas, 8 kő, 2 rézcső, 2 fogaskerék |
+
+A beporzó-fészkelőhely egyelőre **nem vásárolható és nem készíthető el**. Bolti leírása: „Simon jelenleg nem értékesíti ezt a tervrajzot a beporzók megfogyatkozása miatt.” A korábbi terméstöbblet-ötlet elvetve. Későbbi történeti irány lehet az első sikerélményként megjelenő beporzó, majd a gombásodás és spórapamacsok; ennek időzítése és pontos működése nincs elfogadva, most nem épül be.
+
+A megvásárolt tervrajz megmarad a Tervrajzok fülön; a készítés a valós birtokolt/szükséges mennyiségeket és az Elkészítem gombot mutatja. A kész gép a hátizsákba kerül, onnan lehelyezhető. A mulcs és minden új fizikai alapanyag rekeszt foglal, a tárolóládába is betehető. A gépek és dekoratív nádkosarak bontóvassal visszavehetők; a dolgozó vagy át nem vett kimenetet tartalmazó gép nem bontható le.
+
+**Komposztáló:** 10 gazból a következő reggelre 4 adag mulcs készül. Az eredmény a gépben vár átvételre, amíg el nem fér a hátizsákban. Egy mulcs egy már felásott ültetőhelyre kerül. Tartósan megmarad azon a földön, amíg a játékos vissza nem egyengeti. Öntözés napján, és az azt követő két napon nedves a föld: hétfői öntözés után kedden és szerdán sem kell öntözni, csütörtökön igen. Az eső is feltölti ezt a nedvességet; a termés a szokásos napi ütemben fejlődik.
+
+**Öntözőrendszer:** a növénysorhoz igazodva helyezhető le. Minden reggel automatikusan, irányválasztás nélkül működik, balra és jobbra legfeljebb három-három közvetlen cellapozíciót ér el, kizárólag a vele egy vízszintes sorban lévő beültetett helyeket. Üres földet és szomszédos sort nem locsol; oda vízívet sem rajzol. Hat egymás melletti növény két végére tett öntözők befelé öntöznek. A víz íves sugarakkal, mozgó cseppekkel érkezik. A lehelyezéskor is elvégzi az első öntözést.
+
+**Nádkosárkészítő:** 4 vágott nádból másnapra 1 nádkosár. A kosár 40 goldért eladható az eladóládán keresztül, vagy szabadon lerakható dekoráció. A megvásárolt nád a készletből levágható alapanyagnak; a tóban elhelyezett nád Gyűjtéssel szedhető fel vágott nádnak.
+
+**Új nyersanyagok:** a járgány és a munkapad teljes bontása egyenként 1 fogaskereket ad, az utánfutóé 1 rézcsövet. A korábbi fa-, kő- és ócskavashozam változatlan. A háromnapos megújuláskor ezek a részek is újra gyűjthetők. A patakpart vöröses agyagfoltjai 2 agyagot adnak, háromnaponta szedhetők újra. Az agyag a fészkelőhely későbbi receptjéhez már összegyűjthető. A történet első, régi szivattyúból nyerhető rézcsöve is megmarad.
+
+Simon első mondata pontosan: „Szia! Simon vagyok. Ha valami lötyög a birtokon, előbb nézd meg, javítható-e. Újat venni még mindig ráérsz.” A gyakorlatias, türelmes, finom humorú karakter mellett a visszafogott kézmozdulatok és pislogás adnak életet a bolti alaknak.

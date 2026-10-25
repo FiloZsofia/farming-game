@@ -45,6 +45,7 @@ function validSnapshotRecord(value:unknown,legacy=false):value is Snapshot{
   keys.add(key);const parts=key.split(',');if(parts.length!==2)return false;
   const [x,y]=parts.map(Number);
   if(!finite(x)||!finite(y)||tileKey({x,y})!==key||tileKey((legacy?legacyTargetTile:targetTile)(x+1,y+1))!==key||!(legacy?legacyCultivable:cultivable)({x,y}))return false;
+  if(plot&&((plot.mulched!==undefined&&typeof plot.mulched!=='boolean')||(plot.moisture!==undefined&&(!plot.mulched||!Number.isSafeInteger(plot.moisture)||plot.moisture<0||plot.moisture>3||plot.watered!==(plot.moisture>0)))))return false;
   if(!plot||typeof plot!=='object'||typeof plot.watered!=='boolean'||!(plot.crop===null||crops.includes(plot.crop)))return false;
   if(!Number.isSafeInteger(plot.growth)||plot.growth<0||plot.growth>1000||typeof plot.regrowing!=='boolean'||(plot.regrowing&&!['pea','strawberry','honeyberry','blueberry'].includes(plot.crop??''))||(!plot.crop&&plot.growth!==0))return false;
  }
@@ -54,6 +55,9 @@ function validSnapshotRecord(value:unknown,legacy=false):value is Snapshot{
 }
 // Migrate known formats without discarding the original backup until a v18 write succeeds.
 export function decodeSnapshot(value:unknown):Snapshot|null{
+ if(value&&typeof value==='object'&&'version' in value&&Number(value.version)>=1&&Number(value.version)<=18){const v=value as Snapshot;const accounts=[v.travel?.estate?.produce,v.travel?.estate?.shipping,v.travel?.estate?.roe,v.travel?.sale?.extras,v.economy?.lastSale?.extras];if(accounts.some(c=>c&&typeof c==='object'&&!Array.isArray(c)&&c.basket===undefined)){const n=structuredClone(v);for(const c of [n.travel?.estate?.produce,n.travel?.estate?.shipping,n.travel?.estate?.roe,n.travel?.sale?.extras,n.economy?.lastSale?.extras])if(c&&typeof c==='object'&&!Array.isArray(c)&&c.basket===undefined)c.basket=0;return decodeSnapshot(n);}}
+
+
  if(value&&typeof value==='object'&&'version' in value&&(value.version===17||value.version===18)){const old=value as unknown as Snapshot;if(old.player?.x> -910&&old.player.x< -860&&old.player.y>=695&&old.player.y<=1340&&worldBlocked(old.player.x,old.player.y)){const next=structuredClone(old);next.player.x=-840;return decodeSnapshot(next);}}
  // New pathside trunks may cover an old village position; preserve every possession.
  if(value&&typeof value==='object'&&'version' in value&&(value.version===17||value.version===18)){const old=value as unknown as Snapshot;if(old.player&&Number.isFinite(old.player.x)&&Number.isFinite(old.player.y)&&old.player.y>=600&&old.player.y<1400){const player=relocateVillagePlayer(old.player);if(player!==old.player){const next=structuredClone(old);next.player=player;if(validSnapshotRecord(next,old.version!==18))return decodeSnapshot(next);}}}

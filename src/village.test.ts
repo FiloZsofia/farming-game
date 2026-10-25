@@ -12,7 +12,7 @@ describe('Southbound village route',()=>{
   for(let i=0;i<15;i++)p=move(p.x,p.y,0,-1,.05,1,()=>false,worldBlocked);expect(p.y).toBeCloseTo(580);
  });
  it('keeps buildings solid and all entrances reachable',()=>{
-  for(const b of [villageLayout.nursery,villageLayout.fishShop]){expect(worldBlocked(b.x+b.w/2,b.y+30)).toBe(true);expect(worldBlocked(b.door.x,b.door.y+5)).toBe(false);}
+  for(const b of [villageLayout.nursery,villageLayout.fishShop,villageLayout.craftShop]){expect(worldBlocked(b.x+b.w/2,b.y+30)).toBe(true);expect(worldBlocked(b.door.x,b.door.y+5)).toBe(false);}
   expect(worldBlocked(10,930)).toBe(false);expect(worldBlocked(-1120,900)).toBe(true);expect(worldBlocked(476,1081)).toBe(true);
  });
  it('roundtrips a village position and validates collected-bush dates',()=>{
@@ -22,8 +22,8 @@ describe('Southbound village route',()=>{
  it('migrates v12 without moving the farmer or changing possessions',()=>{
   const current=snapshot({x:250,y:242},createClock(),createGarden());const {travel,...rest}=current;const legacy={...rest,version:12};expect(decodeSnapshot(legacy)).toEqual({...current,travel:createTravel()});expect(legacy).not.toHaveProperty('travel');
  });
- it('keeps both shop interiors walkable and saves their locations safely',()=>{
-  for(const shop of ['nursery','fishShop'] as const){const y=shopOrigins[shop];expect(shopAt(y+467)).toBe(shop);expect(worldBlocked(400,y+467)).toBe(false);expect(worldBlocked(400,y+250)).toBe(true);expect(worldBlocked(95,y+470)).toBe(true);expect(worldBlocked(400,y+520)).toBe(true);const data=snapshot({x:400,y:y+467},createClock(),createGarden());expect(decodeSnapshot(data)).toEqual(data);}
+ it('keeps all three shop interiors walkable and saves their locations safely',()=>{
+  for(const shop of ['nursery','fishShop','craftShop'] as const){const y=shopOrigins[shop];expect(shopAt(y+467)).toBe(shop);expect(worldBlocked(400,y+467)).toBe(false);expect(worldBlocked(400,y+250)).toBe(true);expect(worldBlocked(95,y+470)).toBe(true);expect(worldBlocked(400,y+520)).toBe(true);const data=snapshot({x:400,y:y+467},createClock(),createGarden());expect(decodeSnapshot(data)).toEqual(data);}
  });
  it('rejects newer unknown saves',()=>{
   expect(decodeSnapshot({...snapshot({x:250,y:242},createClock(),createGarden()),version:19})).toBeNull();
@@ -66,3 +66,5 @@ it('notifies once after the narrative milestone, independently of day count, wit
 it('keeps complete crowns clear of both village walking routes',async()=>{const {villageTrees,forestTrees,woodlandTreeClear,villagePaths}=await import('./village-layout');expect(villageTrees.length+forestTrees.length).toBeGreaterThan(5);for(const t of [...villageTrees,...forestTrees])expect(woodlandTreeClear(t.x,t.y,1,t.kind)).toBe(true);for(const path of villagePaths)for(let i=1;i<path.points.length;i++){const a=path.points[i-1],b=path.points[i],n=Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/4);for(let j=0;j<=n;j++)expect(woodlandTreeClear(a[0]+(b[0]-a[0])*j/n,a[1]+(b[1]-a[1])*j/n+45)).toBe(false);}});
 
 it('preserves a current save when a restored woodland trunk covers its old position',async()=>{const {forestTrees}=await import('./village-layout');const t=forestTrees[0],s=snapshot({x:t.x,y:t.y},createClock(8),createGarden());s.economy.gold=163;s.clearing.wood=35;const original=structuredClone(s),n=decodeSnapshot(s)!;expect(n).not.toBeNull();expect(worldBlocked(n.player.x,n.player.y)).toBe(false);expect(n.economy).toEqual(s.economy);expect(n.clearing).toEqual(s.clearing);expect(n.clock).toEqual(s.clock);expect(s).toEqual(original);});
+
+it('moves an old saved position out of the new shop without losing money or possessions',()=>{const old=snapshot({x:660,y:1270},createClock(7),createGarden());old.economy.gold=493;old.clearing.wood=35;expect(validSnapshot(old)).toBe(false);const next=decodeSnapshot(old)!;expect(next).not.toBeNull();expect(worldBlocked(next.player.x,next.player.y)).toBe(false);expect(next.economy.gold).toBe(493);expect(next.clearing.wood).toBe(35);expect(old.player).toEqual({x:660,y:1270});});

@@ -51,6 +51,11 @@ export function drawVillage(scene:Phaser.Scene){
   for(const xx of[x+18,x+w-48]){rect(xx-3,y+30,34,37,0xe6d7ac);rect(xx,y+33,28,29,0x4d6966);poly([xx+2,y+35,xx+26,y+35,xx+2,y+59],0xa5bcb0,.7);line(xx+14,y+34,xx+14,y+62,0xe5d6ad,2);line(xx+1,y+48,xx+27,y+48,0xe5d6ad,2);rect(xx-4,y+65,36,4,0x7c704f);}
   rect(x+w*.44-4,y+h,34,5,0xb9aa86);rect(x+w*.44-7,y+h+5,40,4,0xd0bf97);
  };
+ const c=layout.craftShop;house(c.x,c.y,c.w,c.h,0x856449,0xc7b18a);label(660,1242,'MŰHELYBOLT',11);
+ // An open double door, wall-mounted tools, timber rack and wicker wares.
+ rect(647,1285,27,47,0x394b38);poly([647,1285,633,1290,633,1333,647,1332],0x947047);poly([674,1285,688,1290,688,1333,674,1332],0xa47d4e);line(635,1295,644,1292,0xd0ac73);line(678,1293,685,1296,0xd0ac73);
+ rect(566,1300,8,31,0x70573c);rect(567,1297,52,7,0xb0905d);for(let i=0;i<4;i++){line(578+i*10,1305,576+i*10,1323,0x7f6544,2);rect(572+i*10,1321,10,4,0x81907c);}for(let i=0;i<5;i++){line(704,1326-i*4,753,1324-i*4,0x9d784a,4);line(706,1325-i*4,750,1323-i*4,0xc5a371);}oval(744,1335,28,13,0x987b4e);g.lineStyle(2,0xc4a670).strokeEllipse(744,1325,19,24);for(let i=0;i<4;i++)line(733,1331+i*2,754,1331+i*2,0xc4a670);
+ for(const x of [575,746]){rect(x,1292,3,18,0x5d5b40);rect(x-4,1290,12,14,0xd4bd80);poly([x-5,1290,x+2,1283,x+9,1290],0x5a5d43);}flowers(776,1334);
  const n=layout.nursery;house(n.x,n.y,n.w,n.h,0x657b52,0xd6c8a0);label(593,864,'FAISKOLA',10);
  // Nursery saplings in tubs, a little glass lean-to and hand-painted tree sign.
  rect(503,952,55,20,0xada17c);rect(630,952,55,20,0xada17c);
@@ -81,7 +86,7 @@ export function drawVillage(scene:Phaser.Scene){
  for(const x of [753,825]){for(let i=0;i<3;i++){line(x+5+i*5,1048,x+4+i*5,1038-i%2*5,0x436f52,2);}oval(x+27,1042,10,4,0xdaa166);poly([x+32,1042,x+36,1039,x+36,1045],0xd0aa72);oval(x+10,1021,8,3,0xe3ce97);poly([x+6,1021,x+2,1018,x+2,1024],0xcabd81);}
  flowers(889,1088);rect(904,1044,2,27,0x827258);line(898,1044,911,1044,0xa39374);for(let i=0;i<3;i++){line(900+i*4,1045,900+i*4,1055+i%2*4,0xb9b393);oval(900+i*4,1057+i%2*4,3,5,0xd5c9a7);}
  // A second village lantern frames the southern edge of the square.
- rect(632,1187,4,40,0x615940);rect(626,1180,17,18,0xd9c994);rect(624,1178,21,3,0x5b6550);poly([623,1178,634,1168,646,1178],0x566650);
+ rect(518,1192,4,40,0x615940);rect(512,1185,17,18,0xd9c994);rect(510,1183,21,3,0x5b6550);poly([509,1183,520,1173,532,1183],0x566650);
  // Diverse forest silhouettes: broad oak, silver birch and fir.
  const tree=(x:number,y:number,kind:number,s=1)=>{if(woodlandTreeClear(x,y,s,kind))drawWoodlandTree(g,random,x,y,kind,s);};
  for(let row=0;row<17;row++)for(let column=0;column<9;column++){const x=FOREST_LEFT+25+column*77+(row%2)*24,y=farmBounds.top+50+row*65;if(x< -445)tree(x,y,(row+column)%3,.85+(column%3)*.08);}

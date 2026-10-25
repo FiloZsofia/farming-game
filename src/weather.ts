@@ -1,3 +1,4 @@
+import {waterPlot} from './gardening';
 import type {Garden} from './gardening';
 export type Weather='sunny'|'cloudy'|'rain';
 export const weatherNames:Record<Weather,string>={sunny:'Napos',cloudy:'Felhős',rain:'Esős'};
@@ -12,4 +13,4 @@ export function weatherSchedule(seed:number,block=0):Weather[]{
  return days;
 }
 export const weatherOnDay=(seed:number,day:number):Weather=>weatherSchedule(seed,Math.floor((day-1)/15))[(day-1)%15];
-export function waterFromRain(garden:Garden){let changed=false;for(const plot of garden.plots.values())if(!plot.watered){plot.watered=true;changed=true;}return changed;}
+export function waterFromRain(garden:Garden){let changed=false;for(const plot of garden.plots.values()){if(!plot.watered){waterPlot(plot);changed=true;}else if(plot.mulched)plot.moisture=3;}return changed;}

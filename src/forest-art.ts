@@ -56,7 +56,7 @@ export function drawForestObjects(scene:Phaser.Scene,f:Forest,day:number,weather
    }
   }
  }
- for(const p of natureSites){if(p.kind!=='stone'||!natureReady(f,p,day,weatherSeed))continue;
+ for(const p of natureSites){if(p.kind==='wood'||!natureReady(f,p,day,weatherSeed))continue;if(p.kind==='clay'){g.fillStyle(0x8e674b,.65).fillEllipse(p.x,p.y,36,19);g.fillStyle(0xb67e59).fillEllipse(p.x-3,p.y-3,27,13);g.lineStyle(1,0xd09d72).lineBetween(p.x-11,p.y-5,p.x+4,p.y-2).lineBetween(p.x+3,p.y+2,p.x+11,p.y+5);g.lineStyle(1,0x795c43).lineBetween(p.x-5,p.y-5,p.x-2,p.y+4);continue;}
   g.fillStyle(0x314a34,.28).fillEllipse(p.x+2,p.y+5,34,12);
   {for(const [dx,dy,w,h,c]of [[-8,2,17,10,0xa7a99b],[7,0,14,11,0x89998e],[0,-5,12,8,0xc4c5b2]]){g.fillStyle(c).fillEllipse(p.x+dx,p.y+dy,w,h);g.lineStyle(.8,0xd9d4b9).lineBetween(p.x+dx-w*.25,p.y+dy-2,p.x+dx+2,p.y+dy-3);}g.lineStyle(1.2,0x67949a,.7).lineBetween(p.x-12,p.y+5,p.x-6,p.y+5).lineBetween(p.x+5,p.y+5,p.x+12,p.y+5);}
  }
