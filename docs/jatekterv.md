@@ -545,3 +545,9 @@ Az átjárót indagubanc, a belső részt két spórapamacs védi. Ezek fiktív 
 A harc után az elhagyott fatörzs felnyílt fészekjáratából mintát vehetünk. Az ép, sárral lezárt járatokat nem bolygatjuk. A javított műhely munkapadján Sam saját mikroszkópja jelenik meg. A fókusz interaktívan állítható; Sam gombafonalakat lát, de sem a fajt, sem az oksági kapcsolatot nem állapítja meg. A megvizsgált minta levéllel a postaládából elküldhető a korábbi laboros kollégának. A történeti szakasz a küldésig tart; a válasz és a kivonatos kísérlet későbbi folytatás.
 
 A menü neve Főmenü, a két magyarázó bekezdés kikerül. A melléképület két oldalán álló rövid kerítések megszűnnek, a visszanövés sem kezeli őket foglalt helynek.
+
+### Megjelenési pontosítások
+
+A tárolóláda receptje és az Elkészítem/Elhelyezem művelet külön Tervrajzok fülön szerepel. A recept két adata: 24 rekesz; 20 fa + 5 ócskavas. Elkészítése nincs helyszínhez kötve. A 3. szint jutalmánál is hullanak cseresznyevirágszirmok. A Készlet kártyáin csak tárgynevek vannak, ár és magyarázó típusmegjelölés nélkül; a mennyiségek külön jelvények. A fészekminta saját, üreges fatörzset idéző ikont kap. Az életerő a bal felső részen jelenik meg, a közeli ellenfél neve a külön alsó állapotsorban olvasható. A falu és az erdő egyetlen, közös talajréteget és azonos farajzolást használ, összekötött ösvénnyel. A patak íves medret, kavicsos partot és vízcsillanásokat kap; a fészkes fatörzs kérget, évgyűrűket és lezárt/nyitott fészekjáratokat.
+
+A vizsgálati eredmény „Vajon ezek okozták a bajt…” kezdetű, a „De” nélkül. A levél címzettje Noah, Sam fiatal, szőke, jóképű korábbi laboros kollégája. A postaládánál a címke: „KORÁBBI KOLLÉGÁMNAK, NOAH-NAK”. A minta elküldése után Noah portréval megjelenik az Ismerősök között; ezt a meglévő elküldési állapot jelzi, így a korábbi mentésekben elküldött levél is feloldja. A túl homályos mikroszkópképnél a Megvizsgálom gomb inaktív marad.

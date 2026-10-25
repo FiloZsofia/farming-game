@@ -1,3 +1,6 @@
+import {paintForest} from './forest-art';
+import {FOREST_LEFT} from './forest';
+import {drawWoodlandTree} from './woodland-tree';
 import Phaser from 'phaser';
 import {villageLayout as layout,forestTrees,WORLD_HEIGHT,WORLD_WIDTH,benchPose,benchPoint,type BenchPose,shopNames} from './village-layout';
 // Original procedural scenery, sharing coordinates with the walkable village.
@@ -9,14 +12,14 @@ export function drawVillage(scene:Phaser.Scene){
  const line=(x:number,y:number,xx:number,yy:number,c:number,w=1,a=1)=>{g.lineStyle(w,c,a).lineBetween(x,y,xx,yy);};
  const poly=(p:number[],c:number,a=1)=>{g.fillStyle(c,a).fillPoints(Array.from({length:p.length/2},(_,i)=>new Phaser.Geom.Point(p[i*2],p[i*2+1])),true);};
  const label=(x:number,y:number,text:string,size=9)=>{const t=scene.add.text(x,y,text,{fontFamily:'Georgia, serif',fontSize:`${size}px`,color:'#fff1ce',backgroundColor:'#574f37',padding:{x:6,y:4}}).setOrigin(.5).setDepth(5);labels.push(t);};
- rect(-400,600,1600,WORLD_HEIGHT-600,0x759c48);rect(0,600,WORLD_WIDTH,WORLD_HEIGHT-600,0x759c48);
+ rect(FOREST_LEFT,600,1200-FOREST_LEFT,WORLD_HEIGHT-600,0x759c48);
  // Layered hill shoulders: cool lower slopes and sunlit rounded crowns.
  for(const [x,y,w,h]of [[40,760,440,220],[110,965,470,280],[20,1160,450,210]]){
   oval(x+8,y+30,w,h,0x44683f,.55);oval(x-7,y+8,w*.98,h*.82,0x638743,.7);oval(x-35,y-8,w*.8,h*.56,0x8ba352,.5);
   g.lineStyle(2,0xa5b16c,.26).beginPath().arc(x-20,y-2,w*.31,Math.PI*1.12,Math.PI*1.84).strokePath();
  }
  oval(160,900,365,590,0x406846,.48);oval(570,1100,470,490,0x99ae60,.35);
- for(let i=0;i<4600;i++){const x=random()*WORLD_WIDTH,y=600+random()*(WORLD_HEIGHT-600);rect(x,y,1+random()*2,1,[0x4f783f,0x9bb669,0xb1bf72][i%3],.6);}
+ for(let i=0;i<9200;i++){const x=FOREST_LEFT+random()*(1200-FOREST_LEFT),y=600+random()*(WORLD_HEIGHT-600);rect(x,y,1+random()*2,1,[0x4f783f,0x9bb669,0xb1bf72][i%3],.6);}
  const path=(points:number[][],width:number)=>{for(const [w,c]of [[width+5,0x738354],[width+1,0xa5936c],[width-3,0xc1ae85]]){g.lineStyle(w,c).beginPath();points.forEach(([x,y],i)=>i?g.lineTo(x,y):g.moveTo(x,y));g.strokePath();for(const[x,y]of points)oval(x,y,w,w,c);}};
  path([[169,572],[170,600],[174,672],[305,784],[393,909],[476,1030],[493,1320],[493,1414]],32);
  path([[278,760],[150,813],[107,930],[211,1040],[356,1080]],17);
@@ -66,18 +69,8 @@ export function drawVillage(scene:Phaser.Scene){
  oval(865,1107,33,16,0x587d6d);rect(849,1086,32,21,0x947d54);oval(865,1086,32,12,0x5b9595);oval(863,1084,24,6,0x92c4b6);
  const c=layout.cottage;house(c.x,c.y,c.w,c.h,0x9b7155,0xd4c1a1);flowers(331,1343);flowers(446,1344);
  // Diverse forest silhouettes: broad oak, silver birch and fir.
- const tree=(x:number,y:number,kind:number,s=1)=>{
-  oval(x+10*s,y+8*s,67*s,22*s,0x294d3a,.27);
-  rect(x-4*s,y-44*s,9*s,49*s,kind===1?0xc6c9b0:0x6b543a);
-  if(kind===1){for(let i=0;i<6;i++)rect(x-3*s,y-i*7*s,4*s,2*s,0x667463);line(x,y-24*s,x-16*s,y-47*s,0xb5bca2,3*s);}
-  if(kind===2){for(let i=0;i<4;i++){const yy=y-90*s+i*19*s,w=(15+i*8)*s;poly([x,yy,x-w,yy+35*s,x+w,yy+35*s],i%2?0x426d52:0x365c47);poly([x-2*s,yy+4*s,x-w*.75,yy+30*s,x+6*s,yy+28*s],0x62875b,.8);}}
-  else for(const[xx,yy,w,h]of [[-18,-48,45,39],[12,-56,51,47],[-3,-76,49,39],[0,-38,56,32]]){
-   const cx=x+xx*s,cy=y+yy*s,rx=w*s/2,ry=h*s/2;
-   const canopy=(dx:number,dy:number,k:number,c:number)=>poly([cx+dx-rx*k,cy+dy,cx+dx-rx*.8*k,cy+dy-ry*.65*k,cx+dx-rx*.1*k,cy+dy-ry*k,cx+dx+rx*.65*k,cy+dy-ry*.8*k,cx+dx+rx*k,cy+dy-ry*.1*k,cx+dx+rx*.7*k,cy+dy+ry*.65*k,cx+dx-rx*.25*k,cy+dy+ry*.7*k],c);
-   canopy(0,0,1,kind===1?0x587644:0x35583c);canopy(-3*s,-5*s,.84,kind===1?0x87a457:0x587b47);
-   for(let i=0;i<22;i++)rect(cx+(random()-.5)*w*s*.75,cy+(random()-.55)*h*s*.65,(2+random()*3)*s,2*s,[0x98ac63,0x74944d,0xb9c37b][i%3],.65);
-  }
- };
+ const tree=(x:number,y:number,kind:number,s=1)=>drawWoodlandTree(g,random,x,y,kind,s);
+ paintForest(g,random);
  // Backdrop foliage frames the route without filling its walking spaces.
  for(let i=0;i<18;i++){tree(18+random()*750,700+Math.floor(i/9)*660,i%3,.65);}
  for(let i=0;i<25;i++)tree(-170+(i%4)*47,695+Math.floor(i/4)*83,i%3,.85+(i%3)*.08);
@@ -96,7 +89,7 @@ export function drawVillage(scene:Phaser.Scene){
 
  rect(416,930,4,42,0x615940);rect(409,925,18,18,0xd9c994);rect(408,924,20,3,0x5b6550);poly([406,924,418,913,430,924],0x566650);
  // This scenery is static too; keep tree canopies and paving out of the per-frame geometry pass.
- const terrain=scene.add.renderTexture(-400,540,1600,WORLD_HEIGHT-540).setOrigin(0).setDepth(-.5);terrain.draw(g,400,-540);g.destroy();
+ const terrain=scene.add.renderTexture(FOREST_LEFT,540,1200-FOREST_LEFT,WORLD_HEIGHT-540).setOrigin(0).setDepth(-.5);terrain.draw(g,-FOREST_LEFT,-540);g.destroy();
  return {graphics:terrain,labels};
 }
 export function drawForage(scene:Phaser.Scene,picked:Record<string,number>,day:number){

@@ -7,6 +7,7 @@ export class ForestCombat{
  constructor(private scene:Phaser.Scene){this.art=scene.add.graphics().setDepth(91);}
  reset(){this.enemies=[];this.health=5;this.invulnerable=0;this.swing=0;}
  blocks(x:number,y:number,state:Forest){return !state.defeated.includes('vine')&&Math.hypot((x+665)/24,(y-977)/36)<1;}
+ encounterName(player:{x:number;y:number},state:Forest){const enemy=this.enemies.filter(e=>e.hp>0&&!state.defeated.includes(e.id)&&Math.hypot(e.x-player.x,e.y-player.y)<170).sort((a,b)=>Math.hypot(a.x-player.x,a.y-player.y)-Math.hypot(b.x-player.x,b.y-player.y))[0];return enemy?`${enemy.kind==='vine'?'Indagubanc':'Spórapamacs'} · Túrabot: F / kattintás · Space: kitérés`:'';}
  attack(player:{x:number;y:number},direction:{x:number;y:number},state:Forest,onDefeat:(id:string)=>void){
   if(this.swing>0||!state.stick)return false;this.swing=.58;
   for(const e of this.enemies){const dx=e.x-player.x,dy=e.y-player.y,d=Math.hypot(dx,dy);if(e.hp<=0||state.defeated.includes(e.id)||d>76||(d>24&&(dx*direction.x+dy*direction.y)/d<.15))continue;e.hp--;e.timer=.6;e.phase='rest';if(e.hp===0)onDefeat(e.id);else if(e.kind==='spore'){e.x+=dx/(d||1)*12;e.y+=dy/(d||1)*12;}break;}
