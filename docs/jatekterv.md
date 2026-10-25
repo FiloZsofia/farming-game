@@ -704,3 +704,17 @@ A megvásárolt tervrajz megmarad a Tervrajzok fülön; a készítés a valós b
 **Új nyersanyagok:** a járgány és a munkapad teljes bontása egyenként 1 fogaskereket ad, az utánfutóé 1 rézcsövet. A korábbi fa-, kő- és ócskavashozam változatlan. A háromnapos megújuláskor ezek a részek is újra gyűjthetők. A patakpart vöröses agyagfoltjai 2 agyagot adnak, háromnaponta szedhetők újra. Az agyag a fészkelőhely későbbi receptjéhez már összegyűjthető. A történet első, régi szivattyúból nyerhető rézcsöve is megmarad.
 
 Simon első mondata pontosan: „Szia! Simon vagyok. Ha valami lötyög a birtokon, előbb nézd meg, javítható-e. Újat venni még mindig ráérsz.” A gyakorlatias, türelmes, finom humorú karakter mellett a visszafogott kézmozdulatok és pislogás adnak életet a bolti alaknak.
+
+### Géphasználati hibák és egyértelmű inaktív állapotok
+
+Mindkét patakparti agyagfolt egyenként **1 agyagot** ad; a háromnapos újraszedhetőség marad. A beporzó-fészkelőhely bolti sorában a megbeszélt **380 gold** áthúzott szövegként látszik, nem gombként, a korábban elfogadott leírás mellett.
+
+A nem használható gombok egyértelműen szürkék, natív disabled állapottal. Az Üres láda felvétele tartalom esetén inaktív, és a művelet külön állapotellenőrzéssel sem hajtható végre. A láda tartalma így programozott vagy elavult kattintáskor sem veszhet el.
+
+Az E-s gépinterakció mindig az ablakot nyitja meg: a kiválasztott bontóvas miatt sem veheti fel a gépet. Korábban ez okozhatta azt, hogy a játékos a komposztálót újra a hátizsákban találta. Felvétel csak külön Felveszem gombbal, vagy szándékos bontóvasas kattintással/F-művelettel történhet. Dolgozó vagy kész kimenetet tartalmazó gép továbbra sem vehető fel. A reggel és a kimenet átvétele nem változtatja meg a lehelyezett gép helyét.
+
+A kézműves receptek és a nádkosárkészítő együtt számolják a vásárolt nádat és a korábban vágott nádat. Előbb a vágott készlet fogy, majd a szükséges maradék a vásároltból. Nem kell külön Levágom művelettel előkészíteni a vásárolt nádat. A kosárkészítő bemenete továbbra is összesen 4 nád.
+
+A működő komposztáló gőzölgő, mozgó növényi tartalmat, a kosárkészítő mozgó szövőrészt és forgó hajtást kap a farmon. Az ablakban ugyanezeket animált gépillusztráció, forgó alkatrész, gőz és a kész kimenet jelzi. Az animációk nem hamis időmérők; az eredmény továbbra is másnap készül el. Csökkentett mozgás mellett az animációk leállnak.
+
+A műhelybolt belső átalakítása és a tóba ültetett nád megújulása még egyeztetés alatt. Javaslat, nem végleges szabály: megmaradó nádtő, háromnaponta 1 levágható nád és idővel látható új hajtások. A belső tervezett munkasarkai: satu/forgács/javítás alatt álló tárgy; kosaras-zsineges-alkatrészes polcok; felismerhető szerszámfal és tervlapok; melegebb fények és kopott padló, szabad bejárattal és oldalról megközelíthető pulttal. A megbeszélés előtt a bolt belsejét nem alakítjuk át.

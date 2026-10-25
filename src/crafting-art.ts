@@ -1,3 +1,4 @@
+import {itemIcon} from './item-icons';
 import Phaser from 'phaser';
 import {irrigatedPlots,type Crafting} from './crafting';
 import {TILE,type Garden} from './gardening';
@@ -16,4 +17,25 @@ export function drawCrafting(scene:Phaser.Scene,c:Crafting|undefined,interact:(i
 }
 export function drawIrrigationArcs(g:Phaser.GameObjects.Graphics,garden:Garden,c:Crafting|undefined,now:number,until:number){
  g.clear();if(now>=until)return;for(const m of c?.machines??[]){if(m.kind!=='irrigation')continue;for(const [i,p]of irrigatedPlots(garden,m).entries()){const[x,y]=p.key.split(',').map(Number),tx=x+TILE/2,ty=y+TILE/2,startY=m.y-28,height=18+Math.abs(tx-m.x)*.27;const points=Array.from({length:22},(_,j)=>{const t=j/21;return {x:m.x+(tx-m.x)*t,y:startY+(ty-startY)*t-4*height*t*(1-t)};});g.lineStyle(1.2,0xa5d6da,.65).strokePoints(points);for(let j=0;j<5;j++){const t=((now/1050)+j/5+i*.12)%1;g.fillStyle(0xd6f1e2,.85).fillEllipse(m.x+(tx-m.x)*t,startY+(ty-startY)*t-4*height*t*(1-t),2,3);}g.lineStyle(.8,0xb8dedb,.6).strokeEllipse(tx,ty,8+Math.sin(now/110+i)*2,4);}}
+}
+
+export function drawMachineActivity(g:Phaser.GameObjects.Graphics,c:Crafting|undefined,now:number){
+ g.clear();const time=matchMedia('(prefers-reduced-motion: reduce)').matches?0:now;
+ for(const m of c?.machines??[]){if(!g.scene.cameras.main.worldView.contains(m.x,m.y))continue;
+  if(m.started!==null&&m.kind==='composter'){
+   for(let i=0;i<3;i++){const t=(time/2100+i/3)%1,x=m.x-10+i*10+Math.sin(t*6+i)*3,y=m.y-37-t*23;g.lineStyle(1.3,0xdadfc2,(1-t)*.55).strokePoints([{x,y},{x:x+3,y:y-3},{x:x-1,y:y-7}]);const a=time/850+i*2;g.fillStyle(i%2?0xa3af63:0x718a45).fillEllipse(m.x+Math.cos(a)*12,m.y-35+Math.sin(a)*3,5,2);}
+   g.lineStyle(1.3,0xbd9a60).lineBetween(m.x-21,m.y-31,m.x-21,m.y-25+Math.sin(time/220)*2);
+  }
+  if(m.started!==null&&m.kind==='basketMaker'){
+   const shift=Math.sin(time/380)*9,cx=m.x+23,cy=m.y-31,a=time/430;g.fillStyle(0xe1c48a).fillRoundedRect(m.x+shift-5,m.y-34,10,4,1);g.lineStyle(1,0xe6d3a1).lineBetween(m.x-12,m.y-30,m.x+12,m.y-30);g.fillStyle(0x667a64).fillCircle(cx,cy,5);g.lineStyle(1.2,0xbec3a1).lineBetween(cx-Math.cos(a)*4,cy-Math.sin(a)*4,cx+Math.cos(a)*4,cy+Math.sin(a)*4);g.fillStyle(0xc5a16b).fillEllipse(m.x-3,m.y-10,18,9+Math.sin(time/600));
+  }
+  if(m.ready){const y=m.y-48+Math.sin(time/650)*2;g.fillStyle(0xf1d891,.2).fillCircle(m.x,y,9);g.fillStyle(0xefdb9e).fillCircle(m.x,y,4);}
+ }
+}
+
+export function machineActivityPanel(machine:import('./crafting').Machine){
+ const panel=document.createElement('div');panel.className=`machine-demo ${machine.started!==null?'working':machine.ready?'ready':'idle'}`;panel.dataset.machineKind=machine.kind;panel.dataset.machinePhase=machine.started!==null?'working':machine.ready?'ready':'idle';panel.setAttribute('aria-hidden','true');panel.append(itemIcon(machine.kind));
+ if(machine.kind==='composter')for(let i=0;i<3;i++){const steam=document.createElement('i');steam.className='machine-steam';steam.style.setProperty('--delay',`${i*-.7}s`);steam.style.left=`${45+i*20}px`;panel.append(steam);}
+ if(machine.kind==='basketMaker'){const shuttle=document.createElement('i');shuttle.className='machine-shuttle';panel.append(shuttle);const gear=itemIcon('gear');gear.classList.add('machine-gear');panel.append(gear);}
+ if(machine.ready&&['composter','basketMaker'].includes(machine.kind)){const output=itemIcon(machine.kind==='composter'?'mulch':'basket');output.classList.add('machine-output');panel.append(output);}return panel;
 }

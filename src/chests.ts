@@ -41,3 +41,5 @@ export function collectAvailableMail(s:Snapshot):{state:Snapshot;taken:number;re
  for(const crop of crops){const available=next.orders.mailbox[crop];if(!available)continue;const existing=next.seeds[crop],free=Math.max(0,limit-backpackSlots(next)),capacity=(Math.ceil(existing/99)+free)*99-existing,amount=Math.min(available,capacity,999999-existing);if(amount<=0)continue;next.seeds[crop]+=amount;next.orders.mailbox[crop]-=amount;taken+=amount;}
  return taken?{state:next,taken,remaining:Object.values(next.orders.mailbox).reduce((a,b)=>a+b,0)}:null;
 }
+
+export function packEmptyChest(s:Snapshot,index:number){const chest=s.skill.chests?.placed[index];if(!chest||occupiedSlots(chest.items)>0||(s.skill.chests?.packed??0)>=999)return null;const next=structuredClone(s);next.skill.chests!.placed.splice(index,1);next.skill.chests!.packed++;return next;}
