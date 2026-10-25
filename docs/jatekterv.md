@@ -573,3 +573,12 @@ A gépjavítás utáni gondolat és cél változatlan marad: „Talán az erdőb
 ### Déli birtokhatár
 
 A teljes déli farmhatáron meleg árnyalatú, sötétbarna, erős fakerítés húzódik, vastag oszlopokkal, két vaskos vízszintes gerendával és átlós merevítésekkel. A faluba vezető ösvénynél megmarad a kapunyílás. A régi rövid, a birtok belsejében maradt kerítésdarabok és kapuoszlopok megszűnnek. A kapunyílás rajza és átjárhatósága közös elrendezési adatot használ.
+
+
+### A mikroszkóp megőrzése és szabad vizsgálódás
+
+A mikroszkóp kilépőgombja Vissza. Az első vizsgálat és a Noah-nak küldött levél után is használható: Sam megőrzi a minta egy részét. A korábbi történeti eredmény és levél szövege nem változik. A tárgylemez húzással vagy nyílbillentyűkkel mozgatható; 40×, 100× és 400× nagyítás választható, nagyításváltáskor újrafókuszálással. A homályos részletből nem rögzíthető megfigyelés.
+
+A felismerhető részletek külön Megfigyelések fülre kerülnek, ismételt pont- vagy jutalomszerzés nélkül. A Felvételek fülön a tényleges látómező menthető és törölhető; a kép megnyitása ugyanazt a tárgylemezhelyzetet, fókuszt és nagyítást állítja vissza. A vizsgálati állapot, a gyűjtemény és a felvételek farmonként mentődnek, a régi mentések változatlanul betölthetők.
+
+A fészekminta mellett a begyűjtött vadkakukkfű, lándzsás útifű és csalán levélmintája, a kivirágzott vadvirágok pollenje és a tóparton vett vízminta is vizsgálható. Az előkészített tárgylemezek megmaradnak; nem foglalnak új készletrekeszt. A különféle növényi és tóvízi részletek nem bizonyítanak betegséget vagy kapcsolatot a méhek megfogyatkozásával.

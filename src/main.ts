@@ -1,3 +1,5 @@
+import {MicroscopePanel} from './microscope-panel';
+import {createMicroscopy,type SampleId} from './microscopy';
 import {canPlaceChestAt} from './chest-placement';
 import {noahPortrait} from './noah-portrait';
 import {ForestCombat} from './forest-combat';
@@ -111,6 +113,7 @@ class Farm extends Phaser.Scene {
  private story=createStory();
  private forestObjects?:Phaser.GameObjects.Graphics;
  private forestCombat?:ForestCombat;
+ private microscopeUI:MicroscopePanel|null=null;
  private forestSaving=false;
  private forestPresence:boolean|null=null;
  private forestIntroRetryAt=0;
@@ -472,14 +475,18 @@ class Farm extends Phaser.Scene {
   return false;
  }
  private openMicroscope(){
-  const f=this.travel.forest??createForest();
-  if(!f.sample){showDialogue('A mikroszkópom','Elővettem a régi mikroszkópomat. Jó lesz itt, a munkapadon.','SAM');return;}
-  if(f.examined){showDialogue('Feljegyzés a mintáról','Gombafonalakat láttam, de a pontos fajt nem tudom azonosítani. Azt sem tudom, ezek okozták-e a bajt, vagy csak később jelentek meg az elhagyott fészekben.'+(f.sent?' A kollégám válaszára várok.':' Elküldök egy mintát a korábbi laboros kollégámnak.'),'SAM');return;}
-  showDialogue('A mikroszkóp alatt','Óvatosan élesre állítom a képet.','VIZSGÁLAT');const panel=document.querySelector<HTMLElement>('#research-panel')!;panel.replaceChildren();panel.hidden=false;
-  const view=document.createElement('div');view.className='microscope-view';view.innerHTML='<svg viewBox="0 0 240 180" aria-label="A minta nagyított képe"><g fill="none" stroke="#73866d" stroke-width="3"><path d="M15 130Q85 140 112 70T220 20M58 133Q50 80 22 58M100 89Q150 98 192 147M144 46Q134 23 115 12M156 109Q175 88 209 84M76 126Q94 153 139 164"/></g><g fill="#a3ac84"><circle cx="22" cy="58" r="5"/><circle cx="209" cy="84" r="5"/><circle cx="139" cy="164" r="4"/></g></svg>';
-  const label=document.createElement('label');label.textContent='Fókusz';const focus=document.createElement('input');focus.type='range';focus.id='microscope-focus';focus.min='0';focus.max='100';focus.value=String(f.focus);label.append(focus);const inspect=document.createElement('button');inspect.type='button';inspect.id='examine-sample';inspect.textContent='Megvizsgálom';
-  const update=()=>{const sharp=Math.abs(Number(focus.value)-72);view.firstElementChild!.setAttribute('style',`filter:blur(${sharp/7}px)`);inspect.disabled=sharp>8;};focus.oninput=update;update();
-  inspect.onclick=()=>{if(this.transitioning||inspect.disabled)return;const next=structuredClone(this.travel.forest??createForest());next.examined=true;next.focus=Number(focus.value);void this.commitForest(next,()=>showDialogue('Gombafonalak','Vajon ezek okozták a bajt, vagy csak később telepedtek meg az elhagyott fészekben? Ennyiből még a fajt sem tudom biztosan megállapítani. Elküldök egy mintát a korábbi kollégámnak, Noah-nak.','SAM'));};panel.append(view,label,inspect);
+  this.microscopeUI?.destroy();this.microscopeUI=null;
+  const f=this.travel.forest??createForest(),samples:SampleId[]=[...f.microscopy?.slides??[]];
+  if(f.sample)samples.push('nest');for(const id of ['thyme','plantain','nettle'] as const)if(this.travel.estate.produce[id]>0)samples.push(id);if(this.travel.research.flowers.some(f=>f.growth>=4))samples.push('pollen');
+  showDialogue('A mikroszkóp alatt','','VIZSGÁLAT');document.querySelector('#dialogue-close')!.textContent='Vissza';
+  this.microscopeUI=new MicroscopePanel(document.querySelector<HTMLElement>('#research-panel')!,{state:f.microscopy,samples:[...new Set(samples)],focus:f.focus,examined:f.examined,day:this.clock.day,dayLabel:day=>{const d=calendarDay(day,this.farmName);return `${seasons[seasonIndex(d)]} ${seasonDay(d)}. nap`;},save:async state=>{const next=structuredClone(this.travel.forest??createForest());next.microscopy=state;next.focus=state.view.focus;return await this.commitForest(next,()=>{});},firstObservation:async()=>{
+   const next=structuredClone(this.travel.forest??createForest());if(!next.sample)return false;next.examined=true;
+   return await this.commitForest(next,()=>{this.microscopeUI?.destroy();this.microscopeUI=null;showDialogue('Gombafonalak','Vajon ezek okozták a bajt, vagy csak később telepedtek meg az elhagyott fészekben? Ennyiből még a fajt sem tudom biztosan megállapítani. Elküldök egy mintát a korábbi kollégámnak, Noah-nak.','SAM');document.querySelector('#dialogue-close')!.textContent='Vissza';const panel=document.querySelector<HTMLElement>('#research-panel')!;panel.hidden=false;const back=document.createElement('button');back.type='button';back.textContent='Vissza a mikroszkóphoz';back.onclick=()=>this.openMicroscope();panel.replaceChildren(back);});
+  }});
+ }
+ private openPond(){
+  showDialogue('Egy kis tó.','Jó lesz itt megpihenni. Később az öntözőkannát is itt tölthetem újra.');
+  if(!this.travel.research.repaired)return;const panel=document.querySelector<HTMLElement>('#research-panel')!;panel.hidden=false;const take=document.createElement('button');take.type='button';take.textContent='Vízmintát veszek';take.id='take-pond-sample';take.onclick=()=>{if(this.transitioning)return;const next=structuredClone(this.travel.forest??createForest());next.microscopy??=createMicroscopy(next.sample?['nest']:[],next.focus,next.examined);if(!next.microscopy.slides.includes('pond'))next.microscopy.slides.push('pond');if(!next.microscopy.view.sample)next.microscopy.view.sample='pond';void this.commitForest(next,()=>{take.disabled=true;take.textContent='A tóvízminta megőrizve';});};panel.replaceChildren(take);
  }
  private openSampleMail(){
   showDialogue('Levél a laborba','Találtam egy szokatlan bevonatot egy elhagyott faliméhfészekben. A mikroszkóp alatt gombafonalakat látok. Segítenél azonosítani? Egyelőre nem tudom, van-e köze a méhek megfogyatkozásához. — Sam','KORÁBBI KOLLÉGÁMNAK, NOAH-NAK');
@@ -1146,7 +1153,7 @@ class Farm extends Phaser.Scene {
     if(this.nearby==='journal')this.openJournal();
     if(this.nearby==='house')void this.travelTo({x:400,y:HOME_ORIGIN+470});
     if(collectEstate(this.travel.estate,this.actor.x,this.actor.y,this.clock.day)){void this.gatherEstate();return;}
-    if(this.nearby==='pond')showDialogue('Egy kis tó.','Jó lesz itt megpihenni. Később az öntözőkannát is itt tölthetem újra.');
+    if(this.nearby==='pond')this.openPond();
     if(this.nearby==='shed'){if(this.travel.research.key)void this.travelTo({x:400,y:3470});else showDialogue('?','');}
   };
   this.bubble.on('pointerdown',inspect);
@@ -1155,7 +1162,7 @@ class Farm extends Phaser.Scene {
   resize();this.scale.on('resize',resize);
   this.events.once('shutdown',()=>this.scale.off('resize',resize));
   this.game.canvas.tabIndex=-1;
-  dialogue.addEventListener('close',()=>{this.input.keyboard?.resetKeys();release();queueMicrotask(()=>{if(this.ready&&this.hasFarm&&!this.choosingFarm&&!this.naming&&!dialogue.open&&!this.transitioning)this.game.canvas.focus({preventScroll:true});});});
+  dialogue.addEventListener('close',()=>{this.microscopeUI?.destroy();this.microscopeUI=null;this.input.keyboard?.resetKeys();release();queueMicrotask(()=>{if(this.ready&&this.hasFarm&&!this.choosingFarm&&!this.naming&&!dialogue.open&&!this.transitioning)this.game.canvas.focus({preventScroll:true});});});
   showDialogue('',story,'');
   void this.initStorage();
   this.keys=this.input.keyboard!.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT,SHIFT',false) as Record<string,Phaser.Input.Keyboard.Key>;
