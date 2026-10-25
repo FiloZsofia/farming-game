@@ -16,6 +16,11 @@ export function targetTile(x:number,y:number):Tile{
   if(x>=b.x+4&&x<b.x+4+3*TILE&&y>=b.y+2&&y<b.y+2+2*TILE)
    return {x:b.x+4+Math.floor((x-b.x-4)/TILE)*TILE,y:b.y+2+Math.floor((y-b.y-2)/TILE)*TILE};
  }
+ // Continue the nearest raised-bed row across the surrounding meadow. Four
+ // cells leave room for a sprinkler and its three crops on the outer side.
+ const row=farmLayout.beds.filter(b=>y>=b.y+2&&y<b.y+2+2*TILE&&x>=b.x+4-4*TILE&&x<b.x+4+7*TILE)
+  .sort((a,b)=>Math.max(a.x+4-x,0,x-a.x-4-3*TILE)-Math.max(b.x+4-x,0,x-b.x-4-3*TILE))[0];
+ if(row)return {x:row.x+4+Math.floor((x-row.x-4)/TILE)*TILE,y:row.y+2+Math.floor((y-row.y-2)/TILE)*TILE};
  return {x:Math.floor(x/TILE)*TILE,y:Math.floor(y/TILE)*TILE};
 }
 function segmentDistance(x:number,y:number,a:readonly number[],b:readonly number[]){
@@ -26,10 +31,10 @@ export function cultivable(tile:Tile):boolean{
  const {x,y}=tile;
  const bed=farmLayout.beds.find(b=>x>=b.x+4&&x+TILE<=b.x+4+3*TILE&&y>=b.y+2&&y+TILE<=b.y+2+2*TILE);
  if(bed)return true;
- // The prototype opens clear meadow patches first; trees, paths and fixtures remain protected.
- const expansion=(x<0||x>=800||y<0)&&x>=farmBounds.left+40&&x+TILE<=farmBounds.right-40&&y>=farmBounds.top+48&&y+TILE<=568;
- const meadow=expansion||(x>=64&&x+TILE<=160&&y>=288&&y+TILE<=464)||(x>=272&&x+TILE<=416&&y>=400&&y+TILE<=480);
- if(!meadow)return false;
+ // Free meadow can be cultivated throughout the farm, including beside beds.
+ if(x<farmBounds.left+40||x+TILE>farmBounds.right-40||y<farmBounds.top+48||y+TILE>568)return false;
+ // Keep the wooden frames clear even when a neighbouring row uses another grid.
+ if(farmLayout.beds.some(b=>x<b.x+b.w&&x+TILE>b.x&&y<b.y+b.h&&y+TILE>b.y))return false;
  for(let px=x;px<=x+TILE;px+=4)for(let py=y;py<=y+TILE;py+=4){
   if(blocked(px,py))return false;
   for(const path of farmLayout.paths)for(let i=1;i<path.points.length;i++)

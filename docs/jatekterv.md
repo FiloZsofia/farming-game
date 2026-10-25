@@ -742,3 +742,5 @@ A Nád kártyáján az Elhelyezem és Levágom választás mindkét képernyőm�
 Részleges magátvételkor a mentett és a játék közben használt rendelésállapot együtt frissül. A postaláda azonnal újrarajzolja a bent maradó mennyiségeket; az átvett magok kártyái eltűnnek, részben átvett fajtánál csak a maradék látszik. Ha semmi nem fér a hátizsákba, az átvételi gomb inaktív; üres postaládánál rejtett. Hely felszabadítása után, újratöltés nélkül is kizárólag a maradék vehető át. A még úton lévő rendeléseket az átvétel nem módosítja. A javítás a korábbi, helyes mentett állapotot is megőrzi, nem írja felül a régi képernyőkészlettel.
 
 A műhelybolt vásárlóablakának elfogadott fejléce: **SIMON**, cím: **Műhelybolt**, bevezető szöveg pontosan: „A lentieknek a tervrajzát vásárolhatod meg.”
+
+Az öntözők kétirányú használatához a szabad farmi rét az ágyások mellett is kapálható, a védett ösvények, épületek, víz és fakeretek kivételével. A ládák sorai a mellettük lévő réten folytathatók azonos 24-es osztással: az öntöző túloldalára ültetett három növény is ugyanabba a sorba kerül.

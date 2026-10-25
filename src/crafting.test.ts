@@ -1,6 +1,6 @@
 import {describe,it,expect} from 'vitest';
 import {createCrafting,buyBlueprint,craftMachine,compostAction,advanceCrafting,irrigatedPlots,irrigate,mulchPlot,recipes,validCrafting} from './crafting';
-import {createGarden,nextDayGarden,waterPlot} from './gardening';
+import {createGarden,nextDayGarden,waterPlot,targetTile,work,TILE} from './gardening';
 import {createClock} from './clock';
 import {snapshot,decodeSnapshot,validSnapshot} from './storage';
 import {backpackSlots,transferChest} from './chests';
@@ -30,3 +30,18 @@ it('never substitutes plantable roots for cut reeds in a blueprint recipe',()=>{
 it('only packs idle machines through an explicit packing action',async()=>{const {packMachine}=await import('./crafting');const s=fresh();s.travel.crafting=createCrafting();s.travel.crafting.machines=[{kind:'composter',x:324,y:420,started:10,ready:0}];expect(packMachine(s,0)).toBeNull();s.travel.crafting.machines[0]={kind:'composter',x:324,y:420,started:null,ready:4};expect(packMachine(s,0)).toBeNull();s.travel.crafting.machines[0].ready=0;const n=packMachine(s,0)!;expect(n.travel.crafting?.machines).toHaveLength(0);expect(n.travel.crafting?.items.composter).toBe(1);expect(s.travel.crafting.machines).toHaveLength(1);});
 
 it('lets the player explicitly choose cutting a purchased reed instead of planting it',async()=>{const {cutCarriedReed}=await import('./crafting');const s=fresh();s.travel.estate.goods.reed=4;const first=cutCarriedReed(s)!;expect(first.travel.estate.goods.reed).toBe(3);expect(first.travel.crafting?.items.reed).toBe(1);expect(s.travel.estate.goods.reed).toBe(4);let n=first;for(let i=0;i<3;i++)n=cutCarriedReed(n)!;expect(n.travel.estate.goods.reed).toBe(0);expect(n.travel.crafting?.items.reed).toBe(4);expect(cutCarriedReed(n)).toBeNull();expect(decodeSnapshot(n)).toEqual(n);});
+
+describe('planting across a raised-bed sprinkler',()=>{
+ it('allows three new meadow crops on the other side, aligned with the bed',()=>{
+  const g=createGarden(),machine={x:519,y:260};
+  for(const x of [447,471,495,543,567,591]){
+   const tile=targetTile(x,260),player={x,y:260};
+   expect(work(g,'hoe',tile,player).ok).toBe(true);
+   g.seeds.radish++;expect(work(g,'radish',tile,player).ok).toBe(true);
+   expect(tile.y+TILE/2).toBe(machine.y);
+  }
+  expect(irrigatedPlots(g,machine)).toHaveLength(6);
+  irrigate(g,{...createCrafting(),machines:[{kind:'irrigation',...machine,started:null,ready:0}]});
+  expect([...g.plots.values()].every(p=>p.watered)).toBe(true);
+ });
+});
