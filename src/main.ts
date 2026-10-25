@@ -1,3 +1,4 @@
+import {storyEndPending} from './travel';
 import {MicroscopePanel} from './microscope-panel';
 import {createMicroscopy,type SampleId} from './microscopy';
 import {canPlaceChestAt} from './chest-placement';
@@ -44,7 +45,7 @@ import {WorkshopExterior} from './workshop-exterior';
 import {createClearing,activeDebris,clearDebris,debrisAt,neededTool,debrisNames,regrowDebris,type ClearingTool} from './cleanup';
 import {drawCrop} from './crop-art';
 import { createGarden, targetTile, cultivable, reachable, work, TILE, type Tile, type Tool, type Garden, nextDayGarden, isRipe, growthTarget, cropNames } from './gardening';
-import { createClock, SPRING_PREVIEW_LAST_DAY, calendarDay, isTestingFarm, springPreviewComplete, advanceClock, clockLabel, nightOpacity, type Clock } from './clock';
+import { createClock, calendarDay, advanceClock, clockLabel, nightOpacity, type Clock } from './clock';
 import { JUMP_DURATION, JUMP_COOLDOWN, jumpHeight, movementSpeed } from './jump';
 import {itemIcon,seedIcon,goodIcon} from './item-icons';
 import {normalizeFarmName} from './farm-name';
@@ -184,7 +185,7 @@ class Farm extends Phaser.Scene {
   const load=async()=>{
    try{
     const loaded=await this.store.load();
-    if(loaded.data){const {player,clock,seeds,produce,plots,economy,orders,farmName,farmerName,clearing,story,skill,travel}=loaded.data;this.travel={...travel,weatherSeed:travel.weatherSeed??randomWeatherSeed()};this.skill=skill;this.story=story;this.clearing=clearing;this.farmName=farmName;this.farmerName=farmerName;this.updateFarmTitle();this.economy=economy;this.orders=orders;this.actor.setPosition(player.x,player.y);this.clock=clock;this.garden={seeds,produce,plots:new Map(plots)};if(this.currentWeather()==='rain'&&!springPreviewComplete(this.clock,this.farmName))waterFromRain(this.garden);this.redrawScenery();this.drawGarden();if(travel.weatherSeed===undefined)await this.saveChecked(snapshot(this.actor,this.clock,this.garden,this.economy,this.orders,this.farmName,this.clearing,this.story,this.skill,this.farmerName,this.travel));}
+    if(loaded.data){const {player,clock,seeds,produce,plots,economy,orders,farmName,farmerName,clearing,story,skill,travel}=loaded.data;this.travel={...travel,weatherSeed:travel.weatherSeed??randomWeatherSeed()};this.skill=skill;this.story=story;this.clearing=clearing;this.farmName=farmName;this.farmerName=farmerName;this.updateFarmTitle();this.economy=economy;this.orders=orders;this.actor.setPosition(player.x,player.y);this.clock=clock;this.garden={seeds,produce,plots:new Map(plots)};if(this.currentWeather()==='rain')waterFromRain(this.garden);this.redrawScenery();this.drawGarden();if(travel.weatherSeed===undefined)await this.saveChecked(snapshot(this.actor,this.clock,this.garden,this.economy,this.orders,this.farmName,this.clearing,this.story,this.skill,this.farmerName,this.travel));}
     this.hasFarm=Boolean(loaded.data);this.loadRecovered=loaded.recovered;await this.store.listFarms();this.ready=true;this.lastTick=performance.now();
     let resume:string|null=null;try{resume=sessionStorage.getItem('farm-resume-once');sessionStorage.removeItem('farm-resume-once');}catch{}
     if(resume&&resume===this.store.selectedFarmId&&this.hasFarm)this.resumeCurrentFarm();
@@ -266,7 +267,7 @@ class Farm extends Phaser.Scene {
  private resumeCurrentFarm(){
   this.choosingFarm=false;document.querySelector<HTMLElement>('#start-panel')!.hidden=true;this.lastTick=performance.now();release();
   if(!this.farmName){this.openFarmNaming();return;}
-  if(springPreviewComplete(this.clock,this.farmName)){this.showPreviewEnd();return;}
+  if(storyEndPending(this.travel)){this.showPreviewEnd();return;}
   if(this.loadRecovered){this.loadRecovered=false;showDialogue('Az előző mentésből folytatjuk.','A legutóbbi mentés hibás volt. Az előző érvényes állapotot sikerült visszaállítani.','MENTÉS HELYREÁLLÍTVA');}
   else if(this.travel.morning||this.travel.sale||this.travel.estate.duckArrivalPending){dialogue.close();void this.presentMorning();}
   else dialogue.close();
@@ -326,7 +327,6 @@ class Farm extends Phaser.Scene {
  private async finishDay(forced:boolean){
   if(this.transitioning||!this.ready)return;
   this.avatar.cancelWork();this.workEffects?.clear();
-  if(this.clock.day>=SPRING_PREVIEW_LAST_DAY&&!isTestingFarm(this.farmName)){await this.finishSpringPreview();return;}
   this.transitioning=true;this.saveRevision++;
   const nextClock=createClock(this.clock.day+1);
   if(this.currentWeather()==='rain')waterFromRain(this.garden);
@@ -369,14 +369,10 @@ class Farm extends Phaser.Scene {
   showDialogue('Itt tart most a történet.','Elérted a játék jelenlegi változatának végét. A következő napot egy későbbi frissítésben folytathatod. Köszönöm, hogy játszottál! 🙂','FOLYTATÁS KÖVETKEZIK');
   dialogue.dataset.presentation='development-end';document.querySelector<HTMLElement>('#preview-end-panel')!.hidden=false;document.querySelector<HTMLButtonElement>('#dialogue-close')!.hidden=true;document.querySelector<HTMLButtonElement>('#export-save')!.hidden=false;
  }
- private async finishSpringPreview(){
-  this.transitioning=true;this.saveRevision++;release();const clock={...this.clock,elapsed:this.clock.collapseAt};
-  try{
-   await this.saveChecked(snapshot(this.actor,clock,this.garden,this.economy,this.orders,this.farmName,this.clearing,this.story,this.skill,this.farmerName,this.travel));this.clock=clock;
-   this.collapseRemaining=0;this.actor.setAngle(0);this.body.setY(0);this.jumpRemaining=0;this.shadow.setScale(1);this.warningAnimation?.cancel();this.warningAnimation=null;document.querySelector<HTMLElement>('#night-warning')!.hidden=true;document.querySelector<HTMLElement>('#sleep-shade')!.style.opacity='0';document.querySelector('#save-state')!.textContent='Mentve ebben a böngészőben';this.showPreviewEnd();
-  }catch{
-   this.clock.elapsed=Math.min(this.clock.elapsed,this.clock.collapseAt-.001);this.collapseRemaining=0;this.actor.setAngle(0);document.querySelector<HTMLElement>('#sleep-shade')!.style.opacity='0';showDialogue('Még nem sikerült menteni.','A tavasz lezárását nem sikerült elmenteni. A farmod változatlan; próbáld újra.','MENTÉSI HIBA');document.querySelector<HTMLButtonElement>('#sleep')!.hidden=false;
-  }finally{this.transitioning=false;this.lastTick=performance.now();}
+ private async acknowledgeStoryEnd(){
+  if(this.transitioning)return;
+  const next=this.currentSnapshot();next.travel.storyEndSeen=true;
+  await this.commitChest(next,()=>{dialogue.close();if(this.travel.morning||this.travel.sale||this.travel.estate.duckArrivalPending)void this.presentMorning();});
  }
  private async saveMorningState(){
   try{await this.saveChecked(this.currentSnapshot());document.querySelector('#save-state')!.textContent='Mentve ebben a böngészőben';}
@@ -694,7 +690,7 @@ class Farm extends Phaser.Scene {
  }
  private async gatherEstate(){if(!this.canInteract())return;const next=collectEstate(this.travel.estate,this.actor.x,this.actor.y,this.clock.day);if(next)await this.commitEstate(next,'Begyűjtve! A termés a készletedbe került.');}
 
- private canInteract(){return this.ready&&!dialogue.open&&!this.transitioning&&!this.fishThrowPlaying&&!this.avatar.isWorking()&&!springPreviewComplete(this.clock,this.farmName)&&this.collapseRemaining<=0&&this.jumpRemaining<=0;}
+ private canInteract(){return this.ready&&!dialogue.open&&!this.transitioning&&!this.fishThrowPlaying&&!this.avatar.isWorking()&&this.collapseRemaining<=0&&this.jumpRemaining<=0;}
  private materialName(crop:string){return crop==='potato'?'vetőgumó':crop==='strawberry'?'palánta':['honeyberry','blueberry'].includes(crop)?'csemete':'mag';}
  private openCatalog(){
   if(!this.canInteract())return;if(!this.nearObject(farmLayout.catalog)){this.notice('Sétálj a ház jobb oldali ablaka melletti magkatalógushoz.');return;}
@@ -1174,7 +1170,7 @@ class Farm extends Phaser.Scene {
    if(event.code==='Escape'){
     event.preventDefault();if(event.repeat)return;
     if(dialogue.open){
-     if(dialogue.dataset.presentation==='development-end'||this.naming)return;
+     if(dialogue.dataset.presentation==='development-end'){void this.acknowledgeStoryEnd();return;}if(this.naming)return;
      if(this.choosingFarm){if(this.hasFarm){if(this.transitioning)this.closeStartMenuRequested=true;else{const resume=document.querySelector<HTMLButtonElement>('#continue-farm')!;if(!resume.hidden&&!resume.disabled)this.resumeCurrentFarm();}}return;}
      dialogue.close();return;
     }
@@ -1185,14 +1181,14 @@ class Farm extends Phaser.Scene {
    if(!dialogue.open&&this.ready&&!this.transitioning&&this.collapseRemaining<=0){event.preventDefault();this.openInventory();}
   },true);
   dialogue.addEventListener('cancel',event=>{if(this.naming||this.choosingFarm||dialogue.dataset.presentation==='development-end')event.preventDefault();});
-  document.querySelector('#dialogue form')!.addEventListener('submit',event=>{if(this.naming){event.preventDefault();void this.confirmFarmName();}else if(this.choosingFarm||dialogue.dataset.presentation==='development-end')event.preventDefault();});
+  document.querySelector('#dialogue form')!.addEventListener('submit',event=>{if(this.naming){event.preventDefault();void this.confirmFarmName();}else if(dialogue.dataset.presentation==='development-end'){event.preventDefault();void this.acknowledgeStoryEnd();}else if(this.choosingFarm)event.preventDefault();});
   document.querySelector('#farm-name')!.addEventListener('input',()=>this.validateFarmName());
   document.querySelector('#start-farm')!.addEventListener('click',()=>void this.confirmFarmName());
   document.querySelector('#new-farm')!.addEventListener('click',()=>{if(this.ready&&!this.transitioning)this.openFarmNaming(true);});
   document.querySelector('#cancel-farm-name')!.addEventListener('click',()=>{if(!this.transitioning){this.naming=false;void this.openStartMenu(false);}});
   document.querySelector('#continue-farm')!.addEventListener('click',()=>{if(this.ready&&!this.transitioning&&this.hasFarm)this.resumeCurrentFarm();});
   document.querySelector('#retry-farms')!.addEventListener('click',()=>void this.openStartMenu());
-  document.querySelector('#preview-farms')!.addEventListener('click',()=>void this.openStartMenu(false));
+  document.querySelector('#preview-farms')!.addEventListener('click',()=>void this.acknowledgeStoryEnd());
   document.querySelector('#open-start-menu')!.addEventListener('click',()=>void this.openStartMenu());
   document.querySelector('#menu')!.addEventListener('click',()=>{if(this.morningPlaying)return;showDialogue(this.farmName??'A farmod','', 'MENÜ');document.querySelector<HTMLElement>('#menu-panel')!.hidden=false;});
   document.querySelector('#place-order')!.addEventListener('click',()=>void this.placeOrder());
@@ -1223,15 +1219,15 @@ class Farm extends Phaser.Scene {
   this.homeLight?.update(nightOpacity(this.clock));
   this.houseExterior?.update(nightOpacity(this.clock));
   this.workshopExterior?.update(entranceShutterOpen(this.travel.research),nightOpacity(this.clock));
-  const weather=this.currentWeather(),outdoors=!shopAt(this.actor.y)&&!inWorkshop(this.actor.y)&&!inHome(this.actor.y),playing=this.ready&&!dialogue.open&&!this.transitioning&&!this.choosingFarm&&!document.hidden&&document.hasFocus()&&!springPreviewComplete(this.clock,this.farmName);
+  const weather=this.currentWeather(),outdoors=!shopAt(this.actor.y)&&!inWorkshop(this.actor.y)&&!inHome(this.actor.y),playing=this.ready&&!dialogue.open&&!this.transitioning&&!this.choosingFarm&&!document.hidden&&document.hasFocus();
   document.querySelector<HTMLElement>('#sunlight')!.style.opacity=String(outdoors?(1-Math.min(1,nightOpacity(this.clock)/.55))*(weather==='sunny'?1:weather==='cloudy'?.18:0):0);
   document.querySelector('#weather-label')!.textContent=weatherNames[weather];
   if(!this.weatherEffects)this.weatherEffects=new WeatherEffects();this.weatherEffects.draw(playing?Math.min(seconds,.1):0,weather,outdoors,nightOpacity(this.clock),{x:this.cameras.main.worldView.x,y:this.cameras.main.worldView.y,zoom:this.cameras.main.zoom});this.rainSound.update(weather==='rain'&&outdoors&&playing);
-  if(this.ready&&this.hasFarm&&!springPreviewComplete(this.clock,this.farmName)&&weather==='rain'&&waterFromRain(this.garden))this.drawGarden();
+  if(this.ready&&this.hasFarm&&weather==='rain'&&waterFromRain(this.garden))this.drawGarden();
   const surface=document.querySelector<HTMLElement>('#game')!;surface.dataset.cameraX=String(this.cameras.main.worldView.x);surface.dataset.cameraY=String(this.cameras.main.worldView.y);surface.dataset.zoom=String(this.cameras.main.zoom);surface.dataset.placing=this.placing??'';surface.dataset.fish=String(this.travel.estate.fish.goldfish+this.travel.estate.fish.carp);surface.dataset.trees=String(this.travel.estate.trees.length);surface.dataset.morningStage=this.morningStage;surface.dataset.shopLeo=String(Boolean(this.shopLeo?.person.visible&&shopAt(this.actor.y)==='nursery'));surface.dataset.shopsOpen=String(shopsOpen(this.clock.elapsed));surface.dataset.shopAnnie=String(Boolean(this.shopAnnie?.person.visible&&shopAt(this.actor.y)==='fishShop'));surface.dataset.pendingSeeds=String(quantityTotal(this.orders.pending));surface.dataset.mailSeeds=String(quantityTotal(this.orders.mailbox));surface.dataset.gardeningXp=String(this.skill.xp);surface.dataset.gardeningReward=String(this.skill.rewarded);surface.dataset.gift=String(this.story.giftReceived);surface.dataset.birdhouse=String(Boolean(this.story.birdhouse));surface.dataset.morningSeen=String(this.story.morningSeen);surface.dataset.gold=String(this.economy.gold);surface.dataset.shipping=String(shippingValue(this.economy.shipping));surface.dataset.day=String(this.clock.day);surface.dataset.elapsed=String(this.clock.elapsed);surface.dataset.ready=String(this.ready);surface.dataset.jumping=String(this.jumpRemaining>0);
-  surface.dataset.weather=weather;surface.dataset.previewComplete=String(springPreviewComplete(this.clock,this.farmName));
-  if(this.ready&&!this.choosingFarm&&!dialogue.open&&!this.transitioning&&springPreviewComplete(this.clock,this.farmName))this.showPreviewEnd();
-  if(!this.ready||dialogue.open||this.transitioning||springPreviewComplete(this.clock,this.farmName)||document.hidden||!document.hasFocus()){this.input.keyboard?.resetKeys();this.selection.setVisible(false);return;}
+  surface.dataset.weather=weather;surface.dataset.previewComplete=String(this.travel.forest?.sent===true);
+  if(this.ready&&!this.choosingFarm&&!dialogue.open&&!this.transitioning&&storyEndPending(this.travel))this.showPreviewEnd();
+  if(!this.ready||dialogue.open||this.transitioning||document.hidden||!document.hasFocus()){this.input.keyboard?.resetKeys();this.selection.setVisible(false);return;}
   if(this.collapseRemaining>0){
    this.collapseRemaining=Math.max(.001,this.collapseRemaining-seconds);this.actor.setAngle(75);document.querySelector<HTMLElement>('#sleep-shade')!.style.opacity=String(1-this.collapseRemaining);
    if(this.collapseRemaining<=.001)void this.finishDay(true);return;

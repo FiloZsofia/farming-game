@@ -582,3 +582,19 @@ A mikroszkóp kilépőgombja Vissza. Az első vizsgálat és a Noah-nak küldöt
 A felismerhető részletek külön Megfigyelések fülre kerülnek, ismételt pont- vagy jutalomszerzés nélkül. A Felvételek fülön a tényleges látómező menthető és törölhető; a kép megnyitása ugyanazt a tárgylemezhelyzetet, fókuszt és nagyítást állítja vissza. A vizsgálati állapot, a gyűjtemény és a felvételek farmonként mentődnek, a régi mentések változatlanul betölthetők.
 
 A fészekminta mellett a begyűjtött vadkakukkfű, lándzsás útifű és csalán levélmintája, a kivirágzott vadvirágok pollenje és a tóparton vett vízminta is vizsgálható. Az előkészített tárgylemezek megmaradnak; nem foglalnak új készletrekeszt. A különféle növényi és tóvízi részletek nem bizonyítanak betegséget vagy kapcsolatot a méhek megfogyatkozásával.
+
+### Történeti változat vége és folytatható farm (a korábbi napkorlát helyett)
+
+A változat végét többé nem a 15. nap lezárása jelzi. A jelenlegi történeti mérföldkő a minta és a levél elküldése Noah-nak. Ez után, az elküldés visszajelzésének bezárásakor egyszer megjelenik a már elfogadott ablak, változatlan szöveggel:
+
+**FOLYTATÁS KÖVETKEZIK**
+
+**Itt tart most a történet.**
+
+Elérted a játék jelenlegi változatának végét. A következő napot egy későbbi frissítésben folytathatod. Köszönöm, hogy játszottál! 🙂
+
+A korábbi Vissza a főmenübe gomb helyén **Tovább játszom** szerepel; bezárja az ablakot, és ugyanazon a farmon folytatható a játék. A nyugtázás farmonként mentődik. Korábban már elküldött mintával rendelkező mentésnél egyszer ugyanígy megjelenik az értesítés. Az üzenet szövegét a folytatható játékmenet ellenére sem írjuk át. A nyári tartalom nincs megnyitva: a kijelzett naptár legfeljebb Tavasz 15., miközben a belső napok, növekedés, visszanövés, szállítás és tóélet továbbhaladnak. A Teszt farm az Erdőszéli birtokhoz hasonló tesztmentés, kijelzett naptára Tavasz 15.; a mentést nem indítjuk újra és a tárgyait nem módosítjuk.
+
+### Látható, tiszta falusi ösvények
+
+A farmkapunál az ösvény egyenes folytatással csatlakozik, egymásra rajzolt lekerekített végződések nélkül. A falusi és erdőszéli dekorfák teljes lombkoronája is elkerüli az ösvények felszínét. A rajz és a törzsütközés azonos, megtartott fahelyeket használ. Az erdei áfonyabokor is az út mellé kerül, a szedési állapota és azonosítója megmarad.

@@ -14,9 +14,7 @@ export function clockLabel(clock:Clock){
  return `${night?'Éjszaka':clock.elapsed<180?'Délelőtt':'Délután'} · ${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`;
 }
 
-// Keep the prototype at the end of its first spring; later saves stay intact.
+// Internal day counters keep advancing; the unfinished summer stays out of this version.
 export const SPRING_PREVIEW_LAST_DAY=15;
-export const isTestingFarm=(name?:string|null)=>name?.normalize('NFC').trim().toLocaleLowerCase('hu-HU')==='erdőszéli birtok';
-export const springPreviewComplete=(clock:Clock,farmName?:string|null)=>!isTestingFarm(farmName)&&(clock.day>SPRING_PREVIEW_LAST_DAY||clock.day===SPRING_PREVIEW_LAST_DAY&&clock.elapsed>=clock.collapseAt);
-
-export const calendarDay=(day:number,farmName?:string|null)=>isTestingFarm(farmName)?15:day;
+export const isTestingFarm=(name?:string|null)=>['erdőszéli birtok','teszt farm'].includes(name?.normalize('NFC').trim().toLocaleLowerCase('hu-HU')??'');
+export const calendarDay=(day:number,farmName?:string|null)=>isTestingFarm(farmName)?15:farmName===undefined?day:Math.min(day,SPRING_PREVIEW_LAST_DAY);

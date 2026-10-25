@@ -9,16 +9,9 @@ describe('active game clock',()=>{
  it('applies a gradual readable night shade',()=>{const c=createClock();expect(nightOpacity(c)).toBe(0);c.elapsed=360;expect(nightOpacity(c)).toBeGreaterThan(0);c.elapsed=500;expect(nightOpacity(c)).toBe(.55);});
 });
 
-describe('spring preview boundary',()=>{
- it('allows the last spring day until it ends, then blocks summer and preserves later saves',async()=>{
-  const {springPreviewComplete}=await import('./clock');
-  expect(springPreviewComplete({day:14,elapsed:580,collapseAt:580})).toBe(false);
-  expect(springPreviewComplete({day:15,elapsed:579.9,collapseAt:580})).toBe(false);
-  expect(springPreviewComplete({day:15,elapsed:580,collapseAt:580})).toBe(true);
-  const later={day:21,elapsed:12,collapseAt:580};expect(springPreviewComplete(later)).toBe(true);expect(later).toEqual({day:21,elapsed:12,collapseAt:580});
- });
-});
-
-it('lets the named testing farm continue while the other farms retain the spring limit',async()=>{
- const {springPreviewComplete,isTestingFarm}=await import('./clock');const end={day:15,elapsed:580,collapseAt:580};expect(isTestingFarm('Erdőszéli birtok')).toBe(true);expect(springPreviewComplete(end,'Erdőszéli birtok')).toBe(false);expect(springPreviewComplete({...end,day:21},'Erdőszéli birtok')).toBe(false);expect(springPreviewComplete(end,'Másik farm')).toBe(true);expect(springPreviewComplete(end,null)).toBe(true);
+it('keeps unfinished summer out of the calendar without stopping internal days',async()=>{
+ const {calendarDay,isTestingFarm}=await import('./clock');
+ expect(calendarDay(4,'Másik farm')).toBe(4);expect(calendarDay(16,'Másik farm')).toBe(15);expect(calendarDay(48,'Másik farm')).toBe(15);
+ for(const name of ['Erdőszéli birtok','Teszt farm','  TESZT FARM  ']){expect(isTestingFarm(name)).toBe(true);expect(calendarDay(48,name)).toBe(15);}
+ expect(isTestingFarm('Másik farm')).toBe(false);
 });

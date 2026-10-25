@@ -12,19 +12,30 @@ export const villageLayout={
  square:{x:475,y:1080,rx:181,ry:115},
  nurserySaplings:[{x:518,y:958},{x:542,y:958},{x:646,y:958},{x:670,y:958}],
  benches:[{id:'west',angle:-2.35},{id:'east',angle:-.55}],
- bushes:[{id:'fern',x:100,y:736},{id:'birch',x:238,y:821},{id:'moss',x:70,y:939},{id:'brook',x:191,y:1090}],
+ bushes:[{id:'fern',x:100,y:736},{id:'birch',x:238,y:821},{id:'moss',x:70,y:980},{id:'brook',x:191,y:1090}],
  trees:[{x:44,y:670,kind:0},{x:103,y:650,kind:1},{x:254,y:685,kind:2},{x:53,y:799,kind:2},{x:169,y:777,kind:0},{x:286,y:769,kind:1},{x:51,y:889,kind:1},{x:278,y:934,kind:0},{x:146,y:1000,kind:2},{x:40,y:1059,kind:0},{x:311,y:1120,kind:1},{x:100,y:1165,kind:2},{x:250,y:1184,kind:0}],
 } as const;
-// Trunks stay clear of the winding paths and every berry bush.
-const forestRoute=[[278,760],[150,813],[107,930],[211,1040],[356,1080]],road=[[169,572],[170,600],[174,672],[305,784],[393,909]];
-const segmentGap=(x:number,y:number,a:number[],b:number[])=>{const dx=b[0]-a[0],dy=b[1]-a[1],t=Math.max(0,Math.min(1,((x-a[0])*dx+(y-a[1])*dy)/(dx*dx+dy*dy)));return Math.hypot(x-a[0]-t*dx,y-a[1]-t*dy);};
-export const forestTrees=Array.from({length:72},(_,i)=>({x:28+i%8*37+(i%3)*6,y:675+Math.floor(i/8)*61,kind:i%3})).filter(t=>[forestRoute,road].every(route=>route.slice(1).every((b,i)=>segmentGap(t.x,t.y,route[i],b)>34))&&villageLayout.bushes.every(b=>Math.hypot(t.x-b.x,t.y-b.y)>40)&&villageLayout.trees.every(b=>Math.hypot(t.x-b.x,t.y-b.y)>32));
+// Drawing and canopy clearance use the same full routes.
+export const villagePaths=[
+ {width:32,points:[[170,600],[174,672],[305,784],[393,909],[476,1030],[493,1320],[493,1414]]},
+ {width:17,points:[[278,760],[150,813],[107,930],[211,1040],[356,1080]]},
+ {width:28,points:[[474,1016],[586,978],[591,940]]},
+ {width:25,points:[[606,1097],[660,1100],[708,1100]]},
+ {width:20,points:[[107,930],[40,930],[-120,938],[-270,1000],[-450,995],[-570,962],[-660,978],[-780,984],[-940,1010]]},
+];
+// The footprint covers the complete crown and trunk, rather than just a trunk point.
+export function woodlandTreeClear(x:number,y:number,scale=1){
+ const left=x-42*scale,right=x+42*scale,top=y-98*scale,bottom=y+12*scale;
+ return villagePaths.every(path=>path.points.slice(1).every((b,i)=>{const a=path.points[i],length=Math.hypot(b[0]-a[0],b[1]-a[1]),steps=Math.ceil(length/3);for(let j=0;j<=steps;j++){const xx=a[0]+(b[0]-a[0])*j/steps,yy=a[1]+(b[1]-a[1])*j/steps;if(Math.hypot(xx-Math.max(left,Math.min(right,xx)),yy-Math.max(top,Math.min(bottom,yy)))<path.width/2+7)return false;}return true;}));
+}
+export const villageTrees=villageLayout.trees.filter(t=>woodlandTreeClear(t.x,t.y));
+export const forestTrees=Array.from({length:72},(_,i)=>({x:28+i%8*37+(i%3)*6,y:675+Math.floor(i/8)*61,kind:i%3})).filter(t=>woodlandTreeClear(t.x,t.y)&&villageLayout.bushes.every(b=>Math.hypot(t.x-b.x,t.y-b.y)>40)&&villageTrees.every(b=>Math.hypot(t.x-b.x,t.y-b.y)>32));
 const buildings:Box[]=[villageLayout.nursery,villageLayout.fishShop,villageLayout.cottage];
 export function villageBlocked(x:number,y:number){
  if(x<22&&y>=695&&y<=1340)return forestBlocked(x,y);
  if(x<22||x>WORLD_WIDTH-22||y<600||y>1394)return true;
  if(buildings.some(b=>x+7>b.x&&x-7<b.x+b.w&&y+3>b.y&&y-4<b.y+b.h))return true;
- if([...villageLayout.trees,...forestTrees].some(t=>Math.hypot((x-t.x)/12,(y-t.y)/9)<1))return true;
+ if([...villageTrees,...forestTrees].some(t=>Math.hypot((x-t.x)/12,(y-t.y)/9)<1))return true;
  // The basin and benches are solid; the surrounding cobbles remain walkable.
  if(villageLayout.benches.some(b=>benchContains(benchPose(b.angle),x,y)))return true;
  if(((x-476)/28)**2+((y-1081)/19)**2<1)return true;

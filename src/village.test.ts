@@ -4,7 +4,7 @@ import {worldBlocked,villageLayout,shopOrigins,shopAt,benchPose,benchPoint,shops
 import {snapshot,decodeSnapshot,validSnapshot} from './storage';
 import {createGarden} from './gardening';
 import {createClock} from './clock';
-import {createTravel,forageReady} from './travel';
+import {createTravel,forageReady,storyEndPending} from './travel';
 describe('Southbound village route',()=>{
  it('opens only the south gate and allows walking both ways across the farm boundary',()=>{
   expect(blocked(170,595)).toBe(true);expect(worldBlocked(170,595)).toBe(false);expect(worldBlocked(400,595)).toBe(true);
@@ -60,3 +60,7 @@ it('keeps nursery display saplings outside the entrance path',()=>{
  it('allows a walkable side approach for conversation without confusing it with the front counter',async()=>{const {merchantNearby,shopBlocked,shopOrigins}=await import('./village-layout');for(const shop of ['fishShop','nursery'] as const){const origin=shopOrigins[shop];expect(shopBlocked(325,origin+240)).toBe(false);expect(merchantNearby(shop,325,origin+240)).toBe(true);expect(merchantNearby(shop,450,origin+320)).toBe(false);expect(merchantNearby(shop,400,origin+467)).toBe(false);}});
 
 it('keeps the full southern farm boundary closed except for the village gate',()=>{for(const x of [-376,-200,0,140,210,500,900,1176])expect(worldBlocked(x,595)).toBe(true);for(const x of [150,170,190])expect(worldBlocked(x,595)).toBe(false);});
+
+it('notifies once after the narrative milestone, independently of day count, with save compatibility',()=>{const s=snapshot({x:330,y:260},createClock(32),createGarden());expect(storyEndPending(s.travel)).toBe(false);s.travel.forest={revision:2,stick:true,defeated:['vine','spore-a','spore-b','vine-inner'],picked:{},sample:true,examined:true,sent:true,focus:72};expect(storyEndPending(s.travel)).toBe(true);expect(decodeSnapshot(s)).toEqual(s);s.travel.storyEndSeen=true;expect(storyEndPending(s.travel)).toBe(false);expect(decodeSnapshot(s)).toEqual(s);expect(validSnapshot({...s,travel:{...s.travel,storyEndSeen:'yes'}})).toBe(false);});
+
+it('keeps complete crowns clear of both village walking routes',async()=>{const {villageTrees,forestTrees,woodlandTreeClear,villagePaths}=await import('./village-layout');expect(villageTrees.length+forestTrees.length).toBeGreaterThan(5);for(const t of [...villageTrees,...forestTrees])expect(woodlandTreeClear(t.x,t.y)).toBe(true);for(const path of villagePaths)for(let i=1;i<path.points.length;i++){const a=path.points[i-1],b=path.points[i],n=Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/4);for(let j=0;j<=n;j++)expect(woodlandTreeClear(a[0]+(b[0]-a[0])*j/n,a[1]+(b[1]-a[1])*j/n+45)).toBe(false);}});

@@ -3,7 +3,7 @@ import {paintForest} from './forest-art';
 import {FOREST_LEFT} from './forest';
 import {drawWoodlandTree} from './woodland-tree';
 import Phaser from 'phaser';
-import {villageLayout as layout,forestTrees,WORLD_HEIGHT,WORLD_WIDTH,benchPose,benchPoint,type BenchPose,shopNames} from './village-layout';
+import {villageLayout as layout,villagePaths,woodlandTreeClear,villageTrees,forestTrees,WORLD_HEIGHT,WORLD_WIDTH,benchPose,benchPoint,type BenchPose,shopNames} from './village-layout';
 // Original procedural scenery, sharing coordinates with the walkable village.
 export function drawVillage(scene:Phaser.Scene){
  const g=scene.add.graphics().setDepth(-.5),labels:Phaser.GameObjects.Text[]=[];
@@ -23,10 +23,9 @@ export function drawVillage(scene:Phaser.Scene){
  for(let i=0;i<9200;i++){const x=FOREST_LEFT+random()*(1200-FOREST_LEFT),y=600+random()*(WORLD_HEIGHT-600);rect(x,y,1+random()*2,1,[0x4f783f,0x9bb669,0xb1bf72][i%3],.6);}
  // Northern woodland backdrop continues beyond the farm's left edge, instead of blank green.
  for(let i=0;i<4700;i++){const x=FOREST_LEFT+random()*(-400-FOREST_LEFT),y=farmBounds.top+random()*(600-farmBounds.top);rect(x,y,1+random()*2,1,[0x4f783f,0x9bb669,0xb1bf72][i%3],.6);}
- const path=(points:number[][],width:number)=>{for(const [w,c]of [[width+5,0x738354],[width+1,0xa5936c],[width-3,0xc1ae85]]){g.lineStyle(w,c).beginPath();points.forEach(([x,y],i)=>i?g.lineTo(x,y):g.moveTo(x,y));g.strokePath();for(const[x,y]of points)oval(x,y,w,w,c);}};
- path([[169,572],[170,600],[174,672],[305,784],[393,909],[476,1030],[493,1320],[493,1414]],32);
- path([[278,760],[150,813],[107,930],[211,1040],[356,1080]],17);
- path([[474,1016],[586,978],[591,940]],28);path([[606,1097],[660,1100],[708,1100]],25);
+ const path=(points:number[][],width:number,openStart=false)=>{for(const [w,c]of [[width+5,0x738354],[width+1,0xa5936c],[width-3,0xc1ae85]]){g.lineStyle(w,c).beginPath();points.forEach(([x,y],i)=>i?g.lineTo(x,y):g.moveTo(x,y));g.strokePath();for(const[x,y]of (openStart?points.slice(1):points))oval(x,y,w,w,c);}};
+ // The road starts with a straight continuation at the farm edge, without an overlapping end cap.
+ for(const [i,p]of villagePaths.slice(0,4).entries())path(p.points,p.width,i===0);
  oval(479,1089,374,240,0x83915d);oval(476,1080,360,230,0xc3b697);
  for(let y=977;y<1183;y+=10)for(let x=298+(y%20?0:8);x<655;x+=17){if(((x-476)/176)**2+((y-1080)/109)**2>1)continue;rect(x,y,14,7,(x+y)%3?0xcabb9a:0xaeaa8e);line(x+2,y+1,x+12,y+1,0xdfcdae);}
  // A shallow stone fountain and a few pots give the square a quiet centre.
@@ -72,14 +71,14 @@ export function drawVillage(scene:Phaser.Scene){
  oval(865,1107,33,16,0x587d6d);rect(849,1086,32,21,0x947d54);oval(865,1086,32,12,0x5b9595);oval(863,1084,24,6,0x92c4b6);
  const c=layout.cottage;house(c.x,c.y,c.w,c.h,0x9b7155,0xd4c1a1);flowers(331,1343);flowers(446,1344);
  // Diverse forest silhouettes: broad oak, silver birch and fir.
- const tree=(x:number,y:number,kind:number,s=1)=>drawWoodlandTree(g,random,x,y,kind,s);
+ const tree=(x:number,y:number,kind:number,s=1)=>{if(woodlandTreeClear(x,y,s))drawWoodlandTree(g,random,x,y,kind,s);};
  paintForest(g,random);
  for(let row=0;row<17;row++)for(let column=0;column<9;column++){const x=FOREST_LEFT+25+column*77+(row%2)*24,y=farmBounds.top+50+row*65;if(x< -445)tree(x,y,(row+column)%3,.85+(column%3)*.08);}
 
  // Backdrop foliage frames the route without filling its walking spaces.
  for(let i=0;i<18;i++){tree(18+random()*750,700+Math.floor(i/9)*660,i%3,.65);}
  for(let i=0;i<25;i++)tree(-170+(i%4)*47,695+Math.floor(i/4)*83,i%3,.85+(i%3)*.08);
- for(const t of [...layout.trees,...forestTrees].sort((a,b)=>a.y-b.y))tree(t.x,t.y,t.kind);
+ for(const t of [...villageTrees,...forestTrees].sort((a,b)=>a.y-b.y))tree(t.x,t.y,t.kind);
  for(const[x,y,k]of [[410,750,0],[746,766,1],[762,1178,0],[738,1337,2],[559,1372,1],[273,1375,0]])tree(x,y,k,.9);
  // Ferns, fallen leaves and meadow flowers along the shaded fork.
  for(let i=0;i<70;i++){const x=45+random()*240,y=660+random()*520;for(let j=0;j<4;j++)line(x,y,x+(j-1.5)*4,y-5-random()*8,0x63894e);if(i%3===0)oval(x,y,4,2,0xc6b77c,.7);}
