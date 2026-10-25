@@ -620,3 +620,9 @@ A Készletben az eper, a mézbogyó és az áfonya Eszem gombbal fogyasztható. 
 ### Ismerősök megjelenése és Noah foglalkozása
 
 Noah leírása pontosan: „Biológus, Sam korábbi munkatársa a laborból.” Leo arca teljesen új rajz: barna haj, rendezett szakáll, formált állkapocs, kifejező szemek és látható, barátságos mosoly. Annie hosszú, szőke hajat kap, a kalapja megmarad. A bolti figurák és a portrék ugyanabból a rajzból készülnek. Sam megjelenése változatlan.
+
+### Kertészkedés: biztos érettségjelzés és szimmetrikus ládák
+
+A talaj, a növények és a pipák külön rajzolási lépést kapnak, ebben a sorrendben. Minden szüretelhető növény felett megjelenik a pipa, újratermő növényen is; később kirajzolt talaj vagy növény nem takarja el. A mentett ültetés sorrendjétől független a megjelenés.
+
+A három láda oldalkerete a meglévő, 3 × 2 darab 16-os ültetőrácsot szimmetrikusan keretezi; megszűnik a jobb oldali, használhatatlan földsáv. Az ültetőhelyek koordinátái és a mentett növények megmaradnak. Az eper saját piros termésformát, a mézbogyó hosszúkás kék termést, az áfonya gömbölyű, csillagos végű bogyót kap. A sárgarépa levelei finoman elágaznak; a burgonyán apró, világos virágok is látszanak. Nagyobb ültetőhely és új, folyamatos egérkezelés egyelőre javaslat, nem elfogadott követelmény.

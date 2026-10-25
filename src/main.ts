@@ -44,7 +44,7 @@ import {drawFarm} from './world-art';
 import {HouseExterior} from './house-exterior';
 import {WorkshopExterior} from './workshop-exterior';
 import {createClearing,activeDebris,clearDebris,debrisAt,neededTool,debrisNames,regrowDebris,type ClearingTool} from './cleanup';
-import {drawCrop} from './crop-art';
+import {drawGardenPlots} from './garden-art';
 import { createGarden, targetTile, cultivable, reachable, work, TILE, type Tile, type Tool, type Garden, nextDayGarden, isRipe, growthTarget, cropNames } from './gardening';
 import { createClock, calendarDay, advanceClock, clockLabel, nightOpacity, type Clock } from './clock';
 import { JUMP_DURATION, JUMP_COOLDOWN, jumpHeight, movementSpeed } from './jump';
@@ -804,13 +804,7 @@ class Farm extends Phaser.Scene {
  }
  private drawGarden(){
   const g=this.planted;g.clear();
-  for(const [key,plot] of this.garden.plots){
-   const [x,y]=key.split(',').map(Number);
-   g.fillStyle(plot.watered?0x493f31:0x88603f);g.fillRect(x+1,y+1,TILE-2,TILE-2);
-   g.lineStyle(1,plot.watered?0x635b43:0xa17b51);for(let row=4;row<TILE;row+=4)g.lineBetween(x+3,y+row,x+TILE-3,y+row);
-   drawCrop(g,x,y,plot);
-   if(plot.watered){g.fillStyle(0x83b8c5);g.fillRect(x+TILE-4,y+3,2,3);}
-  }
+  const markerCount=drawGardenPlots(g,this.garden);document.querySelector<HTMLElement>('#game')!.dataset.ripeMarkers=String(markerCount);
   this.drawMailFlag();this.redrawResearch();document.querySelector<HTMLButtonElement>('#toolbar [data-tool=stick]')!.hidden=!this.travel.forest?.stick;
   const surface=document.querySelector<HTMLElement>('#game')!;
   surface.dataset.plots=String(this.garden.plots.size);surface.dataset.planted=String([...this.garden.plots.values()].filter(p=>p.crop).length);surface.dataset.watered=String([...this.garden.plots.values()].filter(p=>p.watered).length);surface.dataset.ripe=String([...this.garden.plots.values()].filter(p=>isRipe(p)).length);surface.dataset.produce=String(Object.values(this.garden.produce).reduce((a,b)=>a+b,0));
