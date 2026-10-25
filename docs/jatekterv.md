@@ -673,3 +673,9 @@ A korábban másfélszeresre növelt ültetőhelyek és növények rajzolt mére
 A készletkártyák nagyobb ikont és arányosan, középre rendezett nevet kapnak. Az alsó műveleti hely csak akkor fenntartott, ha valóban van gomb a kártyán. A külön sor felirata „Eszközök és küldetéstárgyak”. A Gyűjtés ikonja a kosár a menüsorban és a készletben is. A szerszámnevek átnevezése egyelőre javaslat.
 
 A Tervrajzok fülön nincs külön hiányt vagy minden alapanyag meglétét közlő mondat. A birtokolt/szükséges darabszám és az Elkészítem gomb állapota jelzi a lehetőséget. Általános szabály: kerülendő minden szájbarágós, túlmagyarázó játékbeli szöveg, különösen a felületből már látható információ megismétlése. Ez az AGENTS.md-ben is rögzítve.
+
+### Roncsok: négy rész, kisebb hozam és látható munkapont
+
+Az előző hatrészes bontást felváltja négy rész, továbbra is részenként három csapással. Három rész egyenként 4 fát és 2 ócskavasat ad, egy rész 6 követ. Egy teljes roncs 12 fa, 6 ócskavas és 6 kő; a három együtt 36 fa, 18 ócskavas és 18 kő háromnaponta. Az újragyűjtés továbbra is a teljes bontás befejezésétől számított három eltelt játéknap után indul. A korábban szerzett alapanyagokat nem vonjuk vissza; a régi részmunka arányosan négy részre igazodik, a csapásszám megmarad, a régi teljes bontás megújulási dátuma változatlan.
+
+A roncsok megjelenése 18%-kal nagyobb. Mind a hat korábbi külön rajzolt darab megmarad; csak négy bontható, két darab a váz részeként állandó dekoráció. A soron következő részt finom körvonal jelzi. A három csík ehhez a részhez tartozik, külön előtéri rétegen, a karakter fejét és testét kerülő elhelyezéssel. Minden harmadik csapás találati pillanatában nyersanyagikonok és +4/+2, illetve +6 jelzések úsznak fel. Rövid leválási animáció után eltűnik a bontott darab és a következő rész kap kiemelést. A mentés a találati animáció előtt biztosítja a jutalmat; sikertelen mentésnél nem jelenik meg jutalomjelzés.
