@@ -33,3 +33,10 @@ export function transferChest(s:Snapshot,index:number,key:string,deposit:boolean
 
 export const backpackSlots=(s:Snapshot)=>occupiedSlots(inventoryCounts(s))+Math.ceil((s.skill.chests?.packed??0)/99);
 export const canCarryChange=(before:Snapshot,after:Snapshot)=>backpackSlots(after)<=Math.max(16,backpackSlots(before));
+
+export function backpackStacks(s:Snapshot){const stacks:{key:string;count:number}[]=[];for(const [key,n]of Object.entries(inventoryCounts(s)))for(let left=n;left>0;left-=99)stacks.push({key,count:Math.min(99,left)});for(let left=s.skill.chests?.packed??0;left>0;left-=99)stacks.push({key:'packed:chest',count:Math.min(99,left)});return stacks;}
+export function collectAvailableMail(s:Snapshot):{state:Snapshot;taken:number;remaining:number}|null{
+ const next=structuredClone(s),limit=Math.max(16,backpackSlots(s));let taken=0;
+ for(const crop of crops){const available=next.orders.mailbox[crop];if(!available)continue;const existing=next.seeds[crop],free=Math.max(0,limit-backpackSlots(next)),capacity=(Math.ceil(existing/99)+free)*99-existing,amount=Math.min(available,capacity,999999-existing);if(amount<=0)continue;next.seeds[crop]+=amount;next.orders.mailbox[crop]-=amount;taken+=amount;}
+ return taken?{state:next,taken,remaining:Object.values(next.orders.mailbox).reduce((a,b)=>a+b,0)}:null;
+}

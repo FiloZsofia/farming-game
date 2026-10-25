@@ -32,6 +32,7 @@ function validSnapshotRecord(value:unknown,legacy=false):value is Snapshot{
  if(v.farmName!==null&&(typeof v.farmName!=='string'||normalizeFarmName(v.farmName)!==v.farmName))return false;
  if(v.farmerName!==null&&(typeof v.farmerName!=='string'||normalizeFarmName(v.farmerName)!==v.farmerName))return false;
  const c=v.clock;
+ if(Object.values(v.clearing.junk??{}).some(p=>p?.completedDay!==undefined&&p.completedDay>c?.day))return false;
  if(Object.values(v.clearing.removed).some(day=>day>c?.day))return false;
  if(!c||!Number.isSafeInteger(c.day)||c.day<1||!finite(c.elapsed)||!finite(c.collapseAt)||c.elapsed<0||c.elapsed>c.collapseAt||c.collapseAt<570||c.collapseAt>=600)return false;
  if(!v.seeds||!crops.every(k=>{const n=v.seeds[k as keyof Garden['seeds']];return Number.isSafeInteger(n)&&n>=0&&n<=999999;}))return false;

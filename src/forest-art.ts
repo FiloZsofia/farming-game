@@ -56,10 +56,9 @@ export function drawForestObjects(scene:Phaser.Scene,f:Forest,day:number,weather
    }
   }
  }
- for(const p of natureSites){if(!natureReady(f,p,day,weatherSeed))continue;
+ for(const p of natureSites){if(p.kind!=='stone'||!natureReady(f,p,day,weatherSeed))continue;
   g.fillStyle(0x314a34,.28).fillEllipse(p.x+2,p.y+5,34,12);
-  if(p.kind==='wood'){g.lineStyle(5,0x725039).strokePoints([{x:p.x-15,y:p.y+3},{x:p.x+12,y:p.y-4},{x:p.x+19,y:p.y-12}]);g.lineStyle(2,0xb28b59).lineBetween(p.x-13,p.y+1,p.x+12,p.y-6);g.lineStyle(3,0x78573d).lineBetween(p.x-2,p.y,p.x-6,p.y-11);g.fillStyle(0xcdb083).fillEllipse(p.x-15,p.y+3,5,6);g.fillStyle(0x86995b).fillEllipse(p.x-5,p.y-12,9,4);}
-  else{for(const [dx,dy,w,h,c]of [[-8,2,17,10,0xa7a99b],[7,0,14,11,0x89998e],[0,-5,12,8,0xc4c5b2]]){g.fillStyle(c).fillEllipse(p.x+dx,p.y+dy,w,h);g.lineStyle(.8,0xd9d4b9).lineBetween(p.x+dx-w*.25,p.y+dy-2,p.x+dx+2,p.y+dy-3);}g.lineStyle(1.2,0x67949a,.7).lineBetween(p.x-12,p.y+5,p.x-6,p.y+5).lineBetween(p.x+5,p.y+5,p.x+12,p.y+5);}
+  {for(const [dx,dy,w,h,c]of [[-8,2,17,10,0xa7a99b],[7,0,14,11,0x89998e],[0,-5,12,8,0xc4c5b2]]){g.fillStyle(c).fillEllipse(p.x+dx,p.y+dy,w,h);g.lineStyle(.8,0xd9d4b9).lineBetween(p.x+dx-w*.25,p.y+dy-2,p.x+dx+2,p.y+dy-3);}g.lineStyle(1.2,0x67949a,.7).lineBetween(p.x-12,p.y+5,p.x-6,p.y+5).lineBetween(p.x+5,p.y+5,p.x+12,p.y+5);}
  }
  if(!f.stick){g.lineStyle(4,0x715238).strokePoints([{x:walkingStick.x-20,y:walkingStick.y+4},{x:walkingStick.x+12,y:walkingStick.y-4},{x:walkingStick.x+22,y:walkingStick.y-13}]);g.lineStyle(1,0xc6aa78).lineBetween(walkingStick.x-18,walkingStick.y+2,walkingStick.x+12,walkingStick.y-6);}
  return g;

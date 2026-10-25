@@ -1,3 +1,5 @@
+import {junkSites,junkPoint,junkProgress,junkWorkPoint,junkTool,junkAt,junkBlocks,strikeJunk,prepareJunkSites,type JunkId} from './junk-sites';
+import {drawJunkSites} from './junk-art';
 import {natureSites,natureReady} from './nature-resources';
 import {consumeBerry} from './food';
 import {storyEndPending} from './travel';
@@ -8,7 +10,7 @@ import {noahPortrait} from './noah-portrait';
 import {ForestCombat} from './forest-combat';
 import {createForest,earlyNestObservation,collectForestSample,beginForestVisit,encounterDefeated,inForest,FOREST_LEFT,forestNest,forestPlants,forestEnemies,walkingStick,microscope,herbNames,type Forest} from './forest';
 import {drawForestObjects} from './forest-art';
-import {backpackSlots,canCarryChange,craftChest,transferChest,inventoryCounts,occupiedSlots,emptyChests} from './chests';
+import {backpackSlots,backpackStacks,collectAvailableMail,canCarryChange,craftChest,transferChest,inventoryCounts,occupiedSlots,emptyChests} from './chests';
 import {HOME_ORIGIN,inHome,homeObjects,homeBlocked} from './home';
 import {HomeLight} from './home-light';
 import {drawHome} from './home-art';
@@ -52,7 +54,7 @@ import { JUMP_DURATION, JUMP_COOLDOWN, jumpHeight, movementSpeed } from './jump'
 import {itemIcon,seedIcon,goodIcon} from './item-icons';
 import {normalizeFarmName} from './farm-name';
 import { SaveStore, snapshot,type Snapshot } from './storage';
-import {createOrders,seedPrices,orderCost,quantityTotal,purchaseSeeds,deliverOrders,collectPackage, type Orders} from './orders';
+import {createOrders,seedPrices,orderCost,quantityTotal,purchaseSeeds,deliverOrders, type Orders} from './orders';
 import { createEconomy, crops, emptyQuantities, salePrices, shippingValue, settleSales, transferProduce, type Economy } from './economy';
 const dialogue=document.querySelector<HTMLDialogElement>('#dialogue')!;
 const story="Sam egy kutatólaborban dolgozott, ahol rovarokon élősködő gombákat vizsgáltak.\n\nAz utolsó hónapokban egy szokatlan minta érkezett a laborba. Az eredmények nem illettek ahhoz, amit addig tudtak. Sam még azelőtt eljött, hogy kiderült volna, mit találtak.\n\n„Szeretném megtudni, képes vagyok-e a saját kezemmel otthont teremteni ezen a helyen.”";
@@ -70,7 +72,7 @@ function showDialogue(title:string,text:string,label='A BIRTOKON'){
  if(!dialogue.open)dialogue.showModal();
 }
 document.querySelector('#story')!.addEventListener('click',()=>showDialogue('',story,''));
-document.querySelector('#help')!.addEventListener('click',()=>showDialogue('Lassan, a saját tempódban.','Mozgás: WASD, nyilak vagy a képernyő iránygombjai. Ugrás: Space. Futás: tartsd a Shiftet. Az ugrás magasabbra és messzebbre visz; akadályokon továbbra sem lehet áthaladni.\n\nA háznál, tónál és melléképületnél az E billentyűvel vagy a megjelenő jelzésre kattintva nézhetsz körül. A napló, a magkatalógus, az eladóláda és a postaláda a világban használható: sétálj oda, majd E vagy kattintás/koppintás.\n\nTakarítás: Kéz (7) a gazhoz, Fejsze (8) az ágakhoz, Csákány (9) a kövekhez. Kattints közelről vagy F. Három nap után, műveletlen helyen újra megjelennek.\n\nKertészkedés: 1–6 vagy az alsó eszközsáv. Kattints egy közeli földkockára, vagy használd az F billentyűt az előtted lévő kockán. Kapa → ültetőanyag → öntözés. A három ágyásban és a szabad rétfoltokon dolgozhatsz.\n\n6 perc nappal után éjszaka lesz. A 2. és 3. éjszakai percben figyelmeztetés érkezik, majd 3:30–4:00 között elfáradsz és otthon ébredsz. A farmon minden holmid biztonságban van. A birtokon kívül 50% eséllyel egy nálad lévő tárgyat (az alap szerszámok és a madárodú kivételével), máskülönben legfeljebb 10 goldot veszítesz. Üres készlet vagy erszény esetén a kiválasztott rablási kísérlet sikertelen. A verandán a Naplóval korábban is lefekhetsz.\n\nA kert és az idő automatikusan mentődik ebben a böngészőben. Az öntözött növények reggel fejlődnek. Éréskor válaszd a Szedés eszközt (6), majd kattints a növényre. A leszedett termények Tab-bal vagy a Menü → Készlet pontban nézhetők meg. A veranda bal oldalán lévő eladóládába teheted a termést. Napzárásig visszavehető, reggel megkapod az árát. Retek: 15, burgonya: 30, borsó: 12 gold/db. A háznál lévő magkatalógusból rendelhetsz (retek 5, burgonya 10, borsó 15 gold/db), másnap a kapu melletti postaládából veheted át. Készlet: Tab; bezárás: Tab vagy Escape. A déli kapun át a faluba sétálhatsz; balra az erdei ösvényen áfonyát gyűjthetsz (E, F vagy koppintás), a bokrok két nap után újrateremnek. A falutéren faiskola, Kertitó Szaküzlet és pihenőpad vár. Az üzletek csak nappal tartanak nyitva, éjszakára bezárnak. A stamina még nincs bekötve.','IRÁNYÍTÁS'));
+document.querySelector('#help')!.addEventListener('click',()=>showDialogue('Lassan, a saját tempódban.','Mozgás: WASD, nyilak vagy a képernyő iránygombjai. Ugrás: Space. Futás: tartsd a Shiftet. Az ugrás magasabbra és messzebbre visz; akadályokon továbbra sem lehet áthaladni.\n\nA háznál, tónál és melléképületnél az E billentyűvel vagy a megjelenő jelzésre kattintva nézhetsz körül. A napló, a magkatalógus, az eladóláda és a postaláda a világban használható: sétálj oda, majd E vagy kattintás/koppintás.\n\nTakarítás: Kéz (7) a gazhoz, Fejsze (8) az ágakhoz, Csákány (9) a kövekhez. Kattints közelről vagy F. Három nap után, műveletlen helyen újra megjelennek.\n\nKertészkedés: 1–6 vagy az alsó eszközsáv. Kattints egy közeli földkockára, vagy használd az F billentyűt az előtted lévő kockán. Kapa → ültetőanyag → öntözés. A három ágyásban és a szabad rétfoltokon dolgozhatsz.\n\n6 perc nappal után éjszaka lesz. A 2. és 3. éjszakai percben figyelmeztetés érkezik, majd 3:30–4:00 között elfáradsz és otthon ébredsz. A farmon minden holmid biztonságban van. A birtokon kívül 50% eséllyel egy nálad lévő tárgyat (az alap szerszámok és a madárodú kivételével), máskülönben legfeljebb 10 goldot veszítesz. Üres készlet vagy erszény esetén a kiválasztott rablási kísérlet sikertelen. A verandán a Naplóval korábban is lefekhetsz.\n\nA kert és az idő automatikusan mentődik ebben a böngészőben. Az öntözött növények reggel fejlődnek. Éréskor válaszd a Gyűjtés műveletet (6), majd kattints a növényre. A leszedett termények Tab-bal vagy a Menü → Készlet pontban nézhetők meg. A veranda bal oldalán lévő eladóládába teheted a termést. Napzárásig visszavehető, reggel megkapod az árát. Retek: 15, burgonya: 30, borsó: 12 gold/db. A háznál lévő magkatalógusból rendelhetsz (retek 5, burgonya 10, borsó 15 gold/db), másnap a kapu melletti postaládából veheted át. Készlet: Tab; bezárás: Tab vagy Escape. A déli kapun át a faluba sétálhatsz; balra az erdei ösvényen áfonyát gyűjthetsz (E, F vagy koppintás), a bokrok két nap után újrateremnek. A falutéren faiskola, Kertitó Szaküzlet és pihenőpad vár. Az üzletek csak nappal tartanak nyitva, éjszakára bezárnak. A stamina még nincs bekötve.','IRÁNYÍTÁS'));
 const held=new Set<string>();
 const movementInput=new MovementInput();
 window.addEventListener('keydown',event=>movementInput.keyDown(event),true);
@@ -82,7 +84,7 @@ document.querySelectorAll<HTMLButtonElement>('[data-dir]').forEach(button=>{
  const up=()=>{held.delete(button.dataset.dir!);button.classList.remove('active');};
  button.addEventListener('pointerup',up);button.addEventListener('pointercancel',up);button.addEventListener('lostpointercapture',up);
 });
-type FarmTool=Tool|ClearingTool|'birdhouse'|'wildflower'|'chest'|'stick';
+type FarmTool=Tool|ClearingTool|'crowbar'|'birdhouse'|'wildflower'|'chest'|'stick';
 class Farm extends Phaser.Scene {
  private researchArt:Phaser.GameObjects.Container|null=null;
  private eatingUntil=0;
@@ -123,6 +125,7 @@ class Farm extends Phaser.Scene {
  private forestPresence:boolean|null=null;
  private forestIntroRetryAt=0;
  private forestEquipped=false;
+ private junkArt:Phaser.GameObjects.Container|null=null;
  private chestArt?:Phaser.GameObjects.Graphics;
  private skill=createGardenSkill();
  private skillUntil=0;
@@ -454,7 +457,7 @@ class Farm extends Phaser.Scene {
   if(!f.stick&&near(walkingStick))return 'forest-stick';
   if(near({x:-461,y:970},42))return 'forest-bench';
   if(near(forestNest,64))return 'forest-nest';
-  const resource=natureSites.find(p=>near(p,32)&&natureReady(f,p,this.clock.day,this.travel.weatherSeed??0));if(resource)return `nature:${resource.id}`;
+  const resource=natureSites.find(p=>p.kind==='stone'&&near(p,32)&&natureReady(f,p,this.clock.day,this.travel.weatherSeed??0));if(resource)return `nature:${resource.id}`;
   const herb=forestPlants.find(p=>near(p,33)&&(f.picked[p.id]===undefined||this.clock.day-f.picked[p.id]>=3));return herb?`herb:${herb.id}`:'';
  }
  private async commitForest(f:Forest,after:()=>void,herb?:typeof forestPlants[number]){
@@ -531,25 +534,35 @@ class Farm extends Phaser.Scene {
   await this.commitChest(next,()=>{if(this.forestCombat)this.forestCombat.health=next.travel.forest!.health!;dialogue.close();release();this.eatingUntil=performance.now()+1200;this.avatar.use(0,-40,'hand');const heart=this.add.text(this.actor.x,this.actor.y-60,'♥ +1',{fontFamily:'sans-serif',fontSize:'13px',color:'#edaf9c',stroke:'#354b35',strokeThickness:3}).setOrigin(.5).setDepth(180);this.tweens.add({targets:heart,y:heart.y-28,alpha:0,duration:1200,onComplete:()=>heart.destroy()});});
  }
  private nearChest(){let index=-1,nearest=48;this.skill.chests?.placed.forEach((c,i)=>{const d=Math.hypot(c.x-this.actor.x,c.y-this.actor.y);if(d<nearest){index=i;nearest=d;}});return index;}
+ private redrawJunk(){
+  if(this.actor&&junkSites.some(s=>!this.clearing.junkPositions?.[s.id]))this.clearing=prepareJunkSites(this.currentSnapshot());
+  this.junkArt?.destroy();this.junkArt=drawJunkSites(this,this.clearing,this.clock.day);
+ }
+ private async workJunk(id:JunkId){
+  if(!this.canInteract())return;const progress=junkProgress(this.clearing,id,this.clock.day);if(progress.part===6){const remaining=Math.max(1,3-(this.clock.day-(progress.completedDay??this.clock.day)));this.notice(`Most nincs több leválasztható rész. ${remaining} nap múlva újra gyűjthető.`);return;}
+  const target=junkWorkPoint(this.clearing,id,this.clock.day),result=strikeJunk(this.currentSnapshot(),id);if(!result){this.notice('Sétálj közelebb a bontandó részhez.');return;}
+  if(await this.commitChest(result.state,()=>{})){this.selectTool('crowbar');this.animateWork(target.x,target.y,'crowbar',result.kind,()=>{this.redrawJunk();if(result.reward)this.notice(result.kind==='wood'?'+6 fa · +2 ócskavas':'+6 kő');});}
+ }
  private drawChests(){
   this.chestArt?.destroy();const g=this.add.graphics().setDepth(.5);this.chestArt=g;
   for(const c of this.skill.chests?.placed??[]){g.fillStyle(0x26362b,.25).fillEllipse(c.x,c.y+5,35,12);g.fillStyle(0x795234).fillRoundedRect(c.x-16,c.y-16,32,23,3);g.fillStyle(0xb68a50).fillRoundedRect(c.x-17,c.y-21,34,10,3);g.lineStyle(1,0xe0b979).lineBetween(c.x-14,c.y-19,c.x+14,c.y-19);g.lineStyle(3,0x514a3d).lineBetween(c.x-10,c.y-19,c.x-10,c.y+5).lineBetween(c.x+10,c.y-19,c.x+10,c.y+5);g.fillStyle(0xe1be68).fillRect(c.x-2,c.y-10,5,6);}
  }
  private async commitChest(next:Snapshot,after:()=>void){
   if(this.transitioning)return false;this.transitioning=true;this.saveRevision++;
-  try{await this.saveChecked(next);this.skill=next.skill;this.clearing=next.clearing;this.travel=next.travel;this.garden.seeds=next.seeds;this.garden.produce=next.produce;this.economy=next.economy;this.story=next.story;this.redrawForest();this.drawChests();this.drawGarden();this.transitioning=false;after();return true;}
+  try{await this.saveChecked(next);this.skill=next.skill;this.clearing=next.clearing;this.travel=next.travel;this.garden.seeds=next.seeds;this.garden.produce=next.produce;this.economy=next.economy;this.story=next.story;this.redrawForest();this.drawChests();this.redrawJunk();this.drawGarden();this.transitioning=false;after();return true;}
   catch{this.notice('Nem sikerült menteni. A tárgyaid megmaradtak.');return false;}
   finally{this.transitioning=false;this.lastTick=performance.now();}
  }
  private appendChestInventory(materials:HTMLElement){
-  const capacity=document.createElement('p');capacity.className='backpack-capacity';capacity.textContent=`Hátizsák: ${backpackSlots(this.currentSnapshot())} / 16 rekesz`;materials.prepend(capacity);
   if(Object.values(this.skill.pendingSeeds??{}).some(n=>n>0)){const claim=document.createElement('button');claim.type='button';claim.textContent='Átveszem a félretett szintjutalmat';claim.onclick=()=>{const next=this.currentSnapshot();let received=false;for(const [k,n]of Object.entries(next.skill.pendingSeeds??{})){const candidate=structuredClone(next);candidate.seeds[k as keyof Garden['seeds']]+=n;if(canCarryChange(this.currentSnapshot(),candidate)){next.seeds=candidate.seeds;delete next.skill.pendingSeeds![k];received=true;}}if(received)void this.commitChest(next,()=>this.openInventory());else this.notice('A jutalom megmaradt. Előbb szabadíts fel egy rekeszt.');};materials.append(claim);}
   const recipes=document.querySelector<HTMLElement>('#blueprints-page')!;recipes.replaceChildren();
   if(!this.skill.chestBlueprint)return;
   const card=document.createElement('div');card.className='inventory-card';card.textContent='Tárolóláda · 24 rekesz';card.prepend(itemIcon('chest'));
-  const recipe=document.createElement('p');recipe.textContent='20 fa + 5 ócskavas';card.append(recipe);
-  const craft=document.createElement('button');craft.type='button';craft.textContent='Elkészítem';craft.disabled=this.clearing.wood<20||this.travel.research.materials.scrap<5;
-  craft.onclick=()=>{const next=craftChest(this.currentSnapshot());if(next)void this.commitChest(next,()=>this.openInventory('blueprints'));};card.append(craft);
+  const costs=document.createElement('div');costs.className='recipe-costs';
+  for(const [name,held,required,icon]of [['Fa',this.clearing.wood,20,'wood'],['Ócskavas',this.travel.research.materials.scrap,5,'scrap']] as const){const row=document.createElement('p');row.className=held<required?'recipe-cost missing':'recipe-cost ready';row.append(itemIcon(icon),document.createTextNode(`${name}: ${held} / ${required}`));costs.append(row);}card.append(costs);
+  const missingWood=Math.max(0,20-this.clearing.wood),missingScrap=Math.max(0,5-this.travel.research.materials.scrap),missing=[missingWood?`${missingWood} fa`:'',missingScrap?`${missingScrap} ócskavas`:''].filter(Boolean),shortage=document.createElement('p');shortage.className='recipe-shortage';shortage.textContent=missing.length?`Még ${missing.join(' és ')} szükséges.`:'Minden alapanyag megvan.';card.append(shortage);
+  const craft=document.createElement('button');craft.type='button';craft.id='craft-chest';craft.textContent='Elkészítem';craft.disabled=missing.length>0||this.transitioning||(this.skill.chests?.packed??0)>=999;
+  craft.onclick=()=>{const next=craftChest(this.currentSnapshot());if(next)void this.commitChest(next,()=>this.openInventory('blueprints'));else this.notice('Nincs nálad elég alapanyag.');};card.append(craft);
   if(this.skill.chests?.packed){const place=document.createElement('button');place.type='button';place.textContent=`Elhelyezem (${this.skill.chests.packed} db)`;
    place.onclick=()=>{dialogue.close();this.selectTool('chest');this.notice('Kattints egy közeli, szabad helyre a házban vagy a farmon.');};card.append(place);
   }recipes.append(card);
@@ -578,25 +591,27 @@ class Farm extends Phaser.Scene {
   const progress=document.createElement('p');progress.dataset.skillProgress='gardening';progress.textContent=this.skill.chestBlueprint?'Elérted a jelenleg elérhető legmagasabb, 3. szintet.':`${current} / ${required} tapasztalatpont · Még ${gardeningTarget(this.skill)-this.skill.xp} pont a ${gardeningLevel(this.skill)+1}. szintig.`;
   card.append(heading,level,meter,progress);page.append(card);
  }
+ private renderBackpack(){
+  const state=this.currentSnapshot(),stacks=backpackStacks(state),used=stacks.length,summary=document.querySelector<HTMLElement>('#backpack-summary')!,grid=document.querySelector<HTMLElement>('#backpack-grid')!,free=document.querySelector<HTMLElement>('#carried-tools')!;
+  summary.replaceChildren();const capacity=document.createElement('strong');capacity.textContent=`${Math.max(0,16-used)} szabad rekesz`;const occupied=document.createElement('span');occupied.textContent=`${used} / 16 foglalt`;summary.append(capacity,occupied);grid.replaceChildren();free.replaceChildren();document.querySelector('#inventory-extra-actions')!.replaceChildren();
+  const addAction=(card:HTMLElement,label:string,action:()=>void)=>{const button=document.createElement('button');button.type='button';button.textContent=label;button.onclick=action;card.append(button);return button;};
+  for(const {key,count}of stacks){const [group,id]=key.split(':'),card=document.createElement('div');card.className='inventory-card backpack-slot';card.dataset.stackKey=key;const label=document.createElement('span');label.className='backpack-item-name';label.textContent=group==='packed'?'Tárolóláda':this.chestItemName(key);const amount=document.createElement('strong');amount.className='stack-count';amount.textContent=String(count);card.append(group==='packed'?itemIcon('chest'):this.chestItemIcon(key),label,amount);
+   if(group==='crop'){card.dataset.inventoryCrop=id;if((this.travel.forest?.health??5)<5&&['strawberry','honeyberry','blueberry'].includes(id)){const eat=addAction(card,'Eszem',()=>void this.eatBerry(id as 'strawberry'|'honeyberry'|'blueberry'));eat.dataset.eat=id;}}
+   if(group==='seed'){card.dataset.inventorySeed=id;card.tabIndex=0;card.setAttribute('role','button');card.setAttribute('aria-label',`${label.textContent} kézbevétele`);const select=()=>{dialogue.close();this.selectTool(id as Tool);};card.onclick=select;card.onkeydown=e=>{if(e.key==='Enter'||e.code==='Space'){e.preventDefault();e.stopPropagation();select();}};}
+   if(group==='good'){card.dataset.good=id;const place=addAction(card,'Elhelyezem',()=>{dialogue.close();this.selectTool('harvest');this.placing=id as Good;});place.dataset.placeGood=id;}
+   if(group==='extra')card.dataset.extra=id;if(group==='material')card.dataset.material=id;
+   if(group==='special'){card.dataset.birdhouse='true';addAction(card,'Elhelyezem',()=>{dialogue.close();this.selectTool('birdhouse');});}
+   if(group==='packed')addAction(card,'Elhelyezem',()=>{dialogue.close();this.selectTool('chest');});grid.append(card);
+  }
+  for(let i=used;i<16;i++){const slot=document.createElement('div');slot.className='backpack-slot empty';slot.setAttribute('aria-label','Szabad rekesz');grid.append(slot);}
+  const tool=(name:string,icon:Node,action?:()=>void,count?:number)=>{const card=document.createElement('div');card.className='carried-tool';const label=document.createElement('span');label.textContent=name;card.append(icon,label);if(count){const amount=document.createElement('strong');amount.textContent=String(count);card.append(amount);}if(action){card.tabIndex=0;card.setAttribute('role','button');card.onclick=()=>{dialogue.close();action();};card.onkeydown=e=>{if(e.key==='Enter'||e.code==='Space'){e.preventDefault();e.stopPropagation();card.click();}};}free.append(card);};
+  for(const [id,name]of [['hoe','Kapa'],['water','Öntözés'],['harvest','Gyűjtés'],['crowbar','Bontóvas']] as const)tool(name,itemIcon(id==='harvest'?'hand':id),()=>this.selectTool(id));
+  if(this.travel.forest?.stick)tool('Túrabot',itemIcon('walkingStick'),()=>this.selectTool('stick'));if(this.travel.forest?.sample)tool('Fészekminta',itemIcon('nestSample'));if(this.travel.research.key)tool('Melléképület kulcsa',itemIcon('workshopKey'));if(this.travel.research.seeds)tool('Vadvirágmagok',this.wildflowerIcon(),()=>this.selectTool('wildflower'),this.travel.research.seeds);
+ }
  private openInventory(tab:'items'|'people'|'skills'|'goals'|'blueprints'='items'){
   if(!this.ready||this.transitioning||this.fishThrowPlaying||this.collapseRemaining>0)return;
-  showDialogue('Készlet','A leszedett termények és a nálad lévő ültetőanyagok.','NÁLAD VAN');
-  for(const [selector,items,seeds] of [['inventory-produce',this.garden.produce,false],['inventory-seeds',this.garden.seeds,true]] as const){
-   const grid=document.querySelector<HTMLElement>(`#${selector}`)!;grid.replaceChildren();
-   for(const crop of crops){
-    if(items[crop]===0)continue;
-    const card=document.createElement('div');card.className=`inventory-card crop-${crop}`;card.dataset[seeds?'inventorySeed':'inventoryCrop']=crop;if(!seeds&&Object.prototype.hasOwnProperty.call(rewardFruits,crop))card.dataset.inventoryFruit=crop;
-    const name=document.createElement('span');name.textContent=seeds?`${cropNames[crop]} ${this.materialName(crop)}`:cropNames[crop];
-    const amount=document.createElement('strong');amount.textContent=String(items[crop]);card.append(seeds?seedIcon(crop):itemIcon(crop),name,amount);grid.append(card);
-    if(!seeds&&(this.travel.forest?.health??5)<5&&['strawberry','honeyberry','blueberry'].includes(crop)){const eat=document.createElement('button');eat.type='button';eat.textContent='Eszem';eat.dataset.eat=crop;eat.setAttribute('aria-label',`${cropNames[crop]} elfogyasztása`);eat.onclick=()=>void this.eatBerry(crop as 'strawberry'|'honeyberry'|'blueberry');card.append(eat);}
-   }
-  }
-  const materials=document.querySelector<HTMLElement>('#inventory-materials')!;materials.replaceChildren();
-  this.appendEstateInventory();this.appendResearchInventory();
-  for(const [key,name]of [['wood','Fa'],['stone','Kő'],['weed','Gaz']] as const){if(this.clearing[key]===0)continue;const card=document.createElement('div');card.className='inventory-card';card.dataset.material=key;const label=document.createElement('span');label.textContent=name;const count=document.createElement('strong');count.textContent=String(this.clearing[key]);card.append(itemIcon(key),label,count);materials.append(card);}
-  if(this.story.giftReceived&&!this.story.birdhouse&&!this.skill.birdhouseStored){const card=document.createElement('div');card.className='inventory-card';card.dataset.birdhouse='true';const label=document.createElement('span');label.textContent='Madárodú';card.append(itemIcon('birdhouse'),label);if(!this.story.birdhouse){const place=document.createElement('button');place.type='button';place.textContent='Elhelyezem';place.addEventListener('click',()=>{dialogue.close();this.selectTool('birdhouse');this.notice('Válassz egy közeli, szabad füves helyet, és kattints.');});card.append(place);}materials.append(card);}
-  for(const id of ['inventory-produce','inventory-seeds','inventory-materials']){const grid=document.querySelector<HTMLElement>(`#${id}`)!;if(!grid.children.length){const empty=document.createElement('p');empty.className='inventory-empty';empty.textContent='Ebből most nincs nálad.';grid.append(empty);}}
-  this.appendChestInventory(materials);
+  showDialogue('Készlet','','NÁLAD VAN');
+  this.renderBackpack();this.appendChestInventory(document.querySelector<HTMLElement>('#inventory-extra-actions')!);
   this.drawSkills();this.drawGoals();this.inventoryTab(tab);
   const people=document.querySelector<HTMLElement>('#people-page')!;people.replaceChildren();
   if(this.story.giftReceived||this.travel.metAnnie){const card=document.createElement('article');card.className='person-card';card.dataset.person='annie';const text=document.createElement('div');const name=document.createElement('h3');name.textContent='Annie';const description=document.createElement('p');description.textContent=this.story.giftReceived?'A kedves szomszéd, akitől a madárodút kaptad. A Kertitó Szaküzletben is találkozhatsz vele.':'Annie a Kertitó Szaküzletben dolgozik.';text.append(name,description);card.append(anniePortrait(this),text);people.append(card);}
@@ -678,12 +693,8 @@ class Farm extends Phaser.Scene {
   catch(error){this.transitioning=false;if(!(error instanceof Error&&error.message==='A hátizsák megtelt.'))this.openShop(shop,'Nem sikerült menteni. Az aranyad és a készleted változatlan maradt.');}
   finally{this.transitioning=false;this.lastTick=performance.now();}
  }
- private appendEstateInventory(){
-  const material=document.querySelector<HTMLElement>('#inventory-materials')!,produce=document.querySelector<HTMLElement>('#inventory-produce')!;
-  for(const good of goods){const quantity=this.travel.estate.goods[good];if(!quantity)continue;const card=document.createElement('div');card.className='inventory-card';card.dataset.good=good;const name=document.createElement('span');name.textContent=goodNames[good];const place=document.createElement('button');place.type='button';place.dataset.placeGood=good;place.textContent='Elhelyezem';place.addEventListener('click',()=>{dialogue.close();this.selectTool('hand');this.placing=good;this.notice('Válassz közeli helyet a farmon. Másik szerszámmal megszakíthatod az elhelyezést.');});card.append(goodIcon(good),name,place);material.append(card);}
-  for(const k of extras){const n=this.travel.estate.produce[k];if(!n)continue;const card=document.createElement('div');card.className='inventory-card';card.dataset.extra=k;const label=document.createElement('span');label.textContent=extraNames[k];card.append(itemIcon(k),label);if(n>1){const count=document.createElement('strong');count.textContent=String(n);card.append(count);}produce.querySelector('.inventory-empty')?.remove();produce.append(card);}
- }
  private estateLand(x:number,y:number){
+  if(junkAt(this.clearing,x,y))return false;
   return !(this.skill.chests?.placed.some(c=>Math.hypot(c.x-x,c.y-y)<42))&&x>farmBounds.left+40&&x<farmBounds.right-40&&y>farmBounds.top+48&&y<565&&!blocked(x,y)&&!debrisAt(this.clearing,this.garden,x,y)&&![...this.garden.plots.keys()].some(key=>{const [px,py]=key.split(',').map(Number);return Math.hypot(px+TILE/2-x,py+TILE/2-y)<40;})&&!(this.story.birdhouse&&Math.hypot(x-this.story.birdhouse.x,y-this.story.birdhouse.y)<40)&&!farmLayout.paths.some(path=>path.points.slice(1).some((b,i)=>{const a=path.points[i],dx=b[0]-a[0],dy=b[1]-a[1],t=Math.max(0,Math.min(1,((x-a[0])*dx+(y-a[1])*dy)/(dx*dx+dy*dy)));return Math.hypot(x-a[0]-t*dx,y-a[1]-t*dy)<path.width/2+24;}));
  }
  private async commitEstate(estate:Estate,message:string){
@@ -749,15 +760,10 @@ class Farm extends Phaser.Scene {
  }
  private async collectMail(){
   if(!this.ready||this.transitioning||document.querySelector<HTMLElement>('#mailbox-panel')!.hidden)return;
-  const collected=collectPackage(this.garden,this.orders);if(!collected)return;
-  this.transitioning=true;this.saveRevision++;document.querySelector<HTMLButtonElement>('#collect-package')!.disabled=true;
-  try{
-   await this.saveChecked(snapshot(this.actor,this.clock,collected.garden,this.economy,collected.orders,this.farmName,this.clearing,this.story,this.skill,this.farmerName,this.travel));
-   this.garden=collected.garden;this.orders=collected.orders;this.drawGarden();document.querySelector('#save-state')!.textContent='Mentve ebben a böngészőben';
-   showDialogue('A csomag átvéve.','Az ültetőanyagok bekerültek a készletedbe.','POSTALÁDA');
-  }catch{document.querySelector('#save-state')!.textContent='Az átvételt nem sikerült menteni';document.querySelector('#mailbox-content')!.textContent='Nem sikerült menteni. A csomag megmaradt a postaládában; próbáld újra.';}
-  finally{this.transitioning=false;this.lastTick=performance.now();document.querySelector<HTMLButtonElement>('#collect-package')!.disabled=false;}
+  const collected=collectAvailableMail(this.currentSnapshot());if(!collected){this.notice('A hátizsák tele van. A magok a postaládában maradtak.');return;}
+  await this.commitChest(collected.state,()=>{showDialogue(collected.remaining?'Ami elfért, átvettem.':'A csomag átvéve.',collected.remaining?'A többi magot egyelőre a postaládában hagytam.':'Az ültetőanyagok bekerültek a készletedbe.','POSTALÁDA');});
  }
+
  private renderShipping(){
   const focused=(document.activeElement as HTMLElement)?.dataset.item;
   for(const [id,items,from] of [['shipping-crate',{...this.economy.shipping,...this.travel.estate.shipping},'crate'],['shipping-inventory',{...this.garden.produce,...this.travel.estate.produce},'inventory']] as const){
@@ -800,9 +806,10 @@ class Farm extends Phaser.Scene {
   this.renderShipping();document.querySelector<HTMLElement>('#shipping-panel')!.hidden=false;
  }
  private selectTool(tool:FarmTool){
+  if(tool==='hand')tool='harvest';if(tool==='axe'||tool==='pickaxe')tool='crowbar';
   if(crops.includes(tool as typeof crops[number])&&this.garden.seeds[tool as typeof crops[number]]===0){this.notice('Ebből az ültetőanyagból most nincs nálad.');return;}
   if(tool==='stick'&&!this.travel.forest?.stick)return;
-  if(tool==='wildflower'&&!this.travel.research.seeds)return;this.placing=null;this.tool=tool;this.avatar?.equip(tool==='wildflower'?'radish':tool==='chest'?'hand':tool);
+  if(tool==='wildflower'&&!this.travel.research.seeds)return;this.placing=null;this.tool=tool;this.avatar?.equip(tool==='harvest'?'none':tool==='wildflower'?'radish':tool==='chest'?'hand':tool);
   document.querySelector<HTMLButtonElement>(`#toolbar [data-tool="${tool}"]`)?.scrollIntoView({block:'nearest',inline:'nearest'});
   document.querySelectorAll<HTMLButtonElement>('#toolbar [data-tool]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.tool===tool)));
  }
@@ -829,6 +836,7 @@ class Farm extends Phaser.Scene {
   });
  }
  private canPlaceBirdhouse(x:number,y:number){
+  if(junkAt(this.clearing,x,y))return false;
   return this.story.giftReceived&&!this.story.birdhouse&&!this.skill.birdhouseStored&&!this.skill.chests?.placed.some(c=>Math.hypot(c.x-x,c.y-y)<42)&&!this.travel.estate.trees.some(t=>Math.hypot(t.x-x,t.y-y)<40)&&!this.travel.estate.pond.some(p=>Math.hypot(p.x-x,p.y-y)<28)&&!blocked(x,y)&&y>farmBounds.top+48&&x>farmBounds.left+40&&x<farmBounds.right-40&&y<570&&Math.hypot(x-this.actor.x,y-this.actor.y)<=60&&!debrisAt(this.clearing,this.garden,x,y)&&![...this.garden.plots.keys()].some(key=>{const [px,py]=key.split(',').map(Number);return Math.abs(px+8-x)<22&&Math.abs(py+8-y)<22;});
  }
  private async placeBirdhouse(){
@@ -936,14 +944,6 @@ class Farm extends Phaser.Scene {
   try{await this.saveChecked(snapshot(this.actor,this.clock,garden,this.economy,this.orders,this.farmName,this.clearing,this.story,skill,this.farmerName,travel));const before=this.skill.xp;this.travel=travel;this.skill=skill;this.garden=garden;this.avatar.use(target.x+TILE/2-this.actor.x,target.y+TILE/2-this.actor.y,'radish');this.drawGarden();this.showGardening(before);this.notice('Vadvirág elültetve. Négy megöntözött nap alatt virágzik ki.');}
   catch(error){console.error('Vadvirág ültetése',error);this.notice('Az ültetést nem sikerült menteni. A mag megmaradt.');}finally{this.transitioning=false;this.lastTick=performance.now();}
  }
- private appendResearchInventory(){
-  const r=this.travel.research,materials=document.querySelector<HTMLElement>('#inventory-materials')!;
-  const forest=this.travel.forest;if(forest?.stick){const tool=document.createElement('div');tool.className='inventory-card';tool.append(itemIcon('walkingStick'),document.createTextNode('Túrabot'));materials.append(tool);}if(forest?.sample&&!forest.sent){const sample=document.createElement('div');sample.className='inventory-card';sample.append(itemIcon('nestSample'),document.createTextNode('Fészekminta'));materials.append(sample);}
-  const card=(name:string,quantity:number,icon:string)=>{const el=document.createElement('div');el.className='inventory-card';const drawn=icon==='scrap'||icon==='workshopKey'||icon==='copperPipe'||icon==='linenCloth'||icon==='glassJar';const image=drawn?itemIcon(icon):document.createElement('span');if(!drawn){image.setAttribute('class','research-icon');image.textContent=icon;}const label=document.createElement('span');label.textContent=name;el.append(image,label);if(quantity>1){const count=document.createElement('strong');count.textContent=String(quantity);el.append(count);}return el;};
-  if(r.seeds){const el=card('Vadvirágmag',r.seeds,'✿'),button=document.createElement('button');button.type='button';button.textContent='Elültetem';button.onclick=()=>{dialogue.close();this.selectTool('wildflower');};el.append(button);document.querySelector('#inventory-seeds')!.append(el);}
-  for(const k of researchMaterials)if(r.materials[k])materials.append(card(researchNames[k],r.materials[k],{scrap:'scrap',copper:'copperPipe',glass:'glassJar',linen:'linenCloth'}[k]));
-  if(r.key)materials.append(card('Melléképület kulcsa',1,'workshopKey'));
- }
  private researchNearby(){
   const r=this.travel.research,near=(x:number,y:number,d=48)=>Math.hypot(this.actor.x-x,this.actor.y-y)<d;
   if(inWorkshop(this.actor.y)){
@@ -1016,7 +1016,7 @@ class Farm extends Phaser.Scene {
   if(anchor&&beeAvailable(r,this.clock.day,this.clock.elapsed)){const t=this.clock.elapsed,x=anchor.x+Math.sin(t*2)*5,y=anchor.y-12+Math.cos(t*3)*2,g=this.beeArt;g.fillStyle(0xcbdede,.7).fillEllipse(x-2,y-3,5,3).fillEllipse(x+2,y-3,5,3);g.fillStyle(0xa26939).fillEllipse(x,y,7,5);g.fillStyle(0x3c3b30).fillCircle(x+3,y-1,2);g.lineStyle(.7,0x443c31).lineBetween(x-1,y-2,x-1,y+2);}
  }
 
- private redrawScenery(){this.redrawForest();this.drawChests();this.homeLight?.destroy();this.homeLight=new HomeLight(this);this.homeArt?.destroy();this.homeArt=drawHome(this);this.houseExterior?.destroy();this.houseExterior=new HouseExterior(this);this.workshopExterior?.destroy();this.workshopExterior=new WorkshopExterior(this);this.redrawResearch();this.estateArt?.destroy();this.estateArt=drawEstate(this,this.travel.estate,this.clock.day);if(this.scenery)this.scenery.redraw(this.clearing,this.garden,this.story.birdhouse);else this.scenery=drawFarm(this,this.clearing,this.garden,this.story.birdhouse);this.villageForage?.destroy();this.villageForage=drawForage(this,this.travel.picked,this.clock.day);}
+ private redrawScenery(){this.redrawJunk();this.redrawForest();this.drawChests();this.homeLight?.destroy();this.homeLight=new HomeLight(this);this.homeArt?.destroy();this.homeArt=drawHome(this);this.houseExterior?.destroy();this.houseExterior=new HouseExterior(this);this.workshopExterior?.destroy();this.workshopExterior=new WorkshopExterior(this);this.redrawResearch();this.estateArt?.destroy();this.estateArt=drawEstate(this,this.travel.estate,this.clock.day);if(this.scenery)this.scenery.redraw(this.clearing,this.garden,this.story.birdhouse);else this.scenery=drawFarm(this,this.clearing,this.garden,this.story.birdhouse);this.villageForage?.destroy();this.villageForage=drawForage(this,this.travel.picked,this.clock.day);}
  private harvestPop(crop:typeof crops[number],x:number,y:number){
   const camera=this.cameras.main,z=camera.zoom,pop=document.createElement('div');pop.className='harvest-pop';pop.setAttribute('aria-hidden','true');const count=document.createElement('strong');count.textContent='+1';pop.append(itemIcon(crop),count);pop.style.left=`${(x-camera.worldView.x)*z}px`;pop.style.top=`${(y-camera.worldView.y)*z}px`;document.querySelector('#game')!.append(pop);
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;const animation=pop.animate(reduced?[{opacity:1},{opacity:0}]:[{opacity:0,transform:'translate(-50%, 5px) scale(.65)'},{opacity:1,transform:'translate(-50%, -30px) scale(1.18)',offset:.35},{opacity:1,transform:'translate(-50%, -42px) scale(1)',offset:.72},{opacity:0,transform:'translate(-50%, -60px) scale(.85)'}],{duration:reduced?350:950,easing:'ease-out'});void animation.finished.then(()=>pop.remove()).catch(()=>pop.remove());void this.music.playHarvest();
@@ -1047,6 +1047,7 @@ class Farm extends Phaser.Scene {
   if(inHome(this.actor.y)){this.interactHome();return;}
   if(inWorkshop(this.actor.y)){this.researchInteraction();return;}
   if(this.skill.chests?.placed.some(c=>this.target&&Math.hypot(c.x-this.target.x-TILE/2,c.y-this.target.y-TILE/2)<27)){this.notice('Itt a tárolóláda áll. E betűvel kinyithatod.');return;}
+  const junk=junkAt(this.clearing,this.target.x+TILE/2,this.target.y+TILE/2);if(junk){void this.workJunk(junk.id);return;}
   if(this.tool==='wildflower'){void this.plantWildflower();return;}
   if(flowerAt(this.travel.research,this.target)&&this.tool!=='water'){this.notice('Így marad meg a vadméhek virágos kertje. Öntözd a virágokat.');return;}
   const salvage=salvageSites.find(s=>s.kind==='copper'&&!this.travel.research.picked.includes(s.id)&&Math.hypot(s.x-this.target!.x-TILE/2,s.y-this.target!.y-TILE/2)<23);if(salvage){void this.gatherSalvage(salvage.id);return;}
@@ -1055,7 +1056,7 @@ class Farm extends Phaser.Scene {
   if(this.travel.estate.trees.some(t=>Math.hypot(this.target!.x+TILE/2-t.x,this.target!.y+TILE/2-t.y)<24)||this.travel.estate.pond.some(p=>p.kind==='duckNest'&&Math.hypot(this.target!.x+TILE/2-p.x,this.target!.y+TILE/2-p.y)<24)){this.notice('Itt már egy fa vagy fészek áll.');return;}
   if(this.tool==='birdhouse'){void this.placeBirdhouse();return;}
   if(this.story.birdhouse&&Math.hypot(this.target.x+TILE/2-this.story.birdhouse.x,this.target.y+TILE/2-this.story.birdhouse.y)<25){
-   if(this.tool!=='axe'){this.notice('A madárodút fejszével veheted vissza (8).');return;}
+   if(this.tool!=='crowbar'){this.notice('A madárodút bontóvassal veheted vissza (8).');return;}
    if(Math.hypot(this.actor.x-this.story.birdhouse.x,this.actor.y-this.story.birdhouse.y)>44){this.notice('Sétálj közelebb a madárodúhoz.');return;}
    const point=this.story.birdhouse;
    void this.saveStory({...this.story,birdhouse:null},()=>{this.avatar.use(point.x-this.actor.x,point.y-this.actor.y);this.redrawScenery();this.notice('A madárodú visszakerült a készletbe. Máshová is kiteheted.');});return;
@@ -1063,7 +1064,7 @@ class Farm extends Phaser.Scene {
   const item=debrisAt(this.clearing,this.garden,this.target.x+TILE/2,this.target.y+TILE/2);
   if(item){void this.clean(item);return;}
   if(this.tool==='stick'){this.avatar.use(this.direction.x*60,this.direction.y*60,'stick');return;}
-  if(this.tool==='hand'||this.tool==='axe'||this.tool==='pickaxe'){this.notice('Kattints közeli gazra, faanyagra vagy kőre.');return;}
+  if(this.tool==='hand'||this.tool==='axe'||this.tool==='pickaxe'||this.tool==='crowbar'){this.notice('Válassz egy közeli roncsot a bontáshoz.');return;}
   if(this.story.birdhouse&&Math.hypot(this.target.x+TILE/2-this.story.birdhouse.x,this.target.y+TILE/2-this.story.birdhouse.y)<25){this.notice('Itt a madárodú áll.');return;}
   const usedTool=this.tool,target={...this.target},nextGarden=structuredClone(this.garden),before=this.garden.plots.get(`${target.x},${target.y}`);
   const result=work(nextGarden,usedTool,target,this.actor);
@@ -1105,11 +1106,11 @@ class Farm extends Phaser.Scene {
   for(const button of Array.from(document.querySelectorAll<HTMLButtonElement>('#toolbar [data-tool]'))){
    const tool=button.dataset.tool as FarmTool;
    const label=button.querySelector('span')!;
-   const names={hoe:'Kapa',water:'Öntözés',radish:'Retek',potato:'Burgonya',pea:'Borsó',harvest:'Szedés',hand:'Kéz',axe:'Fejsze',pickaxe:'Csákány',chest:'Tárolóláda',stick:'Túrabot',birdhouse:'Madárodú',strawberry:'Eper',honeyberry:'Mézbogyó',blueberry:'Áfonya',carrot:'Sárgarépa',lettuce:'Saláta',onion:'Hagyma'};
+   const names={hoe:'Kapa',water:'Öntözés',radish:'Retek',potato:'Burgonya',pea:'Borsó',harvest:'Gyűjtés',hand:'Gyűjtés',axe:'Bontóvas',pickaxe:'Bontóvas',crowbar:'Bontóvas',chest:'Tárolóláda',stick:'Túrabot',birdhouse:'Madárodú',strawberry:'Eper',honeyberry:'Mézbogyó',blueberry:'Áfonya',carrot:'Sárgarépa',lettuce:'Saláta',onion:'Hagyma'};
    if(tool==='hoe'||tool==='water'||tool==='harvest'||tool==='wildflower')for(const node of Array.from(button.childNodes))if(node.nodeType===Node.TEXT_NODE)node.remove();
-   if(tool==='wildflower')label.replaceChildren(document.createTextNode('Vadvirág'),document.createElement('br'),document.createTextNode('magok'));else label.textContent=names[tool];button.prepend(crops.includes(tool as typeof crops[number])?seedIcon(tool as typeof crops[number]):tool==='wildflower'?this.wildflowerIcon():tool==='stick'?itemIcon('walkingStick'):itemIcon(tool));button.setAttribute('aria-label',tool==='wildflower'?'Vadvirág magok':names[tool]);
+   if(tool==='wildflower')label.replaceChildren(document.createTextNode('Vadvirág'),document.createElement('br'),document.createTextNode('magok'));else label.textContent=names[tool];button.prepend(crops.includes(tool as typeof crops[number])?seedIcon(tool as typeof crops[number]):tool==='wildflower'?this.wildflowerIcon():tool==='stick'?itemIcon('walkingStick'):itemIcon(tool==='harvest'?'hand':tool));button.setAttribute('aria-label',tool==='wildflower'?'Vadvirág magok':names[tool]);
   }
-  const tools:FarmTool[]=['hoe','water','radish','potato','pea','harvest','hand','axe','pickaxe'];
+  const tools:FarmTool[]=['hoe','water','radish','potato','pea','harvest','harvest','crowbar','crowbar'];
   document.querySelectorAll<HTMLButtonElement>('#toolbar [data-tool]').forEach(button=>button.addEventListener('click',(event)=>{this.selectTool(button.dataset.tool as FarmTool);if(event.detail>0)button.blur();}));
   document.querySelectorAll<HTMLButtonElement>('#toolbar button,#work,#jump,#run').forEach(b=>b.addEventListener('keydown',e=>{if(e.code==='Space')e.stopPropagation();}));
   this.input.keyboard!.on('keydown', (event:KeyboardEvent)=>{
@@ -1149,7 +1150,7 @@ class Farm extends Phaser.Scene {
   const inspect=()=>{
     if(!this.ready||dialogue.open||this.transitioning||this.collapseRemaining>0)return;
     if(this.forestInteraction())return;
-    if(this.nearby.startsWith('restore:')){const item=activeDebris(this.clearing,this.garden).find(d=>d.id===this.nearby.slice(8));if(item)void this.clean(item);return;}
+    if(this.nearby.startsWith('junk:')){void this.workJunk(this.nearby.slice(5) as JunkId);return;}
     if(this.interactHome())return;
     if(this.researchInteraction())return;
     if(this.nearby==='leaveShop'){this.leaveShop();return;}
@@ -1266,7 +1267,7 @@ class Farm extends Phaser.Scene {
   const before={x:this.actor.x,y:this.actor.y};const rocks=activeDebris(this.clearing,this.garden).filter(d=>d.kind==='rock');
   const rockBlocked=(x:number,y:number)=>rocks.some(r=>{const radiusX=r.scale*17+6,radiusY=r.scale*12+3;const old=((before.x-r.x)/radiusX)**2+((before.y-r.y)/radiusY)**2,now=((x-r.x)/radiusX)**2+((y-r.y)/radiusY)**2;return now<1&&(old>=1||now<=old);});
   this.updateForest(Math.min(seconds,.05));
-  const next=move(before.x,before.y,dx,dy,seconds,movementSpeed(this.jumpRemaining>0,movementInput.running),(x,y)=>this.skill.chests?.placed.some(c=>{const d=((x-c.x)/23)**2+((y-c.y)/15)**2,old=((before.x-c.x)/23)**2+((before.y-c.y)/15)**2;return d<1&&(old>=1||d<=old);})||this.forestCombat?.blocks(x,y,this.travel.forest??createForest())||rockBlocked(x,y)||this.travel.estate.trees.some(t=>Math.hypot(x-t.x,y-t.y)<12)||this.travel.estate.pond.some(p=>p.kind==='duckNest'&&Math.hypot(x-p.x,y-p.y)<12),worldBlocked);this.actor.setPosition(next.x,next.y);
+  const next=move(before.x,before.y,dx,dy,seconds,movementSpeed(this.jumpRemaining>0,movementInput.running),(x,y)=>this.skill.chests?.placed.some(c=>{const d=((x-c.x)/23)**2+((y-c.y)/15)**2,old=((before.x-c.x)/23)**2+((before.y-c.y)/15)**2;return d<1&&(old>=1||d<=old);})||this.forestCombat?.blocks(x,y,this.travel.forest??createForest())||(!junkBlocks(this.clearing,before.x,before.y)&&junkBlocks(this.clearing,x,y))||rockBlocked(x,y)||this.travel.estate.trees.some(t=>Math.hypot(x-t.x,y-t.y)<12)||this.travel.estate.pond.some(p=>p.kind==='duckNest'&&Math.hypot(x-p.x,y-p.y)<12),worldBlocked);this.actor.setPosition(next.x,next.y);
   surface.dataset.cleared=String(Object.keys(this.clearing.removed).length);surface.dataset.wood=String(this.clearing.wood);surface.dataset.stone=String(this.clearing.stone);surface.dataset.running=String(movementInput.running);surface.dataset.jumpHeight=String(height);
   const insideShop=shopAt(next.y);
   this.actor.setAlpha(inWorkshop(this.actor.y)&&!this.travel.research.shutter&&!entranceShutterOpen(this.travel.research)?.3:1);this.updateLocation();
@@ -1279,7 +1280,7 @@ class Farm extends Phaser.Scene {
     const debris=debrisAt(this.clearing,this.garden,this.target.x+TILE/2,this.target.y+TILE/2);
     const valid=this.placing?Math.hypot(this.target.x+TILE/2-this.actor.x,this.target.y+TILE/2-this.actor.y)<=90&&Boolean(placeGood(this.travel.estate,this.placing,this.target.x+TILE/2,this.target.y+TILE/2,this.clock.day,this.estateLand(this.target.x+TILE/2,this.target.y+TILE/2),this.farmName)):this.tool==='birdhouse'?this.canPlaceBirdhouse(this.target.x+TILE/2,this.target.y+TILE/2):debris?Math.hypot(this.actor.x-debris.x,this.actor.y-debris.y)<=44&&neededTool[debris.kind]===this.tool:cultivable(this.target)&&reachable(this.target,this.actor);
     const plot=this.garden.plots.get(`${this.target.x},${this.target.y}`);
-    const hint=document.querySelector<HTMLElement>('#crop-hint')!;hint.textContent=this.placing?`${goodNames[this.placing]} · válassz közeli ${treeKinds.includes(this.placing as typeof treeKinds[number])?'szabad földet':this.placing==='duckNest'?'tópartot':'vizet'} · kattintás / F`:this.tool==='birdhouse'?'Madárodú · kattints egy közeli, szabad helyre':debris?`${debrisNames[debris.kind]} · ${'Kézzel · Kéz (7)'} · F / kattintás`:plot?.crop?`${cropNames[plot.crop]} · ${isRipe(plot)?'Betakarítható':`${plot.growth}/${growthTarget(plot)} nap`}${isRipe(plot)?'':` · ${plot.watered?'öntözve':'öntözést kér'}`}`:'';
+    const hint=document.querySelector<HTMLElement>('#crop-hint')!;hint.textContent=this.placing?`${goodNames[this.placing]} · válassz közeli ${treeKinds.includes(this.placing as typeof treeKinds[number])?'szabad földet':this.placing==='duckNest'?'tópartot':'vizet'} · kattintás / F`:this.tool==='birdhouse'?'Madárodú · kattints egy közeli, szabad helyre':debris?`${debrisNames[debris.kind]} · ${'Gyűjtés (6)'} · F / kattintás`:plot?.crop?`${cropNames[plot.crop]} · ${isRipe(plot)?'Betakarítható':`${plot.growth}/${growthTarget(plot)} nap`}${isRipe(plot)?'':` · ${plot.watered?'öntözve':'öntözést kér'}`}`:'';
     this.selection.lineStyle(1,valid?0xf1df9e:0xd69077,1).strokeRect(this.target.x,this.target.y,TILE,TILE);
     this.selection.fillStyle(valid?0xf1df9e:0xd69077,.12).fillRect(this.target.x,this.target.y,TILE,TILE);
   }
@@ -1299,10 +1300,10 @@ class Farm extends Phaser.Scene {
   const estateReady=Boolean(collectEstate(this.travel.estate,next.x,next.y,this.clock.day));
   const nearbyBush=villageLayout.bushes.find(b=>near(b.x,b.y,45));
   this.nearby=this.homeNearby()|| (insideShop&&near(400,shopOrigins[insideShop]+500,48)?'leaveShop':insideShop&&merchantNearby(insideShop,next.x,next.y)?'merchant':insideShop&&near(450,shopOrigins[insideShop]+292,60)?'shopCounter':nearbyBush?`forage:${nearbyBush.id}`:near(villageLayout.nursery.door.x,villageLayout.nursery.door.y,45)?'nursery':near(villageLayout.fishShop.door.x,villageLayout.fishShop.door.y,45)?'fishShop':villageLayout.benches.some(b=>{const p=benchPose(b.angle);return near(p.x,p.y,55);})?'bench':this.neighbor&&!this.story.giftReceived&&near(this.neighbor.x,this.neighbor.y,55)?'neighbor':near(farmLayout.catalog.x+9,farmLayout.catalog.y+6,40)?'catalog':near(farmLayout.mailbox.x+12,farmLayout.mailbox.y+8,55)?'mailbox':near(farmLayout.shipping.x+16,farmLayout.shipping.y+12,50)?'shipping':near(657+farmLayout.shedOffset.x,206+farmLayout.shedOffset.y,66)?'shed':near(farmLayout.dock.x+25,farmLayout.dock.y+10,60)?'pond':porchInteraction(next.x,next.y));
-  if(!this.nearby&&this.actor.y<600){const site=activeDebris(this.clearing,this.garden).filter(d=>d.kind!=='weed'&&Math.hypot(d.x-this.actor.x,d.y-this.actor.y)<40).sort((a,b)=>Math.hypot(a.x-this.actor.x,a.y-this.actor.y)-Math.hypot(b.x-this.actor.x,b.y-this.actor.y))[0];if(site)this.nearby=`restore:${site.id}`;}
+  if(!this.nearby&&this.actor.y<600){const site=junkSites.filter(s=>{const p=junkPoint(this.clearing,s.id);return Math.hypot(p.x-this.actor.x,p.y-this.actor.y)<105;}).sort((a,b)=>{const aa=junkPoint(this.clearing,a.id),bb=junkPoint(this.clearing,b.id);return Math.hypot(aa.x-this.actor.x,aa.y-this.actor.y)-Math.hypot(bb.x-this.actor.x,bb.y-this.actor.y);})[0];if(site)this.nearby=`junk:${site.id}`;}
   this.nearby=this.forestNearby()|| (this.nearChest()>=0?'storage-chest':this.researchNearby()||this.nearby);
-  this.bubble.setPosition(next.x,next.y-54).setText(estateReady?'…':this.nearby==='shed'?'?':this.nearby?'…':'').setVisible(Boolean(this.nearby||estateReady)&&this.jumpRemaining<=0);
-  document.querySelector('#status')!.textContent=(inForest(next.x,next.y)?this.forestCombat?.encounterName(this.actor,this.travel.forest??createForest()):'')||this.researchHint()|| (estateReady?'Begyűjthető · E / F / Szedés':this.nearby.startsWith('nature:')?'Gyűjtögetés · E / F':this.nearby.startsWith('restore:')?'Helyreállítás · E / kattintás':this.nearby==='leaveShop'?'Vissza a térre · E / koppintás':this.nearby==='merchant'?`${insideShop==='nursery'?'Leo':'Annie'} · Beszélgetés · E / koppintás`:this.nearby==='shopCounter'?'Pult · E / koppintás':nearbyBush?(forageReady(this.travel,nearbyBush.id,this.clock.day)?'Erdei áfonya · E / F / koppintás':'Áfonyabokor · most pihen'):this.nearby==='nursery'||this.nearby==='fishShop'?`${shopNames[this.nearby]} · ${shopsOpen(this.clock.elapsed)?'E / koppintás':'Zárva · reggel nyit'}`:this.nearby==='bench'?'Pihenőpad · E / koppintás':this.nearby==='neighbor'?'Szomszéd · E / kattintás':this.nearby==='shed'?'?':this.nearby==='catalog'?'Magkatalógus · E / kattintás':this.nearby==='mailbox'?`Postaláda${quantityTotal(this.orders.mailbox)>0?' · Csomag érkezett':''} · E / kattintás`:this.nearby==='shipping'?'Eladóláda · E / koppints a ládára':this.nearby==='home-exit'?'Vissza a verandára · E':this.nearby.startsWith('home:')?'Megvizsgálom · E':this.nearby==='journal'?'Napló · E':this.nearby==='house'?'Otthon · Belépés · E':this.nearby==='pond'?'Tópart · E / koppints a buborékra':'');
+  this.bubble.setPosition(next.x,next.y-54).setText(estateReady?'…':this.nearby==='shed'?'?':this.nearby?'…':'').setVisible(Boolean(this.nearby||estateReady)&&!this.nearby.startsWith('junk:')&&this.jumpRemaining<=0);
+  document.querySelector('#status')!.textContent=(inForest(next.x,next.y)?this.forestCombat?.encounterName(this.actor,this.travel.forest??createForest()):'')||this.researchHint()|| (estateReady?'Begyűjthető · E / F / Gyűjtés':this.nearby.startsWith('nature:')?'Gyűjtögetés · E / F':this.nearby.startsWith('junk:')?`${junkSites.find(s=>s.id===this.nearby.slice(5))?.name} · ${Math.min(5,junkProgress(this.clearing,this.nearby.slice(5) as JunkId,this.clock.day).part)+1} / 6 · Bontás: E / kattintás`:this.nearby==='leaveShop'?'Vissza a térre · E / koppintás':this.nearby==='merchant'?`${insideShop==='nursery'?'Leo':'Annie'} · Beszélgetés · E / koppintás`:this.nearby==='shopCounter'?'Pult · E / koppintás':nearbyBush?(forageReady(this.travel,nearbyBush.id,this.clock.day)?'Erdei áfonya · E / F / koppintás':'Áfonyabokor · most pihen'):this.nearby==='nursery'||this.nearby==='fishShop'?`${shopNames[this.nearby]} · ${shopsOpen(this.clock.elapsed)?'E / koppintás':'Zárva · reggel nyit'}`:this.nearby==='bench'?'Pihenőpad · E / koppintás':this.nearby==='neighbor'?'Szomszéd · E / kattintás':this.nearby==='shed'?'?':this.nearby==='catalog'?'Magkatalógus · E / kattintás':this.nearby==='mailbox'?`Postaláda${quantityTotal(this.orders.mailbox)>0?' · Csomag érkezett':''} · E / kattintás`:this.nearby==='shipping'?'Eladóláda · E / koppints a ládára':this.nearby==='home-exit'?'Vissza a verandára · E':this.nearby.startsWith('home:')?'Megvizsgálom · E':this.nearby==='journal'?'Napló · E':this.nearby==='house'?'Otthon · Belépés · E':this.nearby==='pond'?'Tópart · E / koppints a buborékra':'');
  }
 }
 new Phaser.Game({type:Phaser.AUTO,parent:'game',width:800,height:600,pixelArt:true,backgroundColor:'#8da85e',scene:Farm,scale:{mode:Phaser.Scale.RESIZE,autoCenter:Phaser.Scale.CENTER_BOTH},input:{keyboard:true}});

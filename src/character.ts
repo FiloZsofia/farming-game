@@ -87,6 +87,7 @@ export class FarmerArt{
   const g=this.tool;g.clear();const r=(x:number,y:number,w:number,h:number,c:number)=>{g.fillStyle(c);g.fillRect(x,y,w,h);};
   const name=this.action>0?this.actionTool:this.equipped;
   if(name==='stick'){this.toolEnd=36;g.lineStyle(3,0x785537).strokePoints([{x:0,y:5},{x:1,y:31},{x:5,y:37}]);g.lineStyle(1,0xcfad77).lineBetween(-1,7,0,30);}
+  else if(name==='crowbar'){this.toolEnd=34;g.lineStyle(3.5,0x556e61).strokePoints([{x:0,y:7},{x:0,y:29},{x:4,y:35},{x:9,y:34},{x:10,y:29}]);g.lineStyle(1.1,0xc8d4b8).lineBetween(-1,8,-1,28).lineBetween(4,33,8,32);}
   else if(heavyTool(name)){const length=this.action>0?29+11*workPose(1,1,this.action).extension:29;this.toolEnd=length;
    r(0,8,2,length-7,0x654b32);r(0,8,1,length-8,0xc6a46b);
    if(name==='hoe'){r(-2,length-4,9,3,0x8faaa2);r(4,length-3,3,6,0x536e69);}
@@ -111,6 +112,7 @@ export class FarmerArt{
   this.rightArm.rotation=working?(heavy?pose.angle:gentleWorkAngle(shoulderDx,shoulderDy,this.action,mirror)):Phaser.Math.DegToRad(stride*.45);
   this.rightArm.setPosition(this.armX+(heavy?pose.weight*3:0),this.armY+(heavy?Math.max(0,pose.weight)*5:0)).setScale(1);
   this.tool.setScale(1,heavy?pose.reach:1).setY(heavy?12-12*pose.reach:0);
+  if(heavy&&this.actionTool==='crowbar'&&workProgress(this.action)>.6){this.rightArm.rotation-=Math.sin((workProgress(this.action)-.6)/.4*Math.PI)*.28;}
   this.root.x=heavy?pose.weight*2:0;this.root.rotation=heavy?pose.weight*.045:0;
   if(heavy&&!walking){this.leftLeg.angle=-4*pose.weight;this.rightLeg.angle=4*pose.weight;}
   if(this.throwing>0){const t=1-this.throwing/.85;this.rightArm.setPosition(this.armX,this.armY).setScale(1);this.rightArm.rotation=-Math.sin(t*Math.PI)*2.8;this.leftArm.rotation=Math.sin(t*Math.PI)*.35;}

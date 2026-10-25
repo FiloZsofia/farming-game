@@ -1,6 +1,6 @@
 export const WORK_SECONDS=.52;
 export const WORK_CONTACT=.60;
-export const heavyTool=(tool:string)=>['hoe','axe','pickaxe','stick'].includes(tool);
+export const heavyTool=(tool:string)=>['hoe','axe','pickaxe','crowbar','stick'].includes(tool);
 const clamp=(x:number)=>Math.max(0,Math.min(1,x));
 const ease=(t:number)=>t*t*(3-2*t);
 export const workProgress=(remaining:number)=>1-clamp(remaining/WORK_SECONDS);

@@ -1,3 +1,4 @@
+import {junkAt} from './junk-sites';
 import {TILE} from './gardening';
 import {farmLayout,farmBounds} from './layout';
 import {blocked} from './movement';
@@ -10,6 +11,7 @@ import type {FarmStory} from './story-events';
 import type {Travel} from './travel';
 type Point={x:number;y:number};
 export function canPlaceChestAt(p:Point,s:{player:Point;garden:Garden;clearing:Clearing;skill:GardenSkill;story:FarmStory;travel:Travel}){
+ if(junkAt(s.clearing,p.x,p.y))return false;
  const {player,garden,clearing,skill,story,travel}=s,distance=Math.hypot(p.x-player.x,p.y-player.y);
  if(!skill.chests?.packed||distance>80||distance<28||skill.chests.placed.some(c=>Math.hypot(c.x-p.x,c.y-p.y)<38))return false;
  if(inHome(p.y))return p.y>=HOME_ORIGIN+230&&Math.hypot(p.x-400,p.y-HOME_ORIGIN-500)>35&&homeObjects.every(o=>Math.hypot(o.x-p.x,o.y-p.y)>27)&&[[-17,-10],[17,-10],[-17,9],[17,9]].every(([dx,dy])=>!homeBlocked(p.x+dx,p.y+dy));

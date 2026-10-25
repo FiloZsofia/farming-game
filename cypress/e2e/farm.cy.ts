@@ -78,16 +78,13 @@ describe('Visual shipping and farm name',()=>{
 
 describe('Clearing and seed packets',()=>{
  const base={version:4,player:{x:112,y:365},clock:{day:1,elapsed:0,collapseAt:580},seeds:{radish:4,potato:4,pea:4},produce:{radish:1,potato:0,pea:0},plots:[],economy:{gold:0,shipping:{radish:0,potato:0,pea:0},lastSale:null},orders:{pending:{radish:0,potato:0,pea:0},mailbox:{radish:2,potato:1,pea:3}}};
- it('requires a pickaxe, collects a rock only once and preserves the cleared spot',()=>{
-  start(base);clickWorld(86,365);cy.get('#game').should('have.attr','data-stone','0');press('9','Digit9',57);clickWorld(86,365);cy.get('#game').should('have.attr','data-stone','1').and('have.attr','data-cleared','1');clickWorld(86,365);cy.get('#game').should('have.attr','data-stone','1');
-  reloadFarm();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-stone','1').and('have.attr','data-cleared','1');press('Tab','Tab',9);cy.get('[data-material=stone]').should('contain','1 db');
- });
+ it('replaces loose rocks with one collection action and a single crowbar',()=>{start(base);cy.get('[data-tool=harvest]').should('contain','Gyűjtés');cy.get('[data-tool=crowbar]').should('have.length',1);cy.get('[data-tool=hand],[data-tool=axe],[data-tool=pickaxe]').should('not.exist');clickWorld(86,365);cy.get('#game').should('have.attr','data-stone','0');press('Tab','Tab',9);cy.get('#backpack-grid .backpack-slot').should('have.length',16);cy.get('#backpack-grid .empty').should('exist');});
  it('distinguishes seed packets from produce and illustrates delivered mail',()=>{
-  start({...base,player:{x:145,y:470}});press('Tab','Tab',9);cy.get('#inventory-seeds .seed-icon').should('have.length',3);cy.get('#inventory-produce .seed-icon').should('not.exist');press('Tab','Tab',9);clickWorld(124,482);cy.get('#mailbox-content .seed-icon').should('have.length',3);cy.get('#collect-package').click();cy.get('#game').should('have.attr','data-mail-seeds','0');
+  start({...base,player:{x:145,y:470}});press('Tab','Tab',9);cy.get('#backpack-grid [data-inventory-seed] .seed-icon').should('have.length',3);cy.get('#backpack-grid [data-inventory-crop] .seed-icon').should('not.exist');press('Tab','Tab',9);clickWorld(124,482);cy.get('#mailbox-content .seed-icon').should('have.length',3);cy.get('#collect-package').click();cy.get('#game').should('have.attr','data-mail-seeds','0');
  });
- it('restores cleared decorations on the second morning and retains materials',()=>{
+ it('restores weeds after three days while retaining legacy clearance and materials',()=>{
   const data={...base,version:6,farmName:'Tesztfarm',player:{x:250,y:242},clearing:{removed:{'rock-a':1,'branch-a':1,'weed-a':1},wood:1,stone:1}};
-  start(data);sleepTo(2);cy.get('#game').should('have.attr','data-cleared','3');sleepTo(3);cy.get('#game').should('have.attr','data-cleared','3');sleepTo(4);cy.get('#game').should('have.attr','data-cleared','0').and('have.attr','data-wood','1').and('have.attr','data-stone','1');
+  start(data);sleepTo(2);cy.get('#game').should('have.attr','data-cleared','3');sleepTo(3);cy.get('#game').should('have.attr','data-cleared','3');sleepTo(4);cy.get('#game').should('have.attr','data-cleared','2').and('have.attr','data-wood','1').and('have.attr','data-stone','1');
  });
 });
 
@@ -95,7 +92,7 @@ describe('Neighbor, birdhouse and weeds',()=>{
  const base={version:7,farmName:'Tesztfarm',player:{x:250,y:242},clock:{day:1,elapsed:0,collapseAt:580},seeds:{radish:4,potato:4,pea:4},produce:{radish:0,potato:0,pea:0},plots:[],economy:{gold:0,shipping:{radish:0,potato:0,pea:0},lastSale:null},orders:{pending:{radish:0,potato:0,pea:0},mailbox:{radish:0,potato:0,pea:0}},clearing:{removed:{},wood:0,stone:0,weed:0},story:{giftReceived:false,morningSeen:false,birdhouse:null}};
  it('receives one gift, places it and sees the next morning thought',()=>{
   start(base);cy.get('#game',{timeout:20000}).should('have.attr','data-gift','true');cy.get('#dialogue-title').should('contain','szomszéd');press('Escape','Escape',27);press('Tab','Tab',9);
-  cy.get('#inventory-materials [data-birdhouse] button').click();walk('down','y',288);clickWorld(280,288);cy.get('#game').should('have.attr','data-birdhouse','true');
+  cy.get('#backpack-grid [data-birdhouse] button').click();walk('down','y',288);clickWorld(280,288);cy.get('#game').should('have.attr','data-birdhouse','true');
   reloadFarm();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-gift','true').and('have.attr','data-birdhouse','true');cy.get('#dialogue').should('not.be.visible');walk('up','y',242);sleepTo(2);cy.get('#game').should('have.attr','data-morning-seen','true');cy.get('#game',{timeout:12000}).should('have.attr','data-birds','1');
  });
  it('adds removed weeds to the material inventory and saves them',()=>{
@@ -109,7 +106,7 @@ describe('Inventory visibility and movable birdhouse',()=>{
   start(base);cy.get('#toolbar [data-tool=radish]').should('not.be.visible');cy.get('#toolbar [data-tool=potato]').should('not.be.visible');cy.get('#toolbar [data-tool=pea]').should('not.be.visible');press('Tab','Tab',9);cy.get('#inventory-produce .inventory-card').should('have.length',1);cy.get('#inventory-seeds .inventory-card').should('not.exist');cy.get('#inventory-materials .inventory-card').should('have.length',1);
  });
  it('picks up the same birdhouse with an axe and saves its new position',()=>{
-  start(base);press('8','Digit8',56);clickWorld(280,296);cy.get('#game').should('have.attr','data-birdhouse','false');reloadFarm();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-birdhouse','false');press('Tab','Tab',9);cy.get('#inventory-materials [data-birdhouse] button').click();clickWorld(304,352);cy.get('#game').should('have.attr','data-birdhouse','true');reloadFarm();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-birdhouse','true');
+  start(base);press('8','Digit8',56);clickWorld(280,296);cy.get('#game').should('have.attr','data-birdhouse','false');reloadFarm();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-birdhouse','false');press('Tab','Tab',9);cy.get('#backpack-grid [data-birdhouse] button').click();clickWorld(304,352);cy.get('#game').should('have.attr','data-birdhouse','true');reloadFarm();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-birdhouse','true');
  });
 });
 

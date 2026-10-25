@@ -1,8 +1,10 @@
 import {goods,extras,type Good,type Extra} from './estate';
 import type {Crop} from './gardening';
-export type IconName=Good|Extra|Crop|'nestSample'|'chest'|'walkingStick'|'scrap'|'workshopKey'|'copperPipe'|'linenCloth'|'glassJar'|'hoe'|'water'|'harvest'|'axe'|'pickaxe'|'hand'|'wood'|'stone'|'weed'|'birdhouse'|'annie'|'strawberry'|'honeyberry'|'blueberry';
+export type IconName=Good|Extra|Crop|'nestSample'|'chest'|'walkingStick'|'scrap'|'workshopKey'|'copperPipe'|'linenCloth'|'glassJar'|'hoe'|'water'|'harvest'|'axe'|'pickaxe'|'crowbar'|'hand'|'wood'|'stone'|'weed'|'birdhouse'|'annie'|'strawberry'|'honeyberry'|'blueberry';
 // Original, locally drawn interface icons; no external asset dependency.
 const artwork:Partial<Record<IconName,string>>={
+ crowbar:'<path d="M9 31 24 9q4-6 8-2l-4 6" fill="none" stroke="#465b53" stroke-width="6" stroke-linecap="round"/><path d="M9 31 24 9q4-6 8-2l-4 6" fill="none" stroke="#9eb3a6" stroke-width="3.5" stroke-linecap="round"/><path d="m8 32 4-5m13-18 5-3" stroke="#e1dfbf" stroke-width="1.3"/><path d="m7 33 3-1" stroke="#526e62" stroke-width="2"/>',
+
  nestSample:'<ellipse cx="18" cy="32" rx="16" ry="3" fill="#344b3b" opacity=".2"/><path d="M3 10 9 5l21 3 4 7-3 15-23 1-5-6z" fill="#805c38" stroke="#4e4631"/><path d="m8 10 20 2 2 13-20 2-5-5z" fill="#c39c65"/><path d="m11 11 13 2m-14 13 17-3" stroke="#8f6c43"/><g stroke="#624f33" fill="#443f2c"><circle cx="13" cy="16" r="3"/><circle cx="23" cy="18" r="3"/></g><circle cx="16" cy="24" r="3" fill="#9f916b" stroke="#76694a"/><g transform="translate(27 6)"><ellipse cx="-3" cy="-2" rx="4" ry="2" fill="#d2e2cc"/><ellipse cx="2" cy="-3" rx="4" ry="2" fill="#d2e2cc"/><ellipse rx="5" ry="3" fill="#b28242"/><path d="M-1-3v6" stroke="#473e2c" stroke-width="2"/><circle cx="5" r="2" fill="#443e2e"/></g>',
 
  chest:'<path d="M3 13h30v19H3z" fill="#805a38" stroke="#4f4c35"/><path d="M2 7q16-9 32 0v8H2z" fill="#ba8d51" stroke="#665237"/><path d="M8 5v26m20-26v26" stroke="#575444" stroke-width="3"/><path d="M16 14h5v7h-5z" fill="#e6c276"/><path d="M4 24h28M5 10h26" stroke="#d0a86a"/>',

@@ -654,3 +654,15 @@ Az erdei utánpótlás hat lehullottág-helyen és hat patakparti kavicsos helye
 ### Kilépőgombok és magkatalógus
 
 A játékba visszatérő gomb neve Vissza vagy Vissza a játékba, soha nem Folytatás. Ez az AGENTS.md-ben is rögzített szabály. A Magkatalógusban a Vissza csak bezár; a még el nem küldött mennyiségek az adott játékfolyamatban megmaradnak az újbóli megnyitásig. A Megrendelem hajtja végre és fizeti ki a rendelést; sikeres rendelés után ürül a választás, sikertelen mentésnél megmarad.
+
+### Egységes gyűjtés, hátizsák és újrahasznosítható roncsok
+
+A Szedés és a Kéz egyetlen **Gyűjtés** művelet (6). A terménynél szüretelő, gaznál kézi, patakparti kőnél keresgélő animáció marad. A Fejsze és Csákány helyett **Bontóvas** (8) használatos: kampós fémszerszám, felső suhintással és rövid kifeszítő mozdulattal. A madárodú ezzel vehető vissza. A régi billentyűk aliasai kompatibilisek, külön menüpontjuk nincs.
+
+Az előző helyreállítási szabály helyett a farmon három állandó, nagyobb, felismerhető roncs ad alapanyagot: fa rakfelületű kerti járgány, felborult utánfutó deszkákkal és téglákkal, összeroskadt munkapad szerszámmaradványokkal. Mindegyiknek hat bontható része van, részenként három suhintással. Négy rész egyenként 6 fát és 2 ócskavasat, kettő egyenként 6 követ ad: roncsonként 24 fa, 12 kő, 8 ócskavas, összesen 72 fa, 36 kő, 24 ócskavas. A váz marad, a teljes begyűjtés után három eltelt játéknap múlva újra bontásra kész. A részmunka, megújulás és hely mentődik. A régi külön fa-, kő- és ócskavaspontok nem gyűjthetők; a korábbi mentések anyagai megmaradnak. A gaz továbbra is visszanő. A patakparti kövek Gyűjtéssel, háromnaponta szedhetők; a különálló erdei faanyagpontok megszűnnek.
+
+A Készlet egyetlen kompakt rekeszrács, látható üres helyekkel és szabad/foglalt darabszámmal. Egy halom legfeljebb 99 darab; a 16 rekesz ezért ténylegesen 16 halmot jelent. Az alap eszközök és helyet nem foglaló küldetéstárgyak külön, egyértelmű feliratú sorban látszanak. A tárgykártyákon név és külön mennyiségjelvény szerepel. A postaláda átadáskor feltölti a meglévő és szabad rekeszeket, a többi mag a postaládában marad. A tervrajz saját fülén látszik a birtokolt/szükséges fa és ócskavas, külön a hiányzó mennyiség; elégtelen anyagnál az Elkészítem inaktív.
+
+### Az ültetőhelyek méretének finomítása
+
+A korábban másfélszeresre növelt ültetőhelyek és növények rajzolt mérete további 10%-kal kisebb, középre igazítva. A kijelölési rács és a kattintható terület marad, így a meglévő mentések növényeit nem kell áthelyezni, és a célzás kényelmes marad. A ládák továbbra is hat ültetőhelyet tartalmaznak. A betakaríthatósági pipák nem kicsinyednek.
