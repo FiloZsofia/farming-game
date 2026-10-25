@@ -598,3 +598,7 @@ A korábbi Vissza a főmenübe gomb helyén **Tovább játszom** szerepel; bezá
 ### Látható, tiszta falusi ösvények
 
 A farmkapunál az ösvény egyenes folytatással csatlakozik, egymásra rajzolt lekerekített végződések nélkül. A falusi és erdőszéli dekorfák teljes lombkoronája is elkerüli az ösvények felszínét. A rajz és a törzsütközés azonos, megtartott fahelyeket használ. Az erdei áfonyabokor is az út mellé kerül, a szedési állapota és azonosítója megmarad.
+
+### Erdei sűrűség és apró visszajelzések
+
+A vízminta sikeres megőrzése után a mintavételi gomb helyén egyszerű státuszszöveg jelenik meg: „A tóvízminta megőrizve”, gombkeret és gombműködés nélkül. A farm alatti erdős sáv és az erdei mellékút ismét sűrűbb: a fák lombjának alakjához igazított távolság és a közeli szabad helyre áthelyezett fák szegélyezik a tisztán látható ösvényt. A Falu feliratú fa irányjelző lefelé mutat.

@@ -71,7 +71,7 @@ export function drawVillage(scene:Phaser.Scene){
  oval(865,1107,33,16,0x587d6d);rect(849,1086,32,21,0x947d54);oval(865,1086,32,12,0x5b9595);oval(863,1084,24,6,0x92c4b6);
  const c=layout.cottage;house(c.x,c.y,c.w,c.h,0x9b7155,0xd4c1a1);flowers(331,1343);flowers(446,1344);
  // Diverse forest silhouettes: broad oak, silver birch and fir.
- const tree=(x:number,y:number,kind:number,s=1)=>{if(woodlandTreeClear(x,y,s))drawWoodlandTree(g,random,x,y,kind,s);};
+ const tree=(x:number,y:number,kind:number,s=1)=>{if(woodlandTreeClear(x,y,s,kind))drawWoodlandTree(g,random,x,y,kind,s);};
  paintForest(g,random);
  for(let row=0;row<17;row++)for(let column=0;column<9;column++){const x=FOREST_LEFT+25+column*77+(row%2)*24,y=farmBounds.top+50+row*65;if(x< -445)tree(x,y,(row+column)%3,.85+(column%3)*.08);}
 
@@ -83,13 +83,13 @@ export function drawVillage(scene:Phaser.Scene){
  // Ferns, fallen leaves and meadow flowers along the shaded fork.
  for(let i=0;i<70;i++){const x=45+random()*240,y=660+random()*520;for(let j=0;j<4;j++)line(x,y,x+(j-1.5)*4,y-5-random()*8,0x63894e);if(i%3===0)oval(x,y,4,2,0xc6b77c,.7);}
  // Supported wooden signs at the road and its forest fork, rather than text in grass.
- const sign=(postX:number,groundY:number,left:number,top:number,width:number,text:string,direction:'left'|'right')=>{
+ const sign=(postX:number,groundY:number,left:number,top:number,width:number,text:string,direction:'left'|'right'|'down')=>{
   oval(postX+4,groundY+3,19,7,0x35553a,.22);rect(postX-2,top+10,5,groundY-top-8,0x6b5438);rect(postX-1,top+12,2,groundY-top-10,0xac8858);
-  const arrow=direction==='right'?[left,top,left+width-10,top,left+width,top+11,left+width-10,top+22,left,top+22]:[left+10,top,left+width,top,left+width,top+22,left+10,top+22,left,top+11];
-  poly(arrow,0x604f35);poly(arrow.map((v,i)=>v+(i%2? -1:0)),0xa98a59);line(left+12,top+3,left+width-12,top+3,0xcfb17b);line(left+12,top+19,left+width-12,top+19,0x735b3c);oval(postX,top+6,2,2,0x5c5b45);oval(postX,top+16,2,2,0x5c5b45);
-  const title=scene.add.text(left+width/2+(direction==='left'?3:-3),top+11,text,{fontFamily:'Georgia,serif',fontSize:'9px',color:'#fff0c8',resolution:2}).setOrigin(.5).setDepth(5);labels.push(title);
+  const arrow=direction==='down'?[left,top,left+width,top,left+width,top+18,left+width/2,top+33,left,top+18]:direction==='right'?[left,top,left+width-10,top,left+width,top+11,left+width-10,top+22,left,top+22]:[left+10,top,left+width,top,left+width,top+22,left+10,top+22,left,top+11];
+  poly(arrow,0x604f35);poly(arrow.map((v,i)=>v+(i%2? -1:0)),0xa98a59);line(left+12,top+3,left+width-12,top+3,0xcfb17b);if(direction!=='down')line(left+12,top+19,left+width-12,top+19,0x735b3c);oval(postX,top+6,2,2,0x5c5b45);oval(postX,top+16,2,2,0x5c5b45);
+  const title=scene.add.text(left+width/2+(direction==='left'?3:direction==='right'?-3:0),top+11,text,{fontFamily:'Georgia,serif',fontSize:'9px',color:'#fff0c8',resolution:2}).setOrigin(.5).setDepth(5);labels.push(title);
  };
- sign(220,667,207,608,57,'Falu','right');sign(292,810,220,759,88,'Erdei ösvény','left');
+ sign(235,673,208,608,54,'Falu','down');sign(292,810,220,759,88,'Erdei ösvény','left');
 
  rect(416,930,4,42,0x615940);rect(409,925,18,18,0xd9c994);rect(408,924,20,3,0x5b6550);poly([406,924,418,913,430,924],0x566650);
  // This scenery is static too; keep tree canopies and paving out of the per-frame geometry pass.
