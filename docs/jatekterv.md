@@ -666,3 +666,10 @@ A Készlet egyetlen kompakt rekeszrács, látható üres helyekkel és szabad/fo
 ### Az ültetőhelyek méretének finomítása
 
 A korábban másfélszeresre növelt ültetőhelyek és növények rajzolt mérete további 10%-kal kisebb, középre igazítva. A kijelölési rács és a kattintható terület marad, így a meglévő mentések növényeit nem kell áthelyezni, és a célzás kényelmes marad. A ládák továbbra is hat ültetőhelyet tartalmaznak. A betakaríthatósági pipák nem kicsinyednek.
+
+
+### Készletkártyák és tömör felületszövegek
+
+A készletkártyák nagyobb ikont és arányosan, középre rendezett nevet kapnak. Az alsó műveleti hely csak akkor fenntartott, ha valóban van gomb a kártyán. A külön sor felirata „Eszközök és küldetéstárgyak”. A Gyűjtés ikonja a kosár a menüsorban és a készletben is. A szerszámnevek átnevezése egyelőre javaslat.
+
+A Tervrajzok fülön nincs külön hiányt vagy minden alapanyag meglétét közlő mondat. A birtokolt/szükséges darabszám és az Elkészítem gomb állapota jelzi a lehetőséget. Általános szabály: kerülendő minden szájbarágós, túlmagyarázó játékbeli szöveg, különösen a felületből már látható információ megismétlése. Ez az AGENTS.md-ben is rögzítve.

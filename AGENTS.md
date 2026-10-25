@@ -15,3 +15,5 @@
 - Az összekapcsolódó ösvények egyetlen hálózatként készüljenek: előbb az összes külső szegély, utána az összes belső réteg. Tilos külön, teljesen körvonalazott útdarabokat egymásra rajzolni, mert az elágazásban belső ív vagy varrat marad. Az új és módosított csomópontokat közeli böngészős képen ellenőrizd, a farmkapunál és az erdei elágazásnál is.
 - Az irányjelző deszkája és felirata együtt kövesse a ténylegesen továbbvezető ösvény irányát; a tartóoszlop függőleges maradjon. Ne tekints elegendőnek egy minimális forgatást, ha a felirat és a nyíl továbbra is természetellenesen áll.
 - A pusztán ablakot bezáró, játékba visszalépő gomb neve Vissza vagy Vissza a játékba legyen, soha ne Folytatás. A Folytatás név csak tényleges folytatást jelentsen, például mentett farm megnyitását. Vásárlásnál/rendelésnél a végrehajtó és a kilépő gomb egyértelműen különüljön el.
+
+- Minden játékbeli szövegnél kerüld a szájbarágást és túlmagyarázást. Ne ismételd szöveggel azt, amit a felület, ikonok, számok vagy gombállapot már egyértelművé tesznek. A recepteknél elég a birtokolt/szükséges mennyiség és az inaktív elkészítőgomb; ne írj külön hiány- vagy készültségi mondatot.
