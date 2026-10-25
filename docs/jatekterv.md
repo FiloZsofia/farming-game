@@ -563,3 +563,13 @@ Az erdő északi háttere a farm bal szélén túl is részletes, a pályán has
 Az indagubanc tüskéket, sötétebb összefonódott testet, figyelő szemeket és mozgó/csapó indákat kap; a spórapamacs rétegzett, bolyhos testet, fonalakat és mozgó spóraport. A bot melletti tárgy egy régi pihenőpad: most háttámlával, ülőlappal, támaszokkal és lábakkal, valamint saját megnevezéssel jelenik meg.
 
 Az erdő elhagyása és a visszatérés új harci látogatást kezd: mind a négy ellenfél ismét megjelenik. A folyamatban lévő látogatás legyőzött ellenfeleit a mentés külön tárolja, így puszta újratöltéskor nem térnek vissza. A történeti első legyőzések, a fészekminta, a vizsgálat és Noah levele nem nullázódnak. A régi, három ellenféllel már teljesített mintavételt változatlanul teljesítettnek őrizzük meg; az új belső ellenfél ehhez nem von vissza előrehaladást.
+
+### A korai erdei felfedezés történeti korlátja
+
+Az erdő, a túrabot, a harc és a gyűjtögetés a kivonatkészítő javítása előtt is elérhető. A fatörzsnél ekkor kizárólag ez a szöveg jelenik meg: „Apró, sárral lezárt járatok… Faliméhek fészkelhetnek itt. Néhány járat már felnyílt. Az épeket inkább békén hagyom.” Mintavételi gomb nincs, és az összes ellenfél legyőzése sem oldja fel a mintavételt a gép megjavítása előtt. A javítás után a szokásos harci feltételekkel lehet mintát venni. A korábbi mentésekben már megszerzett mintát és elvégzett vizsgálatot megőrizzük.
+
+A gépjavítás utáni gondolat és cél változatlan marad: „Talán az erdőben találok valami hasznosat, amivel elkezdhetem a kísérletezést.” és „Nézz körül az erdő mélyén”. Korábbi fatörzsfelfedezés alapján sem jelenik meg külön, a megoldás helyére utaló gondolat. A célokat nem egészítjük ki a teljesítésük módját szájbarágósan eláruló lépésekkel.
+
+### Déli birtokhatár
+
+A teljes déli farmhatáron meleg árnyalatú, sötétbarna, erős fakerítés húzódik, vastag oszlopokkal, két vaskos vízszintes gerendával és átlós merevítésekkel. A faluba vezető ösvénynél megmarad a kapunyílás. A régi rövid, a birtok belsejében maradt kerítésdarabok és kapuoszlopok megszűnnek. A kapunyílás rajza és átjárhatósága közös elrendezési adatot használ.

@@ -9,3 +9,5 @@
 - Vizuális változásról készíts ellenőrizhető képet. A felhasználónak a GitHubon tárolt képek működtek.
 
 - A Készlet tárgykártyáin csak a tárgy vagy növény neve jelenjen meg. Ne adj hozzá árat, leírást, „Eszköz”, „Küldetéstárgy” vagy „1 db” toldalékot. A szükséges mennyiséget külön számozott jelvény jelezheti; a receptek a Tervrajzok fülre tartoznak.
+
+- A történeti célok és Sam gondolatai ne árulják el a megoldás helyét vagy lépéseit. Ne adj hozzá „menj ide”, „beszélj vele”, „itt keresd” útmutatást vagy korábbi felfedezésre alapozott célzott tippet külön felhasználói kérés nélkül. A már elfogadott cél- és gondolatszövegeket őrizd meg; az új mechanikai feltétel nem engedély ezek átírására.

@@ -33,3 +33,9 @@ export function forestGateBlocked(x:number,y:number,state:Forest){
 
 export const encounterDefeated=(state:Forest)=>state.visitDefeated??state.defeated;
 export function beginForestVisit(state:Forest):Forest{return {...structuredClone(state),visitDefeated:[]};}
+
+export const earlyNestObservation='Apró, sárral lezárt járatok… Faliméhek fészkelhetnek itt. Néhány járat már felnyílt. Az épeket inkább békén hagyom.';
+export function collectForestSample(state:Forest,machineRepaired:boolean):Forest|null{
+ if(!machineRepaired||state.sample||!forestEnemies.every(e=>encounterDefeated(state).includes(e.id)))return null;
+ return {...structuredClone(state),sample:true};
+}

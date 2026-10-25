@@ -1,4 +1,5 @@
 import {forestBlocked} from './forest';
+import {farmLayout} from './layout';
 import {inHome,homeBlocked} from './home';
 import {inWorkshop,WORKSHOP_ORIGIN} from './research';
 import {blocked,type Box} from './movement';
@@ -36,7 +37,7 @@ export function worldBlocked(x:number,y:number){
  if(inWorkshop(y))return x<108||x>692||y<WORKSHOP_ORIGIN+198||y>WORKSHOP_ORIGIN+510||(x>282&&x<567&&y>WORKSHOP_ORIGIN+250&&y<WORKSHOP_ORIGIN+357);
  if(y>=1600)return shopBlocked(x,y);
  if(y>=600)return villageBlocked(x,y);
- if(y>=560&&x>=146&&x<=196)return false;
+ if(y>=farmLayout.southGate.y&&x>=farmLayout.southGate.x&&x<=farmLayout.southGate.x+farmLayout.southGate.w)return false;
  return blocked(x,y);
 }
 

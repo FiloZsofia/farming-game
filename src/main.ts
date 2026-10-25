@@ -1,7 +1,7 @@
 import {canPlaceChestAt} from './chest-placement';
 import {noahPortrait} from './noah-portrait';
 import {ForestCombat} from './forest-combat';
-import {createForest,beginForestVisit,encounterDefeated,inForest,FOREST_LEFT,forestNest,forestPlants,forestEnemies,walkingStick,microscope,herbNames,type Forest} from './forest';
+import {createForest,earlyNestObservation,collectForestSample,beginForestVisit,encounterDefeated,inForest,FOREST_LEFT,forestNest,forestPlants,forestEnemies,walkingStick,microscope,herbNames,type Forest} from './forest';
 import {drawForestObjects} from './forest-art';
 import {backpackSlots,canCarryChange,craftChest,transferChest,inventoryCounts,occupiedSlots,emptyChests} from './chests';
 import {HOME_ORIGIN,inHome,homeObjects,homeBlocked} from './home';
@@ -462,9 +462,10 @@ class Farm extends Phaser.Scene {
   if(n==='forest-bench'){showDialogue('Régi pihenőpad','Jólesik néha megállni az erdei úton. Valaki régen gondosan karbantartotta ezt a pihenőhelyet.','SAM');return true;}
   if(n.startsWith('herb:')){const plant=forestPlants.find(p=>p.id===n.slice(5))!;f.picked[plant.id]=this.clock.day;void this.commitForest(f,()=>{this.avatar.use(plant.x-this.actor.x,plant.y-this.actor.y,'hand');this.notice(`+1 ${herbNames[plant.kind]} · A hátizsákodba került.`);},plant);return true;}
   if(n==='forest-nest'){
+   if(!this.travel.research.repaired){showDialogue('Régi fészekjáratok',earlyNestObservation,'SAM');return true;}
    if(!f.sample&&!forestEnemies.every(e=>encounterDefeated(f).includes(e.id))){showDialogue('Régi fészekjáratok','A korhadt törzsben apró üregeket látok. Előbb biztonságossá kell tennem a környéket.','SAM');return true;}
    if(f.sample){showDialogue('Régi fészekjáratok','Az ép, sárral lezárt járatokat békén hagyom. A felnyílt járatból már vettem mintát.','SAM');return true;}
-   showDialogue('Valami a fészekben','Egy felnyílt, elhagyott járatban penészszerű bevonat van. Az ép fészkeket nem bolygatom.','SAM');const panel=document.querySelector<HTMLElement>('#research-panel')!;panel.replaceChildren();panel.hidden=false;const take=document.createElement('button');take.type='button';take.id='collect-nest-sample';take.textContent='Mintát veszek az elhagyott járatból';take.onclick=()=>{if(this.transitioning)return;f.sample=true;void this.commitForest(f,()=>showDialogue('A minta biztonságban van','Ez a bevonat emlékeztet valamire a laborból. A mikroszkóp alatt talán többet megtudok róla.','SAM'));};panel.append(take);return true;
+   showDialogue('Valami a fészekben','Egy felnyílt, elhagyott járatban penészszerű bevonat van. Az ép fészkeket nem bolygatom.','SAM');const panel=document.querySelector<HTMLElement>('#research-panel')!;panel.replaceChildren();panel.hidden=false;const take=document.createElement('button');take.type='button';take.id='collect-nest-sample';take.textContent='Mintát veszek az elhagyott járatból';take.onclick=()=>{if(this.transitioning)return;const sample=collectForestSample(this.travel.forest??createForest(),this.travel.research.repaired);if(!sample)return;void this.commitForest(sample,()=>showDialogue('A minta biztonságban van','Ez a bevonat emlékeztet valamire a laborból. A mikroszkóp alatt talán többet megtudok róla.','SAM'));};panel.append(take);return true;
   }
   if(n==='microscope'){this.openMicroscope();return true;}
   if(n==='send-sample'){this.openSampleMail();return true;}

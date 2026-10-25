@@ -115,8 +115,16 @@ export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),g
  }
 
  // Clearly legible fallen branches, with bark, cut ends and ground shadows.
- const fence=(x:number,y:number,count:number)=>{for(let i=0;i<count;i++){rect(x+i*25,y+8,25,4,0x9b8560);rect(x+i*25,y+18,25,3,0x796c4d);line(x+i*25,y+8,x+(i+1)*25,y+8,0xbca77a);}for(let i=0;i<=count;i++){poly([x+i*25,y+28,x+i*25,y+2,x+i*25+2,y-1,x+i*25+5,y+2,x+i*25+5,y+28],0x6f6047);rect(x+i*25+1,y+3,2,23,0xac956b);}};
- fence(28,499,4);fence(211,515,9);rect(132,492,6,37,0x715436);rect(201,505,6,37,0x715436);rect(121,504,4,25,0x947348);
+ // Full southern boundary: warm dark timber, thick posts, rails and diagonal braces.
+ const fence=(from:number,to:number)=>{
+  rect(from,594,to-from,6,0x283e2c,.3);
+  for(let x=from;x<to;x+=40){const end=Math.min(to,x+40);for(const y of [570,584]){rect(x,y,end-x,6,0x513622);rect(x,y,end-x,2,0x8d623b);line(x,y+5,end,y+5,0x39291d);}
+   line(x+4,589,end-3,570,0x593924,5);line(x+5,587,end-4,570,0x926541,1);}
+  const posts:number[]=[];for(let x=from;x<=to;x+=40)posts.push(x);if(posts.at(-1)!==to)posts.push(to);
+  for(const x of posts){poly([x-4,597,x-4,563,x-1,558,x+5,562,x+5,597],0x493021);rect(x-3,565,3,29,0x875a35);line(x+4,565,x+4,595,0x30241a,2);rect(x-5,559,11,5,0x65452c);line(x-4,559,x+5,559,0xa57a4a);for(const y of [573,587]){oval(x+1,y,2,2,0x262a23);}}
+ };
+ const gate=layout.southGate;fence(farmBounds.left,gate.x-6);fence(gate.x+gate.w+6,farmBounds.right);
+ for(const x of [gate.x-6,gate.x+gate.w+6]){rect(x-6,554,12,44,0x493020);rect(x-4,557,4,38,0x8b603a);rect(x-8,551,16,6,0x67472d);line(x-7,551,x+7,551,0xac8050);for(const y of [570,584])rect(x-6,y,12,3,0x35382d);}
  for(let i=0;i<110;i++){const x=45+random()*710,y=275+random()*265;if(Math.abs(x-215)<65||x>480&&y>340||x>325&&x<495&&y<380)continue;tuft(x,y,.6+random()*.4);if(i%4===0){line(x,y-3,x,y-9,0x4e7149);oval(x,y-10,4,3,i%2?0xd9cfac:0xb5a5bd);}}
  // Bake the static landscape once; its thousands of marks become one draw per frame.
  const terrain=scene.add.renderTexture(left,top,width,height).setOrigin(0).setDepth(-1);

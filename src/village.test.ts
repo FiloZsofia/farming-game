@@ -58,3 +58,5 @@ it('keeps nursery display saplings outside the entrance path',()=>{
 });
 
  it('allows a walkable side approach for conversation without confusing it with the front counter',async()=>{const {merchantNearby,shopBlocked,shopOrigins}=await import('./village-layout');for(const shop of ['fishShop','nursery'] as const){const origin=shopOrigins[shop];expect(shopBlocked(325,origin+240)).toBe(false);expect(merchantNearby(shop,325,origin+240)).toBe(true);expect(merchantNearby(shop,450,origin+320)).toBe(false);expect(merchantNearby(shop,400,origin+467)).toBe(false);}});
+
+it('keeps the full southern farm boundary closed except for the village gate',()=>{for(const x of [-376,-200,0,140,210,500,900,1176])expect(worldBlocked(x,595)).toBe(true);for(const x of [150,170,190])expect(worldBlocked(x,595)).toBe(false);});

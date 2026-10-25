@@ -1,5 +1,5 @@
 import {describe,it,expect} from 'vitest';
-import {createForest,forestBlocked,forestPlants,validForest,forestEnemies,forestGateBlocked,beginForestVisit,encounterDefeated} from './forest';
+import {createForest,forestBlocked,forestPlants,validForest,forestEnemies,forestGateBlocked,collectForestSample,beginForestVisit,encounterDefeated} from './forest';
 import {createTravel} from './travel';
 import {createGarden} from './gardening';
 import {createClock} from './clock';
@@ -27,3 +27,11 @@ it('prevents walking around either gate, even when both vines but not the spores
 });
 
 it('respawns the current encounter on return without resetting the sample, examination or mailed letter',()=>{const completed={...createForest(),stick:true,enemyIntroSeen:true,defeated:forestEnemies.map(e=>e.id),sample:true,examined:true,sent:true};const returning=beginForestVisit(completed);expect(encounterDefeated(returning)).toEqual([]);expect(returning.defeated).toEqual(completed.defeated);expect(returning.sample&&returning.examined&&returning.sent).toBe(true);expect(validForest(returning,10)).toBe(true);expect(forestGateBlocked(-665,977,returning)).toBe(true);expect(encounterDefeated(completed)).toHaveLength(4);});
+
+it('unlocks sampling only after machine repair and the current encounter, exactly once',()=>{
+ const cleared={...createForest(),stick:true,defeated:forestEnemies.map(e=>e.id)};
+ expect(collectForestSample(cleared,false)).toBeNull();expect(cleared.sample).toBe(false);
+ expect(collectForestSample(createForest(),true)).toBeNull();
+ const collected=collectForestSample(cleared,true)!;expect(collected.sample).toBe(true);expect(validForest(collected,10)).toBe(true);expect(cleared.sample).toBe(false);expect(collectForestSample(collected,true)).toBeNull();
+ expect(collectForestSample(beginForestVisit(cleared),true)).toBeNull();
+});
