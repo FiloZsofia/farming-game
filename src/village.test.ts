@@ -13,7 +13,7 @@ describe('Southbound village route',()=>{
  });
  it('keeps buildings solid and all entrances reachable',()=>{
   for(const b of [villageLayout.nursery,villageLayout.fishShop]){expect(worldBlocked(b.x+b.w/2,b.y+30)).toBe(true);expect(worldBlocked(b.door.x,b.door.y+5)).toBe(false);}
-  expect(worldBlocked(10,900)).toBe(true);expect(worldBlocked(476,1081)).toBe(true);
+  expect(worldBlocked(10,900)).toBe(false);expect(worldBlocked(-1120,900)).toBe(true);expect(worldBlocked(476,1081)).toBe(true);
  });
  it('roundtrips a village position and validates collected-bush dates',()=>{
   const data=snapshot({x:450,y:1050},createClock(3),createGarden());data.travel.picked.fern=1;expect(validSnapshot(data)).toBe(true);expect(decodeSnapshot(data)).toEqual(data);

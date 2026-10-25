@@ -1,3 +1,4 @@
+import {forestBlocked} from './forest';
 import {inHome,homeBlocked} from './home';
 import {inWorkshop,WORKSHOP_ORIGIN} from './research';
 import {blocked,type Box} from './movement';
@@ -19,6 +20,7 @@ const segmentGap=(x:number,y:number,a:number[],b:number[])=>{const dx=b[0]-a[0],
 export const forestTrees=Array.from({length:72},(_,i)=>({x:28+i%8*37+(i%3)*6,y:675+Math.floor(i/8)*61,kind:i%3})).filter(t=>[forestRoute,road].every(route=>route.slice(1).every((b,i)=>segmentGap(t.x,t.y,route[i],b)>34))&&villageLayout.bushes.every(b=>Math.hypot(t.x-b.x,t.y-b.y)>40)&&villageLayout.trees.every(b=>Math.hypot(t.x-b.x,t.y-b.y)>32));
 const buildings:Box[]=[villageLayout.nursery,villageLayout.fishShop,villageLayout.cottage];
 export function villageBlocked(x:number,y:number){
+ if(x<22&&y>=695&&y<=1340)return forestBlocked(x,y);
  if(x<22||x>WORLD_WIDTH-22||y<600||y>1394)return true;
  if(buildings.some(b=>x+7>b.x&&x-7<b.x+b.w&&y+3>b.y&&y-4<b.y+b.h))return true;
  if([...villageLayout.trees,...forestTrees].some(t=>Math.hypot((x-t.x)/12,(y-t.y)/9)<1))return true;

@@ -529,3 +529,19 @@ Az új farm elnevezésekor és a Menü → Történet felületen az alábbi köz
 - Teljesítmény: a farm statikus talaja és a falu rajza egyszer eltárolt képréteg; a kerti takarításkor és kapáláskor csak a változó réteg frissül. A boltok háttere is eltárolt kép. A nem látható benti helyszínek és bolti szereplők nem kerülnek rajzolásra. Az ismétlődő esőhang-beállítás csak állapotváltáskor ütemeződik, a célok második, képkockánkénti fölösleges frissítése kikerült.
 - Azonos helyi Chromium-mérésben a medián képkockaidő 83,4 ms-ról 33,4 ms-ra, a 95. percentilis kb. 100 ms-ról 50 ms-ra csökkent; részletek: `docs/performance-rendering.json`. A mérés nem ígér azonos sebességet más hardveren.
 - Képek: `farm-escape-start-menu.png`, `farm-journal-and-open-beds.png`, `home-bedside-raised-night.png`, `village-cached-square.png`, `cached-nursery-interior.png`, `cached-fishShop-interior.png` a `docs/concepts` mappában. Böngészőben ellenőrizve: ESC, gyors dupla ESC mentés alatt, ismétlés, szünetelő idő, Készlet bezárása, napló, takarítás/kapálás és visszatöltés, falu és mindkét bolt, éjjeli lámpa.
+
+## Elfogadott bővítés: erdei mintavétel, 0-tól induló jártasság és tárolás
+
+Ez a rész felülírja a korábbi szintszámozást. Sam 0. kertészkedési szintről indul. Az 1. szint 36 új pont után 4-4 eper-, mézbogyó- és áfonyaültetőanyagot és katalógusfeloldást ad; a 2. szint további 44 pont után 4-4 sárgarépa-, saláta- és hagymamagot, valamint katalógusfeloldást. A 3. szint további 52 pontnál (összesen 132) a tárolóláda tervrajza. A későbbi 4. szinthez 60 új pont tartozik majd; jutalma még nincs meghatározva, ezért nincs megnyitva. A maximumon nem gyűlik pont. A régi jutalmak és készletek megmaradnak; a korábbi 72 pontos maximum az új 2. szint elejére (80 összpont, 0/52) kerül, többletpont nélkül.
+
+A hátizsák 16 rekeszes, halmonként 99 darabbal; az eszközök és történeti kulcs/minta/tervrajz külön vannak. A régi túlméretes készletet nem töröljük: új rekeszt csak helyfelszabadítás után lehet elfoglalni. A szintjutalom helyhiány miatt át nem vett része külön megmarad, a Készletből később átvehető. A betakarítás, vásárlás és gyűjtés mentés előtt ellenőrzi a helyet. Tárgyak földre dobása nincs.
+
+A láda 24 rekeszes, 99 darabos halmokkal, 20 fa és 5 ócskavas árán elkészíthető a házban vagy a műhelyben. A Készletben elkészített láda közeli szabad helyre kattintva tehető a farmon vagy a házban. E/buborék megnyitja; kattintás teljes halmot, Shift+kattintás egy darabot mozgat. Csak üresen vehető fel és helyezhető át. Több láda készíthető. Az eladóláda ettől külön marad.
+
+Az erdő balra bővül: napos, köves gyógynövényes erdőszél; kopott pihenőpad; patak és pallóhíd; domboldalak közti szűk átjáró; árnyas fészkes fatörzs. Vadkakukkfű, lándzsás útifű és csalán gyűjthető, 3 napos újraszedhetőséggel, 4 gold/darab árral. Az erdőszéli pihenőnél egy lehullott ágból Sam túrabotot igazít magának.
+
+Az átjárót indagubanc, a belső részt két spórapamacs védi. Ezek fiktív ellenfelek; jelenlétük nem bizonyítja a méheket érintő gombafertőzést. F/kattintás botütés, Space ugrással kitérés. Sam 5 életerővel indul, találatonként 1-et veszít; a jelzett támadásokat ki lehet kerülni. Vereségnél hazakerül, tárgy- és aranyveszteség nélkül. Az ellenfelek legyőzése megmarad; az átjáró nem zárul vissza. A farmon nincs harc.
+
+A harc után az elhagyott fatörzs felnyílt fészekjáratából mintát vehetünk. Az ép, sárral lezárt járatokat nem bolygatjuk. A javított műhely munkapadján Sam saját mikroszkópja jelenik meg. A fókusz interaktívan állítható; Sam gombafonalakat lát, de sem a fajt, sem az oksági kapcsolatot nem állapítja meg. A megvizsgált minta levéllel a postaládából elküldhető a korábbi laboros kollégának. A történeti szakasz a küldésig tart; a válasz és a kivonatos kísérlet későbbi folytatás.
+
+A menü neve Főmenü, a két magyarázó bekezdés kikerül. A melléképület két oldalán álló rövid kerítések megszűnnek, a visszanövés sem kezeli őket foglalt helynek.

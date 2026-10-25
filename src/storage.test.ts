@@ -180,8 +180,8 @@ describe('persistent farm state',()=>{
   const upgraded=decodeSnapshot(old)!;expect(upgraded.version).toBe(17);expect(upgraded.economy.gold).toBe(37);expect(upgraded.seeds.strawberry).toBe(2);expect(upgraded.seeds.carrot).toBe(0);expect(upgraded.orders.pending.blueberry).toBe(3);expect(upgraded.skill.xp).toBe(36);expect(upgraded.skill.levelThreeRewarded).toBe(false);expect(decodeSnapshot(upgraded)).toEqual(upgraded);
  });
  it('persists level three and its seed stacks without rewarding again',async()=>{
-  const data=fresh();for(let i=0;i<72;i++)data.skill=gainGardening(data.skill,`hoe:${i}`)!;data.seeds.carrot=4;data.seeds.lettuce=3;data.seeds.onion=4;data.produce.onion=2;
-  const factory=new IDBFactory(),store=new SaveStore(factory);await store.load();await store.save(data);store.close();const reader=new SaveStore(factory),loaded=(await reader.load()).data!;expect(loaded.skill.levelThreeRewarded).toBe(true);expect(loaded.seeds).toEqual(data.seeds);expect(loaded.produce.onion).toBe(2);expect(gainGardening(loaded.skill,'hoe:extra')).toBeNull();reader.close();
+  const data=fresh();for(let i=0;i<80;i++)data.skill=gainGardening(data.skill,`hoe:${i}`)!;data.seeds.carrot=4;data.seeds.lettuce=3;data.seeds.onion=4;data.produce.onion=2;
+  const factory=new IDBFactory(),store=new SaveStore(factory);await store.load();await store.save(data);store.close();const reader=new SaveStore(factory),loaded=(await reader.load()).data!;expect(loaded.skill.levelThreeRewarded).toBe(true);expect(loaded.seeds).toEqual(data.seeds);expect(loaded.produce.onion).toBe(2);expect(gainGardening(loaded.skill,'hoe:extra')!.xp).toBe(81);reader.close();
  });
 
  it('stores farmer names and rejects empty, unnormalized or invalid identities',async()=>{
@@ -189,7 +189,7 @@ describe('persistent farm state',()=>{
   const factory=new IDBFactory(),store=new SaveStore(factory);await store.load();await store.save(data);store.close();const reader=new SaveStore(factory);expect((await reader.load()).data!.farmerName).toBe('Léna');reader.close();
  });
  it('migrates v11 without inventing a farmer name or resetting level-three progress',()=>{
-  const data=fresh();data.farmName='Meglévő farm';data.economy.gold=47;for(let i=0;i<72;i++)data.skill=gainGardening(data.skill,`hoe:${i}`)!;data.seeds.carrot=3;
+  const data=fresh();data.farmName='Meglévő farm';data.economy.gold=47;for(let i=0;i<80;i++)data.skill=gainGardening(data.skill,`hoe:${i}`)!;data.seeds.carrot=3;
   const old=JSON.parse(JSON.stringify({...data,version:11}));delete old.farmerName;const upgraded=decodeSnapshot(old)!;expect(upgraded.version).toBe(17);expect(upgraded.farmerName).toBeNull();expect(upgraded.skill).toEqual(data.skill);expect(upgraded.seeds).toEqual(data.seeds);expect(upgraded.economy.gold).toBe(47);expect(decodeSnapshot(upgraded)).toEqual(upgraded);
  });
 

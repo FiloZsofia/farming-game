@@ -29,3 +29,5 @@ it('supports either shutter first, keeps old lit saves lit and saves each hand-c
 it('relocates an old saved player covered by the enlarged workshop without changing the farm',()=>{const data=snapshot({x:565,y:130},createClock(10),createGarden());data.economy.gold=163;const next=decodeSnapshot(data)!;expect(next.player).toEqual({x:565,y:224});expect(next.economy).toEqual(data.economy);expect(next.seeds).toEqual(data.seeds);expect(next.travel).toEqual(data.travel);expect(worldBlocked(565,130)).toBe(true);expect(worldBlocked(632,224)).toBe(false);});
 
 it('keeps possessions when the expanded house covers a legacy player, and rejects a position inside the old wall',()=>{const data=snapshot({x:120,y:150},createClock(10),createGarden());expect(decodeSnapshot(data)?.player).toEqual({x:120,y:280});data.player={x:200,y:150};expect(decodeSnapshot(data)).toBeNull();});
+
+it('does not duplicate a gifted repair material after it is stored in a chest',()=>{const r={...createResearch(),discovered:true};const supplied=supplyMaterial(r,'annie')!;supplied.materials.glass=0;expect(supplyMaterial(supplied,'annie')).toBeNull();});

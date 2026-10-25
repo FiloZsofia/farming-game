@@ -26,7 +26,8 @@ export function drawWorkshop(scene:Phaser.Scene,r:Research){
  g.lineStyle(1,0xc9b997).lineBetween(263,158,263,232);g.fillStyle(0xbba16f).fillCircle(263,233,3);
  // Workbench, shelves, pressed plants and old notebook.
  g.fillStyle(0x574535).fillRect(124,365,12,50).fillRect(212,365,12,50);g.fillStyle(0x9c7c51).fillRoundedRect(118,352,112,20,3);g.lineStyle(2,0xc09e68).lineBetween(122,354,226,354);
- g.fillStyle(0x687875).fillRoundedRect(143,346,23,5,2);g.fillStyle(0x71503b).fillRect(155,339,5,14);g.fillStyle(0xb9aa7c).fillRoundedRect(180,340,28,10,2);
+ if(r.repaired){g.fillStyle(0x38483f).fillRoundedRect(168,340,29,8,3);g.lineStyle(7,0x7f9890).strokePoints([{x:189,y:339},{x:190,y:321},{x:179,y:307},{x:171,y:312}]);g.lineStyle(5,0xd4d3b9).lineBetween(171,311,179,324);g.fillStyle(0x43554c).fillRect(167,329,20,4);g.fillStyle(0xd8d3a8).fillRect(171,327,12,2);g.fillStyle(0x30443b).fillCircle(190,326,4);}
+ g.fillStyle(0x687875).fillRoundedRect(143,346,23,5,2);g.fillStyle(0x71503b).fillRect(155,339,5,14);g.fillStyle(0xb9aa7c).fillRoundedRect(r.repaired?208:180,340,r.repaired?16:28,10,2);
  for(let y=245;y<324;y+=37){g.fillStyle(0x896d49).fillRect(568,y,100,6);for(let i=0;i<4;i++){g.fillStyle([0x718b76,0x9e9b76,0xb59164,0x6f8988][i]).fillRoundedRect(575+i*22,y-22,13,21,3);g.lineStyle(2,0xc8bb8b).lineBetween(577+i*22,y-20,586+i*22,y-20);}}
  g.fillStyle(0x71573b).fillRoundedRect(584,351,78,28,3);g.fillStyle(0xd0bc88).fillPoints([{x:599,y:344},{x:627,y:342},{x:630,y:366},{x:602,y:368}],true);for(let y=348;y<364;y+=4)g.lineStyle(1,0x8c825f).lineBetween(605,y,624,y-1);
  // Dried herbs hang from the rafters; a pair of pots has waited by the bench.

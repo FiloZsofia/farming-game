@@ -1,8 +1,15 @@
 import {goods,extras,type Good,type Extra} from './estate';
 import type {Crop} from './gardening';
-export type IconName=Good|Extra|Crop|'scrap'|'workshopKey'|'copperPipe'|'linenCloth'|'glassJar'|'hoe'|'water'|'harvest'|'axe'|'pickaxe'|'hand'|'wood'|'stone'|'weed'|'birdhouse'|'annie'|'strawberry'|'honeyberry'|'blueberry';
+export type IconName=Good|Extra|Crop|'chest'|'walkingStick'|'scrap'|'workshopKey'|'copperPipe'|'linenCloth'|'glassJar'|'hoe'|'water'|'harvest'|'axe'|'pickaxe'|'hand'|'wood'|'stone'|'weed'|'birdhouse'|'annie'|'strawberry'|'honeyberry'|'blueberry';
 // Original, locally drawn interface icons; no external asset dependency.
 const artwork:Partial<Record<IconName,string>>={
+ chest:'<path d="M3 13h30v19H3z" fill="#805a38" stroke="#4f4c35"/><path d="M2 7q16-9 32 0v8H2z" fill="#ba8d51" stroke="#665237"/><path d="M8 5v26m20-26v26" stroke="#575444" stroke-width="3"/><path d="M16 14h5v7h-5z" fill="#e6c276"/><path d="M4 24h28M5 10h26" stroke="#d0a86a"/>',
+ walkingStick:'<path d="m9 33 13-24 5-6" stroke="#694b32" stroke-width="5" stroke-linecap="round" fill="none"/><path d="m8 32 13-24 5-6" stroke="#c6a572" stroke-width="1.3" stroke-linecap="round" fill="none"/>',
+
+ thyme:'<path d="M18 33V7M18 25 7 16M18 20 29 11" stroke="#557849" stroke-width="3" fill="none"/><g fill="#b08ac2"><circle cx="18" cy="7" r="5"/><circle cx="7" cy="15" r="4"/><circle cx="29" cy="10" r="4"/></g>',
+ plantain:'<path d="M18 33V4" stroke="#416b3d" stroke-width="2"/><g fill="#78964d"><ellipse cx="11" cy="22" rx="5" ry="12" transform="rotate(-30 11 22)"/><ellipse cx="25" cy="20" rx="5" ry="13" transform="rotate(30 25 20)"/></g><path d="M18 4v10" stroke="#a58b55" stroke-width="4"/>',
+ nettle:'<path d="M18 33V4" stroke="#416b3d" stroke-width="2"/><g fill="#588749"><path d="M17 25 4 21l3-4-4-5 7-1 7 9M19 20l13-5-4-3 3-5-7 1-5 7M17 33 4 29l4-3-3-5 8 1 4 6M19 30l13-5-4-3 3-5-7 1-5 7"/></g>',
+
  linenCloth:'<ellipse cx="18" cy="31" rx="16" ry="3" fill="#344b3b" opacity=".2"/><path d="m3 25 5-17 24 2-3 21-21 2z" fill="#a58f65" stroke="#6e674d"/><path d="m4 23 5-19 24 3-5 20-18 3z" fill="#d1c096" stroke="#8f7c57"/><path d="m9 5 21 3-4 15-16 4-5-4z" fill="#e7dab6"/><path d="m10 9 18 2M9 13l18 2M8 17l18 2M7 21l17 2m-9-16-4 19m9-18-4 17m9-16-4 15" fill="none" stroke="#ae9b70" stroke-width=".6" opacity=".7"/><path d="m10 28 18-3-1 4-15 3-5-4z" fill="#c0ab7d"/><path d="m8 29-1 3m5-2v4m4-4v3m4-4v3m4-5v4" stroke="#ddcba2" stroke-width="1"/>',
  glassJar:'<ellipse cx="18" cy="32" rx="13" ry="3" fill="#344b3b" opacity=".2"/><path d="M10 8h16v5l4 4v13q-12 6-24 0V17l4-4z" fill="#a6c3b5" fill-opacity=".45" stroke="#d3e0c6" stroke-width="1.4"/><path d="M11 10v5l-3 4v9q9 4 19 0V18l-3-4v-4z" fill="#d5e6d3" opacity=".18"/><path d="M10 6q8-3 16 0v4q-8 3-16 0z" fill="#8c9d8c" stroke="#556e65"/><ellipse cx="18" cy="6" rx="8" ry="2.5" fill="#c1cdb2"/><path d="M10 11q8 3 16 0M9 28q9 4 18 0" stroke="#dce8d2" fill="none"/><path d="M11 17v9M14 18v4" stroke="#f4f4de" stroke-width="2" stroke-linecap="round" opacity=".9"/><path d="M26 18v9" stroke="#658b80" stroke-width="1"/>',
 

@@ -84,7 +84,8 @@ export class FarmerArt{
  private drawTool(){
   const g=this.tool;g.clear();const r=(x:number,y:number,w:number,h:number,c:number)=>{g.fillStyle(c);g.fillRect(x,y,w,h);};
   const name=this.action>0?this.actionTool:this.equipped;
-  if(heavyTool(name)){const length=this.action>0?29+11*workPose(1,1,this.action).extension:29;this.toolEnd=length;
+  if(name==='stick'){this.toolEnd=36;g.lineStyle(3,0x785537).strokePoints([{x:0,y:5},{x:1,y:31},{x:5,y:37}]);g.lineStyle(1,0xcfad77).lineBetween(-1,7,0,30);}
+  else if(heavyTool(name)){const length=this.action>0?29+11*workPose(1,1,this.action).extension:29;this.toolEnd=length;
    r(0,8,2,length-7,0x654b32);r(0,8,1,length-8,0xc6a46b);
    if(name==='hoe'){r(-2,length-4,9,3,0x8faaa2);r(4,length-3,3,6,0x536e69);}
    if(name==='axe'){g.fillStyle(0x91aaa4).fillTriangle(1,length-6,11,length-9,9,length+2);r(8,length-6,2,6,0xd2d9c4);}

@@ -116,7 +116,7 @@ export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),g
 
  // Clearly legible fallen branches, with bark, cut ends and ground shadows.
  const fence=(x:number,y:number,count:number)=>{for(let i=0;i<count;i++){rect(x+i*25,y+8,25,4,0x9b8560);rect(x+i*25,y+18,25,3,0x796c4d);line(x+i*25,y+8,x+(i+1)*25,y+8,0xbca77a);}for(let i=0;i<=count;i++){poly([x+i*25,y+28,x+i*25,y+2,x+i*25+2,y-1,x+i*25+5,y+2,x+i*25+5,y+28],0x6f6047);rect(x+i*25+1,y+3,2,23,0xac956b);}};
- fence(28,499,4);fence(211,515,9);fence(433,176,4);fence(691,221,3);rect(132,492,6,37,0x715436);rect(201,505,6,37,0x715436);rect(121,504,4,25,0x947348);
+ fence(28,499,4);fence(211,515,9);rect(132,492,6,37,0x715436);rect(201,505,6,37,0x715436);rect(121,504,4,25,0x947348);
  for(let i=0;i<110;i++){const x=45+random()*710,y=275+random()*265;if(Math.abs(x-215)<65||x>480&&y>340||x>325&&x<495&&y<380)continue;tuft(x,y,.6+random()*.4);if(i%4===0){line(x,y-3,x,y-9,0x4e7149);oval(x,y-10,4,3,i%2?0xd9cfac:0xb5a5bd);}}
  // Bake the static landscape once; its thousands of marks become one draw per frame.
  const terrain=scene.add.renderTexture(left,top,width,height).setOrigin(0).setDepth(-1);
