@@ -366,7 +366,7 @@ class Farm extends Phaser.Scene {
  }
 
  private showPreviewEnd(){
-  showDialogue('Itt tart most a történet.','Elérted a játék jelenlegi változatának végét. A következő napot egy későbbi frissítésben folytathatod. Köszönöm, hogy játszottál! 🙂','FOLYTATÁS KÖVETKEZIK');
+  showDialogue('Itt tart most a történet.','Elérted a játék jelenlegi változatának végét. A történet egy későbbi frissítésben folytatódik, de addig is szabadon gondozhatod a farmodat. Köszönöm, hogy játszottál! 🙂','FOLYTATÁS KÖVETKEZIK');
   dialogue.dataset.presentation='development-end';document.querySelector<HTMLElement>('#preview-end-panel')!.hidden=false;document.querySelector<HTMLButtonElement>('#dialogue-close')!.hidden=true;document.querySelector<HTMLButtonElement>('#export-save')!.hidden=false;
  }
  private async acknowledgeStoryEnd(){

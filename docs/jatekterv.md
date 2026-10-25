@@ -408,7 +408,7 @@ Az új farm elnevezésekor és a Menü → Történet felületen az alábbi köz
 
 - A bevezetőből eltűnt az „EGY ÚJ KEZDET” és a „Végre megérkeztem.” címsor. A farmnév mezőben nincs helykitöltő, a „Farm neve” címke megmarad. Az indítógomb felirata „Tovább”. A Történet menüpont ugyanezt a cím nélküli bevezetőt mutatja.
 
-- A fejlesztési határ véglegesített üzenete: „FOLYTATÁS KÖVETKEZIK” / „Itt tart most a történet.” / „Elérted a játék jelenlegi változatának végét. A következő napot egy későbbi frissítésben folytathatod. Köszönöm, hogy játszottál! 🙂”
+- A fejlesztési határ véglegesített üzenete: „FOLYTATÁS KÖVETKEZIK” / „Itt tart most a történet.” / „Elérted a játék jelenlegi változatának végét. A történet egy későbbi frissítésben folytatódik, de addig is szabadon gondozhatod a farmodat. Köszönöm, hogy játszottál! 🙂”
 
 
 ## Farmtörlés és a saját tesztfarm
@@ -591,7 +591,7 @@ A változat végét többé nem a 15. nap lezárása jelzi. A jelenlegi történ
 
 **Itt tart most a történet.**
 
-Elérted a játék jelenlegi változatának végét. A következő napot egy későbbi frissítésben folytathatod. Köszönöm, hogy játszottál! 🙂
+Elérted a játék jelenlegi változatának végét. A történet egy későbbi frissítésben folytatódik, de addig is szabadon gondozhatod a farmodat. Köszönöm, hogy játszottál! 🙂
 
 A korábbi Vissza a főmenübe gomb helyén **Tovább játszom** szerepel; bezárja az ablakot, és ugyanazon a farmon folytatható a játék. A nyugtázás farmonként mentődik. Korábban már elküldött mintával rendelkező mentésnél egyszer ugyanígy megjelenik az értesítés. Az üzenet szövegét a folytatható játékmenet ellenére sem írjuk át. A nyári tartalom nincs megnyitva: a kijelzett naptár legfeljebb Tavasz 15., miközben a belső napok, növekedés, visszanövés, szállítás és tóélet továbbhaladnak. A Teszt farm az Erdőszéli birtokhoz hasonló tesztmentés, kijelzett naptára Tavasz 15.; a mentést nem indítjuk újra és a tárgyait nem módosítjuk.
 
