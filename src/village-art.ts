@@ -69,7 +69,20 @@ export function drawVillage(scene:Phaser.Scene){
  for(const x of [753,825]){rect(x-4,1005,49,51,0xf0dfb7);rect(x,1009,41,43,0x6a9d96);line(x+20,1009,x+20,1052,0xe7dabc,3);line(x,1030,x+41,1030,0xe7dabc,3);line(x+3,1012,x+15,1026,0xc5d7be,2);rect(x-6,1057,53,6,0x796e4d);}
  rect(680,1025,56,6,0x638776);line(680,1025,736,1025,0xb8c4a2,2);label(780,987,shopNames.fishShop,12);
  oval(865,1107,33,16,0x587d6d);rect(849,1086,32,21,0x947d54);oval(865,1086,32,12,0x5b9595);oval(863,1084,24,6,0x92c4b6);
- const c=layout.cottage;house(c.x,c.y,c.w,c.h,0x9b7155,0xd4c1a1);flowers(331,1343);flowers(446,1344);
+ // A small village-edge flower garden replaces the unused house.
+ oval(385,1298,133,55,0x627c45,.42);oval(382,1289,120,39,0x8e9b59,.6);
+ for(let i=0;i<15;i++){const x=326+i*8,y=1288+Math.sin(i*.43)*12;oval(x,y,8,4,0x9d9979);line(x-2,y-1,x+2,y-1,0xc8b893);}
+ for(const [x,y]of [[344,1270],[367,1293],[398,1264],[416,1285],[443,1276]]){for(let i=0;i<6;i++){const xx=x+(i%3-1)*6,yy=y-Math.floor(i/3)*6;line(xx,yy+6,xx,yy-3,0x4e7441);oval(xx,yy-4,5,4,[0xd1a0a4,0xe1ca85,0xc3bdcf][i%3]);}}
+ // Window boxes, climbing foliage and distinct wares make the two shops personal.
+ for(const [x,y]of [[541,912],[640,912]])flowers(x,y);
+ for(let i=0;i<9;i++){const x=515+Math.sin(i*.8)*4,y=874+i*6;line(x,y,x+3,y+8,0x557345);oval(x-4,y,7,4,0x6c8c4c);oval(x+5,y+4,7,4,0x7f9958);if(i%3===0)oval(x-4,y-2,4,4,0xc7aaa0);}
+ // Seedling trays and a terracotta watering jug beside Leo's entrance.
+ rect(482,965,20,8,0x796044);for(let i=0;i<4;i++){rect(484+i*4,963,3,3,0x3d4d33);line(485+i*4,964,484+i*4,959,0x6e994f);}oval(489,942,13,15,0xb88457);oval(489,934,10,4,0xd2a16a);line(494,938,502,933,0xb88457,3);
+ // Fish silhouettes and aquatic plants behind Annie's glazing.
+ for(const x of [753,825]){for(let i=0;i<3;i++){line(x+5+i*5,1048,x+4+i*5,1038-i%2*5,0x436f52,2);}oval(x+27,1042,10,4,0xdaa166);poly([x+32,1042,x+36,1039,x+36,1045],0xd0aa72);oval(x+10,1021,8,3,0xe3ce97);poly([x+6,1021,x+2,1018,x+2,1024],0xcabd81);}
+ flowers(889,1088);rect(904,1044,2,27,0x827258);line(898,1044,911,1044,0xa39374);for(let i=0;i<3;i++){line(900+i*4,1045,900+i*4,1055+i%2*4,0xb9b393);oval(900+i*4,1057+i%2*4,3,5,0xd5c9a7);}
+ // A second village lantern frames the southern edge of the square.
+ rect(632,1187,4,40,0x615940);rect(626,1180,17,18,0xd9c994);rect(624,1178,21,3,0x5b6550);poly([623,1178,634,1168,646,1178],0x566650);
  // Diverse forest silhouettes: broad oak, silver birch and fir.
  const tree=(x:number,y:number,kind:number,s=1)=>{if(woodlandTreeClear(x,y,s,kind))drawWoodlandTree(g,random,x,y,kind,s);};
  paintForest(g,random);
@@ -85,11 +98,11 @@ export function drawVillage(scene:Phaser.Scene){
  // Supported wooden signs at the road and its forest fork, rather than text in grass.
  const sign=(postX:number,groundY:number,left:number,top:number,width:number,text:string,direction:'left'|'right'|'down')=>{
   oval(postX+4,groundY+3,19,7,0x35553a,.22);rect(postX-2,top+10,5,groundY-top-8,0x6b5438);rect(postX-1,top+12,2,groundY-top-10,0xac8858);
-  const arrow=direction==='down'?[left,top,left+width,top,left+width,top+18,left+width/2,top+33,left,top+18]:direction==='right'?[left,top,left+width-10,top,left+width,top+11,left+width-10,top+22,left,top+22]:[left+10,top,left+width,top,left+width,top+22,left+10,top+22,left,top+11];
-  poly(arrow,0x604f35);poly(arrow.map((v,i)=>v+(i%2? -1:0)),0xa98a59);line(left+12,top+3,left+width-12,top+3,0xcfb17b);if(direction!=='down')line(left+12,top+19,left+width-12,top+19,0x735b3c);oval(postX,top+6,2,2,0x5c5b45);oval(postX,top+16,2,2,0x5c5b45);
-  const title=scene.add.text(left+width/2+(direction==='left'?3:direction==='right'?-3:0),top+11,text,{fontFamily:'Georgia,serif',fontSize:'9px',color:'#fff0c8',resolution:2}).setOrigin(.5).setDepth(5);labels.push(title);
+  const arrow=direction==='down'?[left,top,left+width,top,left+width,top+51,left+width/2,top+65,left,top+51]:direction==='right'?[left,top,left+width-10,top,left+width,top+11,left+width-10,top+22,left,top+22]:[left+10,top,left+width,top,left+width,top+22,left+10,top+22,left,top+11];
+  poly(arrow,0x604f35);poly(arrow.map((v,i)=>v+(i%2? -1:0)),0xa98a59);if(direction==='down'){line(left+3,top+4,left+3,top+48,0xcfb17b);line(left+width-3,top+4,left+width-3,top+48,0x735b3c);}else line(left+12,top+3,left+width-12,top+3,0xcfb17b);if(direction!=='down')line(left+12,top+19,left+width-12,top+19,0x735b3c);oval(postX,top+6,2,2,0x5c5b45);oval(postX,top+16,2,2,0x5c5b45);
+  const title=scene.add.text(left+width/2+(direction==='left'?3:direction==='right'?-3:0),top+(direction==='down'?25:11),text,{fontFamily:'Georgia,serif',fontSize:'9px',color:'#fff0c8',resolution:2}).setOrigin(.5).setRotation(direction==='down'?Math.PI/2:0).setDepth(5);labels.push(title);
  };
- sign(235,673,208,608,54,'Falu','down');sign(292,810,220,759,88,'Erdei ösvény','left');
+ sign(235,696,226,608,18,'Falu','down');sign(292,810,220,759,88,'Erdei ösvény','left');
 
  rect(416,930,4,42,0x615940);rect(409,925,18,18,0xd9c994);rect(408,924,20,3,0x5b6550);poly([406,924,418,913,430,924],0x566650);
  // This scenery is static too; keep tree canopies and paving out of the per-frame geometry pass.

@@ -602,3 +602,21 @@ A farmkapunál az ösvény egyenes folytatással csatlakozik, egymásra rajzolt 
 ### Erdei sűrűség és apró visszajelzések
 
 A vízminta sikeres megőrzése után a mintavételi gomb helyén egyszerű státuszszöveg jelenik meg: „A tóvízminta megőrizve”, gombkeret és gombműködés nélkül. A farm alatti erdős sáv és az erdei mellékút ismét sűrűbb: a fák lombjának alakjához igazított távolság és a közeli szabad helyre áthelyezett fák szegélyezik a tisztán látható ösvényt. A Falu feliratú fa irányjelző lefelé mutat.
+
+### Hangulatosabb falu és erdőbejárat
+
+A funkció nélküli falusi kis épület megszűnik, az ütközése is; helyét virágos faluszéli kertrész veszi át. A Faiskola virágos ablakokat, falra futó növényzetet, palántatálcát és öntözőkancsót kap. A Kertitó Szaküzlet kirakatában vízinövények és halsziluettek látszanak; mellette virág és apró függődísz van. A tér szellős marad, nappal három kis madár ugrál/repül a szökőkút körül, esőben és éjszaka nem jelennek meg. A lámpák és a boltok ablakai este meleg fényt adnak. A szökőkút vízgyűrűi megmaradnak.
+
+Az erdei bejárat nyugati folytatása az ösvény két oldalán sűrűbb fákat kap, így befelé nem egy nagy tisztás következik. A gyűjthető növényeket és a gyalogos ösvényt szabadon hagyjuk. A Falu jelzőtáblája keskeny, hosszúkás deszkanyíl, lefelé fordítva.
+
+### A birtokon található fa és kő megjelenése
+
+A faanyagok között leszakadt, leveles ágak, kis rönkrakások és korhadt kerítésből származó, szögnyomos deszkamaradványok jelennek meg. A kövek változó méretű, talajba süllyedő, mohás kőcsoportok. A szerszámigény, a nyersanyaghozam és a háromnapos megújulás nem változik. A meglévő mentések tárgyazonosítói és begyűjtési állapotai megmaradnak.
+
+### Evés és életerő
+
+A Készletben az eper, a mézbogyó és az áfonya Eszem gombbal fogyasztható. Egy darab fogy, és egy szívet tölt vissza, legfeljebb ötig. Tele életerőnél a művelet inaktív, nem fogy el étel. Evés után Sam 1,2 másodpercre megáll, nem ugrik és nem támad; a harc és az idő továbbhalad, tehát biztonságos pillanatot érdemes választani. A visszatöltést egy rövid, felfelé úszó szívjelzés mutatja. Az életerő a mentés része; az erdő elhagyása és újratöltés nem gyógyít automatikusan. Az alvás teljesen feltölti. A régi, életerőmező nélküli mentés öt szívvel indul. Vereségnél továbbra is biztonságosan hazakerül, tárgy- és aranyveszteség nélkül.
+
+### Ismerősök megjelenése és Noah foglalkozása
+
+Noah leírása pontosan: „Biológus, Sam korábbi munkatársa a laborból.” Leo arca teljesen új rajz: barna haj, rendezett szakáll, formált állkapocs, kifejező szemek és látható, barátságos mosoly. Annie hosszú, szőke hajat kap, a kalapja megmarad. A bolti figurák és a portrék ugyanabból a rajzból készülnek. Sam megjelenése változatlan.

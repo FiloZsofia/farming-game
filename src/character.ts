@@ -32,6 +32,8 @@ export class FarmerArt{
   this.tool=scene.add.graphics();this.rightArm.add(this.tool);this.equip('hoe');
    return;
   }
+  // Annie's long blond hair falls behind her shoulders; Sam's artwork is unchanged.
+  const backHair=scene.add.graphics();this.root.add(backHair);backHair.fillStyle(0xb89556).fillRoundedRect(-9,-47,18,29,7);backHair.fillStyle(0xd9bb78).fillRoundedRect(-8,-44,16,25,5);backHair.lineStyle(1,0xf1d69a).lineBetween(-6,-38,-6.5,-22).lineBetween(6,-38,6.5,-22);backHair.lineStyle(.7,0xb29052).lineBetween(-3,-32,-3,-20).lineBetween(3,-32,3,-20);
   const part=(parent:Phaser.GameObjects.Container,x:number,y:number,w:number,h:number,c:number)=>{const p=scene.add.graphics();p.fillStyle(c);p.fillEllipse(x,y,w,h);parent.add(p);return p;};
   const leg=(x:number)=>{const c=scene.add.container(x,-16);this.root.add(c);part(c,0,5,6,12,neighbor?0x596b78:0x526c43);part(c,-1,5,1,10,0x7c925d);part(c,0,13,6,5,0x654d39);part(c,1,15,6,2,0x3c3d30);return c;};
   this.leftLeg=leg(-3.5);this.rightLeg=leg(3.5);
@@ -52,11 +54,11 @@ export class FarmerArt{
   const tail=scene.add.graphics();tail.fillStyle(0x61422e);tail.fillEllipse(3,-3,8,8);tail.fillEllipse(7,3,7,12);tail.fillStyle(0x96683f);tail.fillEllipse(3,-4,5,5);tail.fillEllipse(6,2,3,8);this.pony.add(tail);this.pony.visible=!neighbor;
   this.head=scene.add.container(0,-40);this.root.add(this.head);
   const face=scene.add.graphics();this.head.add(face);
-  face.fillStyle(0x624631);face.fillEllipse(0,-1,neighbor?17:12.8,18);
+  face.fillStyle(0xb89556);face.fillEllipse(0,-1,neighbor?17:12.8,18);
   face.fillStyle(0xe8b68d);face.fillEllipse(0,1,neighbor?15:11.8,16);
   face.fillStyle(0xf3cba4);face.fillEllipse(-.6,1,neighbor?13:10.2,14.5);
-  face.fillStyle(0x725035);face.fillEllipse(0,-7,neighbor?16:12.5,6);face.fillEllipse(neighbor?-7:-5.7,-3,1.6,6);
-  face.fillStyle(0x997047);face.fillEllipse(-1,-7.5,neighbor?10:8,2.4);
+  face.fillStyle(0xd9bb78);face.fillEllipse(0,-7,neighbor?16:12.5,6);face.fillEllipse(neighbor?-7:-5.7,-3,1.6,6);
+  face.fillStyle(0xf0d59a);face.fillEllipse(-1,-7.5,neighbor?10:8,2.4);
   for(const x of [-2.6,2.6]){
    face.fillStyle(0xfff5df);face.fillEllipse(x,.5,3,3.4);
    face.fillStyle(0x61704b);face.fillEllipse(x+.15,.7,1.9,2.7);
@@ -120,7 +122,7 @@ export class FarmerArt{
 
 // The contact portrait is rendered from the same character, including her outfit and hat.
 export function anniePortrait(scene:Phaser.Scene){
- const image=document.createElement('img');image.className='item-icon';image.alt='Annie arcképe kalappal';
+ const image=document.createElement('img');image.className='item-icon';image.alt='Annie arcképe hosszú, szőke hajjal';
  const art=new FarmerArt(scene,true);art.equip('none');art.root.setPosition(40,200).setScale(4);
  const portrait=scene.add.renderTexture(0,0,80,80).setVisible(false);
  portrait.draw(art.root);art.root.destroy();

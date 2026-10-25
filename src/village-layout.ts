@@ -1,4 +1,4 @@
-import {forestBlocked} from './forest';
+import {forestBlocked,forestPlants} from './forest';
 import {farmLayout} from './layout';
 import {inHome,homeBlocked} from './home';
 import {inWorkshop,WORKSHOP_ORIGIN} from './research';
@@ -8,7 +8,6 @@ export const WORLD_WIDTH=1000;
 export const villageLayout={
  nursery:{x:510,y:840,w:165,h:106,door:{x:591,y:954},entrance:{x:580,y:898,w:29,h:65}},
  fishShop:{x:665,y:960,w:230,h:128,door:{x:708,y:1100},entrance:{x:690,y:1030,w:35,h:76}},
- cottage:{x:315,y:1230,w:146,h:104},
  square:{x:475,y:1080,rx:181,ry:115},
  nurserySaplings:[{x:518,y:958},{x:542,y:958},{x:646,y:958},{x:670,y:958}],
  benches:[{id:'west',angle:-2.35},{id:'east',angle:-.55}],
@@ -39,8 +38,14 @@ for(const original of candidates){
  if(t.x>175&&t.x<285&&t.y>620&&t.y<735||t.x>260&&t.y>1010)continue;
  forestTrees.push(t);break;}
 }
-const buildings:Box[]=[villageLayout.nursery,villageLayout.fishShop,villageLayout.cottage];
+// The western entrance grows denser toward the woodland, on both sides of its narrow trail.
+for(let row=0;row<7;row++)for(let column=0;column<10;column++){
+ const t={x:-365+column*47+(row%2)*16,y:835+row*55,kind:(row+column)%3};
+ if(woodlandTreeClear(t.x,t.y,1,t.kind)&&forestPlants.every(p=>Math.hypot(p.x-t.x,p.y-t.y)>42)&&villageLayout.bushes.every(p=>Math.hypot(p.x-t.x,p.y-t.y)>38)&&[...villageTrees,...forestTrees].every(p=>Math.hypot(p.x-t.x,p.y-t.y)>34))forestTrees.push(t);
+}
+const buildings:Box[]=[villageLayout.nursery,villageLayout.fishShop];
 export function villageBlocked(x:number,y:number){
+ if(forestTrees.some(t=>Math.hypot((x-t.x)/12,(y-t.y)/9)<1))return true;
  if(x<22&&y>=695&&y<=1340)return forestBlocked(x,y);
  if(x<22||x>WORLD_WIDTH-22||y<600||y>1394)return true;
  if(buildings.some(b=>x+7>b.x&&x-7<b.x+b.w&&y+3>b.y&&y-4<b.y+b.h))return true;

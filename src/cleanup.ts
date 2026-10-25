@@ -25,7 +25,7 @@ export const debris=[...originalDebris,...expandedDebris];
 
 export type Debris={id:typeof debris[number]['id'];kind:'rock'|'branch'|'weed';x:number;y:number;scale:number};
 export const neededTool={rock:'pickaxe',branch:'axe',weed:'hand'} as const;
-export const debrisNames={rock:'Kő',branch:'Faág',weed:'Gaz'};
+export const debrisNames={rock:'Kő',branch:'Faanyag',weed:'Gaz'};
 export function hasPlantAt(item:Debris,garden:Garden){return [...garden.plots.keys()].some(key=>{const [x,y]=key.split(',').map(Number);return Math.abs(x+8-item.x)<(item.kind==='rock'?24:20)&&Math.abs(y+8-item.y)<20;});}
 export const activeDebris=(state:Clearing,garden:Garden)=>debris.map(item=>({...item,...state.positions[item.id]})).filter(item=>state.removed[item.id]===undefined&&!hasPlantAt(item,garden));
 export function debrisAt(state:Clearing,garden:Garden,x:number,y:number){return activeDebris(state,garden).find(item=>Math.hypot(item.x-x,item.y-y)<(item.kind==='weed'?15:24));}
