@@ -584,7 +584,7 @@ class Farm extends Phaser.Scene {
     const card=document.createElement('div');card.className=`inventory-card crop-${crop}`;card.dataset[seeds?'inventorySeed':'inventoryCrop']=crop;if(!seeds&&Object.prototype.hasOwnProperty.call(rewardFruits,crop))card.dataset.inventoryFruit=crop;
     const name=document.createElement('span');name.textContent=seeds?`${cropNames[crop]} ${this.materialName(crop)}`:cropNames[crop];
     const amount=document.createElement('strong');amount.textContent=String(items[crop]);card.append(seeds?seedIcon(crop):itemIcon(crop),name,amount);grid.append(card);
-    if(!seeds&&['strawberry','honeyberry','blueberry'].includes(crop)){const eat=document.createElement('button');eat.type='button';eat.textContent='Eszem';eat.dataset.eat=crop;eat.setAttribute('aria-label',`${cropNames[crop]} elfogyasztása`);eat.disabled=(this.travel.forest?.health??5)>=5;eat.onclick=()=>void this.eatBerry(crop as 'strawberry'|'honeyberry'|'blueberry');card.append(eat);}
+    if(!seeds&&(this.travel.forest?.health??5)<5&&['strawberry','honeyberry','blueberry'].includes(crop)){const eat=document.createElement('button');eat.type='button';eat.textContent='Eszem';eat.dataset.eat=crop;eat.setAttribute('aria-label',`${cropNames[crop]} elfogyasztása`);eat.onclick=()=>void this.eatBerry(crop as 'strawberry'|'honeyberry'|'blueberry');card.append(eat);}
    }
   }
   const materials=document.querySelector<HTMLElement>('#inventory-materials')!;materials.replaceChildren();

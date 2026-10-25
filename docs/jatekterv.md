@@ -615,7 +615,7 @@ A faanyagok között leszakadt, leveles ágak, kis rönkrakások és korhadt ker
 
 ### Evés és életerő
 
-A Készletben az eper, a mézbogyó és az áfonya Eszem gombbal fogyasztható. Egy darab fogy, és egy szívet tölt vissza, legfeljebb ötig. Tele életerőnél a művelet inaktív, nem fogy el étel. Evés után Sam 1,2 másodpercre megáll, nem ugrik és nem támad; a harc és az idő továbbhalad, tehát biztonságos pillanatot érdemes választani. A visszatöltést egy rövid, felfelé úszó szívjelzés mutatja. Az életerő a mentés része; az erdő elhagyása és újratöltés nem gyógyít automatikusan. Az alvás teljesen feltölti. A régi, életerőmező nélküli mentés öt szívvel indul. Vereségnél továbbra is biztonságosan hazakerül, tárgy- és aranyveszteség nélkül.
+A Készletben az eper, a mézbogyó és az áfonya Eszem gombbal fogyasztható. Egy darab fogy, és egy szívet tölt vissza, legfeljebb ötig. Tele életerőnél az Eszem gomb nem jelenik meg; sérülés után újra látható. Nem fogy el étel tele életerőnél. Evés után Sam 1,2 másodpercre megáll, nem ugrik és nem támad; a harc és az idő továbbhalad, tehát biztonságos pillanatot érdemes választani. A visszatöltést egy rövid, felfelé úszó szívjelzés mutatja. Az életerő a mentés része; az erdő elhagyása és újratöltés nem gyógyít automatikusan. Az alvás teljesen feltölti. A régi, életerőmező nélküli mentés öt szívvel indul. Vereségnél továbbra is biztonságosan hazakerül, tárgy- és aranyveszteség nélkül.
 
 ### Ismerősök megjelenése és Noah foglalkozása
 
