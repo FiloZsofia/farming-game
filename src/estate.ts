@@ -20,14 +20,14 @@ export const emptyExtras=():ExtraCounts=>({cherry:0,plum:0,apple:0,pear:0,roe6:0
 export const extraValue=(items:ExtraCounts)=>extras.reduce((sum,k)=>sum+items[k]*extraPrices[k],0);
 export const validExtras=(v:unknown):v is ExtraCounts=>!!v&&typeof v==='object'&&extras.every(k=>Number.isSafeInteger((v as ExtraCounts)[k])&&(v as ExtraCounts)[k]>=0&&(v as ExtraCounts)[k]<=999999);
 export type OrchardTree={kind:TreeKind;x:number;y:number;planted:number;last:number;fruit:number};
-export type PondPlace={kind:'lily'|'reed'|'duckNest';x:number;y:number;day:number};
+export type PondPlace={kind:'lily'|'reed'|'duckNest';x:number;y:number;day:number;lastHarvest?:number};
 export type Estate={duckPurchaseDay:number|null;duckArrivalDay:number|null;duckArrivalPending:boolean;goods:Record<Good,number>;produce:ExtraCounts;shipping:ExtraCounts;trees:OrchardTree[];pond:PondPlace[];fish:{goldfish:number;carp:number};roe:ExtraCounts;eggs:number;roeDay:number;eggDay:number};
 export const createEstate=():Estate=>({duckPurchaseDay:null,duckArrivalDay:null,duckArrivalPending:false,goods:Object.fromEntries(goods.map(k=>[k,0])) as Record<Good,number>,produce:emptyExtras(),shipping:emptyExtras(),trees:[],pond:[],fish:{goldfish:0,carp:0},roe:emptyExtras(),eggs:0,roeDay:0,eggDay:0});
 const count=(n:number)=>Number.isSafeInteger(n)&&n>=0&&n<=999999;
 export function validEstate(v:unknown,day:number):v is Estate{
  if(!v||typeof v!=='object')return false;const e=v as Estate;
  const date=(n:number)=>Number.isSafeInteger(n)&&n>=0&&n<=day;
- return (e.duckPurchaseDay===null||date(e.duckPurchaseDay)&&e.duckPurchaseDay>=1)&&(e.duckArrivalDay===null||date(e.duckArrivalDay)&&e.duckArrivalDay>=1)&&typeof e.duckArrivalPending==='boolean'&&(!e.duckArrivalPending||e.duckArrivalDay!==null)&&!!e.goods&&goods.every(k=>count(e.goods[k]))&&validExtras(e.produce)&&validExtras(e.shipping)&&validExtras(e.roe)&&!!e.fish&&count(e.fish.goldfish)&&count(e.fish.carp)&&count(e.eggs)&&date(e.roeDay)&&date(e.eggDay)&&Array.isArray(e.trees)&&e.trees.length<=200&&e.trees.every(t=>treeKinds.includes(t.kind)&&Number.isFinite(t.x)&&t.x>=farmBounds.left+24&&t.x<=farmBounds.right-24&&Number.isFinite(t.y)&&t.y>=farmBounds.top+32&&t.y<=576&&date(t.planted)&&t.planted>=1&&date(t.last)&&count(t.fruit))&&Array.isArray(e.pond)&&e.pond.length<=200&&e.pond.every(p=>['lily','reed','duckNest'].includes(p.kind)&&Number.isFinite(p.x)&&Number.isFinite(p.y)&&date(p.day)&&p.day>=1)&&e.pond.filter(p=>p.kind==='duckNest').length<=1&&(e.duckArrivalDay===null||e.pond.some(p=>p.kind==='duckNest'&&e.duckArrivalDay!>=p.day+3));
+ return (e.duckPurchaseDay===null||date(e.duckPurchaseDay)&&e.duckPurchaseDay>=1)&&(e.duckArrivalDay===null||date(e.duckArrivalDay)&&e.duckArrivalDay>=1)&&typeof e.duckArrivalPending==='boolean'&&(!e.duckArrivalPending||e.duckArrivalDay!==null)&&!!e.goods&&goods.every(k=>count(e.goods[k]))&&validExtras(e.produce)&&validExtras(e.shipping)&&validExtras(e.roe)&&!!e.fish&&count(e.fish.goldfish)&&count(e.fish.carp)&&count(e.eggs)&&date(e.roeDay)&&date(e.eggDay)&&Array.isArray(e.trees)&&e.trees.length<=200&&e.trees.every(t=>treeKinds.includes(t.kind)&&Number.isFinite(t.x)&&t.x>=farmBounds.left+24&&t.x<=farmBounds.right-24&&Number.isFinite(t.y)&&t.y>=farmBounds.top+32&&t.y<=576&&date(t.planted)&&t.planted>=1&&date(t.last)&&count(t.fruit))&&Array.isArray(e.pond)&&e.pond.length<=200&&e.pond.every(p=>['lily','reed','duckNest'].includes(p.kind)&&Number.isFinite(p.x)&&Number.isFinite(p.y)&&date(p.day)&&p.day>=1&&(p.lastHarvest===undefined||p.kind==='reed'&&date(p.lastHarvest)&&p.lastHarvest>=p.day))&&e.pond.filter(p=>p.kind==='duckNest').length<=1&&(e.duckArrivalDay===null||e.pond.some(p=>p.kind==='duckNest'&&e.duckArrivalDay!>=p.day+3));
 }
 export function buyGood(estate:Estate,gold:number,good:Good,amount=1,day=1){
  if(!goods.includes(good)||!Number.isSafeInteger(amount)||amount<1||amount>999||estate.goods[good]+amount>999999||gold<goodPrices[good]*amount)return null;
@@ -59,3 +59,6 @@ export function collectEstate(estate:Estate,x:number,y:number,day:number){
  if(next.eggs&&next.produce.duckEgg+next.eggs<=999999){next.produce.duckEgg+=next.eggs;next.eggs=0;found=true;}
  return found?next:null;
 }
+
+export const reedReady=(reed:PondPlace,day:number)=>reed.kind==='reed'&&day-(reed.lastHarvest??reed.day)>=3;
+export function cutReed(estate:Estate,index:number,day:number){const reed=estate.pond[index];if(!reed||!reedReady(reed,day))return null;const next=structuredClone(estate);next.pond[index].lastHarvest=day;return next;}

@@ -6,22 +6,12 @@
   <div id="game" aria-label="Bejárható farm"></div>
   <header class="hud"><div class="title-plaque"><span class="eyebrow" id="location-label">EGY ÚJ KEZDET</span><h1>A farmod</h1></div><div class="season"><span id="weather-label" aria-label="Mai időjárás"></span><span id="season-name">Tavasz</span> · <b id="day-number">1.</b> nap<span id="clock-label">Délelőtt · 0:00</span><span class="gold-line"><b id="gold">0</b> gold</span><span id="save-state" role="status">Mentés betöltése…</span></div></header>
   <div class="actions"><button id="menu" aria-label="Menü megnyitása">☰ Menü</button></div>
-  <section id="toolbar" aria-label="Eszközök és ültetőanyagok">
+  <section id="toolbar" aria-label="Eszközök">
     <button data-tool="hoe" aria-pressed="true"><span>⌁</span>Kapa<small>1</small></button>
     <button data-tool="water" aria-pressed="false"><span>♧</span>Öntözés<small>2</small></button>
-    <button data-tool="radish" aria-pressed="false"><span>Retek</span><b data-count="radish">4</b><small>3</small></button>
-    <button data-tool="potato" aria-pressed="false"><span>Burgonya</span><b data-count="potato">4</b><small>4</small></button>
-    <button data-tool="pea" aria-pressed="false"><span>Borsó</span><b data-count="pea">4</b><small>5</small></button>
-    <button data-tool="strawberry" aria-pressed="false" hidden><span>Eper</span><b data-count="strawberry">0</b></button>
-    <button data-tool="honeyberry" aria-pressed="false" hidden><span>Mézbogyó</span><b data-count="honeyberry">0</b></button>
-    <button data-tool="blueberry" aria-pressed="false" hidden><span>Áfonya</span><b data-count="blueberry">0</b></button>
-    <button data-tool="carrot" aria-pressed="false" hidden><span>Sárgarépa</span><b data-count="carrot">0</b></button>
-    <button data-tool="lettuce" aria-pressed="false" hidden><span>Saláta</span><b data-count="lettuce">0</b></button>
-    <button data-tool="onion" aria-pressed="false" hidden><span>Hagyma</span><b data-count="onion">0</b></button>
-    <button data-tool="wildflower" aria-pressed="false" hidden><span>Vadvirág magok</span><b data-count="wildflower">0</b></button>
-    <button data-tool="harvest" aria-pressed="false"><span>Gyűjtés</span><small>6</small></button>
-    <button data-tool="crowbar" aria-pressed="false"><span>Bontóvas</span><small>8</small></button>
-    <button data-tool="stick" aria-pressed="false" hidden><span>Túrabot</span></button>
+    <button data-tool="harvest" aria-pressed="false"><span>Gyűjtés</span><small>3</small></button>
+    <button data-tool="crowbar" aria-pressed="false"><span>Bontóvas</span><small>4</small></button>
+    <button data-tool="stick" aria-pressed="false" hidden><span>Túrabot</span><small>5</small></button>
   </section>
   <aside id="seed-find" role="status" aria-live="polite" hidden></aside>
   <aside id="gardening-skill" aria-label="Kertészkedés jártasság" hidden><span>Kertészkedés</span><strong id="skill-xp">0 / 36</strong><span id="skill-gain" aria-hidden="true" hidden>+1</span><div class="skill-track" role="progressbar" aria-label="Haladás a 2. szint felé" aria-valuemin="0" aria-valuemax="36" aria-valuenow="0"><div id="skill-fill"></div></div><strong id="skill-level">1. szint</strong></aside>

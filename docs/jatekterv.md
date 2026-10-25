@@ -718,3 +718,27 @@ A kézműves receptek és a nádkosárkészítő együtt számolják a vásárol
 A működő komposztáló gőzölgő, mozgó növényi tartalmat, a kosárkészítő mozgó szövőrészt és forgó hajtást kap a farmon. Az ablakban ugyanezeket animált gépillusztráció, forgó alkatrész, gőz és a kész kimenet jelzi. Az animációk nem hamis időmérők; az eredmény továbbra is másnap készül el. Csökkentett mozgás mellett az animációk leállnak.
 
 A műhelybolt belső átalakítása és a tóba ültetett nád megújulása még egyeztetés alatt. Javaslat, nem végleges szabály: megmaradó nádtő, háromnaponta 1 levágható nád és idővel látható új hajtások. A belső tervezett munkasarkai: satu/forgács/javítás alatt álló tárgy; kosaras-zsineges-alkatrészes polcok; felismerhető szerszámfal és tervlapok; melegebb fények és kopott padló, szabad bejárattal és oldalról megközelíthető pulttal. A megbeszélés előtt a bolt belsejét nem alakítjuk át.
+
+### A nád két szerepe, megmaradó tövek és a műhely berendezése
+
+Ez a döntés felülírja az összevont nádfelhasználást: a vásárolható és elültethető tárgy neve **Nád**, az elkészítéshez használt alapanyagé **Vágott nád**. A „nádtő”, „gyökeres nád” és „ültethető nád” nem kerül a tárgy nevébe. A receptek és a kosárkészítő kizárólag vágott nádat fogadnak el.
+
+A Nád készletkártyája két lehetőséget kínál: **Elhelyezem** a tóba, vagy **Levágom**, ami egy megvásárolt nádból egy vágott nádat készít. Így azonnali vásárlásból is elkészíthető a kosár; a levágás külön, tudatos döntés marad. Az alapanyagköltséget a gép nem vonhatja le automatikusan az ültetésre való nádból.
+
+A tóba telepített nád töve megmarad. Az ültetéstől három eltelt játéknap után egyszer 1 vágott nádat ad, majd az utolsó vágástól számított három nap után ismét vágható. Ültetés az 1. napon: első vágás a 4. napon, újabb a 7. napon. Vágáskor a növény nem tűnik el: rövidebb szárak maradnak, amelyek újranőnek. Az idősebb foltokon több fiatal hajtás látszik. A vágható nád ugyanazt az érettségjelzőt kapja, mint a többi begyűjthető növény. A betakarítás időpontja mentődik; újratöltés nem ad ismételt aznapi vágást.
+
+Simon boltjába bekerül a megbeszélt teljes belső kialakítás: kopott, erezett és karcolt deszkapadló; visszafogott terrakotta mintás, rojtos szőnyeg; enyhén foltos vakolat és gerendák; ablakon beeső meleg fény; növény és asztali munkalámpa. Bal oldalt satu, mérőléc, fakalapács, alkatrész és faforgács van a munkapadnál, alatta egy javítás alatt álló kocsikerék. Jobb oldalt eltérő magasságú kosarak, rézidomok, zsinegtekercsek, hajtogatott szövet, fiókok és kis szerszámos láda kerül a polcokra. A szerszámfalon külön felismerhető kézifúró, kalapács, fűrész, derékszög és fogó, mellette egy öntözővázlat és feltekert rajzlapok látszanak. A bejárat, a pulthoz vezető folyosó és Simon bal oldali beszélgetőhelye szabad marad; az eredeti ütközési területeken belül maradnak a berendezések.
+
+### Öt eszköz az alsó sorban; kosár felvétele
+
+Az alsó sorban kizárólag **Kapa (1), Öntözés (2), Gyűjtés (3), Bontóvas (4), Túrabot (5)** szerepel. A túrabot megszerzéséig négy eszköz látható. Mag, vadvirágmag, mulcs és lehelyezhető tárgy nem kerülhet ide. Ezeket a Készletből lehet kiválasztani, utána a játékban a szokásos művelettel használni. Az ültetőanyagok számát a készletrekeszek jelvényei mutatják. A korábbi 6–9-es szerszámgyorsbillentyűk megmaradnak kompatibilis aliasnak, magot nem választanak.
+
+A lehelyezett dekoratív nádkosár saját ablakában is megjelenik a **Felveszem** gomb. Ez egyszer adja vissza a kosarat a készletbe; a bontóvasas célzott művelet is használható marad.
+
+A Nád kártyáján az Elhelyezem és Levágom választás mindkét képernyőméreten olvasható marad: telefonon a két művelet egymás alatt jelenik meg.
+
+### A postaláda részleges átvételének állapotfrissítése
+
+Részleges magátvételkor a mentett és a játék közben használt rendelésállapot együtt frissül. A postaláda azonnal újrarajzolja a bent maradó mennyiségeket; az átvett magok kártyái eltűnnek, részben átvett fajtánál csak a maradék látszik. Ha semmi nem fér a hátizsákba, az átvételi gomb inaktív; üres postaládánál rejtett. Hely felszabadítása után, újratöltés nélkül is kizárólag a maradék vehető át. A még úton lévő rendeléseket az átvétel nem módosítja. A javítás a korábbi, helyes mentett állapotot is megőrzi, nem írja felül a régi képernyőkészlettel.
+
+A műhelybolt vásárlóablakának elfogadott fejléce: **SIMON**, cím: **Műhelybolt**, bevezető szöveg pontosan: „A lentieknek a tervrajzát vásárolhatod meg.”

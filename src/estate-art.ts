@@ -1,6 +1,6 @@
 import {drawRipeMarker} from './crop-art';
 import Phaser from 'phaser';
-import {type Estate} from './estate';
+import {reedReady,type Estate} from './estate';
 export function drawEstate(scene:Phaser.Scene,estate:Estate,day:number){
  const g=scene.add.graphics().setDepth(2);
  for(const t of estate.trees){const grown=day-t.planted>=15,s=grown?1:.45+Math.min(15,day-t.planted)/30,x=t.x,y=t.y;
@@ -14,7 +14,11 @@ export function drawEstate(scene:Phaser.Scene,estate:Estate,day:number){
    for(let i=0;i<8;i++){const a=i*Math.PI/4;g.fillStyle(i%2?0xe5aeb8:0xf5d7d4).fillEllipse(p.x+Math.cos(a)*7,p.y-5+Math.sin(a)*3.5,10,5);}
    g.fillStyle(0xffeee0).fillEllipse(p.x,p.y-8,9,9);g.fillStyle(0xe5bd55).fillEllipse(p.x,p.y-5,6,4);
   }
-  else if(p.kind==='reed'){for(let i=0;i<7;i++){const x=p.x+(i-3)*3;g.lineStyle(2,0x6e8d43).lineBetween(x,p.y,x+(i-3)*2,p.y-21-i%3*7);g.lineStyle(3,0x816440).lineBetween(x+(i-3)*2,p.y-21-i%3*7,x+(i-3)*2,p.y-29-i%3*7);}}
+  else if(p.kind==='reed'){
+   const growth=Math.min(1,Math.max(0,(day-(p.lastHarvest??p.day))/3)),shoots=7+Math.min(5,Math.floor((day-p.day)/3));
+   g.fillStyle(0x416f53,.4).fillEllipse(p.x,p.y+2,25,8);for(let i=0;i<shoots;i++){const offset=i<7?(i-3)*3:(i%2?-1:1)*(12+(i-7)*2),x=p.x+offset,s=i<7?.32+growth*.68:.3+growth*.36,h=(21+i%3*7)*s,lean=offset*.55;g.lineStyle(i<7?2:1.4,i<7?0x6e8d43:0x91ac60).lineBetween(x,p.y,x+lean,p.y-h);g.lineStyle(1,0xa4b877).lineBetween(x,p.y-3,x+lean-4,p.y-h*.7);if(i<7&&growth>=.8)g.lineStyle(3,0x816440).lineBetween(x+lean,p.y-h,x+lean,p.y-h-8);}
+   if(reedReady(p,day))drawRipeMarker(g,p.x+16,p.y-40);
+  }
   else{g.fillStyle(0x8e734a).fillEllipse(p.x,p.y,33,20);g.fillStyle(0xc6a474).fillEllipse(p.x,p.y-3,30,17);g.fillStyle(0x6e6446).fillEllipse(p.x,p.y-4,20,10);}
  }
  // Spawn clings to submerged vegetation in the shallows, rather than a marker on land.
