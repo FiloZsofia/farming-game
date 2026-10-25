@@ -98,9 +98,12 @@ export function drawVillage(scene:Phaser.Scene){
  // Supported wooden signs at the road and its forest fork, rather than text in grass.
  const sign=(postX:number,groundY:number,left:number,top:number,width:number,text:string,direction:'left'|'right'|'down')=>{
   oval(postX+4,groundY+3,19,7,0x35553a,.22);rect(postX-2,top+10,5,groundY-top-8,0x6b5438);rect(postX-1,top+12,2,groundY-top-10,0xac8858);
+  const tilt=direction==='down'?-.3:0,pivotX=postX,pivotY=top+14;g.save();g.translateCanvas(pivotX,pivotY).rotateCanvas(tilt).translateCanvas(-pivotX,-pivotY);
   const arrow=direction==='down'?[left,top,left+width,top,left+width,top+51,left+width/2,top+65,left,top+51]:direction==='right'?[left,top,left+width-10,top,left+width,top+11,left+width-10,top+22,left,top+22]:[left+10,top,left+width,top,left+width,top+22,left+10,top+22,left,top+11];
   poly(arrow,0x604f35);poly(arrow.map((v,i)=>v+(i%2? -1:0)),0xa98a59);if(direction==='down'){line(left+3,top+4,left+3,top+48,0xcfb17b);line(left+width-3,top+4,left+width-3,top+48,0x735b3c);}else line(left+12,top+3,left+width-12,top+3,0xcfb17b);if(direction!=='down')line(left+12,top+19,left+width-12,top+19,0x735b3c);oval(postX,top+6,2,2,0x5c5b45);oval(postX,top+16,2,2,0x5c5b45);
-  const title=scene.add.text(left+width/2+(direction==='left'?3:direction==='right'?-3:0),top+(direction==='down'?25:11),text,{fontFamily:'Georgia,serif',fontSize:'9px',color:'#fff0c8',resolution:2}).setOrigin(.5).setRotation(direction==='down'?Math.PI/2:0).setDepth(5);labels.push(title);
+  g.restore();
+  const tx=left+width/2+(direction==='left'?3:direction==='right'?-3:0),ty=top+(direction==='down'?25:11),dx=tx-pivotX,dy=ty-pivotY;
+  const title=scene.add.text(pivotX+dx*Math.cos(tilt)-dy*Math.sin(tilt),pivotY+dx*Math.sin(tilt)+dy*Math.cos(tilt),text,{fontFamily:'Georgia,serif',fontSize:'9px',color:'#fff0c8',resolution:2}).setOrigin(.5).setRotation((direction==='down'?Math.PI/2:0)+tilt).setDepth(5);labels.push(title);
  };
  sign(235,696,226,608,18,'Falu','down');sign(292,810,220,759,88,'Erdei ösvény','left');
 

@@ -626,3 +626,9 @@ Noah leírása pontosan: „Biológus, Sam korábbi munkatársa a laborból.” 
 A talaj, a növények és a pipák külön rajzolási lépést kapnak, ebben a sorrendben. Minden szüretelhető növény felett megjelenik a pipa, újratermő növényen is; később kirajzolt talaj vagy növény nem takarja el. A mentett ültetés sorrendjétől független a megjelenés.
 
 A három láda oldalkerete a meglévő, 3 × 2 darab 16-os ültetőrácsot szimmetrikusan keretezi; megszűnik a jobb oldali, használhatatlan földsáv. Az ültetőhelyek koordinátái és a mentett növények megmaradnak. Az eper saját piros termésformát, a mézbogyó hosszúkás kék termést, az áfonya gömbölyű, csillagos végű bogyót kap. A sárgarépa levelei finoman elágaznak; a burgonyán apró, világos virágok is látszanak. Nagyobb ültetőhely és új, folyamatos egérkezelés egyelőre javaslat, nem elfogadott követelmény.
+
+### A Falu nyíl dőlése és látható esti fények
+
+A keskeny, hosszúkás Falu nyíl deszkája és felirata enyhén, körülbelül 17 fokkal az ösvény folytatása felé dől; a tartóoszlop függőleges marad. Az Erdei ösvény táblája változatlan.
+
+A falu utcai lámpái erősebb, meleg fényudvart és a talajon látható fényfoltot kapnak. A két bolt ablakai este aranyló fényt adnak. A fények az éjszakai kék árnyékolás fölött, a kezelőfelület alatt jelennek meg, kamerahelyzethez és nagyításhoz igazítva. Nappal eltűnnek, szürkületkor fokozatosan erősödnek. A fényréteg a játékterület szélén levágódik, és nem fogja el a kattintásokat.
