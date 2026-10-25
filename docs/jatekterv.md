@@ -553,3 +553,13 @@ A tárolóláda receptje és az Elkészítem/Elhelyezem művelet külön Tervraj
 A vizsgálati eredmény „Vajon ezek okozták a bajt…” kezdetű, a „De” nélkül. A levél címzettje Noah, Sam fiatal, szőke, jóképű korábbi laboros kollégája. A postaládánál a címke: „KORÁBBI KOLLÉGÁMNAK, NOAH-NAK”. A minta elküldése után Noah portréval megjelenik az Ismerősök között; ezt a meglévő elküldési állapot jelzi, így a korábbi mentésekben elküldött levél is feloldja. A túl homályos mikroszkópképnél a Megvizsgálom gomb inaktív marad.
 
 A mikroszkópos eredmény utolsó mondata: „Elküldök egy mintát a korábbi kollégámnak, Noah-nak.”
+
+### Erdei átjárók, ismétlődő harc és tárolóláda – pontosítás
+
+A láda az épületek közelében és az ösvények mellett is elhelyezhető; a korábbi nagy távolsági védősávok helyett a tényleges tárgyalaprajz, az ajtók, a veranda oszlopai, a növények és a víz maradnak védettek. A tároló mindkét oldalán egyforma kártyák vannak, minden tétel saját ikonnal, tárgynévvel és külön mennyiséggel.
+
+Az erdő északi háttere a farm bal szélén túl is részletes, a pályán használt talajt és fákat folytatja. A harci átjárókat sűrű fák és bozót szegélyezik. Két indagubanc és két spórapamacs van. A belső átjáró csak az adott látogatás mind a négy ellenfelének legyőzése után járható; élő ellenfelek mellett gyalog és ugrással sem kerülhető meg. Az első túrabot felvételekor névvel és animált képpel mutatjuk be mindkét ellenféltípust. A korábban már túrabotot szerzett játékos a következő veszélyes megközelítésnél kapja meg egyszer ezt a bemutatót, ha a történeti mintát még nem szerezte meg. A botnak saját, megszerzés után látható és kijelölhető gombja van az alsó eszközsávban.
+
+Az indagubanc tüskéket, sötétebb összefonódott testet, figyelő szemeket és mozgó/csapó indákat kap; a spórapamacs rétegzett, bolyhos testet, fonalakat és mozgó spóraport. A bot melletti tárgy egy régi pihenőpad: most háttámlával, ülőlappal, támaszokkal és lábakkal, valamint saját megnevezéssel jelenik meg.
+
+Az erdő elhagyása és a visszatérés új harci látogatást kezd: mind a négy ellenfél ismét megjelenik. A folyamatban lévő látogatás legyőzött ellenfeleit a mentés külön tárolja, így puszta újratöltéskor nem térnek vissza. A történeti első legyőzések, a fészekminta, a vizsgálat és Noah levele nem nullázódnak. A régi, három ellenféllel már teljesített mintavételt változatlanul teljesítettnek őrizzük meg; az új belső ellenfél ehhez nem von vissza előrehaladást.

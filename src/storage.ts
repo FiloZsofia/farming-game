@@ -1,3 +1,4 @@
+import {migrateForest} from './forest';
 import {atHomeBedside} from './home';
 import {createResearch} from './research';
 import {createEstate} from './estate';
@@ -49,6 +50,7 @@ export function validSnapshot(value:unknown):value is Snapshot{
 }
 // Migrate known formats without discarding the original backup until a v17 write succeeds.
 export function decodeSnapshot(value:unknown):Snapshot|null{
+ if(value&&typeof value==='object'&&'version' in value&&value.version===17){const old=value as Snapshot;if(old.player?.x> -910&&old.player.x< -860&&old.player.y>=695&&old.player.y<=1340&&worldBlocked(old.player.x,old.player.y)){const next=structuredClone(old);next.player.x=-840;return decodeSnapshot(next);}}
  // Extend existing pond/fruit counts with new forage types without touching possessions.
  if(value&&typeof value==='object'){
   const old=value as Snapshot,estate=old.travel?.estate;
@@ -59,7 +61,7 @@ export function decodeSnapshot(value:unknown):Snapshot|null{
   }
  }
 
- if(validSnapshot(value)){const result=structuredClone(value);result.skill=migrateGardenSkill(result.skill);if(result.travel.research.supplied===undefined&&(result.travel.research.materials.glass>0||result.travel.research.materials.linen>0))result.travel.research.supplied=[...(result.travel.research.materials.glass>0?['annie' as const]:[]),...(result.travel.research.materials.linen>0?['leo' as const]:[])];return result;}
+ if(validSnapshot(value)){const result=structuredClone(value);result.skill=migrateGardenSkill(result.skill);if(result.travel.forest)result.travel.forest=migrateForest(result.travel.forest);if(result.travel.research.supplied===undefined&&(result.travel.research.materials.glass>0||result.travel.research.materials.linen>0))result.travel.research.supplied=[...(result.travel.research.materials.glass>0?['annie' as const]:[]),...(result.travel.research.materials.linen>0?['leo' as const]:[])];return result;}
  // Layout changes can cover saved debris and a placed birdhouse as well as the player.
  // Move only objects in the newly occupied strips; never reset the farm or its resources.
  if(value&&typeof value==='object'&&'version' in value&&value.version===17){
@@ -74,7 +76,7 @@ export function decodeSnapshot(value:unknown):Snapshot|null{
   if(newlyCovered(old.player)){const p={x:old.player.x,y:old.player.y+3>farmLayout.shipping.y&&old.player.y-4<farmLayout.shipping.y+farmLayout.shipping.h&&old.player.x+7>farmLayout.shipping.x&&old.player.x-7<farmLayout.shipping.x+farmLayout.shipping.w?farmLayout.shipping.y+farmLayout.shipping.h+8:old.player.x<400?280:224};if(!blocked(p.x,p.y)){migrated.player=p;changed=true;}}
   if(old.story?.birdhouse&&newlyCovered(old.story.birdhouse)){const p=freePlace(old.story.birdhouse,'birdhouse');if(p){migrated.story.birdhouse=p;changed=true;}}
   if(old.clearing?.positions&&typeof old.clearing.positions==='object'&&!Array.isArray(old.clearing.positions))for(const [id,p]of Object.entries(old.clearing.positions)){if(newlyCovered(p)){const q=freePlace(p,id);if(q){migrated.clearing.positions[id]=q;changed=true;}}}
-  if(changed&&validSnapshot(migrated)){migrated.skill=migrateGardenSkill(migrated.skill);return migrated;}
+  if(changed&&validSnapshot(migrated)){migrated.skill=migrateGardenSkill(migrated.skill);if(migrated.travel.forest)migrated.travel.forest=migrateForest(migrated.travel.forest);return migrated;}
  }
  if(!value||typeof value!=='object'||!('version' in value)||(value.version!==1&&value.version!==2&&value.version!==3&&value.version!==4&&value.version!==5&&value.version!==6&&value.version!==7&&value.version!==8&&value.version!==9&&value.version!==10&&value.version!==11&&value.version!==12&&value.version!==13&&value.version!==14&&value.version!==15&&value.version!==16))return null;
  const legacy=value as {clearing?:Clearing;version:number;plots?:unknown;player?:{x:number;y:number}};

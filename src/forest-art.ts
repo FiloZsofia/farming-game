@@ -17,8 +17,19 @@ export function paintForest(g:Phaser.GameObjects.Graphics,random:()=>number){
  for(let i=3;i<brook.length-3;i+=5){const p=brook[i];g.lineStyle(1.2,0xd5e3bd,.8).lineBetween(p.x-6,p.y-3,p.x+7,p.y-3);oval(p.x+(i%2?18:-18),p.y+7,8,5,0xa6ab89);g.lineStyle(1.5,0x5c8249).lineBetween(p.x+21,p.y,p.x+23,p.y-10).lineBetween(p.x+23,p.y,p.x+27,p.y-7);}
  for(let i=0;i<8;i++){g.fillStyle(i%2?0xae925f:0x947951).fillRect(-464,1167+i*8,40,6);}g.lineStyle(3,0x67533b).lineBetween(-465,1165,-465,1229).lineBetween(-423,1165,-423,1229);
  for(let i=0;i<46;i++){const x=-1080+random()*1030,y=i%2?700+random()*130:1260+random()*115;drawWoodlandTree(g,random,x,y,i%3,.85+(i%3)*.08);}
+ // Dense trunks and brambles follow the actual impassable shoulders of both gates.
+ for(const [center,top,bottom]of [[-665,934,1020],[-885,954,1040]]){
+  for(const x of [center-25,center,center+25]){
+   for(let y=725;y<top+1;y+=48)drawWoodlandTree(g,random,x+(y%3)*3,y,Math.abs(Math.round(x+y))%3,.9);
+   for(let y=bottom+99;y<1380;y+=47)drawWoodlandTree(g,random,x+(y%3)*3,y,Math.abs(Math.round(x+y))%3,.9);
+   for(let y=715;y<1340;y+=26)if(y<top-5||y>bottom+5){g.lineStyle(2,0x456b3c).lineBetween(x-12,y+7,x+8,y-3).lineBetween(x-4,y+9,x-9,y-8);g.fillStyle(0x6d8a49).fillEllipse(x-10,y,18,8).fillEllipse(x+4,y+4,20,7);}
+  }
+ }
  for(const [x,y]of [[-300,826],[-487,850],[-740,1130],[-1010,950]]){oval(x,y,40,22,0x737d6c);oval(x-5,y-5,27,12,0xa1aa8a);oval(x+7,y+5,23,9,0x50734a);}
- g.fillStyle(0x564b35).fillRect(-486,959,5,20).fillRect(-440,959,5,20);g.fillStyle(0xa28655).fillRoundedRect(-492,951,61,9,2);g.lineStyle(3,0xc1a776).lineBetween(-489,948,-434,948);g.lineStyle(6,0x715a3d).lineBetween(-490,932,-433,932);
+ // A complete wooden resting bench: back slats, supports, seat and four clear legs.
+ oval(-461,977,76,16,0x344a30,.25);g.fillStyle(0x655035).fillRect(-489,933,5,43).fillRect(-437,933,5,43).fillRect(-486,960,5,21).fillRect(-440,960,5,21);
+ g.fillStyle(0xa88a57).fillRoundedRect(-494,928,64,9,2).fillRoundedRect(-494,939,64,8,2);g.lineStyle(1,0xd4b577).lineBetween(-491,930,-433,930).lineBetween(-491,941,-433,941);
+ g.fillStyle(0xb69a65).fillPoints([{x:-493,y:950},{x:-434,y:950},{x:-427,y:961},{x:-499,y:961}],true);g.fillStyle(0x7e6240).fillRect(-499,961,72,5);g.lineStyle(1,0xd0b47b).lineBetween(-492,954,-432,954).lineBetween(-495,958,-430,958);for(const x of [-486,-438])g.fillStyle(0x66543a).fillCircle(x,933,1).fillCircle(x,943,1);
  const n=forestNest;oval(n.x,n.y+10,128,28,0x2f452f,.3);
  // Fallen hardwood: bark ridges, broken branch, growth rings and pre-existing nesting holes.
  g.fillStyle(0x594531).fillPoints([{x:n.x-62,y:n.y-13},{x:n.x-52,y:n.y-40},{x:n.x+43,y:n.y-34},{x:n.x+61,y:n.y-18},{x:n.x+53,y:n.y+6},{x:n.x-47,y:n.y+9}],true);

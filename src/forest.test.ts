@@ -1,5 +1,5 @@
 import {describe,it,expect} from 'vitest';
-import {createForest,forestBlocked,forestPlants,validForest,forestEnemies} from './forest';
+import {createForest,forestBlocked,forestPlants,validForest,forestEnemies,forestGateBlocked,beginForestVisit,encounterDefeated} from './forest';
 import {createTravel} from './travel';
 import {createGarden} from './gardening';
 import {createClock} from './clock';
@@ -16,3 +16,14 @@ describe('forest investigation and backpack',()=>{
  it('preserves old over-capacity inventories, permitting unloading without losing items',()=>{const s=snapshot({x:330,y:260},createClock(),createGarden());s.clearing.wood=99*20;const n=decodeSnapshot(s)!;expect(n.clearing.wood).toBe(s.clearing.wood);expect(canCarryChange(s,n)).toBe(true);n.clearing.stone++;expect(canCarryChange(s,n)).toBe(false);n.clearing.wood-=99;expect(canCarryChange(s,n)).toBe(true);});
  it('migrates missing forage fields without concealing corrupted old counts',()=>{const s=snapshot({x:330,y:260},createClock(),createGarden());for(const k of ['produce','shipping','roe'] as const)for(const h of ['thyme','plantain','nettle'])delete (s.travel.estate[k] as Record<string,number>)[h];expect(decodeSnapshot(s)?.travel.estate.produce.thyme).toBe(0);delete (s.travel.estate.produce as Record<string,number>).cherry;expect(decodeSnapshot(s)).toBeNull();});
 });
+
+it('requires all four enemies and preserves completed investigations from the three-enemy version',()=>{
+ const old={stick:true,defeated:['vine','spore-a','spore-b'],picked:{},sample:true,examined:true,sent:true,focus:72};const s=snapshot({x:-940,y:997},createClock(10),createGarden());s.travel.forest=old;const loaded=decodeSnapshot(s)!;expect(loaded.travel.forest?.defeated).toContain('vine-inner');expect(loaded.travel.forest?.sent).toBe(true);expect(old.defeated).not.toContain('vine-inner');
+});
+
+it('prevents walking around either gate, even when both vines but not the spores are defeated',()=>{
+ const reachable=(defeated:string[])=>{const state={...createForest(),defeated},queue=[{x:-430,y:996}],seen=new Set(['-430,996']);for(let i=0;i<queue.length;i++){const p=queue[i];if(p.x< -932&&Math.abs(p.y-974)<20)return true;for(const [dx,dy]of [[4,0],[-4,0],[0,4],[0,-4]]){const q={x:p.x+dx,y:p.y+dy},key=`${q.x},${q.y}`;if(q.x>0||seen.has(key)||forestBlocked(q.x,q.y)||forestGateBlocked(q.x,q.y,state))continue;seen.add(key);queue.push(q);}}return false;};
+ expect(reachable([])).toBe(false);expect(reachable(['vine'])).toBe(false);expect(reachable(['vine','vine-inner'])).toBe(false);expect(reachable(forestEnemies.map(e=>e.id))).toBe(true);
+});
+
+it('respawns the current encounter on return without resetting the sample, examination or mailed letter',()=>{const completed={...createForest(),stick:true,enemyIntroSeen:true,defeated:forestEnemies.map(e=>e.id),sample:true,examined:true,sent:true};const returning=beginForestVisit(completed);expect(encounterDefeated(returning)).toEqual([]);expect(returning.defeated).toEqual(completed.defeated);expect(returning.sample&&returning.examined&&returning.sent).toBe(true);expect(validForest(returning,10)).toBe(true);expect(forestGateBlocked(-665,977,returning)).toBe(true);expect(encounterDefeated(completed)).toHaveLength(4);});

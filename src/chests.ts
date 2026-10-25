@@ -1,3 +1,4 @@
+import {farmBounds} from './layout';
 import type {Snapshot} from './storage';
 import {crops} from './economy';
 import {goods,extras} from './estate';
@@ -9,7 +10,7 @@ export const chestKeys=[...crops.map(k=>`seed:${k}`),...crops.map(k=>`crop:${k}`
 export const occupiedSlots=(items:Record<string,number>)=>Object.values(items).reduce((sum,n)=>sum+Math.ceil(n/99),0);
 export function validChests(v:unknown):v is ChestStorage{
  if(!v||typeof v!=='object')return false;const s=v as ChestStorage;
- return Number.isSafeInteger(s.packed)&&s.packed>=0&&s.packed<=999&&Array.isArray(s.placed)&&s.placed.length<=200&&s.placed.every(c=>c&&Number.isFinite(c.x)&&Number.isFinite(c.y)&&c.x>=-376&&c.x<=1176&&(c.y>=-300&&c.y<=560||c.y>=3930&&c.y<=4210)&&!!c.items&&typeof c.items==='object'&&!Array.isArray(c.items)&&Object.entries(c.items).every(([k,n])=>chestKeys.includes(k)&&Number.isSafeInteger(n)&&n>0&&n<=2376&&(k!=='special:birdhouse'||n===1))&&occupiedSlots(c.items)<=24);
+ return Number.isSafeInteger(s.packed)&&s.packed>=0&&s.packed<=999&&Array.isArray(s.placed)&&s.placed.length<=200&&s.placed.every(c=>c&&Number.isFinite(c.x)&&Number.isFinite(c.y)&&c.x>=-376&&c.x<=1176&&(c.y>=farmBounds.top+48&&c.y<=560||c.y>=3930&&c.y<=4210)&&!!c.items&&typeof c.items==='object'&&!Array.isArray(c.items)&&Object.entries(c.items).every(([k,n])=>chestKeys.includes(k)&&Number.isSafeInteger(n)&&n>0&&n<=2376&&(k!=='special:birdhouse'||n===1))&&occupiedSlots(c.items)<=24);
 }
 export function inventoryCounts(s:Snapshot):Record<string,number>{return Object.fromEntries(chestKeys.map(k=>[k,itemAccount(s,k).value]));}
 function itemAccount(s:Snapshot,key:string){
