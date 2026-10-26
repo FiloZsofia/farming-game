@@ -71,6 +71,6 @@ export function drawWorkshop(scene:Phaser.Scene,r:Research){
  for(const web of remainingWebs(r)){const x=web.x,y=web.y-3000-22;g.lineStyle(.9,0xe1ddc3,.6);for(let i=0;i<5;i++){const a=i*Math.PI/8;g.lineBetween(x,y,x+Math.cos(a)*30,y+Math.sin(a)*30);}for(const radius of [10,19,29]){g.beginPath();for(let i=0;i<5;i++){const a=i*Math.PI/8;i?g.lineTo(x+Math.cos(a)*radius,y+Math.sin(a)*radius):g.moveTo(x+radius,y);}g.strokePath();}}
  g.fillStyle(0x302e26).fillRect(373,501,54,13);g.fillStyle(0xa28a62).fillRoundedRect(369,498,62,5,2);
  if(r.shutter)for(let i=0;i<30;i++){const x=170+(i*37)%180,y=225+(i*29)%220;if(x<170+(y-210)*.7)g.fillStyle(0xffe3a8,.24).fillCircle(x,y,.6+i%2*.3);}
- if(!r.shutter||!frontOpen){g.fillStyle(0x111b20,!r.shutter&&!frontOpen?.94:.42).fillRect(88,138,624,388);g.fillStyle(0xd6c99c,.35).fillRect(159,208,92,2);g.fillStyle(0xd6c99c,.12).fillTriangle(159,210,251,210,215,255);}
+ if(!r.shutter||!frontOpen){g.fillStyle(0x111b20,!r.shutter&&!frontOpen?.94:.42).fillRect(88,138,624,388);if(!r.shutter){g.fillStyle(0xd6c99c,.35).fillRect(159,208,92,2);g.fillStyle(0xd6c99c,.12).fillTriangle(159,210,251,210,215,255);}if(!frontOpen){g.fillStyle(0xefd5a2,.55).fillRect(459,514,74,2);g.fillStyle(0xefd5a2,.14).fillTriangle(459,513,533,513,495,464);}}
  return root;
 }

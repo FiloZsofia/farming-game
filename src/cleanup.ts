@@ -32,7 +32,7 @@ export const neededTool={rock:'hand',branch:'hand',weed:'hand'} as const;
 export const debrisNames={rock:'Régi kőrakás',branch:'Elhagyott faanyag',weed:'Gaz'};
 export function hasPlantAt(item:Debris,garden:Garden){return [...garden.plots.keys()].some(key=>{const [x,y]=key.split(',').map(Number);return Math.abs(x+TILE/2-item.x)<(item.kind==='rock'?24:20)&&Math.abs(y+TILE/2-item.y)<20;});}
 export const activeDebris=(state:Clearing,garden:Garden)=>debris.map(item=>({...item,...state.positions[item.id]})).filter(item=>item.kind==='weed'&&state.removed[item.id]===undefined&&!hasPlantAt(item,garden));
-export function debrisAt(state:Clearing,garden:Garden,x:number,y:number){return activeDebris(state,garden).find(item=>Math.hypot(item.x-x,item.y-y)<(item.kind==='weed'?15:24));}
+export function debrisAt(state:Clearing,garden:Garden,x:number,y:number){return activeDebris(state,garden).filter(item=>Math.hypot(item.x-x,item.y-y)<18).sort((a,b)=>Math.hypot(a.x-x,a.y-y)-Math.hypot(b.x-x,b.y-y))[0];}
 export function clearDebris(state:Clearing,item:Debris,tool:string,player:{x:number;y:number},day:number):Clearing|null{
  if(item.kind!=='weed')return null;
  if(state.removed[item.id]!==undefined||tool!==neededTool[item.kind]||Math.hypot(player.x-item.x,player.y-item.y)>44)return null;

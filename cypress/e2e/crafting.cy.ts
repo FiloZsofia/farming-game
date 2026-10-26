@@ -25,3 +25,9 @@ it('allows hoeing beside the starter-bed sprinkler and moving it through invento
  const point=(x:number,y:number)=>cy.get('#game').then(el=>{const z=Number(el.attr('data-zoom'));cy.get('canvas').click((x-Number(el.attr('data-camera-x')))*z,(y-Number(el.attr('data-camera-y')))*z);});
  point(543,260);cy.get('#game').should('have.attr','data-plots','4').and('have.attr','data-working','false');press('e','KeyE',69);cy.get('#dialogue-title').should('have.text','Öntözőrendszer');cy.get('[data-pack-machine]').click();cy.get('#game').should('have.attr','data-craft-machines','0');press('Tab','Tab',9);cy.get('[data-stack-key="craft:irrigation"] button').click();point(543,284);cy.get('#game').should('have.attr','data-craft-machines','1');cy.reload();cy.get('#continue-farm').should('not.be.disabled').click();cy.get('#game').should('have.attr','data-craft-machines','1').and('have.attr','data-plots','4');
 });
+
+it('collects weeds behind a composter and beside a wreck without interacting with either',()=>{
+ const point=(x:number,y:number)=>cy.get('#game').then(el=>{const z=Number(el.attr('data-zoom'));cy.get('canvas').click((x-Number(el.attr('data-camera-x')))*z,(y-Number(el.attr('data-camera-y')))*z);});
+ const a=fresh(300,430);a.clearing.positions['weed-a']={x:324,y:400};a.travel.crafting!.machines=[{kind:'composter',x:324,y:420,started:null,ready:0}];start(a);press('3','Digit3',51);point(324,400);cy.get('#game').should('have.attr','data-cleared','1').and('have.attr','data-craft-machines','1');cy.get('#dialogue').should('not.be.visible');
+ const b=fresh(-230,390);b.clearing.positions['weed-a']={x:-230,y:350};start(b);press('3','Digit3',51);point(-230,350);cy.get('#game').should('have.attr','data-cleared','1');cy.get('#dialogue').should('not.be.visible');
+});
