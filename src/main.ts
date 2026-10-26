@@ -1090,7 +1090,7 @@ class Farm extends Phaser.Scene {
   this.workEffects??=new WorkEffects(this);this.avatar.use(x-this.actor.x,y-this.actor.y,tool,()=>{contact();this.workEffects?.impact(x,y,kind);});
  }
  private gatherTargetWeed(point?:{x:number;y:number}){
-  if(this.tool!=='harvest'&&this.tool!=='hand'||!this.target&&!point)return false;
+  if(this.placing||['machine','chest','mulch','birdhouse','wildflower'].includes(this.tool)||!this.target&&!point)return false;
   const p=point??{x:this.target!.x+TILE/2,y:this.target!.y+TILE/2},weed=debrisAt(this.clearing,this.garden,p.x,p.y);
   if(!weed)return false;void this.clean(weed);return true;
  }
@@ -1357,7 +1357,7 @@ class Farm extends Phaser.Scene {
   this.selection.clear();
   if(this.target){
     const debris=debrisAt(this.clearing,this.garden,this.target.x+TILE/2,this.target.y+TILE/2);
-    const valid=this.placing?Math.hypot(this.target.x+TILE/2-this.actor.x,this.target.y+TILE/2-this.actor.y)<=90&&Boolean(placeGood(this.travel.estate,this.placing,this.target.x+TILE/2,this.target.y+TILE/2,this.clock.day,this.estateLand(this.target.x+TILE/2,this.target.y+TILE/2),this.farmName)):this.tool==='birdhouse'?this.canPlaceBirdhouse(this.target.x+TILE/2,this.target.y+TILE/2):debris?Math.hypot(this.actor.x-debris.x,this.actor.y-debris.y)<=44&&(this.tool==='harvest'||this.tool==='hand'):cultivable(this.target)&&reachable(this.target,this.actor);
+    const valid=this.placing?Math.hypot(this.target.x+TILE/2-this.actor.x,this.target.y+TILE/2-this.actor.y)<=90&&Boolean(placeGood(this.travel.estate,this.placing,this.target.x+TILE/2,this.target.y+TILE/2,this.clock.day,this.estateLand(this.target.x+TILE/2,this.target.y+TILE/2),this.farmName)):this.tool==='birdhouse'?this.canPlaceBirdhouse(this.target.x+TILE/2,this.target.y+TILE/2):debris?Math.hypot(this.actor.x-debris.x,this.actor.y-debris.y)<=44:cultivable(this.target)&&reachable(this.target,this.actor);
     const plot=this.garden.plots.get(`${this.target.x},${this.target.y}`);
     const hint=document.querySelector<HTMLElement>('#crop-hint')!;hint.textContent=this.placing?`${goodNames[this.placing]} · válassz közeli ${treeKinds.includes(this.placing as typeof treeKinds[number])?'szabad földet':this.placing==='duckNest'?'tópartot':'vizet'} · kattintás / F`:this.tool==='birdhouse'?'Madárodú · kattints egy közeli, szabad helyre':debris?`${debrisNames[debris.kind]} · ${'Gyűjtés (3)'} · F / kattintás`:plot?.crop?`${cropNames[plot.crop]} · ${isRipe(plot)?'Betakarítható':`${plot.growth}/${growthTarget(plot)} nap`}${isRipe(plot)?'':` · ${plot.watered?'öntözve':'öntözést kér'}`}`:'';
     this.selection.lineStyle(1,valid?0xf1df9e:0xd69077,1).strokeRect(this.target.x,this.target.y,TILE,TILE);

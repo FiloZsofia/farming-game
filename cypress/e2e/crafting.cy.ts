@@ -31,3 +31,8 @@ it('collects weeds behind a composter and beside a wreck without interacting wit
  const a=fresh(300,430);a.clearing.positions['weed-a']={x:324,y:400};a.travel.crafting!.machines=[{kind:'composter',x:324,y:420,started:null,ready:0}];start(a);press('3','Digit3',51);point(324,400);cy.get('#game').should('have.attr','data-cleared','1').and('have.attr','data-craft-machines','1');cy.get('#dialogue').should('not.be.visible');
  const b=fresh(-230,390);b.clearing.positions['weed-a']={x:-230,y:350};start(b);press('3','Digit3',51);point(-230,350);cy.get('#game').should('have.attr','data-cleared','1');cy.get('#dialogue').should('not.be.visible');
 });
+
+for(const spot of [{id:'workbench' as const,x:458,y:-107,playerX:493,playerY:-107},{id:'trailer' as const,x:1051,y:226,playerX:1051,playerY:261}])it(`gathers a targeted weed beside the exhausted ${spot.id} even with the crowbar selected`,()=>{
+ const s=fresh(spot.playerX,spot.playerY);s.clearing.positions['weed-a']={x:spot.x,y:spot.y};s.clearing.junk={[spot.id]:{part:4,hits:0,revision:2,completedDay:1}};start(s);press('4','Digit4',52);
+ cy.get('#game').then(el=>{const z=Number(el.attr('data-zoom'));cy.get('canvas').click((spot.x-Number(el.attr('data-camera-x')))*z,(spot.y-10-Number(el.attr('data-camera-y')))*z);});cy.get('#game').should('have.attr','data-cleared','1');cy.get('#feedback').should('not.contain','Most nincs több leválasztható rész');
+});
