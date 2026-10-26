@@ -45,3 +45,13 @@ describe('planting across a raised-bed sprinkler',()=>{
   expect([...g.plots.values()].every(p=>p.watered)).toBe(true);
  });
 });
+
+it('packs and relocates an irrigation device without changing crops or mail',async()=>{
+ const {packMachine}=await import('./crafting');const s=fresh();
+ s.orders.mailbox={radish:2,potato:2,pea:1,strawberry:1,honeyberry:1,blueberry:1,carrot:2,lettuce:1,onion:2};
+ s.travel.crafting=createCrafting();s.travel.crafting.machines=[{kind:'irrigation',x:519,y:260,started:null,ready:0}];
+ s.plots=['435,248','459,248','483,248','531,248'].map(key=>[key,{crop:'pea',watered:false,growth:1,regrowing:false}]);
+ const packed=packMachine(s,0)!;expect(packed.travel.crafting!.items.irrigation).toBe(1);expect(packed.travel.crafting!.machines).toEqual([]);expect(packed.plots).toEqual(s.plots);expect(packed.orders).toEqual(s.orders);expect(decodeSnapshot(packed)).toEqual(packed);
+ packed.travel.crafting!.items.irrigation--;packed.travel.crafting!.machines.push({kind:'irrigation',x:519,y:260,started:null,ready:0});
+ const g={...createGarden(),plots:new Map(packed.plots)};irrigate(g,packed.travel.crafting);expect([...g.plots.values()].every(p=>p.watered)).toBe(true);expect(s.plots.every(([,p])=>!p.watered)).toBe(true);
+});

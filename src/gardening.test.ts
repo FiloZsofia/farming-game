@@ -89,3 +89,21 @@ describe('level-three single-harvest vegetables',()=>{
   expect(isRipe(garden.plots.get('353,280')!)).toBe(true);expect(work(garden,'harvest',tile,player).ok).toBe(true);expect(garden.produce[crop]).toBe(1);expect(garden.plots.get('353,280')!.crop).toBeNull();expect(work(garden,'harvest',tile,player).ok).toBe(false);
  });
 });
+
+describe('continuous meadow rows beside a sprinkler',()=>{
+ it('keeps the same row when pointing beside crop tops and farther east',()=>{
+  expect(targetTile(543,240)).toEqual({x:531,y:248});
+  expect(targetTile(615,260)).toEqual({x:603,y:248});
+  expect(targetTile(639,284)).toEqual({x:627,y:272});
+  expect(cultivable(targetTile(543,240))).toBe(true);
+ });
+ it('preserves targeting of existing meadow plants on the earlier grid',()=>{
+  const g=createGarden();g.plots.set('600,240',{crop:'pea',watered:false,growth:1,regrowing:false});
+  expect(targetTile(612,250,g.plots)).toEqual({x:600,y:240});
+ });
+});
+
+it('does not overlap a retained old meadow plot when extending the bed grid',()=>{
+ const g=createGarden();g.plots.set('600,240',{crop:'pea',watered:false,growth:1,regrowing:false});
+ expect(work(g,'hoe',{x:603,y:248},{x:615,y:260}).ok).toBe(false);expect(g.plots.size).toBe(1);expect(g.plots.get('600,240')?.crop).toBe('pea');
+});

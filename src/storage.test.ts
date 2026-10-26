@@ -199,3 +199,9 @@ it('recovers saved debris and a birdhouse covered by enlarged buildings without 
 it('loads layout-affected active and backup saves without overwriting the originals and exports the recovery data',async()=>{const factory=new IDBFactory(),data=fresh();const setup=new SaveStore(factory);await setup.load();setup.close();data.clearing.positions={'rock-a':{x:100,y:150}};await put(factory,'active',data);await put(factory,'backup',data);const store=new SaveStore(factory);const loaded=await store.load();expect(loaded.recovered).toBe(false);expect(loaded.data).not.toBeNull();const exported=JSON.parse(await store.exportOriginal());expect(exported.active).toEqual(data);expect(exported.backup).toEqual(data);expect(loaded.data!.clearing.positions).not.toEqual(data.clearing.positions);store.close();});
 
 it('also recovers layout-covered decorative positions when upgrading an older save format',()=>{const data={...fresh(),version:16};data.clearing.positions={'weed-a':{x:100,y:150}};data.clearing.weed=14;data.economy.gold=163;const next=decodeSnapshot(data)!;expect(next).not.toBeNull();expect(validSnapshot(next)).toBe(true);expect(next.clearing.weed).toBe(14);expect(next.economy.gold).toBe(163);expect(next.clearing.positions['weed-a']).not.toEqual(data.clearing.positions['weed-a']);expect(data.clearing.positions['weed-a']).toEqual({x:100,y:150});});
+
+it('preserves earlier meadow grid plots beside the extended bed rows on save and reload',async()=>{
+ const s=fresh();s.farmName='Rácsteszt';s.plots=[['600,240',{crop:'pea',watered:true,growth:2,regrowing:false}]];
+ expect(validSnapshot(s)).toBe(true);expect(decodeSnapshot(s)).toEqual(s);
+ const store=new SaveStore(new IDBFactory());await store.load();await store.save(s);const loaded=await store.load();expect(loaded.data?.plots).toEqual(s.plots);expect(loaded.data?.orders).toEqual(s.orders);store.close();
+});

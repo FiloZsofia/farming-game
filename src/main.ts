@@ -556,9 +556,9 @@ class Farm extends Phaser.Scene {
  private openMachine(index:number){
   const machine=this.travel.crafting?.machines[index];if(!machine)return;
 
-  if(machine.kind==='irrigation'){this.sprayPending=true;return;}
+  if(machine.kind==='irrigation')this.sprayPending=true;
   showDialogue(machine.kind==='basket'?'Nádkosár':blueprintNames[machine.kind],'','A BIRTOKON');const panel=document.querySelector<HTMLElement>('#research-panel')!;panel.replaceChildren();panel.hidden=false;panel.append(machineActivityPanel(machine));
-  if(machine.kind==='beeHabitat'||machine.kind==='basket'){const pickup=document.createElement('button');pickup.type='button';pickup.textContent='Felveszem';pickup.dataset.packMachine=String(index);pickup.onclick=()=>void this.retrieveMachine(index,true);panel.append(pickup);return;}
+  if(machine.kind==='irrigation'||machine.kind==='beeHabitat'||machine.kind==='basket'){const pickup=document.createElement('button');pickup.type='button';pickup.textContent='Felveszem';pickup.dataset.packMachine=String(index);pickup.onclick=()=>void this.retrieveMachine(index,true);panel.append(pickup);return;}
   const ready=machine.ready>0,compost=machine.kind==='composter',input=compost?'Gaz':'Vágott nád',held=compost?this.clearing.weed:heldMaterial(this.currentSnapshot(),'reed'),cost=compost?10:4;const status=document.createElement('p');status.textContent=ready?`${compost?'Mulcs':'Nádkosár'}: ${machine.ready}`:machine.started!==null?'Készül…':`${input}: ${held} / ${cost} → ${compost?'4 mulcs':'1 nádkosár'}`;panel.append(status);
   const button=document.createElement('button');button.type='button';button.dataset.machineAction=String(index);button.textContent=ready?'Átveszem':'Elindítom';button.disabled=this.transitioning||machine.started!==null||!ready&&held<cost;button.onclick=()=>{if(this.transitioning)return;const next=compostAction(this.currentSnapshot(),index);if(next)void this.commitChest(next,()=>this.openMachine(index));};panel.append(button);const pack=document.createElement('button');pack.type='button';pack.dataset.packMachine=String(index);pack.textContent='Felveszem';pack.disabled=machine.started!==null||machine.ready>0||this.transitioning;pack.onclick=()=>void this.retrieveMachine(index,true);panel.append(pack);
  }
@@ -1196,11 +1196,11 @@ class Farm extends Phaser.Scene {
   });
   this.input.on('pointermove',(pointer:Phaser.Input.Pointer)=>{
     if(!this.ready||dialogue.open||pointer.wasTouch)return;
-    const point=this.cameras.main.getWorldPoint(pointer.x,pointer.y);this.target=targetTile(point.x,point.y);
+    const point=this.cameras.main.getWorldPoint(pointer.x,pointer.y);this.target=targetTile(point.x,point.y,this.garden.plots);
   });
   this.input.on('pointerdown',(pointer:Phaser.Input.Pointer)=>{
     if(!this.ready||dialogue.open||pointer.button!==0)return;
-    const point=this.cameras.main.getWorldPoint(pointer.x,pointer.y);this.target=targetTile(point.x,point.y);if(inForest(this.actor.x,this.actor.y)){const d=Math.hypot(point.x-this.actor.x,point.y-this.actor.y)||1;this.direction={x:(point.x-this.actor.x)/d,y:(point.y-this.actor.y)/d};}this.doWork();
+    const point=this.cameras.main.getWorldPoint(pointer.x,pointer.y);this.target=targetTile(point.x,point.y,this.garden.plots);if(inForest(this.actor.x,this.actor.y)){const d=Math.hypot(point.x-this.actor.x,point.y-this.actor.y)||1;this.direction={x:(point.x-this.actor.x)/d,y:(point.y-this.actor.y)/d};}this.doWork();
   });
   this.actor=this.add.container(START.x,START.y).setDepth(100);
   this.shadow=this.add.ellipse(0,0,20,7,0x35442e,0.25);this.actor.add(this.shadow);
@@ -1287,7 +1287,7 @@ class Farm extends Phaser.Scene {
   });
  }
  private currentWeather(){return weatherOnDay(this.travel.weatherSeed??0,this.clock.day);}
- private aimAhead(){this.target=targetTile(this.actor.x+this.direction.x*22,this.actor.y+this.direction.y*22);}
+ private aimAhead(){this.target=targetTile(this.actor.x+this.direction.x*22,this.actor.y+this.direction.y*22,this.garden.plots);}
  update(time:number,delta:number){
   if(!this.actor)return;
   if(dialogue.open||!inForest(this.actor.x,this.actor.y))document.querySelector<HTMLElement>('#forest-health')!.hidden=true;

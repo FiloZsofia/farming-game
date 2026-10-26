@@ -744,3 +744,5 @@ Részleges magátvételkor a mentett és a játék közben használt rendelésá
 A műhelybolt vásárlóablakának elfogadott fejléce: **SIMON**, cím: **Műhelybolt**, bevezető szöveg pontosan: „A lentieknek a tervrajzát vásárolhatod meg.”
 
 Az öntözők kétirányú használatához a szabad farmi rét az ágyások mellett is kapálható, a védett ösvények, épületek, víz és fakeretek kivételével. A ládák sorai a mellettük lévő réten folytathatók azonos 24-es osztással: az öntöző túloldalára ültetett három növény is ugyanabba a sorba kerül.
+
+Az öntözőrendszer közelében E-vel vagy kattintással megnyíló ablakban legyen „Felveszem” gomb. Felvételkor a készletbe kerül, onnan az „Elhelyezem” művelettel áttehető másik helyre. A meglévő növények, mulcs és postaládacsomagok ettől nem változnak. A jobb oldali rét kijelölése folytassa az ültetőládák sorait távolabb is; ne váltson vissza elcsúszó rácsra. A korábban más rácson elültetett növények helye és célzása megmarad, az új földkockák nem fedhetik őket.

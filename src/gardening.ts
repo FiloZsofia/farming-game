@@ -11,11 +11,21 @@ export type Plot={watered:boolean;crop:Crop|null;growth:number;regrowing:boolean
 export type Garden={plots:Map<string,Plot>;seeds:Record<Crop,number>;produce:Record<Crop,number>};
 export const createGarden=():Garden=>({plots:new Map(),seeds:{radish:4,potato:4,pea:4,strawberry:0,honeyberry:0,blueberry:0,carrot:0,lettuce:0,onion:0},produce:{radish:0,potato:0,pea:0,strawberry:0,honeyberry:0,blueberry:0,carrot:0,lettuce:0,onion:0}});
 export const tileKey=(tile:Tile)=>`${tile.x},${tile.y}`;
-export function targetTile(x:number,y:number):Tile{
+export function targetTile(x:number,y:number,plots?:ReadonlyMap<string,Plot>):Tile{
+ // Preserve targeting of older meadow plots when extending a neighbouring grid.
+ for(const key of plots?.keys()??[]){const [px,py]=key.split(',').map(Number);if(x>=px&&x<px+TILE&&y>=py&&y<py+TILE)return{x:px,y:py};}
  for(const b of farmLayout.beds){
   if(x>=b.x+4&&x<b.x+4+3*TILE&&y>=b.y+2&&y<b.y+2+2*TILE)
    return {x:b.x+4+Math.floor((x-b.x-4)/TILE)*TILE,y:b.y+2+Math.floor((y-b.y-2)/TILE)*TILE};
  }
+ // The eastern meadow continues both right-hand beds, without reverting to
+ // the global grid after the sprinkler's third cell. A small upper margin
+ // keeps pointing beside the crop artwork on the same ground row.
+ const eastern=farmLayout.beds.filter(b=>x>=b.x+b.w&&b.x===Math.max(...farmLayout.beds.map(b=>b.x)))
+  .flatMap(b=>[b.y+2,b.y+2+TILE].map(py=>({x:b.x+4,y:py})))
+  .filter(row=>Math.abs(y-row.y-TILE/2)<=TILE)
+  .sort((a,b)=>Math.abs(y-a.y-TILE/2)-Math.abs(y-b.y-TILE/2))[0];
+ if(eastern)return {x:eastern.x+Math.floor((x-eastern.x)/TILE)*TILE,y:eastern.y};
  // Continue the nearest raised-bed row across the surrounding meadow. Four
  // cells leave room for a sprinkler and its three crops on the outer side.
  const row=farmLayout.beds.filter(b=>y>=b.y+2&&y<b.y+2+2*TILE&&x>=b.x+4-4*TILE&&x<b.x+4+7*TILE)
@@ -48,6 +58,7 @@ export function work(garden:Garden,tool:Tool,tile:Tile,player:{x:number;y:number
  if(!reachable(tile,player))return {ok:false,message:'Sétálj közelebb a kijelölt földkockához.'};
  if(!cultivable(tile))return {ok:false,message:'Itt nem művelhető a talaj. Próbáld az ágyásokat vagy a szabad rétet.'};
  const key=tileKey(tile),plot=garden.plots.get(key);
+ if(!plot&&[...garden.plots.keys()].some(k=>{const[px,py]=k.split(',').map(Number);return tile.x<px+TILE&&tile.x+TILE>px&&tile.y<py+TILE&&tile.y+TILE>py;}))return {ok:false,message:'Itt már van megművelt föld.'};
  if(tool==='harvest'){
   if(!plot?.crop)return {ok:false,message:'Itt még nincs betakarítható növény.'};
   if(!isRipe(plot))return {ok:false,message:'Ez a növény még fejlődik.'};

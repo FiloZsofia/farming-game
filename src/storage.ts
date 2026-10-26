@@ -6,7 +6,7 @@ import {createResearch} from './research';
 import {createEstate} from './estate';
 import {createTravel,validTravel,type Travel} from './travel';
 import {worldBlocked,relocateVillagePlayer} from './village-layout';
-import { cultivable, targetTile, tileKey, type Garden, type Plot } from './gardening';
+import { cultivable, targetTile, tileKey, TILE, type Garden, type Plot } from './gardening';
 import type { Clock } from './clock';
 import { createEconomy, validEconomy, crops, type Economy } from './economy';
 import { createOrders, validOrders, type Orders } from './orders';
@@ -44,7 +44,7 @@ function validSnapshotRecord(value:unknown,legacy=false):value is Snapshot{
   const [key,plot]=row;if(typeof key!=='string'||keys.has(key))return false;
   keys.add(key);const parts=key.split(',');if(parts.length!==2)return false;
   const [x,y]=parts.map(Number);
-  if(!finite(x)||!finite(y)||tileKey({x,y})!==key||tileKey((legacy?legacyTargetTile:targetTile)(x+1,y+1))!==key||!(legacy?legacyCultivable:cultivable)({x,y}))return false;
+  if(!finite(x)||!finite(y)||tileKey({x,y})!==key||(tileKey((legacy?legacyTargetTile:targetTile)(x+1,y+1))!==key&&(legacy||x%TILE!==0||y%TILE!==0))||!(legacy?legacyCultivable:cultivable)({x,y}))return false;
   if(plot&&((plot.mulched!==undefined&&typeof plot.mulched!=='boolean')||(plot.moisture!==undefined&&(!plot.mulched||!Number.isSafeInteger(plot.moisture)||plot.moisture<0||plot.moisture>3||plot.watered!==(plot.moisture>0)))))return false;
   if(!plot||typeof plot!=='object'||typeof plot.watered!=='boolean'||!(plot.crop===null||crops.includes(plot.crop)))return false;
   if(!Number.isSafeInteger(plot.growth)||plot.growth<0||plot.growth>1000||typeof plot.regrowing!=='boolean'||(plot.regrowing&&!['pea','strawberry','honeyberry','blueberry'].includes(plot.crop??''))||(!plot.crop&&plot.growth!==0))return false;
