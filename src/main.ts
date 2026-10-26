@@ -254,9 +254,9 @@ class Farm extends Phaser.Scene {
   try{
    if(saveCurrent&&this.hasFarm){await this.saveChecked(this.currentSnapshot());document.querySelector('#save-state')!.textContent='Mentve ebben a böngészőben';}
    const farms=await this.store.listFarms();error.textContent='';resume.hidden=!this.hasFarm;resume.disabled=!this.hasFarm;create.disabled=false;
-   document.querySelector('#continue-farm-name')!.textContent=this.hasFarm?`${this.farmName??'Névtelen farm'} · ${calendarDay(this.clock.day,this.farmName)}. nap`:'';
+   document.querySelector('#continue-farm-name')!.textContent=this.hasFarm?`${this.farmName??'Névtelen farm'} · ${this.clock.day}. nap`:'';
    for(const farm of farms){
-    const card=document.createElement('article');card.className='farm-save-card';card.dataset.farmId=farm.id;const info=document.createElement('div'),name=document.createElement('h3'),details=document.createElement('p'),date=document.createElement('small');name.textContent=farm.name;details.textContent=`${calendarDay(farm.day,farm.name)}. nap · ${farm.gold} gold`;date.textContent=`Mentve: ${new Date(farm.updatedAt).toLocaleString('hu-HU')}`;info.append(name);info.append(details,date);
+    const card=document.createElement('article');card.className='farm-save-card';card.dataset.farmId=farm.id;const info=document.createElement('div'),name=document.createElement('h3'),details=document.createElement('p'),date=document.createElement('small');name.textContent=farm.name;details.textContent=`${farm.day}. nap · ${farm.gold} gold`;date.textContent=`Mentve: ${new Date(farm.updatedAt).toLocaleString('hu-HU')}`;info.append(name);info.append(details,date);
     const play=document.createElement('button');play.type='button';play.textContent=farm.id===this.store.selectedFarmId?'Folytatom':'Megnyitom';play.addEventListener('click',()=>void this.chooseFarm(farm.id));const actions=document.createElement('div');actions.className='farm-card-actions';const remove=document.createElement('button');remove.type='button';remove.textContent='Törlés';remove.dataset.deleteFarm=farm.id;remove.className='delete-farm';remove.setAttribute('aria-label',`${farm.name} törlése`);remove.addEventListener('click',()=>this.confirmFarmDeletion(farm.id,farm.name));actions.append(play,remove);card.append(info,actions);list.append(card);
    }
    if(!farms.length){const empty=document.createElement('p');empty.className='farm-list-empty';empty.textContent='Még nincs mentett farmod. Az első kerted rád vár.';list.append(empty);}
@@ -1307,7 +1307,7 @@ class Farm extends Phaser.Scene {
   if(performance.now()>this.skillUntil)document.querySelector<HTMLElement>('#gardening-skill')!.hidden=true;
   const now=performance.now();const seconds=Math.max(0,(now-this.lastTick)/1000);this.lastTick=now;
   document.querySelector('#gold')!.textContent=String(this.shownGold??this.economy.gold);
-  document.querySelector('#day-number')!.textContent=`${seasonDay(calendarDay(this.clock.day,this.farmName))}.`;document.querySelector('#season-name')!.textContent=seasons[seasonIndex(calendarDay(this.clock.day,this.farmName))];
+  document.querySelector('#day-number')!.textContent=`${this.clock.day}.`;document.querySelector('#season-name')!.textContent=seasons[seasonIndex(calendarDay(this.clock.day,this.farmName))];
   document.querySelector('#clock-label')!.textContent=clockLabel(this.clock);
   document.querySelector<HTMLElement>('#night-shade')!.style.opacity=String(nightOpacity(this.clock));
   this.homeLight?.update(nightOpacity(this.clock));
