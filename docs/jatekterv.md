@@ -777,3 +777,11 @@ A bogyósok egészséges lombja megmarad az újratermés alatt is. A sikertelen 
 Az erdei fészkes fatörzs nyitott járatainál finom szürkésfehér gombafonalak és helyileg tompább fakéreg látható. A közvetlen környéken ellenfényben porszerű részecskék úsznak, ritkább a rovarmozgás; a szomszédos tisztás eleven marad. Nem sötétedik el vagy színeződik át az egész erdő/farm. A gombafonalak továbbra sem bizonyítják önmagukban, hogy a gomba okozta a beporzók megfogyatkozását.
 
 Amikor Sam először közel sétál valóban sikertelen terméskötődést mutató növényhez, egyszer megjelenik az **Üres terméshelyek** megfigyelés: „A levelek egészségesek, mégis sok virág elnyílt termés nélkül. Az öntözés önmagában nem elég… Talán túl kevés beporzó jár erre.” Ugyanez dátummal megmarad a verandán olvasható naplóban, a korábbi faliméh-megfigyelés mellett. Az észlelés mentődik, újratöltés nem ismétli meg. A pusztán leszedetlenül túlérő gyümölcs nem váltja ki ezt a beporzóhiányról szóló következtetést.
+
+
+### Erdei áfonya és hullott gyümölcs — 2026. október 27.
+- Az erdei áfonya érési ciklusa 3 nap; három ciklusból egy terem. Bokronként 1 áfonya szedhető, az érett bogyók 3 játéknap után egyszerűen eltűnnek, erdei hullott gyümölcs nem keletkezik. A ciklus állandó, a játék újratöltése nem sorsolja újra.
+- A farmon túlérett bogyósok és gyümölcsfák lehullott termése Gyűjtéssel felszedhető, egységes „Hullott gyümölcs” alapanyag. A lehulló mennyiség a megmaradt termésnek felel meg; külön ikont és készlethelyet kap, tárolóládába tehető. Nem ehető és nem értékesíthető.
+- A komposztálóban külön választható a gaz vagy a hullott gyümölcs: 10 darab hullott gyümölcsből másnapra 4 mulcs készül. A gaz meglévő receptje változatlan.
+
+- A fészkes fatörzs természetes barna színű marad. A szürkés gombás bevonat csak a két felnyílt járat körül látható; onnan lassú cseppek hullanak a földre, helyi elszíneződést hagyva. A levegőben felszálló világos porszemcsék jól láthatók, a környező erdő színei változatlanok.

@@ -1,3 +1,4 @@
+import {collectFruitFalls,pickFallenFruit} from './fallen-fruit';
 import {initializeFruitTimers} from './fruit-timers';
 import {nearEmptyBlossoms,POLLINATION_OBSERVATION_TITLE,POLLINATION_OBSERVATION_TEXT} from './pollination-observation';
 import {ForestAtmosphere} from './forest-atmosphere';
@@ -371,6 +372,7 @@ class Farm extends Phaser.Scene {
   if(weatherOnDay(this.travel.weatherSeed??0,nextClock.day)==='rain')waterFromRain(nextGarden);
   const nextTravel=structuredClone(this.travel);nextTravel.crafting=advanceCrafting(robbery?.crafting??nextTravel.crafting,nextClock.day);irrigate(nextGarden,nextTravel.crafting);this.sprayPending=true;if(nextTravel.forest)nextTravel.forest.health=5;
   nextTravel.estate=advanceEstate(robbery?.estate??this.travel.estate,nextClock.day,Math.random,this.farmName,{seed:this.travel.weatherSeed??0});
+  collectFruitFalls(this.garden,nextGarden,this.travel,nextTravel);
   nextTravel.research=advanceResearch(robbery?.research??this.travel.research,this.garden,nextClock.day);
   const loss=robbery?.loss;
   const carriedEconomy={...this.economy,gold:robbery?.gold??this.economy.gold};
@@ -577,6 +579,7 @@ class Farm extends Phaser.Scene {
   showDialogue(machine.kind==='basket'?'Nádkosár':blueprintNames[machine.kind],'','A BIRTOKON');const panel=document.querySelector<HTMLElement>('#research-panel')!;panel.replaceChildren();panel.hidden=false;panel.append(machineActivityPanel(machine));
   if(machine.kind==='irrigation'||machine.kind==='beeHabitat'||machine.kind==='basket'){const pickup=document.createElement('button');pickup.type='button';pickup.textContent='Felveszem';pickup.dataset.packMachine=String(index);pickup.onclick=()=>void this.retrieveMachine(index,true);panel.append(pickup);return;}
   const ready=machine.ready>0,compost=machine.kind==='composter',input=compost?'Gaz':'Vágott nád',held=compost?this.clearing.weed:heldMaterial(this.currentSnapshot(),'reed'),cost=compost?10:4;const status=document.createElement('p');status.textContent=ready?`${compost?'Mulcs':'Nádkosár'}: ${machine.ready}`:machine.started!==null?'Készül…':`${input}: ${held} / ${cost} → ${compost?'4 mulcs':'1 nádkosár'}`;panel.append(status);
+  if(compost&&!ready&&machine.started===null){const fruit=this.travel.crafting?.items.fallenFruit??0;const row=document.createElement('p');row.append(itemIcon('fallenFruit'),document.createTextNode(`Hullott gyümölcs: ${fruit} / 10 → 4 mulcs`));panel.append(row);const start=document.createElement('button');start.type='button';start.dataset.compostFruit='';start.textContent='Gyümölcsből készítem';start.disabled=fruit<10||this.transitioning;start.onclick=()=>{const next=compostAction(this.currentSnapshot(),index,'fallenFruit');if(next)void this.commitChest(next,()=>this.openMachine(index));};panel.append(start);}
   const button=document.createElement('button');button.type='button';button.dataset.machineAction=String(index);button.textContent=ready?'Átveszem':'Elindítom';button.disabled=this.transitioning||machine.started!==null||!ready&&held<cost;button.onclick=()=>{if(this.transitioning)return;const next=compostAction(this.currentSnapshot(),index);if(next)void this.commitChest(next,()=>this.openMachine(index));};panel.append(button);const pack=document.createElement('button');pack.type='button';pack.dataset.packMachine=String(index);pack.textContent='Felveszem';pack.disabled=machine.started!==null||machine.ready>0||this.transitioning;pack.onclick=()=>void this.retrieveMachine(index,true);panel.append(pack);
  }
  private async retrieveMachine(index:number,close=false){if(this.transitioning)return;const next=packMachine(this.currentSnapshot(),index);if(next)await this.commitChest(next,()=>{if(close)dialogue.close();});}
@@ -699,7 +702,7 @@ class Farm extends Phaser.Scene {
  private async gatherForage(id:string){
   if(!this.canInteract())return;
   const bush=villageLayout.bushes.find(b=>b.id===id);if(!bush||Math.hypot(this.actor.x-bush.x,this.actor.y-bush.y)>45)return;
-  if(!forageReady(this.travel,id,this.clock.day)){this.notice('A bokor most pihen. Két nap után újra szedhető.');return;}
+  if(!forageReady(this.travel,id,this.clock.day)){this.notice('Most nincs érett áfonya a bokron.');return;}
   if(this.garden.produce.blueberry>=999999){this.notice('Ebből már nem fér több a készletbe.');return;}
   this.transitioning=true;this.saveRevision++;
   const travel=structuredClone(this.travel),garden=structuredClone(this.garden);travel.picked[id]=this.clock.day;garden.produce.blueberry++;
@@ -893,7 +896,10 @@ class Farm extends Phaser.Scene {
  }
  private drawGarden(){
   const g=this.planted;g.clear();
-  const markerCount=drawGardenPlots(g,this.garden);document.querySelector<HTMLElement>('#game')!.dataset.ripeMarkers=String(markerCount);
+  const markerCount=drawGardenPlots(g,this.garden);
+  for(const p of this.travel.fallenFruit??[]){g.fillStyle(0x495d38,.3).fillEllipse(p.x,p.y+3,15,5);for(let i=0;i<Math.min(3,p.count+1);i++){const x=p.x-4+i*4;g.fillStyle(i%2?0xa88356:0x8d7254).fillEllipse(x,p.y,5,4);g.fillStyle(0xc3a470).fillCircle(x-1,p.y-1,1);g.lineStyle(1,0x627144).lineBetween(x,p.y-2,x+1,p.y-4);}}
+
+  document.querySelector<HTMLElement>('#game')!.dataset.ripeMarkers=String(markerCount);
   this.drawMailFlag();this.redrawResearch();document.querySelector<HTMLButtonElement>('#toolbar [data-tool=stick]')!.hidden=!this.travel.forest?.stick;
   const surface=document.querySelector<HTMLElement>('#game')!;
   surface.dataset.plots=String(this.garden.plots.size);surface.dataset.planted=String([...this.garden.plots.values()].filter(p=>p.crop).length);surface.dataset.watered=String([...this.garden.plots.values()].filter(p=>p.watered).length);surface.dataset.ripe=String([...this.garden.plots.values()].filter(p=>isRipe(p)).length);surface.dataset.produce=String(Object.values(this.garden.produce).reduce((a,b)=>a+b,0));
@@ -1118,7 +1124,7 @@ class Farm extends Phaser.Scene {
   if(anchor&&beeAvailable(r,this.clock.day,this.clock.elapsed)){const t=this.clock.elapsed,x=anchor.x+Math.sin(t*2)*5,y=anchor.y-12+Math.cos(t*3)*2,g=this.beeArt;g.fillStyle(0xcbdede,.7).fillEllipse(x-2,y-3,5,3).fillEllipse(x+2,y-3,5,3);g.fillStyle(0xa26939).fillEllipse(x,y,7,5);g.fillStyle(0x3c3b30).fillCircle(x+3,y-1,2);g.lineStyle(.7,0x443c31).lineBetween(x-1,y-2,x-1,y+2);}
  }
 
- private redrawScenery(){this.redrawCrafting();this.redrawJunk();this.redrawForest();this.drawChests();this.homeLight?.destroy();this.homeLight=new HomeLight(this);this.homeArt?.destroy();this.homeArt=drawHome(this,this.travel.research.microscopeDelivered===true);this.houseExterior?.destroy();this.houseExterior=new HouseExterior(this);this.workshopExterior?.destroy();this.workshopExterior=new WorkshopExterior(this);this.redrawResearch();this.estateArt?.destroy();this.estateArt=drawEstate(this,this.travel.estate,this.clock.day);if(this.scenery)this.scenery.redraw(this.clearing,this.garden,this.story.birdhouse);else this.scenery=drawFarm(this,this.clearing,this.garden,this.story.birdhouse);this.villageForage?.destroy();this.villageForage=drawForage(this,this.travel.picked,this.clock.day);}
+ private redrawScenery(){this.redrawCrafting();this.redrawJunk();this.redrawForest();this.drawChests();this.homeLight?.destroy();this.homeLight=new HomeLight(this);this.homeArt?.destroy();this.homeArt=drawHome(this,this.travel.research.microscopeDelivered===true);this.houseExterior?.destroy();this.houseExterior=new HouseExterior(this);this.workshopExterior?.destroy();this.workshopExterior=new WorkshopExterior(this);this.redrawResearch();this.estateArt?.destroy();this.estateArt=drawEstate(this,this.travel.estate,this.clock.day);if(this.scenery)this.scenery.redraw(this.clearing,this.garden,this.story.birdhouse);else this.scenery=drawFarm(this,this.clearing,this.garden,this.story.birdhouse);this.villageForage?.destroy();this.villageForage=drawForage(this,this.travel.picked,this.clock.day,this.travel.weatherSeed??0);}
  private salvageRewardPop(x:number,y:number,kind:'wood'|'stone',extra?:'gear'|'copperPipe'){
   const camera=this.cameras.main,z=camera.zoom,pop=document.createElement('div');pop.className='harvest-pop salvage-reward';pop.setAttribute('role','status');
   for(const [icon,n,name]of (kind==='wood'?[['wood',4,'fa'],['scrap',2,'ócskavas']]:[['stone',6,'kő']]) as ['wood'|'scrap'|'stone',number,string][]){const item=document.createElement('span'),count=document.createElement('strong');item.className='salvage-reward-item';count.textContent=`+${n}`;item.setAttribute('aria-label',`+${n} ${name}`);item.append(itemIcon(icon),count);pop.append(item);}
@@ -1133,7 +1139,16 @@ class Farm extends Phaser.Scene {
  private animateWork(x:number,y:number,tool:string,kind:ImpactKind,contact:()=>void){
   this.workEffects??=new WorkEffects(this);this.avatar.use(x-this.actor.x,y-this.actor.y,tool,()=>{contact();this.workEffects?.impact(x,y,kind);});
  }
+ private gatherFallenFruit(point?:{x:number;y:number}){
+  if(this.placing||this.tool!=='harvest'||!this.canInteract())return false;
+  const p=point??(this.target?{x:this.target.x+TILE/2,y:this.target.y+TILE/2}:this.actor);
+  const index=this.travel.fallenFruit?.findIndex(f=>Math.hypot(f.x-p.x,f.y-p.y)<20)??-1;if(index<0)return false;
+  const fruit=this.travel.fallenFruit![index];if(Math.hypot(fruit.x-this.actor.x,fruit.y-this.actor.y)>48){this.notice('Sétálj közelebb.');return true;}
+  const next=pickFallenFruit(this.currentSnapshot(),index);if(!next)return true;
+  void this.commitChest(next,()=>{this.avatar.use(fruit.x-this.actor.x,fruit.y-this.actor.y,'hand');this.notice(`+${fruit.count} Hullott gyümölcs`);});return true;
+ }
  private gatherTargetWeed(point?:{x:number;y:number}){
+  if(this.gatherFallenFruit(point))return true;
   if(this.placing||['machine','chest','mulch','birdhouse','wildflower'].includes(this.tool)||!this.target&&!point)return false;
   const p=point??{x:this.target!.x+TILE/2,y:this.target!.y+TILE/2},weed=debrisAt(this.clearing,this.garden,p.x,p.y);
   if(!weed)return false;void this.clean(weed);return true;
@@ -1407,7 +1422,8 @@ class Farm extends Phaser.Scene {
     const debris=debrisAt(this.clearing,this.garden,this.target.x+TILE/2,this.target.y+TILE/2);
     const valid=this.placing?Math.hypot(this.target.x+TILE/2-this.actor.x,this.target.y+TILE/2-this.actor.y)<=90&&Boolean(placeGood(this.travel.estate,this.placing,this.target.x+TILE/2,this.target.y+TILE/2,this.clock.day,this.estateLand(this.target.x+TILE/2,this.target.y+TILE/2),this.farmName)):this.tool==='birdhouse'?this.canPlaceBirdhouse(this.target.x+TILE/2,this.target.y+TILE/2):debris?Math.hypot(this.actor.x-debris.x,this.actor.y-debris.y)<=44:cultivable(this.target)&&reachable(this.target,this.actor);
     const plot=this.garden.plots.get(`${this.target.x},${this.target.y}`);
-    const hint=document.querySelector<HTMLElement>('#crop-hint')!;hint.textContent=this.placing?`${goodNames[this.placing]} · válassz közeli ${treeKinds.includes(this.placing as typeof treeKinds[number])?'szabad földet':this.placing==='duckNest'?'tópartot':'vizet'} · kattintás / F`:this.tool==='birdhouse'?'Madárodú · kattints egy közeli, szabad helyre':debris?`${debrisNames[debris.kind]} · ${'Gyűjtés (3)'} · F / kattintás`:plot?.crop?`${cropNames[plot.crop]} · ${plot.fruitSet===false?'Nem kötődött termés':plot.fruitAftermath==='fallen'?'Lehullott termés':isRipe(plot)?(plot.ripeDays===2?'Túlérett · Betakarítható':'Betakarítható'):`${plot.growth}/${growthTarget(plot)} nap`}${isRipe(plot)?'':` · ${plot.watered?'öntözve':'öntözést kér'}`}`:'';
+    const fallen=this.travel.fallenFruit?.some(p=>Math.hypot(p.x-this.target!.x-TILE/2,p.y-this.target!.y-TILE/2)<20);
+    const hint=document.querySelector<HTMLElement>('#crop-hint')!;hint.textContent=this.placing?`${goodNames[this.placing]} · válassz közeli ${treeKinds.includes(this.placing as typeof treeKinds[number])?'szabad földet':this.placing==='duckNest'?'tópartot':'vizet'} · kattintás / F`:this.tool==='birdhouse'?'Madárodú · kattints egy közeli, szabad helyre':fallen?'Hullott gyümölcs · Gyűjtés':debris?`${debrisNames[debris.kind]} · ${'Gyűjtés (3)'} · F / kattintás`:plot?.crop?`${cropNames[plot.crop]} · ${plot.fruitSet===false?'Nem kötődött termés':plot.fruitAftermath==='fallen'?'Lehullott termés':isRipe(plot)?(plot.ripeDays===2?'Túlérett · Betakarítható':'Betakarítható'):`${plot.growth}/${growthTarget(plot)} nap`}${isRipe(plot)?'':` · ${plot.watered?'öntözve':'öntözést kér'}`}`:'';
     this.selection.lineStyle(1,valid?0xf1df9e:0xd69077,1).strokeRect(this.target.x,this.target.y,TILE,TILE);
     this.selection.fillStyle(valid?0xf1df9e:0xd69077,.12).fillRect(this.target.x,this.target.y,TILE,TILE);
   }

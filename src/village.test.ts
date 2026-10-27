@@ -28,8 +28,11 @@ describe('Southbound village route',()=>{
  it('rejects newer unknown saves',()=>{
   expect(decodeSnapshot({...snapshot({x:250,y:242},createClock(),createGarden()),version:19})).toBeNull();
  });
- it('allows collecting again after two days, preserving each bush independently',()=>{
-  const travel=createTravel();expect(forageReady(travel,'fern',1)).toBe(true);travel.picked.fern=1;expect(forageReady(travel,'fern',2)).toBe(false);expect(forageReady(travel,'birch',2)).toBe(true);expect(forageReady(travel,'fern',3)).toBe(true);
+ it('keeps wild berries for three days, permits one harvest, and skips two of three three-day cycles',()=>{
+  const travel=createTravel();const ripe=[];
+  for(let day=1;day<=27;day+=3)if(forageReady(travel,'fern',day))ripe.push(day);
+  expect(ripe).toHaveLength(3);
+  for(const day of ripe){expect(forageReady(travel,'fern',day+1)).toBe(true);expect(forageReady(travel,'fern',day+2)).toBe(true);expect(forageReady(travel,'fern',day+3)).toBe(false);travel.picked.fern=day;expect(forageReady(travel,'fern',day+1)).toBe(false);expect(forageReady(travel,'fern',day+2)).toBe(false);}
  });
 });
 

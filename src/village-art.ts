@@ -1,3 +1,4 @@
+import {forageReady} from './travel';
 import {drawPathNetwork} from './path-art';
 import {farmBounds} from './layout';
 import {paintForest} from './forest-art';
@@ -115,9 +116,9 @@ export function drawVillage(scene:Phaser.Scene){
  const terrain=scene.add.renderTexture(FOREST_LEFT,farmBounds.top,1200-FOREST_LEFT,WORLD_HEIGHT-farmBounds.top).setOrigin(0).setDepth(-.5);terrain.draw(g,-FOREST_LEFT,-farmBounds.top);g.destroy();
  return {graphics:terrain,labels};
 }
-export function drawForage(scene:Phaser.Scene,picked:Record<string,number>,day:number){
+export function drawForage(scene:Phaser.Scene,picked:Record<string,number>,day:number,weatherSeed=0){
  const g=scene.add.graphics().setDepth(2);
  for(const b of layout.bushes){g.fillStyle(0x2f5138,.25).fillEllipse(b.x+3,b.y+5,40,13);g.fillStyle(0x3e693e).fillEllipse(b.x,b.y-6,35,24);g.fillStyle(0x719047).fillEllipse(b.x-6,b.y-12,21,15);g.fillStyle(0x92a85a).fillEllipse(b.x+4,b.y-15,15,10);
-  if(picked[b.id]===undefined||day-picked[b.id]>=2)for(const[dx,dy]of [[-10,-5],[2,-12],[10,-4],[-3,0]]){g.fillStyle(0x565b84).fillCircle(b.x+dx,b.y+dy,3);g.fillStyle(0xa8a9c7).fillCircle(b.x+dx-1,b.y+dy-1,1);}}
+  if(forageReady({picked,weatherSeed},b.id,day))for(const[dx,dy]of [[-10,-5],[2,-12],[10,-4],[-3,0]]){g.fillStyle(0x565b84).fillCircle(b.x+dx,b.y+dy,3);g.fillStyle(0xa8a9c7).fillCircle(b.x+dx-1,b.y+dy-1,1);}}
  return g;
 }

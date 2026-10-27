@@ -8,10 +8,17 @@ export class ForestAtmosphere{
   const g=this.g;g.clear();if(!outdoors||!inForest(actor.x,actor.y)||Math.hypot(actor.x-forestNest.x,actor.y-forestNest.y)>300)return;
   this.time+=dt;const light=1-darkness/.55,n=forestNest;
   if(sunny&&light>.2){g.fillStyle(0xe3d8ac,.06*light).fillPoints([{x:n.x-100,y:n.y-170},{x:n.x-76,y:n.y-170},{x:n.x+67,y:n.y+24},{x:n.x+13,y:n.y+18}],true);}
-  for(let i=0;i<19;i++){
+  for(let i=0;i<28;i++){
    const t=this.time*(.015+i%3*.004)+i*.173,turn=t-Math.floor(t),x=n.x-82+(i*37%160)+Math.sin(this.time*.4+i)*8,y=n.y+9-turn*85;
-   const fade=Math.sin(Math.PI*turn)*(.11+(sunny?.18:.08))*Math.max(.2,light);
-   if(this.scene.cameras.main.worldView.contains(x,y))g.fillStyle(i%3?0xc7cbb9:0xe2dcc4,fade).fillEllipse(x,y,i%3?1:1.7,i%3?1.2:1.5);
+   const fade=Math.sin(Math.PI*turn)*(.32+(sunny?.35:.2))*Math.max(.2,light);
+   if(this.scene.cameras.main.worldView.contains(x,y))g.fillStyle(i%3?0xc7cbb9:0xe2dcc4,fade).fillEllipse(x,y,i%3?1.5:2.2,i%3?1.8:2.4);
+  }
+  // Slow drops originate only from the two open nest passages.
+  for(const [i,dx,dy]of [[0,-33,-20],[1,13,-13]]){
+   const phase=(this.time*.25+i*.47)%1,x=n.x+dx,y0=n.y+dy+10,ground=n.y+11;
+   if(phase<.78){const progress=phase/.78,y=y0+(ground-y0)*progress*progress;
+    g.fillStyle(0xd0d0a6,.9).fillEllipse(x,y,2.4,3.8);g.fillStyle(0xeff0d0,.7).fillCircle(x-.4,y-.7,.7);
+   }else{const spread=(phase-.78)/.22;g.lineStyle(.8,0xbcc295,(1-spread)*.7).strokeEllipse(x,ground,3+spread*12,1+spread*4);}
   }
   // Normal activity survives in the sunlit clearing beside the disturbed hollow.
   for(let i=0;i<2;i++){const t=this.time*.7+i*3,x=n.x+180+Math.sin(t)*20,y=n.y+12+i*23+Math.cos(t*.8)*10,spread=1+Math.abs(Math.sin(this.time*15+i))*2;

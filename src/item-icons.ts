@@ -1,8 +1,9 @@
 import {goods,extras,type Good,type Extra} from './estate';
 import type {Crop} from './gardening';
-export type IconName='cutReed'|'composter'|'basketMaker'|'beeHabitat'|'irrigation'|'mulch'|'gear'|'clay'|Good|Extra|Crop|'nestSample'|'chest'|'walkingStick'|'scrap'|'workshopKey'|'copperPipe'|'linenCloth'|'glassJar'|'hoe'|'water'|'harvest'|'axe'|'pickaxe'|'crowbar'|'hand'|'wood'|'stone'|'weed'|'birdhouse'|'annie'|'strawberry'|'honeyberry'|'blueberry';
+export type IconName='fallenFruit'|'cutReed'|'composter'|'basketMaker'|'beeHabitat'|'irrigation'|'mulch'|'gear'|'clay'|Good|Extra|Crop|'nestSample'|'chest'|'walkingStick'|'scrap'|'workshopKey'|'copperPipe'|'linenCloth'|'glassJar'|'hoe'|'water'|'harvest'|'axe'|'pickaxe'|'crowbar'|'hand'|'wood'|'stone'|'weed'|'birdhouse'|'annie'|'strawberry'|'honeyberry'|'blueberry';
 // Original, locally drawn interface icons; no external asset dependency.
 const artwork:Partial<Record<IconName,string>>={
+ fallenFruit:'<ellipse cx="18" cy="31" rx="16" ry="3" fill="#596344" opacity=".4"/><path d="M5 18q4-9 13-5 12-6 15 5 1 13-14 15Q3 32 5 18z" fill="#b48655"/><path d="M8 19q4-5 10-2 5-4 10 1l-2 8-13 3z" fill="#caa46b"/><ellipse cx="24" cy="25" rx="5" ry="4" fill="#806848"/><path d="m18 15 1-10m0 4q8-8 12-3-4 7-12 3" fill="#75864d" stroke="#627342" stroke-width="2"/>',
  cutReed:'<path d="m8 32 4-27m1 28 4-29m1 28 4-29m1 27 5-23" stroke="#b7a66a" stroke-width="3"/><path d="m9 21 18 2m-18 3 17 1" stroke="#896744" stroke-width="2"/><path d="m12 5 1-3m4 3 1-3m4 2 1-3m5 4 1-3" stroke="#d5c891" stroke-width="2"/>',
  composter:'<path d="m5 10 26 2-2 20H7z" fill="#765d39"/><path d="M5 10 18 5l14 6-13 5z" fill="#9b8050"/><path d="m7 17 23 2M7 23l22 2M8 29l20 2" stroke="#c2a36b" stroke-width="2"/><path d="m11 10 7-6 6 7-6 3z" fill="#6c9450"/>',
  basketMaker:'<path d="M5 12h27v5H5zM7 16h3v17H7zM27 16h3v17h-3z" fill="#967146"/><path d="M13 4h13v10H13z" fill="#b89962"/><path d="m14 5 10 8m-7-8 7 5" stroke="#dac38d"/><path d="m12 20 13 1-3 10H14z" fill="#b69257"/><path d="M14 20q3-12 8 0" fill="none" stroke="#d7bd83" stroke-width="2"/><path d="m12 24 12 1m-11 3 10 1" stroke="#ead1a0"/>',
