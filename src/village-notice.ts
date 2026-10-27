@@ -1,7 +1,7 @@
 import type Phaser from 'phaser';
 export const villageNotice={x:350,y:1165,w:76};
 export const pollinatorNoticeTitle='Közlemény a gyümölcstermésről';
-export const pollinatorNoticeText='A környék gazdái idén szokatlanul kevés beporzót figyeltek meg. A bogyósokon és gyümölcsfákon sok virág termés nélkül nyílik el: jelenleg nagyjából minden harmadik virágzási ciklusból várható gyümölcs.\n\nAz öntözés továbbra is fontos, de a beporzók munkáját nem helyettesíti. Az érett gyümölcsöt érdemes három napon belül leszedni.\n\nA polgármesteri hivatal';
+export const pollinatorNoticeText='A környék gazdái idén szokatlanul kevés beporzót figyeltek meg. A bogyósokon és gyümölcsfákon sok virág termés nélkül nyílik el: jelenleg nagyjából minden harmadik virágzási ciklusból várható gyümölcs. A terméskiesés a gyümölcsök eladási értékét növeli.\n\nAz öntözés továbbra is fontos, de a beporzók munkáját nem helyettesíti. Az érett gyümölcsöt érdemes három napon belül leszedni.\n\nA polgármesteri hivatal';
 export function noticeBoardBlocked(x:number,y:number){const dx=x-villageNotice.x,dy=y-villageNotice.y;return Math.abs(dx)<38&&Math.abs(dy-dx*.25)<9;}
 export function drawVillageNotice(scene:Phaser.Scene){
  const g=scene.add.graphics().setDepth(3),n=villageNotice;

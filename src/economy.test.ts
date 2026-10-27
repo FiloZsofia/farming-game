@@ -2,7 +2,7 @@ import {describe,it,expect} from 'vitest';
 import {createGarden} from './gardening';
 import {createEconomy,salePrices,shippingValue,transferProduce,settleSales,validEconomy} from './economy';
 describe('shipping and gold',()=>{
- it('uses agreed unit prices',()=>expect(salePrices).toEqual({radish:15,potato:30,pea:12,strawberry:14,honeyberry:16,blueberry:30,carrot:22,lettuce:12,onion:32}));
+ it('uses agreed unit prices',()=>expect(salePrices).toEqual({radish:15,potato:30,pea:12,strawberry:25,honeyberry:24,blueberry:21,carrot:22,lettuce:12,onion:32}));
  it('moves produce into the crate without paying before morning',()=>{
   const garden=createGarden(),economy=createEconomy();garden.produce.radish=4;
   expect(transferProduce(garden,economy,'radish',3,'deposit')).toBe(true);expect(garden.produce.radish).toBe(1);expect(economy.shipping.radish).toBe(3);expect(economy.gold).toBe(0);expect(shippingValue(economy.shipping)).toBe(45);
@@ -26,5 +26,10 @@ describe('shipping and gold',()=>{
  it('validates balances, shipping and receipt totals',()=>{const e=createEconomy();expect(validEconomy(e)).toBe(true);e.gold=-1;expect(validEconomy(e)).toBe(false);const next=settleSales(createEconomy(),1);next.lastSale!.total=1;expect(validEconomy(next)).toBe(false);});
 });
 describe('spring fruit sales',()=>{
- it('sells the three similar-value berries with vegetables in one morning',()=>{const garden=createGarden(),economy=createEconomy();for(const crop of ['strawberry','honeyberry','blueberry'] as const){garden.produce[crop]=1;expect(transferProduce(garden,economy,crop,1,'deposit')).toBe(true);}expect(settleSales(economy,1).gold).toBe(60);});
+ it('sells the three similar-value berries with vegetables in one morning',()=>{const garden=createGarden(),economy=createEconomy();for(const crop of ['strawberry','honeyberry','blueberry'] as const){garden.produce[crop]=1;expect(transferProduce(garden,economy,crop,1,'deposit')).toBe(true);}expect(settleSales(economy,1).gold).toBe(70);});
+});
+
+it('keeps legacy berry receipts valid while settling new sales at the new prices',()=>{
+ const e=createEconomy();e.shipping.strawberry=1;e.shipping.honeyberry=1;e.shipping.blueberry=1;const n=settleSales(e,1);expect(n.lastSale?.total).toBe(70);expect(validEconomy(n)).toBe(true);
+ const old=structuredClone(n);old.lastSale!.total=60;delete old.lastSale!.unitPrices;expect(validEconomy(old)).toBe(true);expect(old.gold).toBe(n.gold);old.lastSale!.total=61;expect(validEconomy(old)).toBe(false);
 });

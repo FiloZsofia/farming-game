@@ -792,3 +792,9 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 - A falutér délnyugati peremére álló, kétoszlopos, tetőléces hirdetőtábla került, a tér ívéhez illeszkedő enyhe perspektívával. E-vel és kattintással olvasható. A polgármesteri hivatal elfogadott „Közlemény a gyümölcstermésről” szövege innen bármikor újraolvasható; postaládás másolat nem készül.
 - Az üres felkapált föld két teljes, vetés nélkül eltelt nap után visszaáll: hétfőn kapálva kedden és szerdán megmarad, csütörtök reggelre eltűnik. Öntözés és eső nem indítja újra ezt az időt; ültetés megszünteti az üresföld-számlálást. Egyszer termő növény leszedése után az üresen maradt helyre újra érvényes a szabály. A vadvirággal elfoglalt földet és a beültetett helyeket nem érinti. Régi mentésben korábban üresen álló földek a frissítéstől számítják ezt az időt.
 - A palánták árai egyelőre változatlanok; az esetleges árcsökkentés még egyeztetés alatt áll.
+
+
+### Gyümölcsárak és falusi közlemény — 2026. október 27.
+- A játék kezdetétől az eper eladási ára 25 gold/db, a mézbogyóé 24 gold/db, az áfonyáé 21 gold/db. A vételárak változatlanok (20 / 25 / 45 gold). A meglévő mentésekben a még el nem számolt termést is az új árakon értékesítjük; a korábbi bevételeket nem számoljuk újra.
+- A hirdetőtábla közleményében a „jelenleg nagyjából minden harmadik virágzási ciklusból várható gyümölcs.” mondat után ez szerepel: „A terméskiesés a gyümölcsök eladási értékét növeli.”
+- Egy sikeresen termő eper-, mézbogyó- vagy áfonyanövény szüretenként 1 gyümölcsöt ad; a mennyiség változatlan.

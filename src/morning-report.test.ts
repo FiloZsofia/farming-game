@@ -30,3 +30,8 @@ describe('Visual morning settlement',()=>{
   const data=snapshot({x:250,y:242},createClock(3),createGarden());const legacy={...data,version:13,travel:{picked:{},morning:'Az éjjel kiraboltak. Elveszítettem: 1 db áfonya.'}};const decoded=decodeSnapshot(legacy)!;expect(decoded.travel.morning).toBe(legacy.travel.morning);expect(decoded.travel.sale).toBeNull();expect(decoded.economy.gold).toBe(data.economy.gold);
  });
 });
+
+it('renders historical berry line values without recalculating the saved balance',()=>{
+ const old=morningSale({day:2,total:60,items:{...emptyQuantities(),strawberry:1,honeyberry:1,blueberry:1}},100);expect(validMorningSale(old,3)).toBe(true);expect(saleRows(old).map(r=>r.value)).toEqual([14,16,30]);expect(old.afterGold).toBe(160);
+ const e=createEconomy();e.shipping={...old.items};const current=morningSale(settleSales(e,2).lastSale!,100);expect(validMorningSale(current,3)).toBe(true);expect(saleRows(current).map(r=>r.value)).toEqual([25,24,21]);expect(current.afterGold).toBe(170);
+});
