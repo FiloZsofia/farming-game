@@ -1,6 +1,7 @@
+import {drawBedroomLuggage} from './workshop-luggage-art';
 import Phaser from 'phaser';
 import {HOME_ORIGIN,homeBedsideOffset} from './home';
-export function drawHome(scene:Phaser.Scene){
+export function drawHome(scene:Phaser.Scene,unpacked=false){
  const root=scene.add.container(0,HOME_ORIGIN).setDepth(0),g=scene.add.graphics();root.add(g);
  g.fillStyle(0x323b32).fillRect(0,0,800,600);g.fillStyle(0x3e4639).fillRect(88,140,624,386);g.fillStyle(0xb7b093).fillRect(100,148,600,62);g.fillStyle(0x77634b).fillRect(100,210,600,304);
  for(let y=213;y<514;y+=18){g.lineStyle(1,0x534b37).lineBetween(100,y,700,y);for(let x=105+(y%5)*32;x<700;x+=122)g.lineBetween(x,y,x,y+18);g.lineStyle(1,0xac9467,.32).lineBetween(110,y+3,687,y+3);}
@@ -19,7 +20,7 @@ export function drawHome(scene:Phaser.Scene){
  g.fillStyle(0x397f82).fillRoundedRect(332,370,143,83,5);g.lineStyle(4,0xd99452).strokeRoundedRect(338,376,131,71,4);g.lineStyle(1,0xf0d2a0).strokeRoundedRect(344,382,119,59,3);
  for(let y=379;y<448;y+=5){g.lineStyle(1,0xe3c795,.9).lineBetween(327,y,332,y).lineBetween(475,y,480,y);}for(const x of [369,403,437]){g.fillStyle(0xe8bc78).fillPoints([{x,y:394},{x:x+9,y:411},{x,y:428},{x:x-9,y:411}],true);g.fillStyle(0xb7623e).fillCircle(x,411,3);}
 
- g.fillStyle(0x6b5038).fillRoundedRect(274,425,38,24,5);g.lineStyle(3,0x8c734e).strokeRoundedRect(286,418,14,10,3);g.fillStyle(0xb49865).fillRect(281,426,3,22).fillRect(302,426,3,22);for(const [x,y]of [[600,385],[632,396]]){g.fillStyle(0xb09a70).fillRoundedRect(x,y,29,27,2);g.lineStyle(1,0x786447).strokeRect(x,y,29,27);g.fillStyle(0xd1bd8c).fillRect(x+12,y,5,27);}
+ drawBedroomLuggage(g,unpacked);for(const [x,y]of [[600,385],[632,396]]){g.fillStyle(0xb09a70).fillRoundedRect(x,y,29,27,2);g.lineStyle(1,0x786447).strokeRect(x,y,29,27);g.fillStyle(0xd1bd8c).fillRect(x+12,y,5,27);}
  g.fillStyle(0x363b2c).fillRect(373,501,54,13);g.fillStyle(0xb49b6c).fillRoundedRect(369,498,62,5,2);g.fillStyle(0x88734f).fillEllipse(400,484,49,17);
  return root;
 }

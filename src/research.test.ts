@@ -1,5 +1,5 @@
 import {describe,it,expect} from 'vitest';
-import {createResearch,startResearch,plantFlower,advanceResearch,observeBee,grantKey,inspectWorkshop,collectSalvage,supplyMaterial,repairMachine,salvageSites,validResearch,beeAvailable,repairNeeds,inWorkshop,entranceShutterOpen,workshopLit,clearCobweb,remainingWebs} from './research';
+import {createResearch,startResearch,plantFlower,advanceResearch,observeBee,grantKey,inspectWorkshop,collectSalvage,supplyMaterial,repairMachine,salvageSites,validResearch,beeAvailable,repairNeeds,inWorkshop,entranceShutterOpen,workshopLit,clearCobweb,remainingWebs,microscopeReady,workshopEntered,workshopText,shouldDeliverMicroscope} from './research';
 import {createGarden,targetTile,tileKey} from './gardening';
 import {createClock,calendarDay} from './clock';
 import {snapshot,decodeSnapshot,validSnapshot} from './storage';
@@ -31,3 +31,30 @@ it('relocates an old saved player covered by the enlarged workshop without chang
 it('keeps possessions when the expanded house covers a legacy player, and rejects a position inside the old wall',()=>{const data=snapshot({x:120,y:150},createClock(10),createGarden());expect(decodeSnapshot(data)?.player).toEqual({x:120,y:280});data.player={x:200,y:150};expect(decodeSnapshot(data)).toBeNull();});
 
 it('does not duplicate a gifted repair material after it is stored in a chest',()=>{const r={...createResearch(),discovered:true};const supplied=supplyMaterial(r,'annie')!;supplied.materials.glass=0;expect(supplyMaterial(supplied,'annie')).toBeNull();});
+
+describe('bringing the old microscope to the workbench',()=>{
+ it('keeps the microscope absent until delivery is saved after a new repair',()=>{
+  const r=examined();r.materials={scrap:18,copper:1,glass:1,linen:1};const fixed=repairMachine(r,{wood:35,stone:30})!;
+  expect(fixed.research.microscopeDelivered).toBe(false);expect(microscopeReady(fixed.research)).toBe(false);
+  const s=snapshot({x:400,y:3405},createClock(10),createGarden());s.travel.research=fixed.research;s.plots=[...flowering().garden.plots];
+  expect(decodeSnapshot(s)?.travel.research.microscopeDelivered).toBe(false);
+  const delivered=structuredClone(s);delivered.travel.research.microscopeDelivered=true;
+  expect(microscopeReady(delivered.travel.research)).toBe(true);expect(decodeSnapshot(delivered)).toEqual(delivered);expect(delivered.travel.research.materials).toEqual(fixed.research.materials);
+ });
+ it('keeps already repaired older saves usable without replay or lost materials',()=>{
+  const r=examined();r.repaired=true;delete r.microscopeDelivered;expect(microscopeReady(r)).toBe(true);expect(validResearch(r,10)).toBe(true);
+  expect(validResearch({...r,microscopeDelivered:'yes'},10)).toBe(false);expect(validResearch({...createResearch(),microscopeDelivered:true},10)).toBe(false);
+ });
+});
+
+it('starts the suitcase scene only after taking the nest sample and returning home',()=>{
+ const r=examined();r.repaired=true;r.microscopeDelivered=false;
+ expect(shouldDeliverMicroscope(r,false,250)).toBe(false);expect(shouldDeliverMicroscope(r,true,974)).toBe(false);
+ for(const y of [590,4180,3385])expect(shouldDeliverMicroscope(r,true,y)).toBe(true);
+ expect(shouldDeliverMicroscope({...r,microscopeDelivered:true},true,250)).toBe(false);
+});
+it('uses the workshop name from first entry and preserves the state through save decoding',()=>{
+ const r=unlocked();expect(workshopEntered(r)).toBe(false);expect(workshopText('Melléképület kulcsa',false)).toBe('Melléképület kulcsa');
+ r.workshopEntered=true;expect(workshopEntered(r)).toBe(true);expect(workshopText('Melléképület kulcsa',true)).toBe('Műhely kulcsa');expect(workshopText('A RÉGI MŰHELY',true)).toBe('MŰHELY');expect(workshopText('A háznál, tónál és melléképületnél.',true)).toBe('A háznál, tónál és Műhelynél.');
+ const s=snapshot({x:400,y:3470},createClock(10),createGarden());s.travel.research=r;s.plots=[...flowering().garden.plots];expect(decodeSnapshot(s)?.travel.research.workshopEntered).toBe(true);
+});

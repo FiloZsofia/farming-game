@@ -752,3 +752,14 @@ Gyűjtésnél a kijelölt gaz felszedése elsőbbséget kap a mögötte vagy el�
 A gaz közvetlen kijelölése a roncsoknál bármely szokásos kézben lévő eszközzel elsőbbséget kap, nem csak a Gyűjtés kiválasztásakor. A bontóvas se indítson bontást a kijelölt gaz helyett, kimerült roncsnál sem. Ez egyezzen a roncsoktól távol lévő gazok működésével; az építési, kihelyezési és mulcsozási módok külön műveletei megmaradnak.
 
 A napok kijelzett számozása nem áll meg 15-nél: a játék HUD-ja, a Folytatás gomb és a mentett farmok listája a tényleges, folyamatos napszámot mutassa. Ez az Erdőszéli birtokra és a Teszt farmra is érvényes. Az évszak jelenleg továbbra is Tavasz; a kijelzett napok növelése önmagában nem vezeti be a kidolgozatlan nyári tartalmakat. A meglévő mentés belső napszáma megmarad, nincs újraszámolás vagy újrakezdés.
+
+
+A használati statisztika bevezetését egyelőre elvetettük. Nincs beépített vagy bekapcsolt analitikai mérés.
+
+## A mikroszkóp előkerülése és a Műhely neve
+
+A kivonatkészítő javítása után a mikroszkóp még nem jelenik meg. A fészekminta begyűjtésekor változatlanul a „Vizsgáld meg a fészeknél talált mintát” cél következik; a játékos szabadon folytathatja az erdei kalandot. Az első farmra visszaérkezés indítja el a rövid jelenetet. Áttűnéssel Sam hálószobájába kerülünk: a meglévő bőröndjében keresgél, három ruhadarabot dob maga mögé, majd óvatosan előveszi régi mikroszkópját. Újabb áttűnés után a Műhelyben a jelenlegi munkapadra helyezi. Nem sétál végig a helyszínek között. Ezután visszakapjuk az irányítást, a vizsgálatot a játékos indítja. A jelenet idejére megáll a játékidő, a ruhák a hálószobában maradnak. Csökkentett animációt kérő böngészőbeállításnál rövidebb, visszafogott mozdulatok láthatók.
+
+A jelenet függőben lévő és kész állapota mentődik, megszakításkor a hálószobai jelenet újraindítható, az alapanyagok ismételt levonása nélkül. A korábban megjavított géphez már elhelyezett mikroszkópot tartalmazó régi mentések tovább használhatók, nem kényszerítjük rájuk utólag a jelenetet.
+
+A lezárt melléképület az első tényleges belépéstől **Műhely** néven szerepel. A mentés ezt akkor is megjegyzi, ha még egyik redőny sincs felhúzva. Az aktuális helyszíncím, belépési jelzés, kulcs neve, párbeszédek és súgó ezt a nevet használja. A már teljesített első felfedezési cél címe történeti emlékként marad az eredeti; még folyamatban lévő változata az első belépés után már a Műhelyt nevezi meg.

@@ -5,7 +5,9 @@ export class FarmerArt{
  private leftLeg:Phaser.GameObjects.Container;private rightLeg:Phaser.GameObjects.Container;
  private leftArm:Phaser.GameObjects.Container;private rightArm:Phaser.GameObjects.Container;
  private head:Phaser.GameObjects.Container;private pony:Phaser.GameObjects.Container;
- private armX:number;private armY:number;
+ private armX:number;private armY:number;private carrying=false;
+ setCarrying(value:boolean){this.carrying=value;}
+ rummagePose(t:number){this.root.y=7+Math.sin(t*16);this.root.rotation=.08;this.head.y=-37;this.leftArm.setAngle(-65+Math.sin(t*22)*12);this.rightArm.setAngle(60-Math.sin(t*22)*15);}
  private contact:(()=>void)|null=null;private toolEnd=29;
  private tool:Phaser.GameObjects.Graphics;private action=0;private throwing=0;private phase=0;private equipped='hoe';private actionTool='hoe';private aim={x:0,y:1};
  constructor(private scene:Phaser.Scene,neighbor=false){
@@ -122,7 +124,7 @@ export class FarmerArt{
   }
   this.head.y=-40+(heavy?pose.weight*1.5:0)+(walking?Math.abs(Math.sin(this.phase))*-.7:0);this.pony.angle=heavy?-pose.weight*9:walking?Math.sin(this.phase)*12:0;this.pony.x=3;
   this.root.scaleX=look.x<0?-.98:1;this.root.scaleY=1;this.root.y=jumping||working&&['harvest','restore','search'].includes(this.actionTool)?this.root.y:heavy?Math.max(0,pose.weight)*1.5:0;
-  this.drawTool();if(contact)contact();
+  this.drawTool();if(this.carrying){this.leftArm.setAngle(-65);this.rightArm.setAngle(65);this.tool.clear();}if(contact)contact();
  }
 }
 
