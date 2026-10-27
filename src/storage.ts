@@ -48,6 +48,7 @@ function validSnapshotRecord(value:unknown,legacy=false):value is Snapshot{
   if(!finite(x)||!finite(y)||tileKey({x,y})!==key||(tileKey((legacy?legacyTargetTile:targetTile)(x+1,y+1))!==key&&(legacy||x%TILE!==0||y%TILE!==0))||!(legacy?legacyCultivable:cultivable)({x,y}))return false;
   if(plot&&((plot.mulched!==undefined&&typeof plot.mulched!=='boolean')||(plot.moisture!==undefined&&(!plot.mulched||!Number.isSafeInteger(plot.moisture)||plot.moisture<0||plot.moisture>3||plot.watered!==(plot.moisture>0)))))return false;
   if(!plot||typeof plot!=='object'||typeof plot.watered!=='boolean'||!(plot.crop===null||crops.includes(plot.crop)))return false;
+  if(plot.emptyDays!==undefined&&(plot.crop!==null||!Number.isSafeInteger(plot.emptyDays)||plot.emptyDays<0||plot.emptyDays>2))return false;
   if((plot.bloomCycle!==undefined||plot.fruitSet!==undefined||plot.ripeDays!==undefined||plot.fruitAftermath!==undefined)&&!pollinationDependent(plot.crop))return false;
   if(plot.bloomCycle!==undefined&&(!Number.isSafeInteger(plot.bloomCycle)||plot.bloomCycle<0||plot.bloomCycle>999999))return false;
   if(plot.fruitSet!==undefined&&typeof plot.fruitSet!=='boolean')return false;

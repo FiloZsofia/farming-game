@@ -1,3 +1,4 @@
+import {noticeBoardBlocked} from './village-notice';
 import {natureSites,natureTreeClear} from './nature-resources';
 import {forestBlocked,forestPlants} from './forest';
 import {farmLayout} from './layout';
@@ -50,6 +51,7 @@ for(let row=0;row<7;row++)for(let column=0;column<10;column++){
 }
 const buildings:Box[]=[villageLayout.nursery,villageLayout.fishShop,villageLayout.craftShop];
 export function villageBlocked(x:number,y:number){
+ if(noticeBoardBlocked(x,y))return true;
  if(forestTrees.some(t=>Math.hypot((x-t.x)/12,(y-t.y)/9)<1))return true;
  if(x<22&&y>=695&&y<=1340)return forestBlocked(x,y);
  if(x<22||x>WORLD_WIDTH-22||y<600||y>WORLD_HEIGHT-26)return true;
@@ -96,7 +98,7 @@ export function benchContains(b:BenchPose,x:number,y:number){const dx=x-b.x,dy=y
 // Move only positions affected by those changes, preserving every possession.
 export function relocateVillagePlayer(player:{x:number;y:number}){
  const {x,y}=player,b=villageLayout.fishShop;
- const changed=buildings.some(b=>x+7>b.x&&x-7<b.x+b.w&&y+3>b.y&&y-4<b.y+b.h)||[...villageTrees,...forestTrees].some(t=>Math.hypot((x-t.x)/12,(y-t.y)/9)<1)||(x+7>b.x&&x-7<b.x+b.w&&y+3>b.y&&y-4<b.y+b.h)||villageLayout.benches.some(p=>benchContains(benchPose(p.angle),x,y));
+ const changed=noticeBoardBlocked(x,y)||buildings.some(b=>x+7>b.x&&x-7<b.x+b.w&&y+3>b.y&&y-4<b.y+b.h)||[...villageTrees,...forestTrees].some(t=>Math.hypot((x-t.x)/12,(y-t.y)/9)<1)||(x+7>b.x&&x-7<b.x+b.w&&y+3>b.y&&y-4<b.y+b.h)||villageLayout.benches.some(p=>benchContains(benchPose(p.angle),x,y));
  if(!changed||!worldBlocked(x,y))return player;
  for(let distance=8;distance<=160;distance+=8)for(let angle=0;angle<Math.PI*2;angle+=Math.PI/8){const point={x:x+Math.cos(angle)*distance,y:y+Math.sin(angle)*distance};if(!worldBlocked(point.x,point.y))return point;}
  return {x:560,y:1100};

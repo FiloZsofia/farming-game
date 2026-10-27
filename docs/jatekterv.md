@@ -786,3 +786,9 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 
 - A fészkes fatörzs természetes barna színű marad. A szürkés gombás bevonat csak a két felnyílt járat körül látható; onnan lassú cseppek hullanak a földre, helyi elszíneződést hagyva. A levegőben felszálló világos porszemcsék jól láthatók, a környező erdő színei változatlanok.
 - A fatörzs közvetlen környezete is élettelenebb: szabálytalan fakó fűfoltok, száraz avar, talajon futó finom gombafonalak és apró világos gombatelepek. A hatás fokozatosan olvad az élő erdőbe, nem fed külön téglalapként a terepre, és nem színezi át a törzs barna kérgét. A közvetlen fészekkörnyéken nem látható lepke vagy szentjánosbogár, távolabb megmarad a rovarélet.
+
+
+### Falusi közlemény és üres föld — 2026. október 27.
+- A falutér délnyugati peremére álló, kétoszlopos, tetőléces hirdetőtábla került, a tér ívéhez illeszkedő enyhe perspektívával. E-vel és kattintással olvasható. A polgármesteri hivatal elfogadott „Közlemény a gyümölcstermésről” szövege innen bármikor újraolvasható; postaládás másolat nem készül.
+- Az üres felkapált föld két teljes, vetés nélkül eltelt nap után visszaáll: hétfőn kapálva kedden és szerdán megmarad, csütörtök reggelre eltűnik. Öntözés és eső nem indítja újra ezt az időt; ültetés megszünteti az üresföld-számlálást. Egyszer termő növény leszedése után az üresen maradt helyre újra érvényes a szabály. A vadvirággal elfoglalt földet és a beültetett helyeket nem érinti. Régi mentésben korábban üresen álló földek a frissítéstől számítják ezt az időt.
+- A palánták árai egyelőre változatlanok; az esetleges árcsökkentés még egyeztetés alatt áll.

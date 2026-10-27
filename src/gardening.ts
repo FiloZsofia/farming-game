@@ -8,7 +8,7 @@ export type Tool='hoe'|'water'|'harvest'|Crop;
 // Agreed initial playtest values; revisit after playing.
 export const growthRules={radish:3,potato:5,pea:6,peaRegrowth:3,strawberry:4,honeyberry:5,blueberry:6,fruitRegrowth:2,carrot:4,lettuce:2,onion:5};
 export type Tile={x:number;y:number};
-export type Plot={bloomCycle?:number;fruitSet?:boolean;ripeDays?:number;fruitAftermath?:'empty'|'fallen';watered:boolean;crop:Crop|null;growth:number;regrowing:boolean;mulched?:boolean;moisture?:number};
+export type Plot={emptyDays?:number;bloomCycle?:number;fruitSet?:boolean;ripeDays?:number;fruitAftermath?:'empty'|'fallen';watered:boolean;crop:Crop|null;growth:number;regrowing:boolean;mulched?:boolean;moisture?:number};
 export type Garden={plots:Map<string,Plot>;seeds:Record<Crop,number>;produce:Record<Crop,number>};
 export const createGarden=():Garden=>({plots:new Map(),seeds:{radish:4,potato:4,pea:4,strawberry:0,honeyberry:0,blueberry:0,carrot:0,lettuce:0,onion:0},produce:{radish:0,potato:0,pea:0,strawberry:0,honeyberry:0,blueberry:0,carrot:0,lettuce:0,onion:0}});
 export const tileKey=(tile:Tile)=>`${tile.x},${tile.y}`;
@@ -82,7 +82,7 @@ export function work(garden:Garden,tool:Tool,tile:Tile,player:{x:number;y:number
  }
  if(plot.crop)return {ok:false,message:'Ide már ültettél. Válassz egy üres földkockát.'};
  if(garden.seeds[tool]<=0)return {ok:false,message:'Ebből elfogyott az ültetőanyag.'};
- plot.crop=tool;plot.growth=0;plot.regrowing=false;garden.seeds[tool]--;return {ok:true,message:`Elültetve: ${cropNames[tool]}.`};
+ delete plot.emptyDays;plot.crop=tool;plot.growth=0;plot.regrowing=false;garden.seeds[tool]--;return {ok:true,message:`Elültetve: ${cropNames[tool]}.`};
 }
 
 export function growthTarget(plot:Plot,rules=growthRules){return plot.crop?(plot.regrowing?(plot.crop==='pea'?rules.peaRegrowth:rules.fruitRegrowth):rules[plot.crop]):0;}
@@ -90,9 +90,10 @@ export function isRipe(plot:Plot,rules=growthRules){return Boolean(plot.crop&&pl
 function restartFruitCycle(plot:Plot,aftermath:'empty'|'fallen'){
  plot.growth=0;plot.regrowing=true;plot.bloomCycle=(plot.bloomCycle??0)+1;plot.fruitAftermath=aftermath;delete plot.fruitSet;delete plot.ripeDays;
 }
-export function nextDayGarden(garden:Garden,rules=growthRules,ecology?:PollinationContext):Garden{
- return {seeds:{...garden.seeds},produce:{...garden.produce},plots:new Map([...garden.plots].map(([key,p])=>{
-  const plot={...p},berry=!!ecology&&pollinationDependent(plot.crop);let resting=false;if(berry)delete plot.fruitAftermath;
+export function nextDayGarden(garden:Garden,rules=growthRules,ecology?:PollinationContext,occupied:ReadonlySet<string>=new Set()):Garden{
+ return {seeds:{...garden.seeds},produce:{...garden.produce},plots:new Map([...garden.plots].flatMap(([key,p]):[string,Plot][]=>{
+  const plot={...p};if(!plot.crop&&!occupied.has(key)){plot.emptyDays=(plot.emptyDays??0)+1;if(plot.emptyDays>=3)return [];}else delete plot.emptyDays;
+  const berry=!!ecology&&pollinationDependent(plot.crop);let resting=false;if(berry)delete plot.fruitAftermath;
   if(berry&&isRipe(plot,rules)){
    plot.fruitSet=true;plot.ripeDays=(plot.ripeDays??-1)+1;
    if(plot.ripeDays>=RIPE_FRUIT_DAYS){restartFruitCycle(plot,'fallen');resting=true;}
@@ -106,6 +107,6 @@ export function nextDayGarden(garden:Garden,rules=growthRules,ecology?:Pollinati
    }
    if(berry&&isRipe(plot,rules))plot.ripeDays=0;
   }
-  if(plot.mulched){plot.moisture=Math.max(0,(plot.moisture??(plot.watered?3:0))-1);plot.watered=plot.moisture>0;}else plot.watered=false;return [key,plot];
+  if(plot.mulched){plot.moisture=Math.max(0,(plot.moisture??(plot.watered?3:0))-1);plot.watered=plot.moisture>0;}else plot.watered=false;return [[key,plot]];
  }))};
 }
