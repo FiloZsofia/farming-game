@@ -1,3 +1,4 @@
+import {isMicroscopeTestFarm,prepareMicroscopeTest} from './microscope-test-setup';
 import {playMicroscopeDelivery} from './microscope-delivery';
 import {packEmptyChest} from './chests';
 import {simonPortrait} from './simon-art';
@@ -1057,6 +1058,18 @@ class Farm extends Phaser.Scene {
   if(!this.canInteract()||!inWorkshop(this.actor.y))return;const object=workshopObjects.find(o=>o.id===id);if(!object||Math.hypot(this.actor.x-object.x,this.actor.y-object.y)>78)return;const next=inspectWorkshop(this.travel.research,id);if(!next)return;
   if(await this.commitResearch(next)){showDialogue(object.name,['shutter','entrance-shutter'].includes(id)?object.text:this.travel.research.repaired&&['vat','pipes','filter','coil'].includes(id)?'A helyreállított kivonatkészítő egyik része. Talán az erdőben találok valami hasznosat, amivel elkezdhetem a kísérletezést.':object.text,'A RÉGI MŰHELY');if(id==='vat'&&!next.repaired)this.openRepairPanel();}
  }
+ private openMicroscopeTest(){
+  if(!this.ready||this.transitioning||!isMicroscopeTestFarm(this.farmName))return;
+  showDialogue('Fészekminta tesztje',this.travel.research.repaired?'A fészek mellé kerülsz, a mintavétel elé. A fészekminta vizsgálata és elküldése újrakezdhető; a hozzá tartozó korábbi megfigyelések és képek törlődnek.':'Ehhez a teszthez előbb meg kell javítani a kivonatkészítőt.','TESZT FARM');
+  if(!this.travel.research.repaired)return;
+  const panel=document.querySelector<HTMLElement>('#research-panel')!;panel.replaceChildren();panel.hidden=false;
+  const button=document.createElement('button');button.type='button';button.id='prepare-microscope-test';button.textContent='Előkészítem';button.onclick=async()=>{
+   if(this.transitioning)return;const next=prepareMicroscopeTest(this.currentSnapshot());if(!next)return;button.disabled=true;
+   if(!await this.commitChest(next,()=>{
+    this.clock=next.clock;this.actor.setPosition(next.player.x,next.player.y).setAngle(0);this.body.setY(0);this.jumpRemaining=0;this.jumpCooldown=0;this.collapseRemaining=0;this.shadow.setScale(1);document.querySelector<HTMLElement>('#sleep-shade')!.style.opacity='0';this.forestPresence=true;this.forestEquipped=false;this.forestCombat?.reset();this.thoughtRemaining=0;this.thought.setVisible(false);this.thoughtBack.clear();this.redrawScenery();this.updateFarmTitle();this.fitCamera();this.nearby='';this.aimAhead();dialogue.close();
+   }))button.disabled=false;
+  };panel.append(button);
+ }
  private async deliverMicroscope(){
   if(this.microscopeDeliveryPlaying||this.transitioning)return;
   this.microscopeDeliveryPlaying=true;this.transitioning=true;this.saveRevision++;release();this.bubble.setVisible(false);this.selection.clear();
@@ -1301,7 +1314,8 @@ class Farm extends Phaser.Scene {
   document.querySelector('#retry-farms')!.addEventListener('click',()=>void this.openStartMenu());
   document.querySelector('#preview-farms')!.addEventListener('click',()=>void this.acknowledgeStoryEnd());
   document.querySelector('#open-start-menu')!.addEventListener('click',()=>void this.openStartMenu());
-  document.querySelector('#menu')!.addEventListener('click',()=>{if(this.morningPlaying||this.microscopeDeliveryPlaying)return;showDialogue(this.farmName??'A farmod','', 'MENÜ');document.querySelector<HTMLElement>('#menu-panel')!.hidden=false;});
+  document.querySelector('#menu')!.addEventListener('click',()=>{if(this.morningPlaying||this.microscopeDeliveryPlaying)return;showDialogue(this.farmName??'A farmod','', 'MENÜ');document.querySelector<HTMLButtonElement>('#microscope-test')!.hidden=!isMicroscopeTestFarm(this.farmName);document.querySelector<HTMLElement>('#menu-panel')!.hidden=false;});
+  document.querySelector('#microscope-test')!.addEventListener('click',()=>this.openMicroscopeTest());
   document.querySelector('#place-order')!.addEventListener('click',()=>void this.placeOrder());
   document.querySelector('#collect-package')!.addEventListener('click',()=>void this.collectMail());
   document.querySelector('#sleep')!.addEventListener('click',()=>void this.finishDay(false));
