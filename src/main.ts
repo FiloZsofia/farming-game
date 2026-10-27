@@ -1,3 +1,6 @@
+import {initializeFruitTimers} from './fruit-timers';
+import {nearEmptyBlossoms,POLLINATION_OBSERVATION_TITLE,POLLINATION_OBSERVATION_TEXT} from './pollination-observation';
+import {ForestAtmosphere} from './forest-atmosphere';
 import {isMicroscopeTestFarm,prepareMicroscopeTest} from './microscope-test-setup';
 import {playMicroscopeDelivery} from './microscope-delivery';
 import {packEmptyChest} from './chests';
@@ -124,7 +127,7 @@ class Farm extends Phaser.Scene {
  private shownGold:number|null=null;
  private keys!:Record<string,Phaser.Input.Keyboard.Key>;
  private avatar!:FarmerArt;
- private wildlife!:Wildlife;
+ private wildlife!:Wildlife;private forestAtmosphere:ForestAtmosphere|null=null;
  private villageAmbience!:VillageAmbience;
  private story=createStory();
  private forestObjects?:Phaser.GameObjects.Graphics;
@@ -206,7 +209,7 @@ class Farm extends Phaser.Scene {
   const load=async()=>{
    try{
     const loaded=await this.store.load();
-    if(loaded.data){const {player,clock,seeds,produce,plots,economy,orders,farmName,farmerName,clearing,story,skill,travel}=loaded.data;this.travel={...travel,weatherSeed:travel.weatherSeed??randomWeatherSeed()};if(inWorkshop(player.y))this.travel.research.workshopEntered=true;this.skill=skill;this.story=story;this.clearing=clearing;this.farmName=farmName;this.farmerName=farmerName;this.updateFarmTitle();this.economy=economy;this.orders=orders;this.actor.setPosition(player.x,player.y);this.clock=clock;this.garden={seeds,produce,plots:new Map(plots)};if(this.currentWeather()==='rain')waterFromRain(this.garden);this.redrawScenery();this.drawGarden();if(travel.weatherSeed===undefined)await this.saveChecked(snapshot(this.actor,this.clock,this.garden,this.economy,this.orders,this.farmName,this.clearing,this.story,this.skill,this.farmerName,this.travel));}
+    if(loaded.data){const {player,clock,seeds,produce,plots,economy,orders,farmName,farmerName,clearing,story,skill,travel}=loaded.data;this.travel={...travel,weatherSeed:travel.weatherSeed??randomWeatherSeed()};if(inWorkshop(player.y))this.travel.research.workshopEntered=true;this.skill=skill;this.story=story;this.clearing=clearing;this.farmName=farmName;this.farmerName=farmerName;this.updateFarmTitle();this.economy=economy;this.orders=orders;this.actor.setPosition(player.x,player.y);this.clock=clock;this.garden={seeds,produce,plots:new Map(plots)};const fruitTimersInitialized=initializeFruitTimers(this.garden,this.travel.estate,this.clock.day);if(this.currentWeather()==='rain')waterFromRain(this.garden);this.redrawScenery();this.drawGarden();if(travel.weatherSeed===undefined||fruitTimersInitialized)await this.saveChecked(snapshot(this.actor,this.clock,this.garden,this.economy,this.orders,this.farmName,this.clearing,this.story,this.skill,this.farmerName,this.travel));}
     this.hasFarm=Boolean(loaded.data);this.loadRecovered=loaded.recovered;await this.store.listFarms();this.ready=true;this.lastTick=performance.now();
     let resume:string|null=null;try{resume=sessionStorage.getItem('farm-resume-once');sessionStorage.removeItem('farm-resume-once');}catch{}
     if(resume&&resume===this.store.selectedFarmId&&this.hasFarm)this.resumeCurrentFarm();
@@ -342,9 +345,19 @@ class Farm extends Phaser.Scene {
   if(Math.hypot(this.actor.x-farmLayout.journal.x-9,this.actor.y-farmLayout.journal.y-7)>55){this.notice('A naplót a ház verandáján találod.');return;}
   if(this.jumpRemaining>0)return;
   showDialogue('Mára elég volt?','A kert holnap is megvár. Lezárom a naplót, és reggelig pihenek.','ESTI NAPLÓ');
-  const observation=this.travel.research.observation;if(observation){const panel=document.querySelector<HTMLElement>('#research-panel')!;panel.hidden=false;panel.textContent=`Első megfigyelés · Tavasz ${observation.seasonDay}. napja — Szarvas faliméh (Osmia cornuta). Egy példány a vadvirágoknál. Ez jó jel, de egyetlen megfigyelésből még nem tudom, miért lettek kevesebben.`;}
+  const observation=this.travel.research.observation,note=this.travel.pollinationObservation,panel=document.querySelector<HTMLElement>('#research-panel')!;panel.replaceChildren();
+  if(observation){const p=document.createElement('p');p.textContent=`Első megfigyelés · Tavasz ${observation.seasonDay}. napja — Szarvas faliméh (Osmia cornuta). Egy példány a vadvirágoknál. Ez jó jel, de egyetlen megfigyelésből még nem tudom, miért lettek kevesebben.`;panel.append(p);}
+  if(note){const p=document.createElement('p');p.dataset.pollinationNote='true';const title=document.createElement('strong');title.textContent=`Kerti megfigyelés · ${note.day}. nap — ${POLLINATION_OBSERVATION_TITLE}`;p.append(title,document.createElement('br'),document.createTextNode(POLLINATION_OBSERVATION_TEXT));panel.append(p);}
+  panel.hidden=!observation&&!note;
   document.querySelector<HTMLButtonElement>('#sleep')!.hidden=false;
   document.querySelector<HTMLButtonElement>('#export-save')!.hidden=false;
+ }
+ private async observeEmptyBlossoms(){
+  if(!this.canInteract()||this.travel.pollinationObservation)return;
+  this.transitioning=true;this.saveRevision++;const next=this.currentSnapshot();next.travel.pollinationObservation={day:this.clock.day};
+  try{await this.saveChecked(next);this.travel=next.travel;showDialogue(POLLINATION_OBSERVATION_TITLE,POLLINATION_OBSERVATION_TEXT,'SAM');}
+  catch{this.notice('A megfigyelést nem sikerült menteni.');}
+  finally{this.transitioning=false;this.lastTick=performance.now();}
  }
  private async finishDay(forced:boolean){
   if(this.transitioning||!this.ready)return;
@@ -354,10 +367,10 @@ class Farm extends Phaser.Scene {
   if(this.currentWeather()==='rain')waterFromRain(this.garden);
   const exhausted=forced||this.clock.elapsed>=this.clock.collapseAt;
   const robbery=exhausted&&outsideFarm(this.actor.y)?robInventory(this.garden,this.clearing,this.economy.gold,Math.random,this.travel.estate,this.travel.crafting,this.travel.research):null;
-  const nextGarden=nextDayGarden(robbery?.garden??this.garden);
+  const nextGarden=nextDayGarden(robbery?.garden??this.garden,undefined,{seed:this.travel.weatherSeed??0});
   if(weatherOnDay(this.travel.weatherSeed??0,nextClock.day)==='rain')waterFromRain(nextGarden);
   const nextTravel=structuredClone(this.travel);nextTravel.crafting=advanceCrafting(robbery?.crafting??nextTravel.crafting,nextClock.day);irrigate(nextGarden,nextTravel.crafting);this.sprayPending=true;if(nextTravel.forest)nextTravel.forest.health=5;
-  nextTravel.estate=advanceEstate(robbery?.estate??this.travel.estate,nextClock.day,Math.random,this.farmName);
+  nextTravel.estate=advanceEstate(robbery?.estate??this.travel.estate,nextClock.day,Math.random,this.farmName,{seed:this.travel.weatherSeed??0});
   nextTravel.research=advanceResearch(robbery?.research??this.travel.research,this.garden,nextClock.day);
   const loss=robbery?.loss;
   const carriedEconomy={...this.economy,gold:robbery?.gold??this.economy.gold};
@@ -1349,11 +1362,13 @@ class Farm extends Phaser.Scene {
   const weather=this.currentWeather(),outdoors=!shopAt(this.actor.y)&&!inWorkshop(this.actor.y)&&!inHome(this.actor.y),playing=this.ready&&!dialogue.open&&!this.transitioning&&!this.choosingFarm&&!document.hidden&&document.hasFocus();
   document.querySelector<HTMLElement>('#sunlight')!.style.opacity=String(outdoors?(1-Math.min(1,nightOpacity(this.clock)/.55))*(weather==='sunny'?1:weather==='cloudy'?.18:0):0);
   document.querySelector('#weather-label')!.textContent=weatherNames[weather];
+  this.forestAtmosphere??=new ForestAtmosphere(this);this.forestAtmosphere.update(playing?Math.min(seconds,.05):0,this.actor,outdoors,weather==='sunny',nightOpacity(this.clock));
   if(!this.weatherEffects)this.weatherEffects=new WeatherEffects();this.weatherEffects.draw(playing?Math.min(seconds,.1):0,weather,outdoors,nightOpacity(this.clock),{x:this.cameras.main.worldView.x,y:this.cameras.main.worldView.y,zoom:this.cameras.main.zoom});this.rainSound.update(weather==='rain'&&outdoors&&playing);
   if(this.ready&&this.hasFarm&&weather==='rain'&&waterFromRain(this.garden))this.drawGarden();
   const surface=document.querySelector<HTMLElement>('#game')!;surface.dataset.cameraX=String(this.cameras.main.worldView.x);surface.dataset.cameraY=String(this.cameras.main.worldView.y);surface.dataset.zoom=String(this.cameras.main.zoom);surface.dataset.placing=this.placingCraft??this.placing??'';surface.dataset.craftMachines=String(this.travel.crafting?.machines.length??0);surface.dataset.mulch=String(this.travel.crafting?.items.mulch??0);surface.dataset.fish=String(this.travel.estate.fish.goldfish+this.travel.estate.fish.carp);surface.dataset.trees=String(this.travel.estate.trees.length);surface.dataset.morningStage=this.morningStage;surface.dataset.shopLeo=String(Boolean(this.shopLeo?.person.visible&&shopAt(this.actor.y)==='nursery'));surface.dataset.shopsOpen=String(shopsOpen(this.clock.elapsed));surface.dataset.shopAnnie=String(Boolean(this.shopAnnie?.person.visible&&shopAt(this.actor.y)==='fishShop'));surface.dataset.pendingSeeds=String(quantityTotal(this.orders.pending));surface.dataset.mailSeeds=String(quantityTotal(this.orders.mailbox));surface.dataset.gardeningXp=String(this.skill.xp);surface.dataset.gardeningReward=String(this.skill.rewarded);surface.dataset.gift=String(this.story.giftReceived);surface.dataset.birdhouse=String(Boolean(this.story.birdhouse));surface.dataset.morningSeen=String(this.story.morningSeen);surface.dataset.gold=String(this.economy.gold);surface.dataset.shipping=String(shippingValue(this.economy.shipping));surface.dataset.day=String(this.clock.day);surface.dataset.elapsed=String(this.clock.elapsed);surface.dataset.ready=String(this.ready);surface.dataset.jumping=String(this.jumpRemaining>0);
   surface.dataset.weather=weather;surface.dataset.previewComplete=String(this.travel.forest?.sent===true);
   if(this.ready&&this.hasFarm&&!this.choosingFarm&&!dialogue.open&&!this.transitioning&&shouldDeliverMicroscope(this.travel.research,!!this.travel.forest?.sample,this.actor.y)){void this.deliverMicroscope();}
+  if(this.hasFarm&&this.canInteract()&&!this.travel.pollinationObservation&&nearEmptyBlossoms(this.garden,this.travel.estate,this.actor))void this.observeEmptyBlossoms();
   if(this.ready&&!this.choosingFarm&&!dialogue.open&&!this.transitioning&&storyEndPending(this.travel))this.showPreviewEnd();
   this.machineActivity??=this.add.graphics().setDepth(104);drawMachineActivity(this.machineActivity,this.travel.crafting,now);
   if(!this.ready||dialogue.open||this.transitioning||document.hidden||!document.hasFocus()){this.input.keyboard?.resetKeys();this.selection.setVisible(false);return;}
@@ -1392,7 +1407,7 @@ class Farm extends Phaser.Scene {
     const debris=debrisAt(this.clearing,this.garden,this.target.x+TILE/2,this.target.y+TILE/2);
     const valid=this.placing?Math.hypot(this.target.x+TILE/2-this.actor.x,this.target.y+TILE/2-this.actor.y)<=90&&Boolean(placeGood(this.travel.estate,this.placing,this.target.x+TILE/2,this.target.y+TILE/2,this.clock.day,this.estateLand(this.target.x+TILE/2,this.target.y+TILE/2),this.farmName)):this.tool==='birdhouse'?this.canPlaceBirdhouse(this.target.x+TILE/2,this.target.y+TILE/2):debris?Math.hypot(this.actor.x-debris.x,this.actor.y-debris.y)<=44:cultivable(this.target)&&reachable(this.target,this.actor);
     const plot=this.garden.plots.get(`${this.target.x},${this.target.y}`);
-    const hint=document.querySelector<HTMLElement>('#crop-hint')!;hint.textContent=this.placing?`${goodNames[this.placing]} · válassz közeli ${treeKinds.includes(this.placing as typeof treeKinds[number])?'szabad földet':this.placing==='duckNest'?'tópartot':'vizet'} · kattintás / F`:this.tool==='birdhouse'?'Madárodú · kattints egy közeli, szabad helyre':debris?`${debrisNames[debris.kind]} · ${'Gyűjtés (3)'} · F / kattintás`:plot?.crop?`${cropNames[plot.crop]} · ${isRipe(plot)?'Betakarítható':`${plot.growth}/${growthTarget(plot)} nap`}${isRipe(plot)?'':` · ${plot.watered?'öntözve':'öntözést kér'}`}`:'';
+    const hint=document.querySelector<HTMLElement>('#crop-hint')!;hint.textContent=this.placing?`${goodNames[this.placing]} · válassz közeli ${treeKinds.includes(this.placing as typeof treeKinds[number])?'szabad földet':this.placing==='duckNest'?'tópartot':'vizet'} · kattintás / F`:this.tool==='birdhouse'?'Madárodú · kattints egy közeli, szabad helyre':debris?`${debrisNames[debris.kind]} · ${'Gyűjtés (3)'} · F / kattintás`:plot?.crop?`${cropNames[plot.crop]} · ${plot.fruitSet===false?'Nem kötődött termés':plot.fruitAftermath==='fallen'?'Lehullott termés':isRipe(plot)?(plot.ripeDays===2?'Túlérett · Betakarítható':'Betakarítható'):`${plot.growth}/${growthTarget(plot)} nap`}${isRipe(plot)?'':` · ${plot.watered?'öntözve':'öntözést kér'}`}`:'';
     this.selection.lineStyle(1,valid?0xf1df9e:0xd69077,1).strokeRect(this.target.x,this.target.y,TILE,TILE);
     this.selection.fillStyle(valid?0xf1df9e:0xd69077,.12).fillRect(this.target.x,this.target.y,TILE,TILE);
   }

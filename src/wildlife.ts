@@ -1,3 +1,5 @@
+import {forestNest} from './forest';
+import {nestInfluence} from './forest-atmosphere';
 import Phaser from 'phaser';
 type Flier={g:Phaser.GameObjects.Graphics;x:number;y:number;t:number;speed:number;bird:boolean;color:number;firefly?:boolean};
 export class Wildlife{
@@ -29,5 +31,5 @@ export class Wildlife{
   }
   surface.dataset.birdVisitPhase=this.visitor?(this.visitor.t<3.2?'entering':this.visitor.t<5?'perched':this.visitor.t<5.8?'inside':'leaving'):'none';
  }
- private spawn(bird:boolean,firefly=false){const view=this.scene.cameras.main.worldView;const fromLeft=Math.random()>.5;this.fliers.push({g:this.scene.add.graphics().setDepth(150).setBlendMode(firefly?Phaser.BlendModes.ADD:Phaser.BlendModes.NORMAL),x:fromLeft?view.left-15:view.right+15,y:view.top+60+Math.random()*Math.max(30,view.height-150),t:0,speed:(fromLeft?1:-1)*(bird?75:firefly?18:27),bird,firefly,color:[0xe8b35c,0xc392bc,0xb1cfe5][Math.floor(Math.random()*3)]});}
+ private spawn(bird:boolean,firefly=false){const view=this.scene.cameras.main.worldView;const fromLeft=Math.random()>.5;const y=view.top+60+Math.random()*Math.max(30,view.height-150);if(!bird&&nestInfluence(Math.max(view.left,Math.min(view.right,forestNest.x)),y)>.25&&Math.random()<.75)return;this.fliers.push({g:this.scene.add.graphics().setDepth(150).setBlendMode(firefly?Phaser.BlendModes.ADD:Phaser.BlendModes.NORMAL),x:fromLeft?view.left-15:view.right+15,y,t:0,speed:(fromLeft?1:-1)*(bird?75:firefly?18:27),bird,firefly,color:[0xe8b35c,0xc392bc,0xb1cfe5][Math.floor(Math.random()*3)]});}
 }

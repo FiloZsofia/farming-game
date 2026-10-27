@@ -1,3 +1,4 @@
+import {pollinationDependent,RIPE_FRUIT_DAYS} from './pollination';
 import {enlargeGarden} from './garden-migration';
 import {legacyTargetTile,legacyCultivable} from './legacy-garden-grid';
 import {migrateForest} from './forest';
@@ -6,7 +7,7 @@ import {createResearch} from './research';
 import {createEstate} from './estate';
 import {createTravel,validTravel,type Travel} from './travel';
 import {worldBlocked,relocateVillagePlayer} from './village-layout';
-import { cultivable, targetTile, tileKey, TILE, type Garden, type Plot } from './gardening';
+import { cultivable, targetTile, tileKey, TILE, isRipe, type Garden, type Plot } from './gardening';
 import type { Clock } from './clock';
 import { createEconomy, validEconomy, crops, type Economy } from './economy';
 import { createOrders, validOrders, type Orders } from './orders';
@@ -47,6 +48,11 @@ function validSnapshotRecord(value:unknown,legacy=false):value is Snapshot{
   if(!finite(x)||!finite(y)||tileKey({x,y})!==key||(tileKey((legacy?legacyTargetTile:targetTile)(x+1,y+1))!==key&&(legacy||x%TILE!==0||y%TILE!==0))||!(legacy?legacyCultivable:cultivable)({x,y}))return false;
   if(plot&&((plot.mulched!==undefined&&typeof plot.mulched!=='boolean')||(plot.moisture!==undefined&&(!plot.mulched||!Number.isSafeInteger(plot.moisture)||plot.moisture<0||plot.moisture>3||plot.watered!==(plot.moisture>0)))))return false;
   if(!plot||typeof plot!=='object'||typeof plot.watered!=='boolean'||!(plot.crop===null||crops.includes(plot.crop)))return false;
+  if((plot.bloomCycle!==undefined||plot.fruitSet!==undefined||plot.ripeDays!==undefined||plot.fruitAftermath!==undefined)&&!pollinationDependent(plot.crop))return false;
+  if(plot.bloomCycle!==undefined&&(!Number.isSafeInteger(plot.bloomCycle)||plot.bloomCycle<0||plot.bloomCycle>999999))return false;
+  if(plot.fruitSet!==undefined&&typeof plot.fruitSet!=='boolean')return false;
+  if(plot.ripeDays!==undefined&&(!Number.isSafeInteger(plot.ripeDays)||plot.ripeDays<0||plot.ripeDays>=RIPE_FRUIT_DAYS||plot.fruitSet!==true||!isRipe(plot)))return false;
+  if(plot.fruitAftermath!==undefined&&(!['empty','fallen'].includes(plot.fruitAftermath)||plot.fruitSet!==undefined||plot.ripeDays!==undefined))return false;
   if(!Number.isSafeInteger(plot.growth)||plot.growth<0||plot.growth>1000||typeof plot.regrowing!=='boolean'||(plot.regrowing&&!['pea','strawberry','honeyberry','blueberry'].includes(plot.crop??''))||(!plot.crop&&plot.growth!==0))return false;
  }
  const storedBirdhouses=(v.skill.chests?.placed??[]).reduce((sum,c)=>sum+(c.items['special:birdhouse']??0),0);if(storedBirdhouses!==(v.skill.birdhouseStored?1:0)||v.skill.birdhouseStored&&(!v.story.giftReceived||v.story.birdhouse!==null))return false;

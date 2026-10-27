@@ -1,3 +1,4 @@
+import {pollinationDependent,setsFruit,RIPE_FRUIT_DAYS,type PollinationContext} from './pollination';
 import { farmLayout,farmBounds } from './layout';
 import { blocked } from './movement';
 export const TILE=24;
@@ -7,7 +8,7 @@ export type Tool='hoe'|'water'|'harvest'|Crop;
 // Agreed initial playtest values; revisit after playing.
 export const growthRules={radish:3,potato:5,pea:6,peaRegrowth:3,strawberry:4,honeyberry:5,blueberry:6,fruitRegrowth:2,carrot:4,lettuce:2,onion:5};
 export type Tile={x:number;y:number};
-export type Plot={watered:boolean;crop:Crop|null;growth:number;regrowing:boolean;mulched?:boolean;moisture?:number};
+export type Plot={bloomCycle?:number;fruitSet?:boolean;ripeDays?:number;fruitAftermath?:'empty'|'fallen';watered:boolean;crop:Crop|null;growth:number;regrowing:boolean;mulched?:boolean;moisture?:number};
 export type Garden={plots:Map<string,Plot>;seeds:Record<Crop,number>;produce:Record<Crop,number>};
 export const createGarden=():Garden=>({plots:new Map(),seeds:{radish:4,potato:4,pea:4,strawberry:0,honeyberry:0,blueberry:0,carrot:0,lettuce:0,onion:0},produce:{radish:0,potato:0,pea:0,strawberry:0,honeyberry:0,blueberry:0,carrot:0,lettuce:0,onion:0}});
 export const tileKey=(tile:Tile)=>`${tile.x},${tile.y}`;
@@ -64,7 +65,7 @@ export function work(garden:Garden,tool:Tool,tile:Tile,player:{x:number;y:number
   if(!isRipe(plot))return {ok:false,message:'Ez a növény még fejlődik.'};
   const crop=plot.crop;
   if(garden.produce[crop]>=999999)return {ok:false,message:'A terménytároló megtelt.'};
-  garden.produce[crop]++;plot.growth=0;
+  garden.produce[crop]++;plot.growth=0;if(pollinationDependent(crop)){plot.bloomCycle=(plot.bloomCycle??0)+1;delete plot.fruitSet;delete plot.ripeDays;delete plot.fruitAftermath;}
   if(['pea','strawberry','honeyberry','blueberry'].includes(crop))plot.regrowing=true;
   else {plot.crop=null;plot.regrowing=false;}
   return {ok:true,message:`Betakarítva: ${cropNames[crop]}.`};
@@ -85,10 +86,26 @@ export function work(garden:Garden,tool:Tool,tile:Tile,player:{x:number;y:number
 }
 
 export function growthTarget(plot:Plot,rules=growthRules){return plot.crop?(plot.regrowing?(plot.crop==='pea'?rules.peaRegrowth:rules.fruitRegrowth):rules[plot.crop]):0;}
-export function isRipe(plot:Plot,rules=growthRules){return Boolean(plot.crop&&plot.growth>=growthTarget(plot,rules));}
-export function nextDayGarden(garden:Garden,rules=growthRules):Garden{
+export function isRipe(plot:Plot,rules=growthRules){return Boolean(plot.crop&&plot.fruitSet!==false&&plot.growth>=growthTarget(plot,rules));}
+function restartFruitCycle(plot:Plot,aftermath:'empty'|'fallen'){
+ plot.growth=0;plot.regrowing=true;plot.bloomCycle=(plot.bloomCycle??0)+1;plot.fruitAftermath=aftermath;delete plot.fruitSet;delete plot.ripeDays;
+}
+export function nextDayGarden(garden:Garden,rules=growthRules,ecology?:PollinationContext):Garden{
  return {seeds:{...garden.seeds},produce:{...garden.produce},plots:new Map([...garden.plots].map(([key,p])=>{
-  const plot={...p};if(plot.crop&&plot.watered&&!isRipe(plot,rules))plot.growth=Math.min(growthTarget(plot,rules),plot.growth+1);
+  const plot={...p},berry=!!ecology&&pollinationDependent(plot.crop);let resting=false;if(berry)delete plot.fruitAftermath;
+  if(berry&&isRipe(plot,rules)){
+   plot.fruitSet=true;plot.ripeDays=(plot.ripeDays??-1)+1;
+   if(plot.ripeDays>=RIPE_FRUIT_DAYS){restartFruitCycle(plot,'fallen');resting=true;}
+  }else if(berry&&plot.fruitSet===false&&plot.growth>=growthTarget(plot,rules)){
+   restartFruitCycle(plot,'empty');resting=true;
+  }
+  if(!resting&&plot.crop&&plot.watered&&!isRipe(plot,rules)){
+   plot.growth=Math.min(growthTarget(plot,rules),plot.growth+1);
+   if(berry&&plot.fruitSet===undefined&&plot.growth>=Math.ceil(growthTarget(plot,rules)*.65)){
+    plot.fruitSet=setsFruit(ecology!.seed,`${key}:${plot.crop}`,plot.bloomCycle??0);delete plot.fruitAftermath;
+   }
+   if(berry&&isRipe(plot,rules))plot.ripeDays=0;
+  }
   if(plot.mulched){plot.moisture=Math.max(0,(plot.moisture??(plot.watered?3:0))-1);plot.watered=plot.moisture>0;}else plot.watered=false;return [key,plot];
  }))};
 }

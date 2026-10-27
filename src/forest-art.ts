@@ -33,11 +33,20 @@ export function paintForest(g:Phaser.GameObjects.Graphics,random:()=>number,pain
  const n=forestNest;oval(n.x,n.y+10,128,28,0x2f452f,.3);
  // Fallen hardwood: bark ridges, broken branch, growth rings and pre-existing nesting holes.
  g.fillStyle(0x594531).fillPoints([{x:n.x-62,y:n.y-13},{x:n.x-52,y:n.y-40},{x:n.x+43,y:n.y-34},{x:n.x+61,y:n.y-18},{x:n.x+53,y:n.y+6},{x:n.x-47,y:n.y+9}],true);
- g.fillStyle(0x94734a).fillRoundedRect(n.x-48,n.y-34,90,36,7);
- for(let i=0;i<7;i++)g.lineStyle(i%2?2:1, i%2?0x5e4932:0xb08c59).strokePoints([{x:n.x-47,y:n.y-29+i*5},{x:n.x-18,y:n.y-32+i*5},{x:n.x+10,y:n.y-27+i*5},{x:n.x+40,y:n.y-29+i*5}]);
+ g.fillStyle(0x89816a).fillRoundedRect(n.x-48,n.y-34,90,36,7);
+ for(let i=0;i<7;i++)g.lineStyle(i%2?2:1, i%2?0x625f50:0xaaa18b).strokePoints([{x:n.x-47,y:n.y-29+i*5},{x:n.x-18,y:n.y-32+i*5},{x:n.x+10,y:n.y-27+i*5},{x:n.x+40,y:n.y-29+i*5}]);
  g.fillStyle(0xb59867).fillEllipse(n.x+46,n.y-14,28,43);g.lineStyle(1,0x80653f).strokeEllipse(n.x+46,n.y-14,21,34).strokeEllipse(n.x+46,n.y-14,12,22).lineBetween(n.x+46,n.y-14,n.x+54,n.y-28);
  g.lineStyle(9,0x675038).lineBetween(n.x-23,n.y-33,n.x-35,n.y-51);g.fillStyle(0xb59764).fillEllipse(n.x-35,n.y-51,11,5);
  for(const [dx,dy,plug]of [[-33,-20,0],[-18,-10,1],[-4,-23,1],[13,-13,0],[28,-25,1]]){oval(n.x+dx,n.y+dy,9,10,0x493c29);oval(n.x+dx-1,n.y+dy-1,6,7,plug?0xa39368:0x282e24);if(plug)g.lineStyle(.7,0xc4b687).lineBetween(n.x+dx-2,n.y+dy,n.x+dx+2,n.y+dy-1);}
+ // Fine fungal threads follow only the exposed, open nesting holes.
+ for(const [dx,dy]of [[-33,-20],[13,-13]]){
+  const x=n.x+dx,y=n.y+dy;
+  g.fillStyle(0xb4b7a6,.18).fillEllipse(x,y,23,17);
+  for(let i=0;i<6;i++){const a=i*Math.PI/3,tx=x+Math.cos(a)*13,ty=y+Math.sin(a)*9;
+   g.lineStyle(.7,i%2?0xd0d1bf:0xb8bead,.8).strokePoints([{x:x+Math.cos(a)*4,y:y+Math.sin(a)*4},{x:x+Math.cos(a)*8-1,y:y+Math.sin(a)*6+1},{x:tx,y:ty}]);
+   g.lineStyle(.5,0xd4d5c4,.7).lineBetween(tx,ty,tx+3,ty-2).lineBetween(tx-3,ty-1,tx-5,ty-4);
+  }
+ }
  oval(n.x-9,n.y-34,46,9,0x62804a);for(let i=0;i<9;i++)oval(n.x-30+i*5,n.y-36+(i%2)*3,5,3,0x8fa057);
 }
 export function drawForestObjects(scene:Phaser.Scene,f:Forest,day:number,weatherSeed=0){

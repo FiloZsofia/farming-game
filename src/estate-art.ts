@@ -1,3 +1,4 @@
+import {drawTreeBlossomGaps} from './pollination-art';
 import {drawRipeMarker} from './crop-art';
 import Phaser from 'phaser';
 import {reedReady,type Estate} from './estate';
@@ -6,7 +7,8 @@ export function drawEstate(scene:Phaser.Scene,estate:Estate,day:number){
  for(const t of estate.trees){const grown=day-t.planted>=15,s=grown?1:.45+Math.min(15,day-t.planted)/30,x=t.x,y=t.y;
   g.fillStyle(0x345737,.25).fillEllipse(x+7,y+5,61*s,22*s);g.lineStyle(7*s,0x785738).lineBetween(x,y,x,y-49*s);g.lineStyle(3*s,0x96714b).lineBetween(x-1,y,x-1,y-48*s);
   for(const [dx,dy]of [[-13,-43],[12,-49],[0,-64]]){g.fillStyle(0x3d693f).fillEllipse(x+dx*s,y+dy*s,46*s,37*s);g.fillStyle(0x74964d).fillEllipse(x+(dx-4)*s,y+(dy-5)*s,35*s,26*s);}
-  if(t.fruit)for(let i=0;i<t.fruit;i++){const xx=x+Math.cos(i*2.4)*19,yy=y-48+Math.sin(i*2.4)*14;g.fillStyle(t.kind==='cherry'?0xb94f49:t.kind==='plum'?0x776187:t.kind==='apple'?0xcf9450:0xc1b566).fillEllipse(xx,yy,6,t.kind==='pear'?9:6);g.lineStyle(1,0x65583a).lineBetween(xx,yy-3,xx+1,yy-6);}
+  if(grown)drawTreeBlossomGaps(g,x,y,s,t.fruit>0,t.bloomState);
+  if(t.fruit)for(let i=0;i<t.fruit;i++){const xx=x+Math.cos(i*2.4)*19,yy=y-48+Math.sin(i*2.4)*14;g.fillStyle(t.fruitDay!==undefined&&day-t.fruitDay>=2?(t.kind==='cherry'?0xa26b59:t.kind==='plum'?0x81738a:0xa99a6f):t.kind==='cherry'?0xb94f49:t.kind==='plum'?0x776187:t.kind==='apple'?0xcf9450:0xc1b566).fillEllipse(xx,yy,6,t.kind==='pear'?9:6);g.lineStyle(1,0x65583a).lineBetween(xx,yy-3,xx+1,yy-6);}
   if(t.fruit)drawRipeMarker(g,x+25*s,y-65*s);
  }
  for(const p of estate.pond){if(p.kind==='lily'){
