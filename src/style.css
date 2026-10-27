@@ -102,3 +102,15 @@
 @keyframes machine-steam-rise{0%{transform:translateY(8px) scale(.7);opacity:0}25%{opacity:.7}100%{transform:translate(6px,-28px) scale(1.2);opacity:0}}@keyframes machine-gentle-work{50%{transform:translateY(1px) rotate(.8deg)}}@keyframes machine-weave{50%{transform:translateX(28px)}}@keyframes machine-turn{to{transform:rotate(360deg)}}@keyframes machine-ready{50%{transform:translateY(-5px)}}@media(prefers-reduced-motion:reduce){.machine-demo *{animation:none!important}}
 
 @media(max-width:520px){.backpack-grid .backpack-slot:has(button+button){padding-bottom:66px;min-height:148px}.backpack-slot:has(button+button) button{left:5px;right:5px;bottom:34px;font-size:10px}.backpack-slot:has(button+button) button+button{left:5px;right:5px;bottom:5px}}
+
+@font-face{font-family:'Kerti Ceruza';src:url('../public/fonts/kerti-ceruza.ttf') format('truetype');font-display:swap}
+#dialogue[data-presentation="forest-warning"]{background:#233d30f5;width:min(790px,calc(100vw - 24px));padding:18px;max-height:calc(100dvh - 24px)}
+#dialogue[data-presentation="forest-warning"] #research-panel{border:0;padding:0}
+.forest-warning-paper{position:relative;background:linear-gradient(174deg,#fff 0%,#fafaf7 48%,#f1f0ec 100%);color:#383735;padding:30px 36px 14px;box-shadow:2px 5px 13px #0005;transform:rotate(-.6deg);border-radius:1px 3px 2px 1px;isolation:isolate}
+.forest-warning-paper:before{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(92deg,transparent 49.7%,#9c9b9820 50%,#fff8 50.3%,transparent 51%),linear-gradient(177deg,transparent 58%,#96948f12 58.3%,transparent 59%);z-index:-1}
+.forest-warning-paper:after{content:'';position:absolute;top:8px;left:49%;width:5px;height:5px;background:#55514c;border-radius:50%;box-shadow:1px 1px 1px #0004}
+#dialogue .forest-warning-paper h2{font-family:'Kerti Ceruza',cursive;font-size:32px;line-height:1.35;letter-spacing:.5px;color:#302f2d;margin:4px 0 18px;font-weight:400;text-shadow:.3px .4px #6f6b6750;transform:rotate(.25deg)}
+#dialogue .forest-warning-paper p{font-family:'Kerti Ceruza',cursive;font-size:30px;line-height:1.4;color:#47443f;margin:0;white-space:normal;text-shadow:.3px .3px #7774;transform:rotate(-.25deg)}
+.forest-warning-sketches svg{display:block;width:100%;height:auto;margin-top:12px;filter:contrast(1.2)}
+#dialogue[data-presentation="forest-warning"] .warning-back{margin-top:20px}
+@media(max-width:520px){.forest-warning-paper{padding:25px 18px 8px}#dialogue .forest-warning-paper h2{font-size:25px}#dialogue .forest-warning-paper p{font-size:25px}.forest-warning-sketches svg{margin-top:8px}}

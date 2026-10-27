@@ -1,3 +1,4 @@
+import {forestWarningPaper} from './forest-warning';
 import {drawVillageNotice,villageNotice,pollinatorNoticeTitle,pollinatorNoticeText} from './village-notice';
 import {collectFruitFalls,pickFallenFruit} from './fallen-fruit';
 import {initializeFruitTimers} from './fruit-timers';
@@ -712,7 +713,19 @@ class Farm extends Phaser.Scene {
   catch{this.notice('A gyűjtögetést nem sikerült menteni. A bokor érintetlen maradt.');}
   finally{this.transitioning=false;this.lastTick=performance.now();}
  }
- private openVillageNotice(){if(this.canInteract()&&Math.hypot(this.actor.x-villageNotice.x,this.actor.y-villageNotice.y)<65)showDialogue(pollinatorNoticeTitle,pollinatorNoticeText,'HIRDETŐTÁBLA');}
+ private openVillageNotice(){
+  if(!this.canInteract()||Math.hypot(this.actor.x-villageNotice.x,this.actor.y-villageNotice.y)>=65)return;
+  this.showVillageNotices();
+ }
+ private showVillageNotices(){
+  showDialogue(pollinatorNoticeTitle,pollinatorNoticeText,'HIRDETŐTÁBLA');
+  const panel=document.querySelector<HTMLElement>('#research-panel')!;panel.replaceChildren();panel.hidden=false;
+  const warning=document.createElement('button');warning.type='button';warning.dataset.openForestWarning='';warning.textContent='Névtelen figyelmeztetés';warning.onclick=()=>{
+   showDialogue('','','');dialogue.dataset.presentation='forest-warning';dialogue.setAttribute('aria-label','Névtelen figyelmeztetés');
+   panel.replaceChildren(forestWarningPaper());panel.hidden=false;
+   const back=document.createElement('button');back.type='button';back.className='warning-back';back.textContent='Vissza a hirdetményekhez';back.onclick=()=>this.showVillageNotices();panel.append(back);
+  };panel.append(warning);
+ }
  private updateLocation(){
   const {x,y}=this.actor,shop=shopAt(y),region=inHome(y)?'home':inWorkshop(y)?'workshop':shop??(outsideFarm(y)?(x<315&&y<1200?'forest':'village'):'farm');document.querySelector<HTMLElement>('#game')!.dataset.region=region;
   document.querySelector('#location-label')!.textContent=region==='home'?'AZ OTTHONOD':region==='workshop'?'MŰHELY':region==='farm'?'AZ OTTHONOD':region==='forest'?'ERDEI ÖSVÉNY':shop==='nursery'?'FAISKOLA':shop==='fishShop'?'KERTITÓ SZAKÜZLET':shop==='craftShop'?'MŰHELYBOLT':'A FALU';

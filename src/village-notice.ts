@@ -17,7 +17,10 @@ export function drawVillageNotice(scene:Phaser.Scene){
  rect(-11,36,28,29,0xe9dfbd);rect(-8,60,20,2,0x6a7054);
  for(let i=0;i<4;i++)rect(-8,55-i*4,17-(i%2)*4,1,0xa39772);
  const seal=p(10,40);g.fillStyle(0xad6650).fillCircle(seal.x,seal.y,2.5);
- rect(-28,42,13,16,0xc7c49a);rect(21,47,10,12,0xd2b991);
+ rect(-30,34,17,29,0xf4f3ee);rect(21,47,10,12,0xd2b991);
+ for(let i=0;i<3;i++)rect(-28,59-i*2,12-i%2*3,.6,0x77756e);
+ const ink=(x:number,z:number)=>p(x,z);g.lineStyle(.7,0x555650,.9);g.strokePoints([ink(-27,43),ink(-28,47),ink(-25,51),ink(-23,48),ink(-24,43),ink(-27,43)]);
+ g.strokePoints([ink(-21,42),ink(-23,46),ink(-20,49),ink(-17,46),ink(-18,42),ink(-21,42)]).lineBetween(ink(-22,47).x,ink(-22,47).y,ink(-24,51).x,ink(-24,51).y).lineBetween(ink(-18,44).x,ink(-18,44).y,ink(-15,41).x,ink(-15,41).y);
  for(const x of [-31,31]){const nail=p(x,68);g.fillStyle(0xd2bd84).fillCircle(nail.x,nail.y,1);}
  return g;
 }

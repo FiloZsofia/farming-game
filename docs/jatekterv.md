@@ -798,3 +798,10 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 - A játék kezdetétől az eper eladási ára 25 gold/db, a mézbogyóé 24 gold/db, az áfonyáé 21 gold/db. A vételárak változatlanok (20 / 25 / 45 gold). A meglévő mentésekben a még el nem számolt termést is az új árakon értékesítjük; a korábbi bevételeket nem számoljuk újra.
 - A hirdetőtábla közleményében a „jelenleg nagyjából minden harmadik virágzási ciklusból várható gyümölcs.” mondat után ez szerepel: „A terméskiesés a gyümölcsök eladási értékét növeli.”
 - Egy sikeresen termő eper-, mézbogyó- vagy áfonyanövény szüretenként 1 gyümölcsöt ad; a mennyiség változatlan.
+
+
+### Névtelen erdei figyelmeztetés — 2026. október 27.
+- A falusi hirdetőtáblán külön fehér papírra tűzött, névtelen figyelmeztetés is megnyitható. A gyümölcstermésről szóló hivatalos közlemény megmarad.
+- Pontos szöveg: „AZ ERDŐBEN VESZÉLYES LÉNYEK JELENTEK MEG.” Alatta: „Megtámadják az embert. Ha meglátjátok őket, forduljatok vissza. Ne próbáljatok közelebb menni.”
+- A szöveg ceruzás, kézírásszerű saját betűkészlettel készül; a papíron két sötét, nyugtalanító ceruzarajz látható. Nincsenek lénynevek, képaláírások vagy aláírás.
+- Saját SVG-rajzok, helyben betöltődő, magyar ékezeteket tartalmazó Kerti Ceruza betűkészlet; nincs külső betűszolgáltatás vagy új játékfüggőség. Betűrajz forrása: `tools/draw-pencil-font.py`; eredet és licenc: `public/fonts/README.md`.
