@@ -30,7 +30,25 @@ export function paintForest(g:Phaser.GameObjects.Graphics,random:()=>number,pain
  oval(-461,977,76,16,0x344a30,.25);g.fillStyle(0x655035).fillRect(-489,933,5,43).fillRect(-437,933,5,43).fillRect(-486,960,5,21).fillRect(-440,960,5,21);
  g.fillStyle(0xa88a57).fillRoundedRect(-494,928,64,9,2).fillRoundedRect(-494,939,64,8,2);g.lineStyle(1,0xd4b577).lineBetween(-491,930,-433,930).lineBetween(-491,941,-433,941);
  g.fillStyle(0xb69a65).fillPoints([{x:-493,y:950},{x:-434,y:950},{x:-427,y:961},{x:-499,y:961}],true);g.fillStyle(0x7e6240).fillRect(-499,961,72,5);g.lineStyle(1,0xd0b47b).lineBetween(-492,954,-432,954).lineBetween(-495,958,-430,958);for(const x of [-486,-438])g.fillStyle(0x66543a).fillCircle(x,933,1).fillCircle(x,943,1);
- const n=forestNest;oval(n.x,n.y+10,128,28,0x2f452f,.3);
+ const n=forestNest;
+ // Irregular pockets of exhausted undergrowth blend into the living forest floor.
+ // Keep the walking path clear: this change stays beside and behind the log.
+ for(let i=0;i<16;i++){
+  const a=i*2.4,r=28+(i%4)*17,x=n.x+Math.cos(a)*r,y=n.y-18+Math.sin(a)*r*.45;
+  oval(x,y,38+(i%3)*9,15+(i%4)*3,i%3?0x989171:0x7f8264,.36);
+ }
+ for(let i=0;i<17;i++){
+  const a=i*2.4,r=35+(i%5)*11,x=n.x+Math.cos(a)*r,y=n.y-14+Math.sin(a)*r*.48;
+  g.lineStyle(.8,i%2?0xb2a27d:0x8e8b65,.85).lineBetween(x,y,x-3,y-7).lineBetween(x-2,y-4,x-6,y-6);
+  oval(x+3,y+1,5,2,0xa49271,.7);
+  if(i%3===0){g.lineStyle(.7,0xd1cead,.7).strokePoints([{x,y},{x:x+7,y:y-3},{x:x+13,y:y-2},{x:x+18,y:y-5}]);g.lineBetween(x+7,y-3,x+9,y-7).lineBetween(x+13,y-2,x+16,y+1);}
+ }
+ // Small pale fungal fans emerge through the litter, rather than coloring every tree.
+ for(const [dx,dy]of [[-72,-12],[-53,14],[58,10],[43,-43]]){
+  const x=n.x+dx,y=n.y+dy;g.fillStyle(0x777b5c,.45).fillEllipse(x,y+2,16,5);
+  for(let i=0;i<3;i++){g.fillStyle(i%2?0xc7c8aa:0xafb499).fillEllipse(x+i*4-4,y-i%2*3,8,4);g.lineStyle(.6,0xe0d9bb,.8).lineBetween(x+i*4-6,y-i%2*3-1,x+i*4-2,y-i%2*3-1);}
+ }
+ oval(n.x,n.y+10,128,28,0x2f452f,.3);
  // Fallen hardwood: bark ridges, broken branch, growth rings and pre-existing nesting holes.
  g.fillStyle(0x594531).fillPoints([{x:n.x-62,y:n.y-13},{x:n.x-52,y:n.y-40},{x:n.x+43,y:n.y-34},{x:n.x+61,y:n.y-18},{x:n.x+53,y:n.y+6},{x:n.x-47,y:n.y+9}],true);
  g.fillStyle(0x94734a).fillRoundedRect(n.x-48,n.y-34,90,36,7);

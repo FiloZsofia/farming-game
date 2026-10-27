@@ -785,3 +785,4 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 - A komposztálóban külön választható a gaz vagy a hullott gyümölcs: 10 darab hullott gyümölcsből másnapra 4 mulcs készül. A gaz meglévő receptje változatlan.
 
 - A fészkes fatörzs természetes barna színű marad. A szürkés gombás bevonat csak a két felnyílt járat körül látható; onnan lassú cseppek hullanak a földre, helyi elszíneződést hagyva. A levegőben felszálló világos porszemcsék jól láthatók, a környező erdő színei változatlanok.
+- A fatörzs közvetlen környezete is élettelenebb: szabálytalan fakó fűfoltok, száraz avar, talajon futó finom gombafonalak és apró világos gombatelepek. A hatás fokozatosan olvad az élő erdőbe, nem fed külön téglalapként a terepre, és nem színezi át a törzs barna kérgét. A közvetlen fészekkörnyéken nem látható lepke vagy szentjánosbogár, távolabb megmarad a rovarélet.
