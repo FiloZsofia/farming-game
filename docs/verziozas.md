@@ -12,11 +12,15 @@ A játékverzió forrása a `package.json` `version` mezője. A felület ezt a `
 
 A három rész külön egész szám: 0.1.9 után 0.1.10, 0.1.11 és így tovább következhet. A 0.2.0 nem a tizedik javítás, hanem nagyobb tartalmi kiadás.
 
-Nem minden apró commit kap új számot. Egy összetartozó, ellenőrzött, játékosoknak kiadott frissítéshez tartozik verzió és változáslista.
+Nem minden apró commit kap új számot. A main ágra feltöltött változtatás új verziószám nélkül is megjelenhet a nyilvános játékban: a közzététel (deploy) nem azonos a számozott kiadással.
+
+**Verziószámot kizárólag előzetes felhasználói egyeztetés és kifejezett jóváhagyás után emelhetsz.** Ha indokoltnak érzed az emelést, előbb ismertesd a változások körét és a javasolt új számot, majd kérdezz rá. Jóváhagyásig a javításokat a jelenlegi számmal készítsd és töltsd fel. Sem a módosítás mérete, sem a közzététel nem jelent automatikus engedélyt verzióemelésre.
+
+2026. október 28-án a felhasználó kérésére a játék verzióját visszaállítottuk **0.1.0**-ra. A közben önállóan létrehozott 0.1.1–0.1.3 címkék történeti hivatkozások maradnak; nem mozgatjuk át őket. Az elkészült funkciók megmaradnak.
 
 ## Kiadás menete
 
-1. Válaszd ki a kiadás léptékét. Az első 0.1.0 után például `npm version patch --no-git-tag-version` állítja át a csomagot és lockfájlt 0.1.1-re; nagyobb tartalmi kiadáshoz `minor` használható. A parancs önmagában nem készít commitot vagy Git-címkét.
+1. Kérj előzetes jóváhagyást a javasolt verzióemelésre. Csak a felhasználó válasza után válaszd ki a megbeszélt kiadás léptékét. Az első 0.1.0 után például `npm version patch --no-git-tag-version` állítja át a csomagot és lockfájlt 0.1.1-re; nagyobb tartalmi kiadáshoz `minor` használható. A parancs önmagában nem készít commitot vagy Git-címkét.
 2. Írd meg a `CHANGELOG.md` új, dátumozott bejegyzését, a végső változásokkal.
 3. Futtasd az előírt teszteket és buildet; ellenőrizd a látható verziót mindkét menüben és egy korábbi farm betöltését.
 4. Commitold a kész kiadást. Ehhez a commithoz készüljön megjegyzéssel ellátott Git-címke, például `v0.1.1`; ezt is töltsd fel a kiadással együtt. Már kiadott címkét ne mozgass át másik commitra.

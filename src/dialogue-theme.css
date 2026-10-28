@@ -11,3 +11,5 @@
 #app #delete-farm-dialog #confirm-delete-farm{background:#743f35;border-color:#c68f76}
 
 #test-mode-banner{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:30;background:#553b28;color:#ffe2a0;border:1px solid #bda46a;padding:8px 16px;border-radius:5px;font:700 14px "Trebuchet MS",sans-serif;}
+
+#dialogue #prepare-microscope-test{display:block;margin-left:0;margin-right:auto;text-align:left;max-width:100%;}

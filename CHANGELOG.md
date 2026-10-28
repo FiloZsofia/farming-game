@@ -1,21 +1,14 @@
 # Változások
 
-## 0.1.3 — 2026. október 28.
+## Változások a 0.1.0 óta — külön jóváhagyott verzióemelés nélkül
 
-- A mikroszkópos jelenet tesztgombja alatt megjelenik az induló helyzet leírása.
+A játék verziója a felhasználó kérésére ismét **0.1.0**. A korábban idő előtt kiosztott 0.1.1–0.1.3 címkék megmaradnak a Git-előzményben; a módosításokat nem vontuk vissza.
 
-## 0.1.2 — 2026. október 28.
-
-- A Fejlesztői eszközök csak a `?dev=1` hivatkozással érhetők el.
-- Tesztmódok alcím és „A mikroszkóp megtalálása – jelenet” gomb; javított szövegezés.
-
-## 0.1.1 — 2026. október 28.
-
-- Fejlesztői eszközpanel a Menüben, „Fészekminta megszerzése” teszthelyzettel.
-- A teszt bármely farm külön másolatával, kizárólag memóriában fut; a rendes mentés és biztonsági másolata megmarad.
-- Látható TESZTMÓD jelzés, újraindítás és kilépés; kilépéskor az eredeti farm folytatódik. Oldalfrissítéskor a teszt elvész.
+- Fejlesztői eszközök, kizárólag `?dev=1` hivatkozással, Tesztmódok alcímmel.
+- „A mikroszkóp megtalálása – jelenet” külön memóriában futó, újraindítható teszthelyzet, a rendes farm mentésének megőrzésével.
+- A jelenetgomb és az alatta lévő indulóhelyzet-leírás balra igazodik.
 - A menük láblécében az év és a készítő neve között is elválasztó pötty szerepel.
-- A korábbi, Teszt farm névhez kötött, mentést átíró előkészítést ez váltja fel.
+- A verziószám jövőbeli emeléséhez előzetes felhasználói jóváhagyás szükséges.
 
 ## 0.1.0 — 2026. október 28.
 

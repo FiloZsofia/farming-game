@@ -865,3 +865,7 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 - A paraméter újratöltés és tesztből kilépés után is a hivatkozás része marad.
 
 - A mikroszkópos jelenet tesztgombja alatti rövid leírás: „Indulás a fészekminta megszerzése előtt.”
+
+### Verziószámozás pontosítása — 2026. október 28.
+- A játék száma ismét 0.1.0; a fejlesztői funkciók megmaradnak. A jövőbeli emelés előtt kérdezni kell, és kizárólag kifejezett egyeztetés után nőhet a verziószám. Commit és közzététel változatlan számmal is készülhet.
+- A fejlesztői jelenetgomb és leírása közös bal oldali igazítást kap.
