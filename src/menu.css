@@ -1,0 +1,61 @@
+/* The approved pixel microscope scene remains a still layer; only small overlays move. */
+.menu-microscope,.menu-brand{display:none}
+#settings-panel[hidden]{display:none}
+#dialogue[data-menu]{inset:0!important;width:100vw!important;max-width:none;height:100dvh;max-height:100dvh!important;margin:0!important;padding:clamp(20px,4vh,48px) 20px!important;border:0!important;border-radius:0;transform:none!important;background:#172616!important;box-shadow:none;overflow:auto;overscroll-behavior:contain;isolation:isolate}
+#dialogue[data-menu]::backdrop{background:#07100c}
+#dialogue[data-menu]>form{position:relative;z-index:1;min-height:100%;width:min(640px,100%);margin:0 auto;display:flex;flex-direction:column;justify-content:center;align-items:stretch}
+#dialogue[data-menu] #dialogue-title,#dialogue[data-menu] #dialogue-label,#dialogue[data-menu] #dialogue-text:empty{display:none}
+#dialogue[data-menu] .menu-microscope{display:block;position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;background:#10200e}
+.menu-specimen{position:absolute;inset:0;background:url('./assets/microscope-menu.webp') center/cover no-repeat;image-rendering:pixelated}
+.menu-microscope:after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,#08180b26 0%,transparent 55%,#020b0570 100%)}
+.menu-lens-light{position:absolute;inset:0;background:radial-gradient(ellipse at 36% 25%,#e9d77d18,transparent 65%);animation:lens-light 17s ease-in-out infinite alternate}
+.menu-dust,.menu-bubble,.menu-pollen{position:absolute;display:block;animation:specimen-drift var(--duration) ease-in-out var(--delay) infinite alternate;will-change:transform;pointer-events:none}
+.menu-dust{width:var(--size);height:var(--size);background:#e8d98c;opacity:.55;box-shadow:0 0 4px #d6d58266;--tilt:0deg}
+.menu-pollen{width:var(--size);height:calc(var(--size)*1.1);opacity:.8;--drift:15px;filter:drop-shadow(0 0 3px #c2bb6022)}
+.menu-pollen svg{width:100%;height:100%;display:block}
+.menu-bubble{width:var(--size);height:var(--size);border:1px solid #ece8bd80;border-radius:50%;box-shadow:inset 2px 2px 1px #f9f3d060;opacity:.65;--tilt:0deg;--drift:-14px}
+#dialogue[data-menu] .menu-brand{display:flex;flex-direction:column;align-items:center;margin:0 auto 24px;color:#f4e6b0;flex-shrink:0;width:100%;filter:drop-shadow(0 2px 5px #04110bc0)}
+.menu-wordmark{font-family:Georgia,'Palatino Linotype','Book Antiqua',serif;font-style:italic;font-weight:400;font-size:clamp(56px,8vw,104px);line-height:1.12;letter-spacing:-.045em;white-space:nowrap}
+.menu-botanical{width:clamp(175px,22vw,270px);height:auto;margin-top:10px;opacity:.9}
+#dialogue[data-menu] button,#dialogue[data-menu] select{font-family:'Trebuchet MS','Segoe UI',sans-serif;color:#f8ebc5}
+#dialogue[data-menu] button{position:relative;background:linear-gradient(125deg,#233c22f2,#142b1bf5);border:1px solid #c5aa65;border-radius:2px;box-shadow:inset 0 0 0 3px #172e1a,inset 0 0 0 4px #ac944b80,0 3px 8px #05120c66;min-height:54px;transition:background-color .16s,transform .12s,box-shadow .12s}
+#dialogue[data-menu] button:hover:not(:disabled){background:linear-gradient(125deg,#3b502cf5,#243e24f5);box-shadow:inset 0 0 0 3px #243b21,inset 0 0 0 4px #d4bc79,0 3px 12px #081c0a88}
+#dialogue[data-menu] button:active:not(:disabled){transform:translateY(2px);box-shadow:inset 0 2px 5px #06140eaa}
+#dialogue[data-menu] button:disabled{opacity:.4;cursor:default}
+#dialogue[data-menu] button:focus-visible,#dialogue[data-menu] select:focus-visible{outline:2px solid #fff1bb;outline-offset:5px}
+#dialogue[data-menu] .start-actions,#dialogue[data-menu] .pause-actions{display:flex;flex-direction:column;width:min(310px,100%);gap:16px;margin:0 auto}
+#dialogue[data-menu] .start-actions button,#dialogue[data-menu] .pause-actions button{flex:none;min-height:58px;margin:0!important;font-size:21px;font-weight:400;letter-spacing:.2px;padding:13px 25px}
+#dialogue[data-menu] .start-actions small{display:none}
+#dialogue[data-menu] .menu-link{background:transparent!important;box-shadow:none!important;border-color:transparent!important;font-size:14px!important;min-height:40px!important;padding:7px 10px!important;color:#dfd9ad;text-decoration:underline;text-underline-offset:5px}
+#dialogue[data-menu] .menu-link:hover{color:#fff3c8}
+#dialogue[data-menu="start"][data-menu-section="home"] #farm-list,#dialogue[data-menu="start"][data-menu-section="home"] .farm-library-heading,#dialogue[data-menu="start"][data-menu-section="home"] #back-from-farms{display:none}
+#dialogue[data-menu="start"][data-menu-section="farms"] .start-actions{display:none}
+#dialogue[data-menu="start"][data-menu-section="farms"]>form{width:min(760px,100%)}
+#dialogue[data-menu="start"][data-menu-section="farms"] .menu-wordmark{font-size:clamp(48px,7vw,76px)}
+#dialogue[data-menu="start"][data-menu-section="farms"] #back-from-farms{order:9;margin:22px auto 0}
+#dialogue[data-menu] .farm-library-heading{text-align:center;font:400 22px Georgia,serif;color:#f4e6b0;margin:4px 0 18px}
+#dialogue[data-menu] .farm-save-card{background:#132c20f2;border-color:#b5a16480;box-shadow:0 3px 8px #05120c44;backdrop-filter:none;border-radius:3px}
+#dialogue[data-menu] .farm-save-card button{min-height:44px;font-size:14px;padding:9px 14px}
+#dialogue[data-menu] #farm-list-error,#dialogue[data-menu] .farm-list-empty{text-align:center;background:#132c20dd;padding:12px;border-radius:3px;margin:12px auto}
+#dialogue[data-menu] #farm-list-error:empty{display:none}
+#dialogue[data-menu="pause"] #menu-panel{display:block;margin:0}
+#dialogue[data-menu="pause"] #dialogue-close{display:none}
+#dialogue[data-menu] .menu-utilities{display:flex;flex-wrap:wrap;justify-content:center;gap:9px;width:min(450px,100%);margin:27px auto 0}
+#dialogue[data-menu] .menu-utilities button{min-height:42px;font-size:13px;padding:9px 15px;border-color:#b5a16470;box-shadow:none}
+#dialogue[data-menu="settings"] #settings-panel{width:min(360px,100%);margin:0 auto;padding:24px;background:#142b1be8;border:1px solid #b39e6170;border-radius:3px}
+#dialogue[data-menu] #settings-panel h3{font:400 24px Georgia,serif;text-align:center;color:#f3e6ba;margin:0 0 22px}
+#dialogue[data-menu] #settings-panel button{width:100%;margin:12px 0 0}
+#dialogue[data-menu] #settings-panel .music-choice{display:flex;flex-direction:column;gap:9px;margin:22px 0;font-size:14px}
+#dialogue[data-menu] #settings-panel select{width:100%;background:#213925;border:1px solid #a79d6d;min-height:46px;padding:9px;font-size:16px;border-radius:2px}
+#dialogue[data-menu="naming"] .menu-wordmark{font-size:clamp(48px,7vw,76px)}
+#dialogue[data-menu="naming"] #dialogue-text{background:#142b20f0;padding:20px 24px;border:1px solid #baaa6e80;font-size:16px;line-height:1.7;color:#f0e8ce;border-radius:3px}
+#dialogue[data-menu="naming"] #farm-name-panel{background:#142b20f0;padding:5px 24px 22px;border:1px solid #baaa6e80;border-top:0;margin-top:-21px;border-radius:0 0 3px 3px}
+#dialogue[data-menu="naming"] #farm-name-panel button{width:100%}
+#app:has(#dialogue[open][data-menu])>.hud,#app:has(#dialogue[open][data-menu])>.actions,#app:has(#dialogue[open][data-menu])>#toolbar,#app:has(#dialogue[open][data-menu])>#controls,#app:has(#dialogue[open][data-menu])>#crop-hint,#app:has(#dialogue[open][data-menu])>#status,#app:has(#dialogue[open][data-menu])>#feedback{visibility:hidden}
+#dialogue:not([open]) .menu-microscope,#dialogue:not([data-menu]) .menu-microscope{display:none}
+#dialogue:not([open]) .menu-microscope *,#dialogue[data-menu-paused="true"] .menu-microscope *{animation-play-state:paused}
+@keyframes specimen-drift{from{transform:translate3d(0,7px,0) rotate(var(--tilt))}to{transform:translate3d(var(--drift),-14px,0) rotate(calc(var(--tilt) + 9deg))}}
+@keyframes lens-light{from{opacity:.45}to{opacity:1}}
+@media(max-width:600px){#dialogue[data-menu]{padding:24px 20px!important}.menu-specimen{background-position:38% center}#dialogue[data-menu] .menu-brand{margin-bottom:24px}.menu-wordmark{font-size:clamp(46px,11.8vw,70px)}.menu-botanical{width:175px}.menu-pollen{width:calc(var(--size)*.65);height:calc(var(--size)*.72);opacity:.45}#dialogue[data-menu] .start-actions,#dialogue[data-menu] .pause-actions{width:min(280px,100%);gap:14px}#dialogue[data-menu] .start-actions button,#dialogue[data-menu] .pause-actions button{font-size:19px;min-height:56px}.menu-microscope:after{background:radial-gradient(ellipse at center,#10251850,#0c1d1940 50%,#06150d77)}#dialogue[data-menu] .farm-save-card{gap:12px;padding:16px}#dialogue[data-menu="naming"] #dialogue-text{padding:16px;font-size:14px}#dialogue[data-menu="naming"] #farm-name-panel{padding:5px 16px 18px}}
+@media(max-height:540px) and (min-width:650px){#dialogue[data-menu]{padding:16px!important}#dialogue[data-menu] .menu-brand{margin-bottom:12px}.menu-wordmark{font-size:60px}.menu-botanical{height:32px;margin-top:4px}#dialogue[data-menu] .start-actions,#dialogue[data-menu] .pause-actions{gap:10px}#dialogue[data-menu] .start-actions button,#dialogue[data-menu] .pause-actions button{min-height:46px;font-size:18px;padding:9px 20px}#dialogue[data-menu] .menu-utilities{margin-top:16px}}
+@media(prefers-reduced-motion:reduce){.menu-microscope *{animation:none!important;will-change:auto!important}#dialogue[data-menu] button{transition:none}}

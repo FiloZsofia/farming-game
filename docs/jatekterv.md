@@ -805,3 +805,13 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 - Pontos szöveg: „AZ ERDŐBEN VESZÉLYES LÉNYEK JELENTEK MEG.” Alatta: „Megtámadják az embert. Ha meglátjátok őket, forduljatok vissza. Ne próbáljatok közelebb menni.”
 - A szöveg ceruzás, kézírásszerű saját betűkészlettel készül; a papíron két sötét, nyugtalanító ceruzarajz látható. Nincsenek lénynevek, képaláírások vagy aláírás.
 - Saját SVG-rajzok, helyben betöltődő, magyar ékezeteket tartalmazó Kerti Ceruza betűkészlet; nincs külső betűszolgáltatás vagy új játékfüggőség. Betűrajz forrása: `tools/draw-pencil-font.py`; eredet és licenc: `public/fonts/README.md`.
+
+
+### Silent Pollen — mikroszkópos menüarculat (2026. október 28.)
+- Elfogadott cím: **Silent Pollen**. A Főmenü és a játék közbeni Menü az elfogadott mikroszkópos koncepciót követi: olívazöld növényi sejtek, meleg aranyszínű optikai szegély, elegáns dőlt cím és botanikai vonaldísz, sötétzöld/arany keretes gombok.
+- A háttér felirat nélküli, optimalizált WebP-réteg; a cím és az összes gomb valódi HTML-elem. Négy pollenszem, finom porszemcsék, három apró buborék és lassú fényváltozás animálódik; a középső terület olvasható marad. Csökkentett mozgás kérésénél az animációk állnak, bezárt menünél a háttér nem fut.
+- Főmenü: Folytatás, Új játék, Beállítások; külön Mentett farmok nézet megnyitással és az eddigi megerősítéses törléssel. ESC játék közben továbbra is a Főmenüt nyitja, újra megnyomva folytatja az aktuális farmot.
+- Menü: Vissza a játékba, Beállítások, Főmenü; a meglévő Készlet, Történet, Irányítás és tesztfarm-funkció megmarad. A Beállítások az előző menübe lép vissza, ESC-pel is.
+- Halk, rövid Web Audio fapattanás a menügombokon, külön megjegyzett Menühangok be/ki beállítással. A meglévő zenék és a zene kikapcsolása megmaradnak. A hang nem igényel külső szolgáltatást vagy hangfájlt.
+- A mentési formátum és a játékállapot változatlan. A névadási ablak is az új arculatot kapja, a jóváhagyott történetszöveg változatlan. Mobilon is használható.
+- Grafika: a felhasználó által elfogadott, ebben a munkamenetben generált mikroszkópos koncepció felirat nélküli változata (`src/assets/microscope-menu.webp`); a mozgó szemcsék és a vonaldísz saját SVG-rajzok. Új futásidejű függőség nincs.
