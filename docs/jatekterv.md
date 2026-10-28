@@ -872,5 +872,7 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 
 ### Hibabejelentés — 2026. október 28.
 - GitHub Issues használatos. Menüben az Irányítás mellett, Főmenü alján visszafogott hivatkozásként jelenik meg a Hibabejelentés. Új böngészőlapon nyílik; nem küld automatikusan hibajegyet.
-- A Description elején előre szerepel a „Mi történt?” és „Hogyan lehet előidézni?” címsor, üres helyekkel a játékos válaszának. A technikai blokkja kizárólag játékverziót és rövid Git-buildazonosítót tartalmaz. A címet, leírást és képet a játékos adja meg a GitHubon. Farmadat, mentés, játékidő, eszközadat nem kerül a hivatkozásba.
+- A Description elején előre szerepel a „Mi történt?” és „Hogyan lehet előidézni?” címsor, üres helyekkel a játékos válaszának. A technikai blokk játékverziót, rövid Git-buildazonosítót, böngészőt és operációs rendszert tartalmaz. A címet, leírást és képet a játékos adja meg a GitHubon. Farmadat, mentés, játékidő nem kerül a hivatkozásba.
 - Buildazonosító automatikusan a fordításkor használt Git-commitból (CI-ben GITHUB_SHA), a játékverzió változatlanul 0.1.0. Verzióemelés nincs.
+
+- A Főmenü lencséjének háttérképe nem nagyítható animációval; a részecskék mozgása megmarad. A Hibabejelentés lábléchivatkozás nem változtathatja meg a háttér vagy a menü elrendezési méretét.

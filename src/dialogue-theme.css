@@ -4,8 +4,8 @@
 #app #dialogue:not([data-menu])::backdrop,#app #delete-farm-dialog::backdrop{background:#07170d80}
 #app #dialogue #dialogue-title,#app #delete-farm-title{font-family:var(--control-font);color:var(--window-title)}
 #app #dialogue:not([data-menu]) #dialogue-text{font-family:var(--reading-font)}
-#app #dialogue[open] button:not(:where(.item-slot,.chest-slot,[role="tab"],.delete-farm)),#app #delete-farm-dialog button{font-family:var(--control-font);color:var(--button-ink);background:var(--button-surface);border:1px solid var(--button-border);border-radius:3px;box-shadow:inset 0 0 0 2px #172e1a,inset 0 0 0 3px #ac944b70}
-#app #dialogue[open] button:not(:where(.item-slot,.chest-slot,[role="tab"],.delete-farm)):hover:not(:disabled),#app #delete-farm-dialog button:hover:not(:disabled){background:var(--button-hover);border-color:#e0c784}
+#app #dialogue[open] button:not(:where(.item-slot,.chest-slot,[role="tab"],.delete-farm)),#app #dialogue[open] .menu-utilities .bug-report-link,#app #delete-farm-dialog button{font-family:var(--control-font);color:var(--button-ink);background:var(--button-surface);border:1px solid var(--button-border);border-radius:3px;box-shadow:inset 0 0 0 2px #172e1a,inset 0 0 0 3px #ac944b70}
+#app #dialogue[open] button:not(:where(.item-slot,.chest-slot,[role="tab"],.delete-farm)):hover:not(:disabled),#app #dialogue[open] .menu-utilities .bug-report-link:hover,#app #delete-farm-dialog button:hover:not(:disabled){background:var(--button-hover);border-color:#e0c784}
 #app #dialogue[open] button:disabled,#app #delete-farm-dialog button:disabled{background:#555c54;color:#b7b8ad;border-color:#858b7b;box-shadow:none;opacity:.55;cursor:default}
 #app #dialogue[open] button:focus-visible,#app #delete-farm-dialog button:focus-visible{outline:2px solid #fff1bb;outline-offset:4px}
 #app #delete-farm-dialog #confirm-delete-farm{background:#743f35;border-color:#c68f76}

@@ -4,7 +4,9 @@
 
 A játék verziója a felhasználó kérésére ismét **0.1.0**. A korábban idő előtt kiosztott 0.1.1–0.1.3 címkék megmaradnak a Git-előzményben; a módosításokat nem vontuk vissza.
 
-- Hibabejelentés a Menüben és a Főmenü alján: GitHub Issues új lapon, kizárólag játékverzióval és buildazonosítóval előre kitöltve.
+- A Főmenü háttérképének nagyító animációja megszűnt; a lencse mérete állandó, a lebegő részecskék mozgása megmarad.
+- A Menü Hibabejelentés hivatkozása a szomszédos gombok közös szegélyét és stílusát használja.
+- Hibabejelentés a Menüben és a Főmenü alján: GitHub Issues új lapon, játékverzióval, buildazonosítóval, böngészővel és operációs rendszerrel előre kitöltve.
 - Fejlesztői eszközök, kizárólag `?dev=1` hivatkozással, Tesztmódok alcímmel.
 - „A mikroszkóp megtalálása – jelenet” külön memóriában futó, újraindítható teszthelyzet, a rendes farm mentésének megőrzésével.
 - A jelenetgomb és az alatta lévő indulóhelyzet-leírás balra igazodik.
