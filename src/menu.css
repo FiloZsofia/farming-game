@@ -6,7 +6,7 @@
 #dialogue[data-menu]>form{position:relative;z-index:1;min-height:100%;width:min(640px,100%);margin:0 auto;display:flex;flex-direction:column;justify-content:center;align-items:stretch}
 #dialogue[data-menu] #dialogue-title,#dialogue[data-menu] #dialogue-label,#dialogue[data-menu] #dialogue-text:empty{display:none}
 #dialogue[data-menu] .menu-microscope{display:block;position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;background:#10200e}
-.menu-specimen{position:absolute;inset:-12px;background:url('./assets/microscope-menu.webp') center/cover no-repeat;image-rendering:pixelated;transform:none}
+.menu-specimen{position:absolute;inset:-12px;background:url('./assets/microscope-menu.webp') center/cover no-repeat;image-rendering:pixelated;animation:cell-sway 26s ease-in-out infinite alternate}
 .menu-microscope:after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,#08180b26 0%,transparent 55%,#020b0570 100%)}
 .menu-lens-light{position:absolute;inset:0;background:radial-gradient(ellipse at 36% 25%,#e9d77d18,transparent 65%);animation:lens-light 17s ease-in-out infinite alternate}
 .menu-dust,.menu-bubble,.menu-pollen{position:absolute;display:block;animation:specimen-drift var(--duration) ease-in-out var(--delay) infinite alternate;will-change:transform;pointer-events:none}
@@ -142,3 +142,6 @@
 #dialogue[data-menu] #pause-bug-report{display:inline-flex;align-items:center;min-height:42px;padding:9px 15px;border:1px solid #b5a16470;border-radius:3px;background:var(--button-surface);font-size:13px;box-sizing:border-box}
 #start-bug-report{display:none}
 #dialogue[data-menu="start"] #start-bug-report{display:block;position:absolute;left:50%;bottom:calc(100% + 6px);transform:translateX(-50%);width:max-content;margin:0;pointer-events:auto;font-size:12px}
+
+/* Original gentle microscope background motion. */
+@keyframes cell-sway{from{transform:translate3d(-3px,3px,0) scale(1.008)}to{transform:translate3d(5px,-4px,0) scale(1.025)}}

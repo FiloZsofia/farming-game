@@ -1,5 +1,5 @@
 import {describe,it,expect} from 'vitest';
-import {createEstate,buyGood,placeGood,advanceEstate,collectEstate,seasonIndex,seasonDay,extraValue,emptyExtras,validEstate} from './estate';
+import {createEstate,buyGood,placeGood,goodReachable,advanceEstate,collectEstate,seasonIndex,seasonDay,extraValue,emptyExtras,validEstate} from './estate';
 import {snapshot,decodeSnapshot,validSnapshot} from './storage';
 import {createGarden} from './gardening';
 import {createClock} from './clock';
@@ -44,3 +44,6 @@ describe('permanent, renewable pond reeds',()=>{
  it('keeps the planted root and yields one harvest only after each three elapsed days',async()=>{const {cutReed,reedReady}=await import('./estate');let e=createEstate();e.pond=[{kind:'reed',x:530,y:440,day:1}];expect(reedReady(e.pond[0],3)).toBe(false);expect(cutReed(e,0,3)).toBeNull();e=cutReed(e,0,4)!;expect(e.pond).toHaveLength(1);expect(e.pond[0]).toMatchObject({kind:'reed',day:1,lastHarvest:4});expect(cutReed(e,0,4)).toBeNull();expect(cutReed(e,0,6)).toBeNull();e=cutReed(e,0,7)!;expect(e.pond[0].lastHarvest).toBe(7);expect(validEstate(e,7)).toBe(true);});
  it('preserves old planted reeds, saved harvest dates and unrelated pond possessions',async()=>{const {cutReed}=await import('./estate');const s=snapshot({x:500,y:395},createClock(8),createGarden());s.travel.estate.pond=[{kind:'reed',x:530,y:440,day:1},{kind:'lily',x:550,y:460,day:2}];s.travel.estate.fish.carp=4;s.travel.estate=cutReed(s.travel.estate,0,8)!;expect(decodeSnapshot(s)).toEqual(s);const invalid=structuredClone(s);invalid.travel.estate.pond[0].lastHarvest=9;expect(validSnapshot(invalid)).toBe(false);expect(s.travel.estate.pond[1].kind).toBe('lily');expect(s.travel.estate.fish.carp).toBe(4);});
 });
+
+it('permits fish throws across the pond from the shore but keeps planting within reach',()=>{const e=createEstate();e.goods.goldfish=20;for(const [x,y]of [[638,464],[730,464],[540,470],[650,390]]){expect(goodReachable('goldfish',{x:480,y:464},x,y)).toBe(true);expect(placeGood(e,'goldfish',x,y,1,false)?.fish.goldfish).toBe(1);}expect(goodReachable('lily',{x:480,y:464},730,464)).toBe(false);expect(goodReachable('goldfish',{x:100,y:100},638,464)).toBe(false);});
+it('allows only one purchased duck nest, carried or placed, without charging again',()=>{const first=buyGood(createEstate(),200,'duckNest',1,2)!;expect(buyGood(first.estate,120,'duckNest')).toBeNull();const placed=placeGood(first.estate,'duckNest',490,430,2,true)!;expect(buyGood(placed,120,'duckNest')).toBeNull();expect(buyGood(createEstate(),200,'duckNest',2)).toBeNull();expect(first.gold).toBe(120);});

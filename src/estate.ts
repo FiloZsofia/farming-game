@@ -31,7 +31,12 @@ export function validEstate(v:unknown,day:number):v is Estate{
  const date=(n:number)=>Number.isSafeInteger(n)&&n>=0&&n<=day;
  return (e.duckPurchaseDay===null||date(e.duckPurchaseDay)&&e.duckPurchaseDay>=1)&&(e.duckArrivalDay===null||date(e.duckArrivalDay)&&e.duckArrivalDay>=1)&&typeof e.duckArrivalPending==='boolean'&&(!e.duckArrivalPending||e.duckArrivalDay!==null)&&!!e.goods&&goods.every(k=>count(e.goods[k]))&&validExtras(e.produce)&&validExtras(e.shipping)&&validExtras(e.roe)&&!!e.fish&&count(e.fish.goldfish)&&count(e.fish.carp)&&count(e.eggs)&&date(e.roeDay)&&date(e.eggDay)&&Array.isArray(e.trees)&&e.trees.length<=200&&e.trees.every(t=>t&&validTreeCycle(t,day)&&treeKinds.includes(t.kind)&&Number.isFinite(t.x)&&t.x>=farmBounds.left+24&&t.x<=farmBounds.right-24&&Number.isFinite(t.y)&&t.y>=farmBounds.top+32&&t.y<=576&&date(t.planted)&&t.planted>=1&&date(t.last)&&count(t.fruit))&&Array.isArray(e.pond)&&e.pond.length<=200&&e.pond.every(p=>['lily','reed','duckNest'].includes(p.kind)&&Number.isFinite(p.x)&&Number.isFinite(p.y)&&date(p.day)&&p.day>=1&&(p.lastHarvest===undefined||p.kind==='reed'&&date(p.lastHarvest)&&p.lastHarvest>=p.day))&&e.pond.filter(p=>p.kind==='duckNest').length<=1&&(e.duckArrivalDay===null||e.pond.some(p=>p.kind==='duckNest'&&e.duckArrivalDay!>=p.day+3));
 }
+export const hasDuckNest=(estate:Estate)=>estate.duckPurchaseDay!==null||estate.goods.duckNest>0||estate.pond.some(p=>p.kind==='duckNest');
+export function goodReachable(good:Good,player:{x:number;y:number},x:number,y:number){
+ const p=farmLayout.pond;return good==='goldfish'||good==='carp'?Math.hypot((player.x-p.x)/p.rx,(player.y-p.y)/p.ry)<=1.7:Math.hypot(x-player.x,y-player.y)<=90;
+}
 export function buyGood(estate:Estate,gold:number,good:Good,amount=1,day=1){
+ if(good==='duckNest'&&(amount!==1||hasDuckNest(estate)))return null;
  if(!goods.includes(good)||!Number.isSafeInteger(amount)||amount<1||amount>999||estate.goods[good]+amount>999999||gold<goodPrices[good]*amount)return null;
  const next=structuredClone(estate);if(good==='duckNest'&&next.goods.duckNest===0&&!next.pond.some(p=>p.kind==='duckNest'))next.duckPurchaseDay=day;next.goods[good]+=amount;return {estate:next,gold:gold-goodPrices[good]*amount};
 }

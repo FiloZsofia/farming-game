@@ -876,3 +876,7 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 - Buildazonosító automatikusan a fordításkor használt Git-commitból (CI-ben GITHUB_SHA), a játékverzió változatlanul 0.1.0. Verzióemelés nincs.
 
 - A Főmenü lencséjének háttérképe nem nagyítható animációval; a részecskék mozgása megmarad. A Hibabejelentés lábléchivatkozás nem változtathatja meg a háttér vagy a menü elrendezési méretét.
+
+- A halakat a tópart közeléből a teljes vízfelületre dobhatjuk; célzásuk nem igazodik a kert rácsához. A tavi növények lehelyezési távolsága változatlan. Egy megvett vadkacsafészek után a vásárlási gomb inaktív, további fészekért nem vonható le arany. A Főmenü finom háttérmozgása visszatér, kizárólag eltolással, változó nagyítás nélkül.
+
+- Pontosítás a Főmenü hullámzásához: a felhasználó az eredeti mozgás teljes visszaállítását kérte, az 1.008–1.025 közötti enyhe skálázással együtt. Ez felülírja a korábbi, állandó nagyítást előíró döntést.
