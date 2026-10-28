@@ -863,3 +863,5 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 - A Menü fejlesztői menüpontja csak a `?dev=1` URL-paraméterrel jelenik meg; ez kényelmi elrejtés, nem hozzáférés-védelem. Paraméter nélkül a panel megnyitása is tiltott.
 - Ablakcím és menüpont: Fejlesztői eszközök. Alcím: Tesztmódok. Jelenetgomb: A mikroszkóp megtalálása – jelenet. Szöveg: „A teszt külön memóriában fut. A normál farmod megmarad.”
 - A paraméter újratöltés és tesztből kilépés után is a hivatkozás része marad.
+
+- A mikroszkópos jelenet tesztgombja alatti rövid leírás: „Indulás a fészekminta megszerzése előtt.”

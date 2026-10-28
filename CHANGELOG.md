@@ -1,5 +1,9 @@
 # Változások
 
+## 0.1.3 — 2026. október 28.
+
+- A mikroszkópos jelenet tesztgombja alatt megjelenik az induló helyzet leírása.
+
 ## 0.1.2 — 2026. október 28.
 
 - A Fejlesztői eszközök csak a `?dev=1` hivatkozással érhetők el.

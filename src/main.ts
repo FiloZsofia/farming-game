@@ -1156,7 +1156,7 @@ class Farm extends Phaser.Scene {
      this.clock=next.clock;this.actor.setPosition(next.player.x,next.player.y).setAngle(0);this.body.setY(0);this.jumpRemaining=0;this.jumpCooldown=0;this.collapseRemaining=0;this.shadow.setScale(1);document.querySelector<HTMLElement>('#sleep-shade')!.style.opacity='0';this.forestPresence=true;this.forestEquipped=false;this.forestCombat?.reset();this.thoughtRemaining=0;this.thought.setVisible(false);this.thoughtBack.clear();this.redrawScenery();this.updateFarmTitle();this.fitCamera();this.nearby='';this.aimAhead();document.querySelector<HTMLElement>('#test-mode-banner')!.hidden=false;document.querySelector<HTMLElement>('#save-state')!.textContent='TESZTMÓD · csak memóriában';dialogue.close();release();
     });
    }catch{this.notice('A tesztet nem sikerült elindítani.');}finally{this.transitioning=false;button.disabled=false;}
-  };panel.append(button);
+  };const description=document.createElement('p');description.id='microscope-test-description';description.textContent='Indulás a fészekminta megszerzése előtt.';button.setAttribute('aria-describedby',description.id);panel.append(button,description);
   if(this.store.testMode){const exit=document.createElement('button');exit.type='button';exit.id='exit-test-mode';exit.textContent='Kilépés a tesztmódból';exit.onclick=()=>{if(!this.transitioning&&this.store.selectedFarmId)this.reloadFarm(this.store.selectedFarmId);};panel.append(exit);}
  }
  private async deliverMicroscope(){
