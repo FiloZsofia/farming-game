@@ -2,6 +2,7 @@
 
 ## Változások a 0.1.0 óta — külön jóváhagyott verzióemelés nélkül
 
+- A fejlesztői hivatkozás kis-, nagy- és vegyes betűkkel is működik (`?dev=1`, `?DEV=1`).
 - A déli erdő a küldetés előtt sűrű növényzet és figyelmeztető táblás lezárás mögött marad.
 - Új fejlesztői teszt: Noah levele, Simonnál vásárolható botfejlesztés, déli erdei harc és vörösfenyőgyanta gyűjtése, interaktív kivonatkészítés és mikroszkópos összehasonlítás. A normál történet és mentés nem változik.
 

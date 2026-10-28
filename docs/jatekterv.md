@@ -894,3 +894,5 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 - Kezdőpontok: teljes folyamat Noah levele előtt; Simon; patakhíd; kivonatkészítés előtt. Újraindítás mindig a tesztbe belépéskor megőrzött farmmásolatból indul. Kilépés vagy frissítés eldobja az egész kísérletet.
 
 - A déli erdő a küldetés előtt lezárt átjáró és sűrű növényzeti takarás mögött marad, veszélyt jelző táblával. A normál játékban még nincs hozzáférés; a fejlesztői tesztben Simon útmutatása nyitja meg. A lezárás oldalról sem kerülhető meg, de egy korábbi mentésben már mögötte álló játékost nem zárunk bent.
+
+- A fejlesztői URL-paraméter neve nem kis-/nagybetűérzékeny: `?dev=1`, `?DEV=1` és vegyes írásmód is működik, minden fejlesztői belépési pont ugyanazt a közös ellenőrzést használja.

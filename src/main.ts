@@ -1,5 +1,6 @@
 import {placedItemAt,pickPlacedItem} from './placed-items';
 import {MenuPresentation} from './menu-presentation';
+import {developerToolsEnabled} from './dev-mode';
 import {forestWarningPaper} from './forest-warning';
 import {drawVillageNotice,villageNotice,pollinatorNoticeTitle,pollinatorNoticeText} from './village-notice';
 import {collectFruitFalls,pickFallenFruit} from './fallen-fruit';
@@ -278,7 +279,7 @@ class Farm extends Phaser.Scene {
  private currentSnapshot(){return snapshot(this.actor,this.clock,this.garden,this.economy,this.orders,this.farmName,this.clearing,this.story,this.skill,this.farmerName,this.travel);}
  private openPauseMenu(){
   if(!this.ready||this.transitioning||this.morningPlaying||this.microscopeDeliveryPlaying)return;
-  showDialogue('Menü','','');document.querySelector<HTMLButtonElement>('#microscope-test')!.hidden=new URLSearchParams(location.search).get('dev')!=='1';document.querySelector<HTMLElement>('#menu-panel')!.hidden=false;
+  showDialogue('Menü','','');document.querySelector<HTMLButtonElement>('#microscope-test')!.hidden=!developerToolsEnabled();document.querySelector<HTMLElement>('#menu-panel')!.hidden=false;
   document.querySelector<HTMLButtonElement>('#resume-game')!.focus();
  }
  private openSettings(origin:'start'|'pause'){
@@ -1163,7 +1164,7 @@ class Farm extends Phaser.Scene {
  private noahTest:NoahTestController|null=null;
  private testBaseline:Snapshot|null=null;
  private openMicroscopeTest(){
-  if(!this.ready||this.transitioning||new URLSearchParams(location.search).get('dev')!=='1')return;
+  if(!this.ready||this.transitioning||!developerToolsEnabled())return;
   showDialogue('Fejlesztői eszközök','A teszt külön memóriában fut. A normál farmod megmarad.','');
   const panel=document.querySelector<HTMLElement>('#research-panel')!;panel.replaceChildren();panel.hidden=false;
   const heading=document.createElement('h3');heading.textContent='Tesztmódok';panel.append(heading);
@@ -1190,7 +1191,7 @@ class Farm extends Phaser.Scene {
   if(this.store.testMode){const exit=document.createElement('button');exit.type='button';exit.id='exit-test-mode';exit.textContent='Kilépés a tesztmódból';exit.onclick=()=>{if(!this.transitioning&&this.store.selectedFarmId)this.reloadFarm(this.store.selectedFarmId);};panel.append(exit);}
  }
  private async startNoahTest(checkpoint:NoahCheckpoint,config:NoahTestConfig){
-  if(this.transitioning||new URLSearchParams(location.search).get('dev')!=='1')return;
+  if(this.transitioning||!developerToolsEnabled())return;
   this.preparingNoah=true;this.transitioning=true;
   try{
    if(!this.store.testMode){const original=structuredClone(this.currentSnapshot());await this.saveChecked(original);await this.store.beginTest();this.testBaseline=original;}
