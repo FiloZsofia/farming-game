@@ -205,3 +205,11 @@ it('preserves earlier meadow grid plots beside the extended bed rows on save and
  expect(validSnapshot(s)).toBe(true);expect(decodeSnapshot(s)).toEqual(s);
  const store=new SaveStore(new IDBFactory());await store.load();await store.save(s);const loaded=await store.load();expect(loaded.data?.plots).toEqual(s.plots);expect(loaded.data?.orders).toEqual(s.orders);store.close();
 });
+
+it('keeps test saves in memory while preserving the normal farm and its backup',async()=>{
+ const factory=new IDBFactory(),store=new SaveStore(factory);await store.load();const original=fresh();original.farmName='Normál farm';const id=await store.createFarm(original);
+ const before=await store.exportOriginal();await store.beginTest();expect(store.testMode).toBe(true);
+ const test=structuredClone(original);test.economy.gold=1234;await store.save(test);await store.save(test);
+ expect(await store.exportOriginal()).toBe(before);await expect(store.createFarm(test)).rejects.toThrow();store.close();
+ const reopened=new SaveStore(factory);expect((await reopened.load()).data).toEqual(original);expect(reopened.selectedFarmId).toBe(id);expect(reopened.testMode).toBe(false);reopened.close();
+});

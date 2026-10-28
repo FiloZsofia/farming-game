@@ -6,7 +6,7 @@ import {collectFruitFalls,pickFallenFruit} from './fallen-fruit';
 import {initializeFruitTimers} from './fruit-timers';
 import {nearEmptyBlossoms,POLLINATION_OBSERVATION_TITLE,POLLINATION_OBSERVATION_TEXT} from './pollination-observation';
 import {ForestAtmosphere} from './forest-atmosphere';
-import {isMicroscopeTestFarm,prepareMicroscopeTest} from './microscope-test-setup';
+import {prepareMicroscopeTest} from './microscope-test-setup';
 import {playMicroscopeDelivery} from './microscope-delivery';
 import {simonPortrait} from './simon-art';
 import {blueprintIds,blueprintNames,recipes,materialKeys,materialNames,heldMaterial,canCraft,craftMachine,buyBlueprint,craftNames,createCrafting,advanceCrafting,compostAction,cutCarriedReed,mulchPlot,irrigate,irrigatedPlots,type Blueprint,type CraftItem,type Machine} from './crafting';
@@ -221,8 +221,8 @@ class Farm extends Phaser.Scene {
  private async persist(){
   if(!this.ready||this.transitioning||this.choosingFarm||!this.hasFarm)return;
   const label=document.querySelector<HTMLElement>('#save-state')!;
-  const revision=++this.saveRevision;label.textContent='Mentés…';
-  try{await this.saveChecked(snapshot(this.actor,this.clock,this.garden,this.economy,this.orders,this.farmName,this.clearing,this.story,this.skill,this.farmerName,this.travel));if(revision===this.saveRevision)label.textContent='Mentve ebben a böngészőben';}
+  const revision=++this.saveRevision;label.textContent=this.store.testMode?'TESZTMÓD · csak memóriában':'Mentés…';
+  try{await this.saveChecked(snapshot(this.actor,this.clock,this.garden,this.economy,this.orders,this.farmName,this.clearing,this.story,this.skill,this.farmerName,this.travel));if(revision===this.saveRevision)label.textContent=this.store.testMode?'TESZTMÓD · csak memóriában':'Mentve ebben a böngészőben';}
   catch{if(revision===this.saveRevision){label.textContent='Nem sikerült menteni';this.notice('A mentés nem sikerült. A következő automatikus mentés újrapróbálja.');}}
  }
  private async initStorage(){
@@ -272,7 +272,7 @@ class Farm extends Phaser.Scene {
  private currentSnapshot(){return snapshot(this.actor,this.clock,this.garden,this.economy,this.orders,this.farmName,this.clearing,this.story,this.skill,this.farmerName,this.travel);}
  private openPauseMenu(){
   if(!this.ready||this.transitioning||this.morningPlaying||this.microscopeDeliveryPlaying)return;
-  showDialogue('Menü','','');document.querySelector<HTMLButtonElement>('#microscope-test')!.hidden=!isMicroscopeTestFarm(this.farmName);document.querySelector<HTMLElement>('#menu-panel')!.hidden=false;
+  showDialogue('Menü','','');document.querySelector<HTMLButtonElement>('#microscope-test')!.hidden=false;document.querySelector<HTMLElement>('#menu-panel')!.hidden=false;
   document.querySelector<HTMLButtonElement>('#resume-game')!.focus();
  }
  private openSettings(origin:'start'|'pause'){
@@ -280,6 +280,7 @@ class Farm extends Phaser.Scene {
  }
  private closeSettings(){if(this.transitioning)return;if(this.settingsOrigin==='start')void this.openStartMenu(false);else this.openPauseMenu();}
  private async openStartMenu(saveCurrent=true){
+  if(this.store.testMode){this.openMicroscopeTest();return;}
   if(!this.ready||this.transitioning)return;
   this.closeStartMenuRequested=false;this.choosingFarm=true;this.naming=false;this.draftingFarm=false;this.transitioning=true;release();
   this.warningAnimation?.cancel();document.querySelector<HTMLElement>('#night-warning')!.hidden=true;this.seedFindAnimation?.cancel();document.querySelector<HTMLElement>('#seed-find')!.hidden=true;
@@ -1137,17 +1138,25 @@ class Farm extends Phaser.Scene {
   if(!this.canInteract()||!inWorkshop(this.actor.y))return;const object=workshopObjects.find(o=>o.id===id);if(!object||Math.hypot(this.actor.x-object.x,this.actor.y-object.y)>78)return;const next=inspectWorkshop(this.travel.research,id);if(!next)return;
   if(await this.commitResearch(next)){showDialogue(object.name,['shutter','entrance-shutter'].includes(id)?object.text:this.travel.research.repaired&&['vat','pipes','filter','coil'].includes(id)?'A helyreállított kivonatkészítő egyik része. Talán az erdőben találok valami hasznosat, amivel elkezdhetem a kísérletezést.':object.text,'A RÉGI MŰHELY');if(id==='vat'&&!next.repaired)this.openRepairPanel();}
  }
+ private testBaseline:Snapshot|null=null;
  private openMicroscopeTest(){
-  if(!this.ready||this.transitioning||!isMicroscopeTestFarm(this.farmName))return;
-  showDialogue('Fészekminta tesztje',this.travel.research.repaired?'A fészek mellé kerülsz, a mintavétel elé. A fészekminta vizsgálata és elküldése újrakezdhető; a hozzá tartozó korábbi megfigyelések és képek törlődnek.':'Ehhez a teszthez előbb meg kell javítani a kivonatkészítőt.','TESZT FARM');
-  if(!this.travel.research.repaired)return;
+  if(!this.ready||this.transitioning)return;
+  showDialogue('Fejlesztői eszközpanel','A teszt külön, memóriában fut. A normál farmod megmarad.','');
   const panel=document.querySelector<HTMLElement>('#research-panel')!;panel.replaceChildren();panel.hidden=false;
-  const button=document.createElement('button');button.type='button';button.id='prepare-microscope-test';button.textContent='Előkészítem';button.onclick=async()=>{
-   if(this.transitioning)return;const next=prepareMicroscopeTest(this.currentSnapshot());if(!next)return;button.disabled=true;
-   if(!await this.commitChest(next,()=>{
-    this.clock=next.clock;this.actor.setPosition(next.player.x,next.player.y).setAngle(0);this.body.setY(0);this.jumpRemaining=0;this.jumpCooldown=0;this.collapseRemaining=0;this.shadow.setScale(1);document.querySelector<HTMLElement>('#sleep-shade')!.style.opacity='0';this.forestPresence=true;this.forestEquipped=false;this.forestCombat?.reset();this.thoughtRemaining=0;this.thought.setVisible(false);this.thoughtBack.clear();this.redrawScenery();this.updateFarmTitle();this.fitCamera();this.nearby='';this.aimAhead();dialogue.close();
-   }))button.disabled=false;
+  const button=document.createElement('button');button.type='button';button.id='prepare-microscope-test';button.textContent=this.store.testMode?'Fészekminta megszerzése · Újraindítás':'Fészekminta megszerzése';button.onclick=async()=>{
+   if(this.transitioning)return;button.disabled=true;
+   try{
+    if(!this.store.testMode){
+     this.transitioning=true;
+     const original=structuredClone(this.currentSnapshot());await this.saveChecked(original);await this.store.beginTest();this.testBaseline=original;this.transitioning=false;
+    }
+    const next=prepareMicroscopeTest(this.testBaseline!)!;
+    await this.commitChest(next,()=>{
+     this.clock=next.clock;this.actor.setPosition(next.player.x,next.player.y).setAngle(0);this.body.setY(0);this.jumpRemaining=0;this.jumpCooldown=0;this.collapseRemaining=0;this.shadow.setScale(1);document.querySelector<HTMLElement>('#sleep-shade')!.style.opacity='0';this.forestPresence=true;this.forestEquipped=false;this.forestCombat?.reset();this.thoughtRemaining=0;this.thought.setVisible(false);this.thoughtBack.clear();this.redrawScenery();this.updateFarmTitle();this.fitCamera();this.nearby='';this.aimAhead();document.querySelector<HTMLElement>('#test-mode-banner')!.hidden=false;document.querySelector<HTMLElement>('#save-state')!.textContent='TESZTMÓD · csak memóriában';dialogue.close();release();
+    });
+   }catch{this.notice('A tesztet nem sikerült elindítani.');}finally{this.transitioning=false;button.disabled=false;}
   };panel.append(button);
+  if(this.store.testMode){const exit=document.createElement('button');exit.type='button';exit.id='exit-test-mode';exit.textContent='Kilépés a tesztmódból';exit.onclick=()=>{if(!this.transitioning&&this.store.selectedFarmId)this.reloadFarm(this.store.selectedFarmId);};panel.append(exit);}
  }
  private async deliverMicroscope(){
   if(this.microscopeDeliveryPlaying||this.transitioning)return;
@@ -1406,6 +1415,7 @@ class Farm extends Phaser.Scene {
   document.querySelector('#start-settings')!.addEventListener('click',()=>this.openSettings('start'));
   document.querySelector('#pause-settings')!.addEventListener('click',()=>this.openSettings('pause'));
   document.querySelector('#settings-back')!.addEventListener('click',()=>this.closeSettings());
+  document.querySelector('#test-mode-banner')!.addEventListener('click',()=>this.openMicroscopeTest());
   document.querySelector('#microscope-test')!.addEventListener('click',()=>this.openMicroscopeTest());
   document.querySelector('#place-order')!.addEventListener('click',()=>void this.placeOrder());
   document.querySelector('#collect-package')!.addEventListener('click',()=>void this.collectMail());

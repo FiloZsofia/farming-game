@@ -851,3 +851,10 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 - Egyetlen forrás a `package.json` már meglévő 0.1.0 mezője; a felület közvetlenül ebből kapja a számot. Változáslista: `CHANGELOG.md`; kiadási szabályzat: `docs/verziozas.md`; az első állapot Git-címkéje `v0.1.0`.
 - Kisebb javítás 0.1.1, nagyobb tartalmi bővítés 0.2.0 jellegű lépés. Nem kell minden apró commit után új kiadás, és a korábbi fejlesztéseket nem számozzuk meg visszamenőleg. Az 1.0.0 külön közös döntés lesz.
 - A farmmentés technikai verziója továbbra is 18, a korábbi mentések tartalmát a játékverzió bevezetése nem módosítja.
+
+### Memóriában futó fejlesztői tesztmód — 2026. október 28.
+- Menü → Fejlesztői eszközpanel → Fészekminta megszerzése. Bármely farmból indítható, nem névhez kötött.
+- Belépés előtt a normál farm aktuális állapotát mentjük, majd külön másolatával tesztelünk. A mentési réteg tesztmódban nem ír IndexedDB-be; az automatikus mentés sem, a farmkönyvtár sem módosítható.
+- A teszthelyzet előkészíti a megjavított Műhelyt, a fészek mellé helyezi Samet mintavétel előtt, hogy a hazatéréskor induló mikroszkópos jelenet ismét kipróbálható legyen. A korábbi fészekmegfigyelések csak a tesztmásolatból törlődnek.
+- Állandó TESZTMÓD jelzés nyitja a panelt. Újraindítás mindig a belépéskori farm másolatából indul. Kilépés az eredeti, mentett állapothoz tér vissza; oldalfrissítés/bezárás eldobja a tesztet. A panel egyszerű bezárása nem léptet ki a tesztből.
+- Ez nem külön Dev weboldal vagy kiadási ág, hanem ugyanazon játék elkülönített tesztüzemmódja. A mentésformátum változatlanul 18.

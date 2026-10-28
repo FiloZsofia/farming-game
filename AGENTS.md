@@ -23,3 +23,5 @@
 - Minden jelenlegi és új ablak/gomb kövesse a [közös arculati szabályzatot](docs/ablakok-es-gombok.md). A közös alapstílus forrása `src/dialogue-theme.css`; ne kizárólag kézzel felsorolt ablakcímekhez kösd az egységesítést. Vizuális módosításnál ellenőrizd a szabályzat teljes ablaklistáját, beleértve a beszélgetések és a boltok Vissza gombjait, illetve a névtelen figyelmeztetés gombjait is.
 
 - Játékkiadásokhoz kövesd a [verziózási szabályzatot](docs/verziozas.md): egyetlen verzióforrás a `package.json`, látható szám a `src/version.ts`-ből, változáslista a `CHANGELOG.md`-ben, kiadási Git-címke. Nem minden commit új kiadás. A mentésformátum verzióját ettől külön kezeld.
+
+- A fejlesztői teszthelyzetek csak külön, memóriában tartott farmmásolatot módosíthatnak. A `SaveStore.beginTest()` mentési védelmét minden új teszteszköznél őrizd meg; a rendes farmot vagy biztonsági másolatát teszt közben tilos felülírni. Teszteszközt ne köss farmnévhez.

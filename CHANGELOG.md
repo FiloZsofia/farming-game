@@ -1,5 +1,13 @@
 # Változások
 
+## 0.1.1 — 2026. október 28.
+
+- Fejlesztői eszközpanel a Menüben, „Fészekminta megszerzése” teszthelyzettel.
+- A teszt bármely farm külön másolatával, kizárólag memóriában fut; a rendes mentés és biztonsági másolata megmarad.
+- Látható TESZTMÓD jelzés, újraindítás és kilépés; kilépéskor az eredeti farm folytatódik. Oldalfrissítéskor a teszt elvész.
+- A menük láblécében az év és a készítő neve között is elválasztó pötty szerepel.
+- A korábbi, Teszt farm névhez kötött, mentést átíró előkészítést ez váltja fel.
+
 ## 0.1.0 — 2026. október 28.
 
 Az első számozott, fejlesztés alatti kiadás. A korábbi fejlesztéseket ezzel az állapottal fogjuk össze; nem számozzuk meg őket utólag.

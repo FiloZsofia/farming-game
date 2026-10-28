@@ -141,6 +141,9 @@ export class SaveStore{
  private catalogue:FarmCatalogue|null=null;
  private writable=false;
  private queue=Promise.resolve();
+ private testing=false;
+ get testMode(){return this.testing;}
+ async beginTest(){await this.enqueue(async()=>{this.testing=true;});}
  constructor(private factory:IDBFactory=indexedDB){}
  get selectedFarmId(){return this.catalogue?.selected??null;}
  private enqueue<T>(work:()=>Promise<T>):Promise<T>{const operation=this.queue.then(work);this.queue=operation.then(()=>{},()=>{});return operation;}
@@ -179,9 +182,10 @@ export class SaveStore{
   });
  }
  save(data:Snapshot):Promise<void>{
-  const copy=structuredClone(data),selected=this.selectedFarmId;
+  const copy=structuredClone(data),selected=this.selectedFarmId,testing=this.testing;
   return this.enqueue(async()=>{
    if(!this.writable||!validSnapshot(copy))throw new Error('A mentési állapot nem érvényes vagy a tároló nem írható.');
+   if(testing)return;
    if(this.catalogue&&!selected)throw new Error('Előbb válassz vagy hozz létre egy farmot.');
    if(selected!==this.selectedFarmId)throw new Error('Időközben másik farmot választottál. A régi állapotot nem írtam rá.');
    const next=this.catalogue?structuredClone(this.catalogue):null;
@@ -193,6 +197,7 @@ export class SaveStore{
   });
  }
  async createFarm(data:Snapshot):Promise<string>{
+  if(this.testing)throw new Error('Tesztmódban nem hozható létre mentett farm.');
   const copy=structuredClone(data);if(!validSnapshot(copy)||!copy.farmName)throw new Error('Az új farmnak érvényes név és kezdőállapot szükséges.');
   await this.listFarms();
   return this.enqueue(async()=>{
@@ -202,6 +207,7 @@ export class SaveStore{
   });
  }
  async deleteFarm(id:string):Promise<void>{
+  if(this.testing)throw new Error('Tesztmódban a mentett farmok nem módosíthatók.');
   await this.listFarms();
   return this.enqueue(async()=>{
    if(!this.catalogue!.farms.some(f=>f.id===id))throw new Error('Ez a farm nem található a mentések között.');
@@ -212,6 +218,7 @@ export class SaveStore{
   });
  }
  async selectFarm(id:string):Promise<{data:Snapshot;recovered:boolean}>{
+  if(this.testing)throw new Error('Előbb lépj ki a tesztmódból.');
   await this.listFarms();
   return this.enqueue(async()=>{
    if(!this.catalogue!.farms.some(f=>f.id===id))throw new Error('Ez a farm nem található a mentések között.');
