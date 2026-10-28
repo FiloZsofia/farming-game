@@ -129,3 +129,9 @@
 #dialogue[data-window="utility"] .shop-card :is(h3,strong){color:#f4e6b0}
 
 #dialogue[data-window="utility"],#dialogue:is([data-presentation="story"],[data-presentation="controls"]){scrollbar-width:thin;scrollbar-color:#9d9568 #1e3527}
+
+/* Include speech/shop footers and the anonymous paper's surrounding controls. */
+#app #dialogue[data-speaker],#app #dialogue[data-presentation="forest-warning"]{border:1px solid #bda46a;border-radius:5px;box-shadow:0 16px 70px #07170e90;background:linear-gradient(145deg,#2b4332f7,#172e23fc)}
+#app #dialogue[data-speaker]::backdrop,#app #dialogue[data-presentation="forest-warning"]::backdrop{background:#07170d80}
+#app #dialogue:is([data-window="utility"],[data-speaker],[data-presentation="forest-warning"]) #dialogue-close,#app #dialogue[data-presentation="forest-warning"] .warning-back{font:16px 'Trebuchet MS','Segoe UI',sans-serif;color:#f8ebc5;background:linear-gradient(125deg,#233c22f2,#142b1bf5);border:1px solid #c5aa65;border-radius:3px;box-shadow:inset 0 0 0 2px #172e1a,inset 0 0 0 3px #ac944b70;min-height:44px;padding:10px 16px}
+#app #dialogue:is([data-window="utility"],[data-speaker],[data-presentation="forest-warning"]) #dialogue-close:hover,#app #dialogue[data-presentation="forest-warning"] .warning-back:hover{background:linear-gradient(125deg,#3b502cf5,#243e24f5);border-color:#e0c784}

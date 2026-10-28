@@ -17,3 +17,7 @@
 - A pusztán ablakot bezáró, játékba visszalépő gomb neve Vissza vagy Vissza a játékba legyen, soha ne Folytatás. A Folytatás név csak tényleges folytatást jelentsen, például mentett farm megnyitását. Vásárlásnál/rendelésnél a végrehajtó és a kilépő gomb egyértelműen különüljön el.
 
 - Minden játékbeli szövegnél kerüld a szájbarágást és túlmagyarázást. Ne ismételd szöveggel azt, amit a felület, ikonok, számok vagy gombállapot már egyértelművé tesznek. A recepteknél elég a birtokolt/szükséges mennyiség és az inaktív elkészítőgomb; ne írj külön hiány- vagy készültségi mondatot.
+
+- Minden lehelyezett, mozgatható tárgyat (a jövőben készülőket is) Bontóvassal veszünk vissza a Készletbe, majd onnan helyezünk le újra. Használd a `placed-items.ts` közös felvételi útvonalát; ne adj külön Felveszem/Üres láda felvétele gombot. A teli tárolók, dolgozó gépek és át nem vett termékek védelmét őrizd meg.
+
+- Minden jelenlegi és új ablak/gomb kövesse a [közös arculati szabályzatot](docs/ablakok-es-gombok.md). A közös alapstílus forrása `src/dialogue-theme.css`; ne kizárólag kézzel felsorolt ablakcímekhez kösd az egységesítést. Vizuális módosításnál ellenőrizd a szabályzat teljes ablaklistáját, beleértve a beszélgetések és a boltok Vissza gombjait, illetve a névtelen figyelmeztetés gombjait is.
