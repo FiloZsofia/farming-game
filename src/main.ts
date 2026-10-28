@@ -76,6 +76,7 @@ let workshopIsKnown=false;
 const story="Sam egy kutatólaborban dolgozott, ahol rovarokon élősködő gombákat vizsgáltak.\n\nAz utolsó hónapokban egy szokatlan minta érkezett a laborba. Az eredmények nem illettek ahhoz, amit addig tudtak. Sam még azelőtt eljött, hogy kiderült volna, mit találtak.\n\n„Szeretném megtudni, képes vagyok-e a saját kezemmel otthont teremteni ezen a helyen.”";
 function showDialogue(title:string,text:string,label='A BIRTOKON'){
  if(['IRÁNYÍTÁS','A RÉGI MŰHELY','EGY KEDVES SZÓ'].includes(label))text=workshopText(text,workshopIsKnown);label=workshopText(label,workshopIsKnown);
+ document.querySelector('#research-panel')!.classList.remove('controls-guide');
  release();dialogue.querySelector('.machine-petals')?.remove();delete dialogue.dataset.presentation;delete dialogue.dataset.speaker;document.querySelector<HTMLElement>('#speaker')!.hidden=true;document.querySelector('#speaker-portrait')!.replaceChildren();
  document.querySelector<HTMLButtonElement>('#sleep')!.hidden=true;
  document.querySelector<HTMLButtonElement>('#export-save')!.hidden=true;
@@ -88,8 +89,16 @@ function showDialogue(title:string,text:string,label='A BIRTOKON'){
  document.querySelector('#dialogue-label')!.textContent=label;
  if(!dialogue.open)dialogue.showModal();
 }
-document.querySelector('#story')!.addEventListener('click',()=>showDialogue('',story,''));
-document.querySelector('#help')!.addEventListener('click',()=>showDialogue('Lassan, a saját tempódban.','Mozgás: WASD, nyilak vagy a képernyő iránygombjai. Ugrás: Space. Futás: tartsd a Shiftet. Az ugrás magasabbra és messzebbre visz; akadályokon továbbra sem lehet áthaladni.\n\nA háznál, tónál és melléképületnél az E billentyűvel vagy a megjelenő jelzésre kattintva nézhetsz körül. A napló, a magkatalógus, az eladóláda és a postaláda a világban használható: sétálj oda, majd E vagy kattintás/koppintás.\n\nTakarítás: Kéz (7) a gazhoz, Fejsze (8) az ágakhoz, Csákány (9) a kövekhez. Kattints közelről vagy F. Három nap után, műveletlen helyen újra megjelennek.\n\nKertészkedés: 1–6 vagy az alsó eszközsáv. Kattints egy közeli földkockára, vagy használd az F billentyűt az előtted lévő kockán. Kapa → ültetőanyag → öntözés. A három ágyásban és a szabad rétfoltokon dolgozhatsz.\n\n6 perc nappal után éjszaka lesz. A 2. és 3. éjszakai percben figyelmeztetés érkezik, majd 3:30–4:00 között elfáradsz és otthon ébredsz. A farmon minden holmid biztonságban van. A birtokon kívül 50% eséllyel egy nálad lévő tárgyat (az alap szerszámok és a madárodú kivételével), máskülönben legfeljebb 10 goldot veszítesz. Üres készlet vagy erszény esetén a kiválasztott rablási kísérlet sikertelen. A verandán a Naplóval korábban is lefekhetsz.\n\nA kert és az idő automatikusan mentődik ebben a böngészőben. Az öntözött növények reggel fejlődnek. Éréskor válaszd a Gyűjtés műveletet (3), majd kattints a növényre. A leszedett termények Tab-bal vagy a Menü → Készlet pontban nézhetők meg. A veranda bal oldalán lévő eladóládába teheted a termést. Napzárásig visszavehető, reggel megkapod az árát. Retek: 15, burgonya: 30, borsó: 12 gold/db. A háznál lévő magkatalógusból rendelhetsz (retek 5, burgonya 10, borsó 15 gold/db), másnap a kapu melletti postaládából veheted át. Készlet: Tab; bezárás: Tab vagy Escape. A déli kapun át a faluba sétálhatsz; balra az erdei ösvényen áfonyát gyűjthetsz (E, F vagy koppintás), a bokrok két nap után újrateremnek. A falutéren faiskola, Kertitó Szaküzlet és pihenőpad vár. Az üzletek csak nappal tartanak nyitva, éjszakára bezárnak. A stamina még nincs bekötve.','IRÁNYÍTÁS'));
+document.querySelector('#story')!.addEventListener('click',()=>{showDialogue('Történet',story,'');dialogue.dataset.presentation='story';});
+document.querySelector('#help')!.addEventListener('click',()=>{
+ showDialogue('Irányítás','WASD / nyilak · mozgás\nShift · futás\nSpace · ugrás / kitérés','');dialogue.dataset.presentation='controls';
+ const panel=document.querySelector<HTMLElement>('#research-panel')!;panel.replaceChildren();panel.hidden=false;panel.classList.add('controls-guide');
+ for(const [title,lines]of [
+  ['Eszközök',['1 · Kapa','2 · Öntözés','3 · Gyűjtés','4 · Bontóvas','5 · Túrabot (ha már nálad van)']],
+  ['Használat',['Kattintás · művelet a kijelölt helyen','F · művelet a karakter előtt','E · közeli tárgy vagy szereplő','Ültetőanyagot és lehelyezhető tárgyat a Készletben választhatsz.']],
+  ['Ablakok',['Tab · Készlet megnyitása / bezárása','Esc · ablak bezárása','Esc a kertben · Főmenü megnyitása']]
+ ]as const){const section=document.createElement('section'),heading=document.createElement('h3'),list=document.createElement('ul');heading.textContent=title;for(const line of lines){const item=document.createElement('li');item.textContent=line;list.append(item);}section.append(heading,list);panel.append(section);}
+});
 const held=new Set<string>();
 const movementInput=new MovementInput();
 window.addEventListener('keydown',event=>movementInput.keyDown(event),true);

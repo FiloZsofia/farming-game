@@ -823,3 +823,9 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 - Nagyobb, világos, finom szőrös/tüskés peremű pollenszerű alakzatok kerültek a lencsébe. A sodródás jól észrevehetőbb, de lassú marad; a méret és az áttetszőség finoman lüktet. A háttér sejtrétege lassan elmozdul és tágul/szűkül. A csökkentett mozgás és a háttérben álló menü továbbra is tiszteletben marad.
 - A Főmenü és a Menü esetén a **képernyő legalján „2026 Harsányi Zsófia”** látható. A verziószám helye elő van készítve (`#menu-version`), de még nincs megjelenített verziószám; a verziózást később vezetjük be.
 - Böngészős ellenőrzés: a Menü és a belőle megnyitott Beállítások nem teljes képernyősek; asztali és mobil nézet, ESC-visszalépés, ugrás/fókusz, meglévő mentés megnyitása, menüváltások és mozgáscsökkentés. Képkockák között külön ellenőrzött helyzet-, méret- és áttetszőség-változás. Animált előnézet: `docs/concepts/silent-pollen-menu-motion.gif`.
+
+
+### Menü lábléce és tájékoztató ablakok — 2026. október 28.
+- A „2026 Harsányi Zsófia” felirat a kisebb Menüben és annak Beállításaiban az **ablak aljára** kerül; a teljes képernyős Főmenüben továbbra is a képernyő alján marad. A verziószám továbbra sincs még kitöltve.
+- Az Irányítás elavult, hosszú magyarázata helyett rövid vázlat szerepel: mozgás/futás/ugrás, a jelenlegi öt eszköz, kattintás/F/E, Készlet és ESC. Régi Kéz/Fejsze/Csákány gyorsbillentyűk, árak, küldetési útmutatók és elavult újratermési szövegek nem szerepelnek benne. Címe „Irányítás”, ismétlődő felső címke nincs.
+- A Történet és az Irányítás kisebb ablakai a Menü sötétzöld felületét, aranyszegélyét, árnyékát, Trebuchet MS / Segoe UI betűcsaládját és Vissza gombját használják. A Történet elfogadott szövege változatlan, az ablak címe „Történet”; felső ismétlődő címke itt sincs.
