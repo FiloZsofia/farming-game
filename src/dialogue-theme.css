@@ -25,3 +25,35 @@
  #dialogue #shop-panel .shop-card{grid-template-columns:36px minmax(0,1fr);padding:12px;gap:8px 12px}
  #dialogue #shop-panel .shop-card button,#dialogue #shop-panel .unavailable-blueprint-price{grid-column:2;justify-self:start}
 }
+
+.noah-test-picker{margin-top:26px;padding-top:18px;border-top:1px solid #bda46a60}
+.noah-test-picker select{display:block;max-width:100%;padding:10px;background:#243e31;color:var(--window-ink);border:1px solid var(--window-border);border-radius:3px;font:14px var(--control-font)}
+#dialogue .noah-test-picker button{display:block;margin-left:0;margin-right:auto}
+.noah-ingredient{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #bda46a44}
+.noah-ingredient .item-icon,.noah-resin-icon{width:38px;height:38px;flex:none}
+.noah-ingredient>span:not(.noah-resin-icon){flex:1}
+.noah-ingredient.added .item-icon,.noah-ingredient.added .noah-resin-icon{animation:noah-drop .65s ease-in-out}
+.noah-extractor{display:flex;align-items:center;justify-content:center;height:155px;gap:0;position:relative;overflow:hidden}
+.noah-vat{width:78px;height:90px;border-radius:12px 12px 30px 30px;background:linear-gradient(90deg,#655942,#bf9c5c 35%,#7b633f);border:4px solid #b8a478;position:relative}
+.noah-vat:after{content:'';position:absolute;inset:13px 8px 18px;background:#759354aa;border-radius:6px 6px 20px 20px;transform:scaleY(.2);transform-origin:bottom;transition:transform 1s}
+.noah-extractor.loaded .noah-vat:after,.noah-extractor.working .noah-vat:after{transform:scaleY(1)}
+.noah-pipe{width:40px;height:8px;background:#b9935e;border-block:2px solid #d8c595}
+.noah-filter{width:26px;height:48px;background:repeating-linear-gradient(0deg,#bdc3a0 0 2px,#5e6954 2px 5px);border:3px solid #b9a47b;border-radius:4px}
+.noah-coil{width:52px;height:72px;border-radius:16px;background:repeating-linear-gradient(0deg,transparent 0 9px,#ac8153 9px 14px,#dbb575 14px 16px);border-inline:4px solid #ac8153}
+.noah-flask{width:35px;height:48px;align-self:flex-end;margin-bottom:18px;background:linear-gradient(0deg,#a4b76d88 40%,#b9d7cd22 40%);border:2px solid #b7d0bd;border-radius:8px 8px 14px 14px}
+.noah-extractor.working .noah-vat i{position:absolute;left:25px;top:0;width:10px;height:15px;border:2px solid #dbe2ba88;border-bottom:0;border-radius:50%;animation:noah-steam 2.2s infinite}
+.noah-extractor.working .noah-vat i:nth-child(2){left:40px;animation-delay:-.8s}.noah-extractor.working .noah-vat i:nth-child(3){left:14px;animation-delay:-1.5s}
+.noah-microscopy{display:flex;justify-content:center;gap:20px;text-align:center;margin:20px 0}
+.noah-micro-field{width:min(215px,31vw);aspect-ratio:1;border-radius:50%;overflow:hidden;background:radial-gradient(circle,#e0d6a9,#b2b081 75%,#3a4935);border:6px solid #3c4937;margin-top:12px}
+.noah-micro-field svg{width:100%;height:100%;animation:noah-culture 7s ease-in-out infinite alternate;transform-origin:center}
+.noah-micro-field.treated svg{animation:none;opacity:.55;transform:scale(.83)}
+#noah-microscope-focus{display:block;width:min(360px,100%);margin:16px auto;accent-color:#a6b978}
+@keyframes noah-culture{to{transform:scale(1.15)}}
+@keyframes noah-steam{to{transform:translateY(-45px);opacity:0}}
+@keyframes noah-drop{to{transform:translate(35px,-35px) rotate(30deg);opacity:.2}}
+@media(prefers-reduced-motion:reduce){.noah-extractor *,.noah-micro-field svg,.noah-ingredient.added .item-icon{animation:none!important}}
+.noah-resin-icon{display:inline-block;flex:none;width:32px;height:38px;border-radius:55% 55% 60% 60%;background:radial-gradient(ellipse at 35% 30%,#ffe19b 4%,#e1aa45 25%,#b16d25 70%,#744522);box-shadow:inset 3px 2px 4px #ffe0a955;clip-path:polygon(50% 0,85% 45%,100% 75%,83% 96%,50% 100%,15% 96%,0 75%,15% 45%)}
+.noah-ingredient>span:not(.noah-resin-icon){min-width:0;overflow-wrap:anywhere}
+@media(max-width:520px){.noah-ingredient{gap:8px}.noah-ingredient .item-icon,.noah-resin-icon{width:29px;height:32px}#dialogue .noah-ingredient button{font-size:13px;padding:8px 10px}.noah-ingredient>span{font-size:13px}.noah-microscopy{gap:12px}}
+
+.noah-test-item{display:grid;grid-template-columns:38px minmax(0,1fr) auto;align-items:center;gap:10px;padding:10px 0}.noah-test-item .item-icon{width:36px;height:36px}.noah-concentrate-icon{filter:hue-rotate(75deg)}

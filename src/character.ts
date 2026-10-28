@@ -81,6 +81,8 @@ export class FarmerArt{
  }
  equip(name:string){this.equipped=name;this.drawTool();}
  throwFish(dx:number){this.action=0;this.throwing=.85;this.aim={x:dx,y:0};this.equip('hand');}
+ private reinforcedStick=false;
+ setStickReinforced(value:boolean){if(this.reinforcedStick!==value){this.reinforcedStick=value;this.drawTool();}}
  isWorking(){return this.action>0;}
  cancelWork(){this.action=0;this.contact=null;this.leftArm.setAngle(0);this.rightArm.setAngle(0).setPosition(this.armX,this.armY).setScale(1);this.tool.setScale(1).setY(0);this.root.setPosition(0,0).setRotation(0).setScale(1);this.head.y=-40;this.pony.angle=0;this.leftLeg.angle=0;this.rightLeg.angle=0;this.drawTool();}
  use(dx=0,dy=1,tool=this.equipped,onContact?:()=>void){this.actionTool=tool;this.action=WORK_SECONDS;this.aim={x:dx,y:dy};this.contact=onContact??null;}
@@ -88,7 +90,7 @@ export class FarmerArt{
  private drawTool(){
   const g=this.tool;g.clear();const r=(x:number,y:number,w:number,h:number,c:number)=>{g.fillStyle(c);g.fillRect(x,y,w,h);};
   const name=this.action>0?this.actionTool:this.equipped;
-  if(name==='stick'){this.toolEnd=36;g.lineStyle(3,0x785537).strokePoints([{x:0,y:5},{x:1,y:31},{x:5,y:37}]);g.lineStyle(1,0xcfad77).lineBetween(-1,7,0,30);}
+  if(name==='stick'){this.toolEnd=36;g.lineStyle(3,0x785537).strokePoints([{x:0,y:5},{x:1,y:31},{x:5,y:37}]);g.lineStyle(1,0xcfad77).lineBetween(-1,7,0,30);if(this.reinforcedStick){r(-1,26,5,8,0x80988c);r(-1,26,1,8,0xc9d3b9);for(let i=0;i<4;i++)r(-1,10+i*3,4,1,0xbd9d6c);}}
   else if(name==='crowbar'){this.toolEnd=34;g.lineStyle(3.5,0x556e61).strokePoints([{x:0,y:7},{x:0,y:29},{x:4,y:35},{x:9,y:34},{x:10,y:29}]);g.lineStyle(1.1,0xc8d4b8).lineBetween(-1,8,-1,28).lineBetween(4,33,8,32);}
   else if(heavyTool(name)){const length=this.action>0?29+11*workPose(1,1,this.action).extension:29;this.toolEnd=length;
    r(0,8,2,length-7,0x654b32);r(0,8,1,length-8,0xc6a46b);

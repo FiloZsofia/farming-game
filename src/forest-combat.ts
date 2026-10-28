@@ -1,23 +1,24 @@
 import Phaser from 'phaser';
 import {forestEnemies,forestGateBlocked,encounterDefeated,type Forest,inForest} from './forest';
+export type ForestEnemyDefinition={id:string;kind:'vine'|'spore';x:number;y:number;hp:number};
 type Enemy={id:string;kind:'vine'|'spore';x:number;y:number;homeX:number;homeY:number;hp:number;timer:number;phase:'rest'|'warn'|'strike';aimX:number;aimY:number};
 export class ForestCombat{
  private art:Phaser.GameObjects.Graphics;private enemies:Enemy[]=[];private invulnerable=0;private swing=0;private time=0;
- health=5;
- constructor(private scene:Phaser.Scene){this.art=scene.add.graphics().setDepth(91);}
+ health=5;power=1;
+ constructor(private scene:Phaser.Scene,private definitions:readonly ForestEnemyDefinition[]=forestEnemies,private contains:(x:number,y:number)=>boolean=inForest){this.art=scene.add.graphics().setDepth(91);}
  reset(){this.enemies=[];this.health=5;this.invulnerable=0;this.swing=0;}
  blocks(x:number,y:number,state:Forest){return forestGateBlocked(x,y,state);}
  encounterName(player:{x:number;y:number},state:Forest){const enemy=this.enemies.filter(e=>e.hp>0&&!encounterDefeated(state).includes(e.id)&&Math.hypot(e.x-player.x,e.y-player.y)<170).sort((a,b)=>Math.hypot(a.x-player.x,a.y-player.y)-Math.hypot(b.x-player.x,b.y-player.y))[0];return enemy?`${enemy.kind==='vine'?'Indagubanc':'Spórapamacs'} · Túrabot: F / kattintás · Space: kitérés`:'';}
  attack(player:{x:number;y:number},direction:{x:number;y:number},state:Forest,onDefeat:(id:string)=>void){
   if(this.swing>0||!state.stick)return false;this.swing=.58;
-  for(const e of this.enemies){const dx=e.x-player.x,dy=e.y-player.y,d=Math.hypot(dx,dy);if(e.hp<=0||encounterDefeated(state).includes(e.id)||d>76||(d>24&&(dx*direction.x+dy*direction.y)/d<.15))continue;e.hp--;e.timer=.6;e.phase='rest';if(e.hp===0)onDefeat(e.id);else if(e.kind==='spore'){e.x+=dx/(d||1)*12;e.y+=dy/(d||1)*12;}break;}
+  for(const e of this.enemies){const dx=e.x-player.x,dy=e.y-player.y,d=Math.hypot(dx,dy);if(e.hp<=0||encounterDefeated(state).includes(e.id)||d>76+(this.power>1?14:0)||(d>24&&(dx*direction.x+dy*direction.y)/d<.15))continue;e.hp=Math.max(0,e.hp-this.power);e.timer=.6;e.phase='rest';if(e.hp===0)onDefeat(e.id);else if(e.kind==='spore'){e.x+=dx/(d||1)*12*this.power;e.y+=dy/(d||1)*12*this.power;}break;}
   return true;
  }
  update(dt:number,player:{x:number;y:number},state:Forest,jumping:boolean,onHurt:()=>void){
   this.time+=dt;this.swing=Math.max(0,this.swing-dt);this.invulnerable=Math.max(0,this.invulnerable-dt);const g=this.art;g.clear();
-  if(!inForest(player.x,player.y))return;
-  if(!this.enemies.length)this.enemies=forestEnemies.map((e,i)=>({...e,homeX:e.x,homeY:e.y,timer:1+i*.4,phase:'rest',aimX:0,aimY:0}));
-  if(encounterDefeated(state).includes('vine-inner')&&!forestEnemies.every(e=>encounterDefeated(state).includes(e.id))){g.lineStyle(8,0x486237).strokePoints([{x:-907,y:954},{x:-881,y:977},{x:-900,y:1007},{x:-863,y:1040}]);g.lineStyle(5,0x6d8043).lineBetween(-866,954,-903,1040);}
+  if(!this.contains(player.x,player.y))return;
+  if(!this.enemies.length)this.enemies=this.definitions.map((e,i)=>({...e,homeX:e.x,homeY:e.y,timer:1+i*.4,phase:'rest',aimX:0,aimY:0}));
+  if(this.definitions===forestEnemies&&encounterDefeated(state).includes('vine-inner')&&!forestEnemies.every(e=>encounterDefeated(state).includes(e.id))){g.lineStyle(8,0x486237).strokePoints([{x:-907,y:954},{x:-881,y:977},{x:-900,y:1007},{x:-863,y:1040}]);g.lineStyle(5,0x6d8043).lineBetween(-866,954,-903,1040);}
   for(const e of this.enemies){if(encounterDefeated(state).includes(e.id)||e.hp<=0)continue;const distance=Math.hypot(player.x-e.x,player.y-e.y);e.timer-=dt;
    if(e.timer<=0){if(e.phase==='rest'&&distance<155){e.phase='warn';e.timer=.9;const d=distance||1;e.aimX=(player.x-e.x)/d;e.aimY=(player.y-e.y)/d;}
     else if(e.phase==='warn'){e.phase='strike';e.timer=.3;}else{e.phase='rest';e.timer=1.5;}}

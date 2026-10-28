@@ -33,3 +33,15 @@ it('prepares the nest encounter repeatedly in an isolated memory copy of any far
  cy.get('#menu').click();cy.get('#microscope-test').click();cy.get('#prepare-microscope-test').click();cy.get('#game').should('have.attr','data-forest-sample','false').and('have.attr','data-gold','347');
  cy.get('#test-mode-banner').should('be.visible').click();cy.get('#exit-test-mode').click();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-forest-sample','true');cy.get('#test-mode-banner').should('not.be.visible');
 });
+
+it('runs Noah’s letter and extraction only in an isolated developer test',()=>{
+ const s=repairedWorkshop(fresh(250,220));s.economy.gold=347;start(s,true);
+ cy.get('#menu').click();cy.get('#microscope-test').click();cy.get('#start-noah-test').click();
+ press('e','KeyE',69);cy.get('#dialogue-title').should('have.text','Noah levele');cy.get('#dialogue-text').should('contain','gondolják helyesnek');cy.get('#noah-take-package').click();cy.get('#dialogue-close').click();
+ cy.get('#quest-tracker').should('contain','Kérdezd meg Simont a kötőanyagról');
+ cy.get('#test-mode-banner').click();cy.get('#noah-test-checkpoint').select('mix');cy.get('#start-noah-test').click();press('e','KeyE',69);
+ cy.get('#noah-start-extraction').should('be.disabled');for(const id of ['thyme','plantain','ingredient'])cy.get(`#noah-add-${id}`).click();cy.get('#noah-start-extraction').should('not.be.disabled').click();
+ cy.get('#dialogue-close').click();press('e','KeyE',69);cy.get('#noah-extraction-step').should('be.visible');
+ for(let i=0;i<3;i++)cy.get('#noah-extraction-step').click();cy.get('#dialogue-close').click();
+ cy.get('#test-mode-banner').click();cy.get('#exit-test-mode').click();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-gold','347').and('have.attr','data-forest-sample','false');cy.get('#test-mode-banner').should('not.be.visible');
+});

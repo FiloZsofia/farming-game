@@ -2,6 +2,9 @@
 
 ## Változások a 0.1.0 óta — külön jóváhagyott verzióemelés nélkül
 
+- A déli erdő a küldetés előtt sűrű növényzet és figyelmeztető táblás lezárás mögött marad.
+- Új fejlesztői teszt: Noah levele, Simonnál vásárolható botfejlesztés, déli erdei harc és vörösfenyőgyanta gyűjtése, interaktív kivonatkészítés és mikroszkópos összehasonlítás. A normál történet és mentés nem változik.
+
 A játék verziója a felhasználó kérésére ismét **0.1.0**. A korábban idő előtt kiosztott 0.1.1–0.1.3 címkék megmaradnak a Git-előzményben; a módosításokat nem vontuk vissza.
 
 - A Főmenü eredeti finom háttérhullámzása és enyhe nagyító animációja visszaállt a felhasználó kérésére.

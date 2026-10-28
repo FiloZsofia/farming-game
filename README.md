@@ -120,3 +120,5 @@ A ház jobb oldali ablaka melletti katalóguskönyvre kattintva vagy közelről 
 ### Fejlesztői tesztmódok
 
 A játék hivatkozását `?dev=1` paraméterrel megnyitva a Menüben megjelenik a **Fejlesztői eszközök** menüpont. A **Tesztmódok → A mikroszkóp megtalálása – jelenet** külön, memóriában futó farmmásolatot indít. Kilépéskor az eredeti farm folytatódik; frissítéskor a teszt elvész. Paraméter nélkül a panel rejtett. Ez nem jelszavas hozzáférés-védelem.
+
+A **Noah küldeménye – erdei kísérlet** tesztben a levél, Simon botfejlesztése, a déli erdei harc és gyantagyűjtés, a kivonatkészítő és a mikroszkópos eredmény is kipróbálható. A kezdőpontválasztóval az egyes szakaszok külön indíthatók. A teljes folyamat a postaládánál kezdődik; a teszt biztosítja a szükséges gyógynövényeket és a fejlesztéshez elég alapanyagot/aranyat. Minden újraindítás az eredeti farm külön másolatából indul. A déli erdő a normál játékban még lezárt és takart.
