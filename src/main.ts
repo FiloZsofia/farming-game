@@ -76,6 +76,8 @@ let workshopIsKnown=false;
 const story="Sam egy kutatólaborban dolgozott, ahol rovarokon élősködő gombákat vizsgáltak.\n\nAz utolsó hónapokban egy szokatlan minta érkezett a laborba. Az eredmények nem illettek ahhoz, amit addig tudtak. Sam még azelőtt eljött, hogy kiderült volna, mit találtak.\n\n„Szeretném megtudni, képes vagyok-e a saját kezemmel otthont teremteni ezen a helyen.”";
 function showDialogue(title:string,text:string,label='A BIRTOKON'){
  if(['IRÁNYÍTÁS','A RÉGI MŰHELY','EGY KEDVES SZÓ'].includes(label))text=workshopText(text,workshopIsKnown);label=workshopText(label,workshopIsKnown);
+ delete dialogue.dataset.window;
+ if(['MAGKATALÓGUS','POSTALÁDA','ELADÓLÁDA','ESTI NAPLÓ','HIRDETŐTÁBLA','SIMON','LEO','ANNIE'].includes(label)||['Készlet','Tárolóláda','Nádkosár','Levél a laborba','A küldemény úton van',...Object.values(blueprintNames)].includes(title))dialogue.dataset.window='utility';
  document.querySelector('#research-panel')!.classList.remove('controls-guide');
  release();dialogue.querySelector('.machine-petals')?.remove();delete dialogue.dataset.presentation;delete dialogue.dataset.speaker;document.querySelector<HTMLElement>('#speaker')!.hidden=true;document.querySelector('#speaker-portrait')!.replaceChildren();
  document.querySelector<HTMLButtonElement>('#sleep')!.hidden=true;
@@ -603,10 +605,24 @@ class Farm extends Phaser.Scene {
   if(machine.kind==='irrigation')this.sprayPending=true;
   showDialogue(machine.kind==='basket'?'Nádkosár':blueprintNames[machine.kind],'','A BIRTOKON');const panel=document.querySelector<HTMLElement>('#research-panel')!;panel.replaceChildren();panel.hidden=false;panel.append(machineActivityPanel(machine));
   if(machine.kind==='irrigation'||machine.kind==='beeHabitat'||machine.kind==='basket'){const pickup=document.createElement('button');pickup.type='button';pickup.textContent='Felveszem';pickup.dataset.packMachine=String(index);pickup.onclick=()=>void this.retrieveMachine(index,true);panel.append(pickup);return;}
-  const ready=machine.ready>0,compost=machine.kind==='composter',input=compost?'Gaz':'Vágott nád',held=compost?this.clearing.weed:heldMaterial(this.currentSnapshot(),'reed'),cost=compost?10:4;const status=document.createElement('p');status.textContent=ready?`${compost?'Mulcs':'Nádkosár'}: ${machine.ready}`:machine.started!==null?'Készül…':`${input}: ${held} / ${cost} → ${compost?'4 mulcs':'1 nádkosár'}`;panel.append(status);
-  if(compost&&!ready&&machine.started===null){const fruit=this.travel.crafting?.items.fallenFruit??0;const row=document.createElement('p');row.append(itemIcon('fallenFruit'),document.createTextNode(`Hullott gyümölcs: ${fruit} / 10 → 4 mulcs`));panel.append(row);const start=document.createElement('button');start.type='button';start.dataset.compostFruit='';start.textContent='Gyümölcsből készítem';start.disabled=fruit<10||this.transitioning;start.onclick=()=>{const next=compostAction(this.currentSnapshot(),index,'fallenFruit');if(next)void this.commitChest(next,()=>this.openMachine(index));};panel.append(start);}
-  const button=document.createElement('button');button.type='button';button.dataset.machineAction=String(index);button.textContent=ready?'Átveszem':'Elindítom';button.disabled=this.transitioning||machine.started!==null||!ready&&held<cost;button.onclick=()=>{if(this.transitioning)return;const next=compostAction(this.currentSnapshot(),index);if(next)void this.commitChest(next,()=>this.openMachine(index));};panel.append(button);const pack=document.createElement('button');pack.type='button';pack.dataset.packMachine=String(index);pack.textContent='Felveszem';pack.disabled=machine.started!==null||machine.ready>0||this.transitioning;pack.onclick=()=>void this.retrieveMachine(index,true);panel.append(pack);
+  const ready=machine.ready>0,compost=machine.kind==='composter';
+  if(!ready&&machine.started===null){
+   const inputs=compost?(['weed','fallenFruit'] as const):(['reed'] as const);
+   for(const input of inputs){
+    const held=input==='weed'?this.clearing.weed:input==='fallenFruit'?this.travel.crafting?.items.fallenFruit??0:heldMaterial(this.currentSnapshot(),'reed'),cost=compost?10:4;
+    const row=document.createElement('div');row.className='machine-input-row';row.dataset.machineInput=input;
+    const text=document.createElement('span');text.textContent=`${input==='weed'?'Gaz':input==='fallenFruit'?'Hullott gyümölcs':'Vágott nád'}: ${held} / ${cost} → ${compost?'4 mulcs':'1 nádkosár'}`;
+    const start=document.createElement('button');start.type='button';start.textContent='Elindítom';if(input==='fallenFruit')start.dataset.compostFruit='';else start.dataset.machineAction=String(index);
+    start.disabled=this.transitioning||held<cost;start.onclick=()=>{if(this.transitioning)return;const next=compostAction(this.currentSnapshot(),index,input==='fallenFruit'?'fallenFruit':'weed');if(next)void this.commitChest(next,()=>this.openMachine(index));};
+    row.append(itemIcon(input==='reed'?'cutReed':input),text,start);panel.append(row);
+   }
+  }else{
+   const status=document.createElement('p');status.className='machine-output';if(ready)status.append(itemIcon(compost?'mulch':'basket'));status.append(document.createTextNode(ready?`${compost?'Mulcs':'Nádkosár'}: ${machine.ready}`:'Készül…'));panel.append(status);
+   const take=document.createElement('button');take.type='button';take.dataset.machineAction=String(index);take.textContent=ready?'Átveszem':'Elindítom';take.disabled=this.transitioning||!ready;take.onclick=()=>{if(this.transitioning)return;const next=compostAction(this.currentSnapshot(),index);if(next)void this.commitChest(next,()=>this.openMachine(index));};panel.append(take);
+  }
+  const pack=document.createElement('button');pack.type='button';pack.dataset.packMachine=String(index);pack.textContent='Felveszem';pack.disabled=machine.started!==null||machine.ready>0||this.transitioning;pack.onclick=()=>void this.retrieveMachine(index,true);panel.append(pack);
  }
+
  private async retrieveMachine(index:number,close=false){if(this.transitioning)return;const next=packMachine(this.currentSnapshot(),index);if(next)await this.commitChest(next,()=>{if(close)dialogue.close();});}
  private craftPlacement(){
   if(!this.target)return null;let p={x:this.target.x+TILE/2,y:this.target.y+TILE/2};if(this.placingCraft==='irrigation'&&this.garden.plots.size){const closest=[...this.garden.plots.keys()].map(k=>{const[x,y]=k.split(',').map(Number);return{x:x+TILE/2,y:y+TILE/2};}).filter(q=>Math.abs(q.y-p.y)<=TILE/2).sort((a,b)=>Math.abs(a.y-p.y)-Math.abs(b.y-p.y)||Math.abs(a.x-p.x)-Math.abs(b.x-p.x))[0];if(closest)p={x:closest.x+Math.round((p.x-closest.x)/TILE)*TILE,y:closest.y};}return p;
