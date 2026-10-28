@@ -7,6 +7,7 @@ A játék verziója a felhasználó kérésére ismét **0.1.0**. A korábban id
 - A Főmenü eredeti finom háttérhullámzása és enyhe nagyító animációja visszaállt a felhasználó kérésére.
 - A tópart közeléből a tó teljes vízfelületére bedobhatók a halak, pontos kattintási célzással.
 - Egy megvásárolt vadkacsafészek után az újabb vásárlás tiltott, a bolti gomb szürke és inaktív.
+- A boltok termékkártyái oldalsó belső térközt és egymás közötti távolságot kaptak; mobilon a vásárlógomb a termékszöveg alá igazodik.
 - A Menü Hibabejelentés hivatkozása a szomszédos gombok közös szegélyét és stílusát használja.
 - Hibabejelentés a Menüben és a Főmenü alján: GitHub Issues új lapon, játékverzióval, buildazonosítóval, böngészővel és operációs rendszerrel előre kitöltve.
 - Fejlesztői eszközök, kizárólag `?dev=1` hivatkozással, Tesztmódok alcímmel.
