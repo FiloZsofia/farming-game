@@ -869,3 +869,8 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 ### Verziószámozás pontosítása — 2026. október 28.
 - A játék száma ismét 0.1.0; a fejlesztői funkciók megmaradnak. A jövőbeli emelés előtt kérdezni kell, és kizárólag kifejezett egyeztetés után nőhet a verziószám. Commit és közzététel változatlan számmal is készülhet.
 - A fejlesztői jelenetgomb és leírása közös bal oldali igazítást kap.
+
+### Hibabejelentés — 2026. október 28.
+- GitHub Issues használatos. Menüben az Irányítás mellett, Főmenü alján visszafogott hivatkozásként jelenik meg a Hibabejelentés. Új böngészőlapon nyílik; nem küld automatikusan hibajegyet.
+- A Description elején előre szerepel a „Mi történt?” és „Hogyan lehet előidézni?” címsor, üres helyekkel a játékos válaszának. A technikai blokkja kizárólag játékverziót és rövid Git-buildazonosítót tartalmaz. A címet, leírást és képet a játékos adja meg a GitHubon. Farmadat, mentés, játékidő, eszközadat nem kerül a hivatkozásba.
+- Buildazonosító automatikusan a fordításkor használt Git-commitból (CI-ben GITHUB_SHA), a játékverzió változatlanul 0.1.0. Verzióemelés nincs.

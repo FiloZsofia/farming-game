@@ -135,3 +135,10 @@
 #app #dialogue[data-speaker]::backdrop,#app #dialogue[data-presentation="forest-warning"]::backdrop{background:#07170d80}
 #app #dialogue:is([data-window="utility"],[data-speaker],[data-presentation="forest-warning"]) #dialogue-close,#app #dialogue[data-presentation="forest-warning"] .warning-back{font:16px 'Trebuchet MS','Segoe UI',sans-serif;color:#f8ebc5;background:linear-gradient(125deg,#233c22f2,#142b1bf5);border:1px solid #c5aa65;border-radius:3px;box-shadow:inset 0 0 0 2px #172e1a,inset 0 0 0 3px #ac944b70;min-height:44px;padding:10px 16px}
 #app #dialogue:is([data-window="utility"],[data-speaker],[data-presentation="forest-warning"]) #dialogue-close:hover,#app #dialogue[data-presentation="forest-warning"] .warning-back:hover{background:linear-gradient(125deg,#3b502cf5,#243e24f5);border-color:#e0c784}
+
+#dialogue .bug-report-link{font-family:var(--control-font);color:var(--button-ink);text-decoration:none;}
+#dialogue .bug-report-link:focus-visible{outline:2px solid #fff1bb;outline-offset:4px}
+#dialogue .bug-report-link:hover{text-decoration:underline}
+#dialogue[data-menu] #pause-bug-report{display:inline-flex;align-items:center;min-height:42px;padding:9px 15px;border:1px solid #b5a16470;border-radius:3px;background:var(--button-surface);font-size:13px;box-sizing:border-box}
+#start-bug-report{display:none}
+#dialogue[data-menu="start"] #start-bug-report{display:block;width:fit-content;margin:0 auto 6px;pointer-events:auto;font-size:12px}

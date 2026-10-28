@@ -1,4 +1,5 @@
 import {GAME_VERSION} from './version';
+import {bugReportLink} from './bug-report';
 const menuLogo=new URL('./assets/silent-pollen-logo.webp',import.meta.url).href;
 // Menu-only decoration and sound; no game or save state lives here.
 export class MenuPresentation{
@@ -23,8 +24,9 @@ export class MenuPresentation{
   this.dialog.prepend(this.scene);
   this.brand=document.createElement('div');this.brand.className='menu-brand';this.brand.setAttribute('aria-hidden','true');
   const logo=document.createElement('img');logo.className='menu-logo';logo.src=menuLogo;logo.alt='';logo.width=2170;logo.height=725;logo.draggable=false;this.brand.append(logo);
-  const credits=document.createElement('footer');credits.className='menu-credits';credits.append(document.createTextNode('2026 · Harsányi Zsófia'));const version=document.createElement('span');version.id='menu-version';version.textContent=`v${GAME_VERSION}`;version.setAttribute('aria-label',`Játékverzió: ${GAME_VERSION}`);credits.append(version);this.dialog.append(credits);
+  const credits=document.createElement('footer');credits.className='menu-credits';credits.append(bugReportLink('start-bug-report'));credits.append(document.createTextNode('2026 · Harsányi Zsófia'));const version=document.createElement('span');version.id='menu-version';version.textContent=`v${GAME_VERSION}`;version.setAttribute('aria-label',`Játékverzió: ${GAME_VERSION}`);credits.append(version);this.dialog.append(credits);
   this.dialog.querySelector('form')!.prepend(this.brand);
+  document.querySelector('#help')!.after(bugReportLink('pause-bug-report'));
   this.dialog.dataset.menuSection='home';
   document.querySelector('#open-farms')!.addEventListener('click',()=>{this.dialog.dataset.menuSection='farms';document.querySelector<HTMLButtonElement>('#back-from-farms')!.focus();});
   document.querySelector('#back-from-farms')!.addEventListener('click',()=>{this.dialog.dataset.menuSection='home';document.querySelector<HTMLButtonElement>('#open-farms')!.focus();});
