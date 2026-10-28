@@ -858,3 +858,8 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 - A teszthelyzet előkészíti a megjavított Műhelyt, a fészek mellé helyezi Samet mintavétel előtt, hogy a hazatéréskor induló mikroszkópos jelenet ismét kipróbálható legyen. A korábbi fészekmegfigyelések csak a tesztmásolatból törlődnek.
 - Állandó TESZTMÓD jelzés nyitja a panelt. Újraindítás mindig a belépéskori farm másolatából indul. Kilépés az eredeti, mentett állapothoz tér vissza; oldalfrissítés/bezárás eldobja a tesztet. A panel egyszerű bezárása nem léptet ki a tesztből.
 - Ez nem külön Dev weboldal vagy kiadási ág, hanem ugyanazon játék elkülönített tesztüzemmódja. A mentésformátum változatlanul 18.
+
+### Fejlesztői eszközök elrejtése — 2026. október 28.
+- A Menü fejlesztői menüpontja csak a `?dev=1` URL-paraméterrel jelenik meg; ez kényelmi elrejtés, nem hozzáférés-védelem. Paraméter nélkül a panel megnyitása is tiltott.
+- Ablakcím és menüpont: Fejlesztői eszközök. Alcím: Tesztmódok. Jelenetgomb: A mikroszkóp megtalálása – jelenet. Szöveg: „A teszt külön memóriában fut. A normál farmod megmarad.”
+- A paraméter újratöltés és tesztből kilépés után is a hivatkozás része marad.

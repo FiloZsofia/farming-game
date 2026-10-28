@@ -116,3 +116,7 @@ A ház jobb oldali ablaka melletti katalóguskönyvre kattintva vagy közelről 
 - [Magkatalógus](docs/concepts/farm-catalogue.png)
 - [Aktuális mobilnézet](docs/concepts/farm-clean-mobile.png)
 - [Mobilos katalógus](docs/concepts/farm-catalogue-mobile.png)
+
+### Fejlesztői tesztmódok
+
+A játék hivatkozását `?dev=1` paraméterrel megnyitva a Menüben megjelenik a **Fejlesztői eszközök** menüpont. A **Tesztmódok → A mikroszkóp megtalálása – jelenet** külön, memóriában futó farmmásolatot indít. Kilépéskor az eredeti farm folytatódik; frissítéskor a teszt elvész. Paraméter nélkül a panel rejtett. Ez nem jelszavas hozzáférés-védelem.

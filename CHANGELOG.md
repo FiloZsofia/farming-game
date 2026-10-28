@@ -1,5 +1,10 @@
 # Változások
 
+## 0.1.2 — 2026. október 28.
+
+- A Fejlesztői eszközök csak a `?dev=1` hivatkozással érhetők el.
+- Tesztmódok alcím és „A mikroszkóp megtalálása – jelenet” gomb; javított szövegezés.
+
 ## 0.1.1 — 2026. október 28.
 
 - Fejlesztői eszközpanel a Menüben, „Fészekminta megszerzése” teszthelyzettel.

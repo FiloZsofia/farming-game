@@ -272,7 +272,7 @@ class Farm extends Phaser.Scene {
  private currentSnapshot(){return snapshot(this.actor,this.clock,this.garden,this.economy,this.orders,this.farmName,this.clearing,this.story,this.skill,this.farmerName,this.travel);}
  private openPauseMenu(){
   if(!this.ready||this.transitioning||this.morningPlaying||this.microscopeDeliveryPlaying)return;
-  showDialogue('Menü','','');document.querySelector<HTMLButtonElement>('#microscope-test')!.hidden=false;document.querySelector<HTMLElement>('#menu-panel')!.hidden=false;
+  showDialogue('Menü','','');document.querySelector<HTMLButtonElement>('#microscope-test')!.hidden=new URLSearchParams(location.search).get('dev')!=='1';document.querySelector<HTMLElement>('#menu-panel')!.hidden=false;
   document.querySelector<HTMLButtonElement>('#resume-game')!.focus();
  }
  private openSettings(origin:'start'|'pause'){
@@ -1140,10 +1140,11 @@ class Farm extends Phaser.Scene {
  }
  private testBaseline:Snapshot|null=null;
  private openMicroscopeTest(){
-  if(!this.ready||this.transitioning)return;
-  showDialogue('Fejlesztői eszközpanel','A teszt külön, memóriában fut. A normál farmod megmarad.','');
+  if(!this.ready||this.transitioning||new URLSearchParams(location.search).get('dev')!=='1')return;
+  showDialogue('Fejlesztői eszközök','A teszt külön memóriában fut. A normál farmod megmarad.','');
   const panel=document.querySelector<HTMLElement>('#research-panel')!;panel.replaceChildren();panel.hidden=false;
-  const button=document.createElement('button');button.type='button';button.id='prepare-microscope-test';button.textContent=this.store.testMode?'Fészekminta megszerzése · Újraindítás':'Fészekminta megszerzése';button.onclick=async()=>{
+  const heading=document.createElement('h3');heading.textContent='Tesztmódok';panel.append(heading);
+  const button=document.createElement('button');button.type='button';button.id='prepare-microscope-test';button.textContent=this.store.testMode?'A mikroszkóp megtalálása – jelenet · Újraindítás':'A mikroszkóp megtalálása – jelenet';button.onclick=async()=>{
    if(this.transitioning)return;button.disabled=true;
    try{
     if(!this.store.testMode){
