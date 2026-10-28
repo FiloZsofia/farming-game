@@ -273,3 +273,10 @@ describe('Escape start-menu shortcut',()=>{
  it('opens and closes the start menu and preserves the inventory Escape shortcut',()=>{start();press('Escape','Escape',27);cy.get('#start-panel').should('be.visible');cy.get('#continue-farm').should('not.be.disabled');cy.get('#dialogue-title').should('have.text','Főmenü');cy.get('#open-start-menu').should('have.text','Főmenü');press('Escape','Escape',27);cy.get('#dialogue').should('not.be.visible');press('Tab','Tab',9);cy.get('#inventory-panel').should('be.visible');press('Escape','Escape',27);cy.get('#dialogue').should('not.be.visible');});
  it('closes after a quick second Escape while the current farm is being saved',()=>{start();cy.window().then(win=>{for(let i=0;i<2;i++){win.dispatchEvent(new win.KeyboardEvent('keydown',{key:'Escape',code:'Escape',bubbles:true}));win.dispatchEvent(new win.KeyboardEvent('keyup',{key:'Escape',code:'Escape',bubbles:true}));}});cy.get('#dialogue').should('not.be.visible');cy.get('#start-panel').should('not.be.visible');});
 });
+
+
+describe('Silent Pollen menu presentation',()=>{
+ it('keeps the pause menu and its settings over the farm, and the main menu fullscreen',()=>{
+  start();cy.get('#menu').click();cy.get('#dialogue').should('have.attr','data-menu','pause').then(el=>{cy.window().then(win=>expect(el[0].getBoundingClientRect().width).to.be.lessThan(win.innerWidth));});cy.get('.menu-credits').should('be.visible').and('have.text','2026 Harsányi Zsófia');cy.get('#pause-settings').click();cy.get('#dialogue').should('have.attr','data-menu-origin','pause');press('Escape','Escape',27);cy.get('#resume-game').click();press('Escape','Escape',27);cy.get('#dialogue').should('have.attr','data-menu','start').then(el=>{cy.window().then(win=>expect(el[0].getBoundingClientRect().width).to.equal(win.innerWidth));});cy.get('.menu-logo').should('be.visible').and(el=>expect((el[0] as HTMLImageElement).naturalWidth).to.be.greaterThan(0));
+ });
+});

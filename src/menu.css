@@ -1,19 +1,19 @@
 /* The approved pixel microscope scene remains a still layer; only small overlays move. */
-.menu-microscope,.menu-brand{display:none}
+.menu-microscope,.menu-brand,.menu-credits{display:none}
 #settings-panel[hidden]{display:none}
-#dialogue[data-menu]{inset:0!important;width:100vw!important;max-width:none;height:100dvh;max-height:100dvh!important;margin:0!important;padding:clamp(20px,4vh,48px) 20px!important;border:0!important;border-radius:0;transform:none!important;background:#172616!important;box-shadow:none;overflow:auto;overscroll-behavior:contain;isolation:isolate}
+#dialogue[data-menu]{inset:0!important;width:100vw!important;max-width:none;height:100dvh;max-height:100dvh!important;margin:0!important;padding:clamp(20px,4vh,48px) 20px 48px!important;border:0!important;border-radius:0;transform:none!important;background:#172616!important;box-shadow:none;overflow:auto;overscroll-behavior:contain;isolation:isolate}
 #dialogue[data-menu]::backdrop{background:#07100c}
 #dialogue[data-menu]>form{position:relative;z-index:1;min-height:100%;width:min(640px,100%);margin:0 auto;display:flex;flex-direction:column;justify-content:center;align-items:stretch}
 #dialogue[data-menu] #dialogue-title,#dialogue[data-menu] #dialogue-label,#dialogue[data-menu] #dialogue-text:empty{display:none}
 #dialogue[data-menu] .menu-microscope{display:block;position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;background:#10200e}
-.menu-specimen{position:absolute;inset:0;background:url('./assets/microscope-menu.webp') center/cover no-repeat;image-rendering:pixelated}
+.menu-specimen{position:absolute;inset:-12px;background:url('./assets/microscope-menu.webp') center/cover no-repeat;image-rendering:pixelated;animation:cell-sway 26s ease-in-out infinite alternate}
 .menu-microscope:after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,#08180b26 0%,transparent 55%,#020b0570 100%)}
 .menu-lens-light{position:absolute;inset:0;background:radial-gradient(ellipse at 36% 25%,#e9d77d18,transparent 65%);animation:lens-light 17s ease-in-out infinite alternate}
 .menu-dust,.menu-bubble,.menu-pollen{position:absolute;display:block;animation:specimen-drift var(--duration) ease-in-out var(--delay) infinite alternate;will-change:transform;pointer-events:none}
-.menu-dust{width:var(--size);height:var(--size);background:#e8d98c;opacity:.55;box-shadow:0 0 4px #d6d58266;--tilt:0deg}
-.menu-pollen{width:var(--size);height:calc(var(--size)*1.1);opacity:.8;--drift:15px;filter:drop-shadow(0 0 3px #c2bb6022)}
-.menu-pollen svg{width:100%;height:100%;display:block}
-.menu-bubble{width:var(--size);height:var(--size);border:1px solid #ece8bd80;border-radius:50%;box-shadow:inset 2px 2px 1px #f9f3d060;opacity:.65;--tilt:0deg;--drift:-14px}
+.menu-dust{width:var(--size);height:var(--size);background:#e8d98c;opacity:.7;box-shadow:0 0 4px #d6d58266;--tilt:0deg}
+.menu-pollen{width:var(--size);height:calc(var(--size)*1.214);opacity:.92;filter:drop-shadow(0 0 3px #c2bb6022)}
+.menu-pollen svg{width:100%;height:100%;display:block;animation:pollen-breath var(--pulse) ease-in-out var(--delay) infinite alternate;transform-origin:center}
+.menu-bubble{width:var(--size);height:var(--size);border:1px solid #ece8bd80;border-radius:50%;box-shadow:inset 2px 2px 1px #f9f3d060;opacity:.65;--tilt:0deg;--drift:-36px}
 #dialogue[data-menu] .menu-brand{display:flex;flex-direction:column;align-items:center;margin:0 auto 24px;color:#f4e6b0;flex-shrink:0;width:100%;filter:drop-shadow(0 2px 5px #04110bc0)}
 .menu-wordmark{font-family:Georgia,'Palatino Linotype','Book Antiqua',serif;font-style:italic;font-weight:400;font-size:clamp(56px,8vw,104px);line-height:1.12;letter-spacing:-.045em;white-space:nowrap}
 .menu-botanical{width:clamp(175px,22vw,270px);height:auto;margin-top:10px;opacity:.9}
@@ -51,11 +51,32 @@
 #dialogue[data-menu="naming"] #dialogue-text{background:#142b20f0;padding:20px 24px;border:1px solid #baaa6e80;font-size:16px;line-height:1.7;color:#f0e8ce;border-radius:3px}
 #dialogue[data-menu="naming"] #farm-name-panel{background:#142b20f0;padding:5px 24px 22px;border:1px solid #baaa6e80;border-top:0;margin-top:-21px;border-radius:0 0 3px 3px}
 #dialogue[data-menu="naming"] #farm-name-panel button{width:100%}
-#app:has(#dialogue[open][data-menu])>.hud,#app:has(#dialogue[open][data-menu])>.actions,#app:has(#dialogue[open][data-menu])>#toolbar,#app:has(#dialogue[open][data-menu])>#controls,#app:has(#dialogue[open][data-menu])>#crop-hint,#app:has(#dialogue[open][data-menu])>#status,#app:has(#dialogue[open][data-menu])>#feedback{visibility:hidden}
+#app:has(#dialogue[open][data-menu]:not([data-menu-origin="pause"]))>.hud,#app:has(#dialogue[open][data-menu]:not([data-menu-origin="pause"]))>.actions,#app:has(#dialogue[open][data-menu]:not([data-menu-origin="pause"]))>#toolbar,#app:has(#dialogue[open][data-menu]:not([data-menu-origin="pause"]))>#controls,#app:has(#dialogue[open][data-menu]:not([data-menu-origin="pause"]))>#crop-hint,#app:has(#dialogue[open][data-menu]:not([data-menu-origin="pause"]))>#status,#app:has(#dialogue[open][data-menu]:not([data-menu-origin="pause"]))>#feedback{visibility:hidden}
 #dialogue:not([open]) .menu-microscope,#dialogue:not([data-menu]) .menu-microscope{display:none}
 #dialogue:not([open]) .menu-microscope *,#dialogue[data-menu-paused="true"] .menu-microscope *{animation-play-state:paused}
-@keyframes specimen-drift{from{transform:translate3d(0,7px,0) rotate(var(--tilt))}to{transform:translate3d(var(--drift),-14px,0) rotate(calc(var(--tilt) + 9deg))}}
+@keyframes specimen-drift{from{transform:translate3d(-8px,22px,0) rotate(var(--tilt))}to{transform:translate3d(var(--drift),-44px,0) rotate(calc(var(--tilt) + 9deg))}}
 @keyframes lens-light{from{opacity:.45}to{opacity:1}}
 @media(max-width:600px){#dialogue[data-menu]{padding:24px 20px!important}.menu-specimen{background-position:38% center}#dialogue[data-menu] .menu-brand{margin-bottom:24px}.menu-wordmark{font-size:clamp(46px,11.8vw,70px)}.menu-botanical{width:175px}.menu-pollen{width:calc(var(--size)*.65);height:calc(var(--size)*.72);opacity:.45}#dialogue[data-menu] .start-actions,#dialogue[data-menu] .pause-actions{width:min(280px,100%);gap:14px}#dialogue[data-menu] .start-actions button,#dialogue[data-menu] .pause-actions button{font-size:19px;min-height:56px}.menu-microscope:after{background:radial-gradient(ellipse at center,#10251850,#0c1d1940 50%,#06150d77)}#dialogue[data-menu] .farm-save-card{gap:12px;padding:16px}#dialogue[data-menu="naming"] #dialogue-text{padding:16px;font-size:14px}#dialogue[data-menu="naming"] #farm-name-panel{padding:5px 16px 18px}}
 @media(max-height:540px) and (min-width:650px){#dialogue[data-menu]{padding:16px!important}#dialogue[data-menu] .menu-brand{margin-bottom:12px}.menu-wordmark{font-size:60px}.menu-botanical{height:32px;margin-top:4px}#dialogue[data-menu] .start-actions,#dialogue[data-menu] .pause-actions{gap:10px}#dialogue[data-menu] .start-actions button,#dialogue[data-menu] .pause-actions button{min-height:46px;font-size:18px;padding:9px 20px}#dialogue[data-menu] .menu-utilities{margin-top:16px}}
 @media(prefers-reduced-motion:reduce){.menu-microscope *{animation:none!important;will-change:auto!important}#dialogue[data-menu] button{transition:none}}
+
+/* Exact illustrated wordmark treatment, including the botanical sprig. */
+.menu-logo{display:block;width:min(620px,100%);height:auto;object-fit:contain;user-select:none}
+#dialogue[data-menu="start"][data-menu-section="farms"] .menu-logo,#dialogue[data-menu="naming"] .menu-logo{width:min(430px,100%)}
+#dialogue[data-menu] .menu-credits{display:block;position:fixed;inset:auto 12px max(10px,env(safe-area-inset-bottom));text-align:center;font:12px/1.5 'Trebuchet MS','Segoe UI',sans-serif;letter-spacing:.4px;color:#d8d3b4;text-shadow:0 1px 4px #07180c;pointer-events:none;z-index:2}
+#menu-version:not([hidden]):before{content:' · '}
+@keyframes pollen-breath{from{transform:scale(.94);opacity:.7}to{transform:scale(1.065);opacity:1}}
+@keyframes cell-sway{from{transform:translate3d(-3px,3px,0) scale(1.008)}to{transform:translate3d(5px,-4px,0) scale(1.025)}}
+/* Pause and its settings are a window over the paused farm, never a title screen. */
+#dialogue[data-menu="pause"],#dialogue[data-menu="settings"][data-menu-origin="pause"]{inset:0!important;margin:auto!important;width:min(550px,calc(100vw - 32px))!important;height:fit-content;max-height:calc(100dvh - 76px)!important;padding:26px 30px!important;border:1px solid #bda46a!important;border-radius:5px;background:linear-gradient(145deg,#2b4332f7,#172e23fc)!important;box-shadow:0 16px 70px #07170e90}
+#dialogue[data-menu][data-menu-origin="pause"]::backdrop{background:#07170d80}
+#dialogue[data-menu][data-menu-origin="pause"]>form{min-height:0}
+#dialogue[data-menu][data-menu-origin="pause"] .menu-microscope{display:none}
+#dialogue[data-menu][data-menu-origin="pause"] .menu-brand{margin-bottom:18px}
+#dialogue[data-menu][data-menu-origin="pause"] .menu-logo{width:min(360px,100%)}
+#dialogue[data-menu][data-menu-origin="pause"] .pause-actions{gap:12px}
+#dialogue[data-menu][data-menu-origin="pause"] .pause-actions button{min-height:50px;font-size:18px}
+#dialogue[data-menu][data-menu-origin="pause"] .menu-utilities{margin-top:20px}
+@media(max-width:600px){#dialogue[data-menu]{padding-bottom:44px!important}.menu-logo{width:100%;max-width:400px}.menu-pollen{width:calc(var(--size)*.72);height:calc(var(--size)*.874);opacity:.8}#dialogue[data-menu="pause"],#dialogue[data-menu="settings"][data-menu-origin="pause"]{padding:20px!important}.menu-credits{font-size:11px!important}}
+
+@media(max-width:600px){.menu-pollen[data-grain="1"]{top:12%!important;left:79%!important}}

@@ -815,3 +815,11 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 - Halk, rövid Web Audio fapattanás a menügombokon, külön megjegyzett Menühangok be/ki beállítással. A meglévő zenék és a zene kikapcsolása megmaradnak. A hang nem igényel külső szolgáltatást vagy hangfájlt.
 - A mentési formátum és a játékállapot változatlan. A névadási ablak is az új arculatot kapja, a jóváhagyott történetszöveg változatlan. Mobilon is használható.
 - Grafika: a felhasználó által elfogadott, ebben a munkamenetben generált mikroszkópos koncepció felirat nélküli változata (`src/assets/microscope-menu.webp`); a mozgó szemcsék és a vonaldísz saját SVG-rajzok. Új futásidejű függőség nincs.
+
+
+### Menü finomhangolása és készítői felirat — 2026. október 28.
+- A játék közbeni **Menü kisebb, középre helyezett ablak**, mögötte az elsötétített, megállított farm látható. Az innen megnyitott Beállítások is ilyen ablak marad. A Főmenü, annak Beállításai, farmválasztása és névadása teljes képernyős.
+- A cím és az alatta lévő növényi dísz a jóváhagyott mikroszkópos látványtervhez közelített, átlátszó, külön képréteget kapott (`src/assets/silent-pollen-logo.webp`), hogy ne a helyi rendszerbetűtípustól függjön. A régi CSS-betűs cím helyett ez látszik.
+- Nagyobb, világos, finom szőrös/tüskés peremű pollenszerű alakzatok kerültek a lencsébe. A sodródás jól észrevehetőbb, de lassú marad; a méret és az áttetszőség finoman lüktet. A háttér sejtrétege lassan elmozdul és tágul/szűkül. A csökkentett mozgás és a háttérben álló menü továbbra is tiszteletben marad.
+- A Főmenü és a Menü esetén a **képernyő legalján „2026 Harsányi Zsófia”** látható. A verziószám helye elő van készítve (`#menu-version`), de még nincs megjelenített verziószám; a verziózást később vezetjük be.
+- Böngészős ellenőrzés: a Menü és a belőle megnyitott Beállítások nem teljes képernyősek; asztali és mobil nézet, ESC-visszalépés, ugrás/fókusz, meglévő mentés megnyitása, menüváltások és mozgáscsökkentés. Képkockák között külön ellenőrzött helyzet-, méret- és áttetszőség-változás. Animált előnézet: `docs/concepts/silent-pollen-menu-motion.gif`.

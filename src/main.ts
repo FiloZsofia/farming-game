@@ -264,7 +264,7 @@ class Farm extends Phaser.Scene {
   document.querySelector<HTMLButtonElement>('#resume-game')!.focus();
  }
  private openSettings(origin:'start'|'pause'){
-  if(!this.ready||this.transitioning)return;this.settingsOrigin=origin;showDialogue('Beállítások','','');document.querySelector<HTMLElement>('#settings-panel')!.hidden=false;document.querySelector<HTMLButtonElement>('#dialogue-close')!.hidden=true;document.querySelector<HTMLButtonElement>('#music-toggle')!.focus();
+  if(!this.ready||this.transitioning)return;this.settingsOrigin=origin;showDialogue('Beállítások','','');dialogue.dataset.menuOrigin=origin;document.querySelector<HTMLElement>('#settings-panel')!.hidden=false;document.querySelector<HTMLButtonElement>('#dialogue-close')!.hidden=true;document.querySelector<HTMLButtonElement>('#music-toggle')!.focus();
  }
  private closeSettings(){if(this.transitioning)return;if(this.settingsOrigin==='start')void this.openStartMenu(false);else this.openPauseMenu();}
  private async openStartMenu(saveCurrent=true){
