@@ -844,3 +844,10 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 - Közös célpont- és felvételi kód: `src/placed-items.ts`; a jövőbeli mozgatható tárgyaknak is ezt kell használniuk. A teli tárolóláda, a dolgozó gép és az át nem vett kész termék blokkolja a felvételt. Teli hátizsák vagy sikertelen mentés esetén a tárgy a helyén marad. A felvétel nem kétszerezheti az eszközt.
 - Az Irányítás ismerteti a Bontóvas bontási és áthelyezési szerepét.
 - Ellenőrzés: 333 egységteszt; böngészőben felvétel és újra lehelyezés a gépekkel, kosárral, madárodúval és ládával; védett készletek és gépállapotok; házon belüli ládafelvétel; mindhárom bolt vásárlási és beszélgetési ablaka; mindkét névtelen figyelmeztetés-gomb az eredeti ceruzás szöveg megtartásával.
+
+
+### Első számozott játékkiadás — 2026. október 28.
+- Elfogadott első játékverzió: **0.1.0**. A Főmenüben és a Menüben is a készítő neve mellett látszik: `v0.1.0`. A felirat elhelyezése változatlan (Főmenü: képernyő alja; Menü: ablak alja).
+- Egyetlen forrás a `package.json` már meglévő 0.1.0 mezője; a felület közvetlenül ebből kapja a számot. Változáslista: `CHANGELOG.md`; kiadási szabályzat: `docs/verziozas.md`; az első állapot Git-címkéje `v0.1.0`.
+- Kisebb javítás 0.1.1, nagyobb tartalmi bővítés 0.2.0 jellegű lépés. Nem kell minden apró commit után új kiadás, és a korábbi fejlesztéseket nem számozzuk meg visszamenőleg. Az 1.0.0 külön közös döntés lesz.
+- A farmmentés technikai verziója továbbra is 18, a korábbi mentések tartalmát a játékverzió bevezetése nem módosítja.

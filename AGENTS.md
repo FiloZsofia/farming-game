@@ -21,3 +21,5 @@
 - Minden lehelyezett, mozgatható tárgyat (a jövőben készülőket is) Bontóvassal veszünk vissza a Készletbe, majd onnan helyezünk le újra. Használd a `placed-items.ts` közös felvételi útvonalát; ne adj külön Felveszem/Üres láda felvétele gombot. A teli tárolók, dolgozó gépek és át nem vett termékek védelmét őrizd meg.
 
 - Minden jelenlegi és új ablak/gomb kövesse a [közös arculati szabályzatot](docs/ablakok-es-gombok.md). A közös alapstílus forrása `src/dialogue-theme.css`; ne kizárólag kézzel felsorolt ablakcímekhez kösd az egységesítést. Vizuális módosításnál ellenőrizd a szabályzat teljes ablaklistáját, beleértve a beszélgetések és a boltok Vissza gombjait, illetve a névtelen figyelmeztetés gombjait is.
+
+- Játékkiadásokhoz kövesd a [verziózási szabályzatot](docs/verziozas.md): egyetlen verzióforrás a `package.json`, látható szám a `src/version.ts`-ből, változáslista a `CHANGELOG.md`-ben, kiadási Git-címke. Nem minden commit új kiadás. A mentésformátum verzióját ettől külön kezeld.
