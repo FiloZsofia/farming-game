@@ -1,55 +1,58 @@
 import {itemIcon} from './item-icons';
-export type LabPhase='load'|'extract'|'filter'|'cool'|'done';
+import {drawExtractionMachine} from './extraction-art';
+import {canLoadExtraction,dropExtraction,stepExtraction,type Extraction} from './extraction';
 export type LabPosition={x:number;y:number;carrying:string|null};
-type Options={position:LabPosition;phase:()=>LabPhase;added:Set<string>;available:(id:string)=>boolean;add:(id:string)=>void;start:()=>void;advance:()=>void;ingredientName:string;counts:{thyme:number;plantain:number;ingredient:number};avatars?:HTMLImageElement[]};
-const stations=[{id:'thyme',name:'Vadkakukkfű',x:105,y:145},{id:'plantain',name:'Lándzsás útifű',x:200,y:145},{id:'ingredient',name:'Gyanta',x:295,y:145},{id:'vat',name:'Üst',x:465,y:230},{id:'filter',name:'Szűrő',x:590,y:145},{id:'coil',name:'Hűtőspirál',x:590,y:310},{id:'concentrate',name:'Koncentrátum',x:105,y:330}];
-export function createNoahLab(options:Options){
- const canvas=document.createElement('canvas');canvas.width=700;canvas.height=430;canvas.tabIndex=0;canvas.className='noah-lab-canvas';canvas.setAttribute('aria-label','Kivonatkészítő műhely. WASD vagy nyilak: mozgás; E vagy kattintás: felvétel és használat.');
- const ctx=canvas.getContext('2d')!,keys=new Set<string>(),p=options.position;let last=performance.now(),queuedAction:string|null=null,destination:{x:number;y:number;id:string}|null=null,flight:{id:string;x:number;y:number;age:number}|null=null,frame=0,disposed=false,mounted=false;
- const images:Record<string,HTMLImageElement>={};for(const [key,icon]of [['thyme','thyme'],['plantain','plantain'],['concentrate','glassJar']] as const){const image=new Image();const svg=itemIcon(icon);svg.setAttribute('xmlns','http://www.w3.org/2000/svg');image.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg.outerHTML);images[key]=image;}
- const rect=(x:number,y:number,w:number,h:number,color:string)=>{ctx.fillStyle=color;ctx.fillRect(Math.round(x),Math.round(y),w,h);};
- const label=(text:string,x:number,y:number,color='#eee3bb',size=13)=>{ctx.font=`${size}px "Trebuchet MS",sans-serif`;ctx.fillStyle=color;ctx.textAlign='center';ctx.fillText(text,x,y);};
- function icon(id:string,x:number,y:number,size=30){if(id==='ingredient'){ctx.fillStyle='#d4a248';ctx.beginPath();ctx.moveTo(x,y-size*.48);ctx.bezierCurveTo(x-size*.7,y+size*.1,x-size*.3,y+size*.6,x,y+size*.45);ctx.bezierCurveTo(x+size*.5,y+size*.5,x+size*.6,y+size*.1,x,y-size*.48);ctx.fill();rect(x-3,y-3,3,8,'#ffe1a0');}else{const image=images[id];if(image?.complete&&image.naturalWidth)ctx.drawImage(image,x-size/2,y-size/2,size,size);}}
- function usable(id:string){const phase=options.phase();return phase==='load'?(id==='vat'?['thyme','plantain','ingredient'].every(key=>options.added.has(key)):['thyme','plantain','ingredient'].includes(id)&&!options.added.has(id)&&options.available(id)):phase==='extract'?id==='filter':phase==='filter'?id==='coil':phase==='cool'?id==='concentrate'||id==='vat':false;}
- function interact(id:string){
-  if(flight){queuedAction=id;return;}
-  const phase=options.phase();
-  if(id==='vat'){
-   if(phase==='load'&&p.carrying&&p.carrying!=='concentrate'){const ingredient=p.carrying;p.carrying=null;flight={id:ingredient,x:p.x,y:p.y-35,age:0};options.add(ingredient);return;}
-   if(phase==='load'&&!p.carrying&&['thyme','plantain','ingredient'].every(key=>options.added.has(key)))options.start();
-   else if(phase==='cool'&&p.carrying==='concentrate'){p.carrying=null;flight={id:'concentrate',x:p.x,y:p.y-35,age:0};options.advance();}
-   return;
-  }
-  if(phase==='extract'&&id==='filter'||phase==='filter'&&id==='coil'){options.advance();return;}
-  if(!p.carrying&&((phase==='load'&&['thyme','plantain','ingredient'].includes(id)&&!options.added.has(id)&&options.available(id))||(phase==='cool'&&id==='concentrate')))p.carrying=id;
- }
- const keydown=(event:KeyboardEvent)=>{if(['KeyW','KeyA','KeyS','KeyD','ArrowUp','ArrowLeft','ArrowDown','ArrowRight','KeyE'].includes(event.code)){event.preventDefault();event.stopPropagation();}keys.add(event.code);destination=null;if(event.code==='KeyE'&&!event.repeat){const target=stations.filter(s=>Math.hypot(s.x-p.x,s.y-p.y)<92).sort((a,b)=>Math.hypot(a.x-p.x,a.y-p.y)-Math.hypot(b.x-p.x,b.y-p.y))[0];if(target)interact(target.id);}};
- const keyup=(event:KeyboardEvent)=>keys.delete(event.code);
- canvas.addEventListener('keydown',keydown);canvas.addEventListener('keyup',keyup);canvas.addEventListener('blur',()=>keys.clear());
- canvas.addEventListener('pointerdown',event=>{canvas.focus({preventScroll:true});const r=canvas.getBoundingClientRect(),x=(event.clientX-r.left)*700/r.width,y=(event.clientY-r.top)*430/r.height;const target=stations.filter(s=>Math.hypot(s.x-x,s.y-y)<55).sort((a,b)=>Math.hypot(a.x-x,a.y-y)-Math.hypot(b.x-x,b.y-y))[0];destination=target?{x:target.x,y:target.y+58,id:target.id}:{x:Math.max(30,Math.min(670,x)),y:Math.max(195,Math.min(405,y)),id:''};});
- function draw(now:number){
-  if(disposed)return;if(!canvas.isConnected){if(mounted){dispose();return;}frame=requestAnimationFrame(draw);return;}mounted=true;if(!document.querySelector<HTMLDialogElement>('#dialogue')?.open){dispose();return;}
-  const dt=Math.min(.04,(now-last)/1000);last=now;let dx=Number(keys.has('KeyD')||keys.has('ArrowRight'))-Number(keys.has('KeyA')||keys.has('ArrowLeft')),dy=Number(keys.has('KeyS')||keys.has('ArrowDown'))-Number(keys.has('KeyW')||keys.has('ArrowUp'));
+type Options={position:LabPosition;session:Extraction;available:(id:string)=>boolean;start:()=>void;finish:()=>void;counts:{thyme:number;plantain:number;ingredient:number};avatars?:HTMLImageElement[]};
+export const labStations=[{id:'thyme',name:'Vadkakukkfű',x:85,y:155},{id:'plantain',name:'Lándzsás útifű',x:185,y:155},{id:'resin',name:'Gyanta',x:285,y:155},{id:'aid',name:'Előkészítő anyag',x:95,y:345},{id:'carrier',name:'Gyantás hordozó',x:265,y:330},{id:'vat',name:'Üst',x:480,y:265},{id:'stir',name:'Keverőkar',x:403,y:365},{id:'heat',name:'Fűtés',x:530,y:425},{id:'filter',name:'Szűrő',x:680,y:300},{id:'cooler',name:'Hűtővíz',x:815,y:335},{id:'concentrate',name:'Koncentrátum',x:100,y:485},{id:'dose',name:'Hordozókeverék',x:842,y:430},{id:'bottle',name:'Töltőcsap',x:925,y:480}];
+export function createNoahLab(o:Options){
+ const canvas=document.createElement('canvas');canvas.width=1000;canvas.height=620;canvas.tabIndex=0;canvas.className='noah-lab-canvas';canvas.setAttribute('aria-label','Kivonatkészítő műhely. WASD vagy nyilak: mozgás. E: felvétel és használat; E nyomva: keverés, szűrés, töltés. A szelepek kattintással és húzással is állíthatók.');
+ const c=canvas.getContext('2d')!,s=o.session,p=o.position,keys=new Set<string>();let last=performance.now(),frame=0,disposed=false,mounted=false,finished=false,pointerHeld=false,pointerStation='',dial:string|null=null,destination:{x:number;y:number;id:string}|null=null,flight:{id:string;x:number;y:number;target:string;age:number}|null=null;
+ const images:Record<string,HTMLImageElement>={};for(const[key,id]of [['thyme','thyme'],['plantain','plantain'],['aid','glassJar'],['concentrate','glassJar']]as const){const img=new Image(),svg=itemIcon(id);svg.setAttribute('xmlns','http://www.w3.org/2000/svg');img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg.outerHTML);images[key]=img;}
+ const box=(x:number,y:number,w:number,h:number,color:string)=>{c.fillStyle=color;c.fillRect(Math.round(x),Math.round(y),w,h);};
+ const oval=(x:number,y:number,w:number,h:number,color:string)=>{c.fillStyle=color;c.beginPath();c.ellipse(x,y,w/2,h/2,0,0,Math.PI*2);c.fill();};
+ const text=(t:string,x:number,y:number,size=14,color='#eee2b8')=>{c.fillStyle=color;c.font=`${size}px "Trebuchet MS",sans-serif`;c.textAlign='center';c.fillText(t,x,y);};
+ function icon(id:string,x:number,y:number,size=32){if(id==='resin'||id==='carrier'){oval(x,y+2,size*.7,size*.8,id==='carrier'?'#ac984b':'#d1a047');box(x-3,y-size*.4,6,size*.3,'#e3bc65');box(x-5,y,3,10,'#f4dc93');}else{const img=images[id];if(img?.complete&&img.naturalWidth)c.drawImage(img,x-size/2,y-size/2,size,size);}}
+ function takeable(id:string){return s.phase==='prepare'?(id==='resin'?!s.resin&&o.available('ingredient'):id==='aid'&&!s.aid&&o.available('aid')):s.phase==='load'?id==='carrier'?s.carrierReady&&!s.loaded.includes(id):['thyme','plantain'].includes(id)&&!s.loaded.includes(id)&&o.available(id):s.phase==='dose'&&id==='concentrate';}
+ function throwTo(target:string){if(!p.carrying||flight)return;const copy={...s,loaded:[...s.loaded]};if(!dropExtraction(copy,p.carrying,target))return;flight={id:p.carrying,x:p.x,y:p.y-40,target,age:0};p.carrying=null;}
+ function interact(id:string){if(flight)return;if(p.carrying&&['carrier','vat','dose'].includes(id)){throwTo(id);return;}if(!p.carrying&&takeable(id)){p.carrying=id;return;}if(id==='vat'&&s.phase==='load'&&canLoadExtraction(s))o.start();if(id==='heat'&&s.phase==='extract')s.heat=Math.round(((s.heat+.2)>1?0:s.heat+.2)*10)/10;if(id==='cooler'&&s.phase==='cool')s.coolant=Math.round(((s.coolant+.25)>1?0:s.coolant+.25)*100)/100;}
+ const nearby=()=>labStations.filter(st=>Math.hypot(st.x-p.x,st.y-p.y)<110).sort((a,b)=>Math.hypot(a.x-p.x,a.y-p.y)-Math.hypot(b.x-p.x,b.y-p.y))[0];
+ const continuous=(id:string)=>id==='carrier'&&s.phase==='prepare'&&s.resin&&s.aid||id==='stir'&&s.phase==='extract'||id==='filter'&&s.phase==='filter'||id==='bottle'&&s.phase==='bottle';
+ const keydown=(e:KeyboardEvent)=>{if(['KeyW','KeyA','KeyS','KeyD','ArrowUp','ArrowLeft','ArrowDown','ArrowRight','KeyE'].includes(e.code)){e.preventDefault();e.stopPropagation();keys.add(e.code);}if(e.code==='KeyE'&&!e.repeat){const st=nearby();if(st)interact(st.id);}if(e.code!=='KeyE')destination=null;};
+ const keyup=(e:KeyboardEvent)=>keys.delete(e.code);canvas.addEventListener('keydown',keydown);canvas.addEventListener('keyup',keyup);
+ const clear=()=>{keys.clear();pointerHeld=false;dial=null;};canvas.addEventListener('blur',clear);
+ const point=(e:PointerEvent)=>{const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*1000/r.width,y:(e.clientY-r.top)*620/r.height};};
+ canvas.addEventListener('pointerdown',e=>{e.preventDefault();canvas.focus({preventScroll:true});if(e.isTrusted)canvas.setPointerCapture(e.pointerId);const q=point(e),st=labStations.filter(st=>Math.hypot(st.x-q.x,st.y-q.y)<43).sort((a,b)=>Math.hypot(a.x-q.x,a.y-q.y)-Math.hypot(b.x-q.x,b.y-q.y))[0];pointerHeld=true;pointerStation=st?.id??'';dial=null;
+  if(st?.id==='heat'&&s.phase==='extract'||st?.id==='cooler'&&s.phase==='cool'){dial=st.id;interact(st.id);return;}
+  destination=st?{x:st.x,y:Math.min(580,st.y+78),id:st.id}:{x:Math.max(30,Math.min(970,q.x)),y:Math.max(235,Math.min(580,q.y)),id:''};
+ });
+ canvas.addEventListener('pointermove',e=>{if(!dial)return;const q=point(e),st=labStations.find(st=>st.id===dial)!;const angle=Math.atan2(q.y-st.y,q.x-st.x),value=Math.max(0,Math.min(1,(angle+Math.PI)/(2*Math.PI)));if(dial==='heat')s.heat=value;else s.coolant=value;});
+ canvas.addEventListener('pointerup',()=>{pointerHeld=false;dial=null;});canvas.addEventListener('pointercancel',clear);
+ const phases={prepare:'Gyantás hordozó előkészítése',load:'A hozzávalók összeállítása',extract:'Kivonás',filter:'Szűrés',cool:'Hűtés',dose:'A koncentrátum hozzáadása',bottle:'A minta megtöltése',done:'Elkészült'};
+ function draw(now:number){if(disposed)return;if(!canvas.isConnected){if(mounted){dispose();return;}frame=requestAnimationFrame(draw);return;}mounted=true;if(!document.querySelector<HTMLDialogElement>('#dialogue')?.open){dispose();return;}
+  const dt=document.hidden?0:Math.min(.04,(now-last)/1000);last=now;let dx=Number(keys.has('KeyD')||keys.has('ArrowRight'))-Number(keys.has('KeyA')||keys.has('ArrowLeft')),dy=Number(keys.has('KeyS')||keys.has('ArrowDown'))-Number(keys.has('KeyW')||keys.has('ArrowUp'));
   if(destination&&!dx&&!dy){const d=Math.hypot(destination.x-p.x,destination.y-p.y);if(d<7){const id=destination.id;destination=null;if(id)interact(id);}else{dx=(destination.x-p.x)/d;dy=(destination.y-p.y)/d;}}
-  if(dx||dy){const n=Math.hypot(dx,dy);p.x=Math.max(30,Math.min(670,p.x+dx/n*dt*160));p.y=Math.max(195,Math.min(405,p.y+dy/n*dt*160));}
-  ctx.clearRect(0,0,700,430);rect(0,0,700,430,'#283e30');for(let y=85;y<430;y+=28){rect(0,y,700,26,y%56?'#6b654a':'#726b4d');rect(0,y+25,700,2,'#494e39');}rect(0,0,700,100,'#43523b');for(let i=0;i<15;i++)rect(i*50,0,2,95,'#677153');rect(38,108,300,62,'#9b8054');rect(38,165,300,8,'#5b4b33');rect(62,301,90,45,'#9b8054');
-  const phase=options.phase();
-  for(const s of stations){const active=usable(s.id)||(s.id==='vat'&&Boolean(p.carrying));if(active){ctx.strokeStyle='#d3b66d';ctx.lineWidth=2;ctx.strokeRect(s.x-36,s.y-31,72,61);}
-   if(['thyme','plantain','ingredient'].includes(s.id)){if(!options.added.has(s.id)&&p.carrying!==s.id)icon(s.id,s.x,s.y);label(s.name,s.x,102,'#eee3bb',12);label(`${options.counts[s.id as keyof typeof options.counts]}${options.added.has(s.id)?' ✓':''}`,s.x,187,'#eee3bb',12);}
-   else if(s.id==='vat'){ctx.fillStyle='#ae8e53';ctx.beginPath();ctx.ellipse(s.x,s.y+10,49,50,0,0,Math.PI*2);ctx.fill();rect(s.x-48,s.y-25,96,38,'#9d804d');ctx.fillStyle=options.added.size||phase!=='load'?'#82995a':'#504f38';ctx.beginPath();ctx.ellipse(s.x,s.y-25,47,16,0,0,Math.PI*2);ctx.fill();for(let i=0;i<4&&phase!=='load';i++){const t=(now/1500+i*.23)%1;ctx.strokeStyle=`rgba(221,225,189,${1-t})`;ctx.beginPath();ctx.ellipse(s.x+Math.sin(i+now/700)*15,s.y-35-t*43,4+t*6,7+t*8,0,0,Math.PI*2);ctx.stroke();}label('Üst',s.x,s.y+80);}
-   else if(s.id==='filter'){rect(s.x-25,s.y-30,50,54,'#b7bba0');for(let y=s.y-26;y<s.y+20;y+=6)rect(s.x-22,y,44,2,'#67745a');label('Szűrő',s.x,s.y+47);}
-   else if(s.id==='coil'){for(let i=0;i<5;i++){rect(s.x-24,s.y-28+i*12,48,5,'#ba945a');}rect(s.x-25,s.y-28,5,55,'#b58d54');rect(s.x+20,s.y-28,5,55,'#b58d54');label('Hűtőspirál',s.x,s.y+48);}
-   else{if(p.carrying!=='concentrate')icon('concentrate',s.x,s.y);label('Koncentrátum',s.x,s.y+36,'#eee3bb',12);}}
-  // Sam: brown high ponytail, off-white shirt and moss-green work trousers.
-  const avatar=options.avatars?.[dx||dy?1+Math.floor(now/140)%2:0];
-  if(avatar?.complete&&avatar.naturalWidth)ctx.drawImage(avatar,p.x-32,p.y-82,64,96);else{
-  const stride=dx||dy?Math.sin(now/85)*3:0;rect(p.x-9,p.y-25,7,23+stride,'#526c43');rect(p.x+2,p.y-25,7,23-stride,'#526c43');rect(p.x-10,p.y-2+stride,9,4,'#574a35');rect(p.x+2,p.y-2-stride,9,4,'#574a35');rect(p.x-11,p.y-48,22,24,'#e7e0c0');rect(p.x-14,p.y-45,5,18,'#c5a57c');rect(p.x+10,p.y-45,5,18,'#c5a57c');ctx.fillStyle='#c8a982';ctx.beginPath();ctx.ellipse(p.x,p.y-60,10,13,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#785338';ctx.beginPath();ctx.ellipse(p.x,p.y-68,11,7,0,0,Math.PI*2);ctx.fill();rect(p.x+6,p.y-79,6,15,'#785338');rect(p.x+10,p.y-77,5,15,'#785338');rect(p.x-5,p.y-61,2,2,'#374333');rect(p.x+4,p.y-61,2,2,'#374333');
+  if(dx||dy){const n=Math.hypot(dx,dy);p.x=Math.max(30,Math.min(970,p.x+dx/n*dt*210));p.y=Math.max(235,Math.min(580,p.y+dy/n*dt*210));}
+  const near=nearby(),action=keys.has('KeyE')?near?.id??null:pointerHeld&&pointerStation&&(pointerStation==='carrier'||pointerStation==='filter'||pointerStation==='stir'||pointerStation==='bottle')&&Math.hypot(labStations.find(st=>st.id===pointerStation)!.x-p.x,labStations.find(st=>st.id===pointerStation)!.y-p.y)<110?pointerStation:null;
+  stepExtraction(s,dt,action);if(s.phase==='done'&&!finished){finished=true;o.finish();}
+  c.clearRect(0,0,1000,620);box(0,0,1000,620,'#344636');for(let y=160;y<620;y+=30){box(0,y,1000,28,y%60?'#685b42':'#706249');box(0,y+28,1000,2,'#423f30');for(let x=(y%60?0:120);x<1000;x+=240)box(x,y,2,28,'#4b4533');}box(0,0,1000,165,'#40503b');for(let x=0;x<1000;x+=64)box(x,0,2,165,'#607052');box(25,112,300,15,'#8e7148');box(30,199,300,10,'#4c4431');box(32,125,290,75,'#9a7c4c');box(50,330,90,40,'#927749');box(210,320,105,45,'#927749');box(55,470,90,45,'#927749');
+  drawExtractionMachine(c,s,now);
+  // Separate porcelain preparation dish, before the resin reaches the water-based extract.
+  oval(265,337,74,20,'#b3ac8c');oval(265,329,74,19,'#d3c9a1');oval(265,329,59,12,s.carrierReady?'#b3984f':s.resin?'#ad8944':'#68674b');if(s.aid)oval(267,330,27+Math.sin(now/300)*3,7,'#dcc984');if(action==='carrier'){c.strokeStyle='#e1cc9b';c.lineWidth=4;c.beginPath();c.moveTo(265,326);c.lineTo(265+Math.cos(now/160)*24,316+Math.sin(now/160)*5);c.stroke();}
+  for(const st of labStations){const active=takeable(st.id)||continuous(st.id)||st.id==='vat'&&s.phase==='load'&&(!!p.carrying||canLoadExtraction(s))||st.id==='dose'&&p.carrying==='concentrate'||st.id==='carrier'&&!!p.carrying&&s.phase==='prepare';
+   if(active){c.strokeStyle='#c8ac68';c.lineWidth=1.5;c.strokeRect(st.x-34,st.y-29,68,57);}
+   if(['thyme','plantain','resin','aid','concentrate'].includes(st.id)){if(p.carrying!==st.id&&!flight||flight?.id!==st.id&&p.carrying!==st.id){const hidden=st.id==='resin'?s.resin:st.id==='aid'?s.aid:s.loaded.includes(st.id);if(!hidden)icon(st.id,st.x,st.y);}text(st.name,st.x,st.y-40,12);if(['thyme','plantain','resin'].includes(st.id))text(String(st.id==='resin'?o.counts.ingredient:o.counts[st.id as 'thyme'|'plantain']),st.x,st.y+40,12);}
+   else if(st.id!=='dose')text(st.name,st.x,st.y+(st.id==='vat'?100:st.id==='bottle'?85:47),12);
   }
-  if(p.carrying)icon(p.carrying,p.x+15,p.y-35,24);
-  if(flight){flight.age+=dt;const t=Math.min(1,flight.age/.65);icon(flight.id,flight.x+(465-flight.x)*t,flight.y+(205-flight.y)*t-Math.sin(t*Math.PI)*65,24);if(t>=1){flight=null;if(queuedAction){const id=queuedAction;queuedAction=null;interact(id);}}}
-  label({load:'Alapanyagok',extract:'Kivonás',filter:'Szűrés',cool:'Lehűlt kivonat',done:'Elkészült'}[phase],350,36,'#f1deb1',19);
-  canvas.dataset.labThrowing=String(Boolean(flight));canvas.dataset.labAdded=[...options.added].join(',');canvas.dataset.labPhase=phase;canvas.dataset.labX=String(Math.round(p.x));canvas.dataset.labY=String(Math.round(p.y));canvas.dataset.carrying=p.carrying??'';frame=requestAnimationFrame(draw);
+  // Controls, thermometer and small process indicators belong to the physical machine.
+  for(const[id,value]of [['heat',s.heat],['cooler',s.coolant]]as const){const st=labStations.find(st=>st.id===id)!;oval(st.x,st.y,36,36,'#384437');c.save();c.translate(st.x,st.y);c.rotate(value*Math.PI*1.6-Math.PI*.8);box(-3,-14,6,21,'#d2b47a');c.restore();}
+  box(588,334,14,100,'#344433');box(590,338,10,92,'#858872');box(590,430-s.temperature*92,10,s.temperature*92,s.temperature>.72?'#c4774e':'#d7b15e');box(605,364,4,30,'#8fa769');text('°',594,327,15);
+  const progress=s.phase==='prepare'?s.carrierMix:s.phase==='bottle'?s.fill:s.progress;if(progress>0){box(365,500,220,7,'#303f2e');box(365,500,220*progress,7,'#bca66b');}
+  text(phases[s.phase],500,38,23);text(s.phase==='prepare'?'Gyanta + Noah előkészítő anyaga':s.phase==='extract'?s.temperature>.72?'Túl forró':s.temperature<.4?'Melegszik…':'Egyenletes keverés':s.phase==='cool'?'Lehűlés után kerül bele a koncentrátum':'',500,65,13);
+  const avatar=o.avatars?.[dx||dy?1+Math.floor(now/140)%2:0];if(avatar?.complete&&avatar.naturalWidth)c.drawImage(avatar,p.x-32,p.y-82,64,96);else{box(p.x-9,p.y-40,18,24,'#e4dabe');box(p.x-8,p.y-16,6,20,'#5b7144');box(p.x+2,p.y-16,6,20,'#5b7144');oval(p.x,p.y-52,19,24,'#c8aa85');}
+  if(p.carrying)icon(p.carrying,p.x+17,p.y-38,26);
+  if(flight){flight.age+=dt;const t=Math.min(1,flight.age/.65),st=labStations.find(st=>st.id===flight!.target)!;icon(flight.id,flight.x+(st.x-flight.x)*t,flight.y+(st.y-flight.y)*t-Math.sin(t*Math.PI)*75,26);if(t===1){dropExtraction(s,flight.id,flight.target);flight=null;}}
+  canvas.dataset.labPhase=s.phase;canvas.dataset.labAdded=s.loaded.join(',');canvas.dataset.carrying=p.carrying??'';canvas.dataset.labThrowing=String(!!flight);canvas.dataset.labX=String(Math.round(p.x));canvas.dataset.labY=String(Math.round(p.y));canvas.dataset.carrierReady=String(s.carrierReady);canvas.dataset.temperature=String(s.temperature);canvas.dataset.progress=String(progress);canvas.dataset.heat=String(s.heat);canvas.dataset.coolant=String(s.coolant);frame=requestAnimationFrame(draw);
  }
- function dispose(){disposed=true;cancelAnimationFrame(frame);canvas.removeEventListener('keydown',keydown);canvas.removeEventListener('keyup',keyup);}
- frame=requestAnimationFrame(draw);setTimeout(()=>{if(canvas.isConnected)canvas.focus({preventScroll:true});},0);return {canvas,dispose};
+ function dispose(){disposed=true;cancelAnimationFrame(frame);canvas.removeEventListener('keydown',keydown);canvas.removeEventListener('keyup',keyup);clear();}
+ frame=requestAnimationFrame(draw);setTimeout(()=>{if(canvas.isConnected)canvas.focus({preventScroll:true});},0);return{canvas,dispose};
 }

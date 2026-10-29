@@ -1,3 +1,4 @@
+import {sporeShelters,sporeFieldPhase,sporeFieldHurts,sporeSheltered,inSporeField} from './spore-field';
 import Phaser from 'phaser';
 import {ForestCombat} from './forest-combat';
 import {createForest} from './forest';
@@ -24,6 +25,7 @@ export class NoahSouthForest{
  private terrain:Phaser.GameObjects.Graphics;private art:Phaser.GameObjects.Graphics;private fungi:Phaser.GameObjects.Graphics;private swampSeen=false;private struck=new Set<number>();
  private lastSafe={x:-444,y:2000};private herbs:Phaser.GameObjects.Graphics;
  private label:Phaser.GameObjects.Text;private minorCombat:ForestCombat;private minorState={...createForest(),stick:true};
+ get fieldPhase(){return sporeFieldPhase(this.age);}
  get minorRemaining(){return southEnemies.length-this.minorState.defeated.length;}
  setUnlocked(value:boolean){this.terrain.setVisible(value);this.art.setVisible(value);this.herbs.setVisible(value);this.fungi.setVisible(value);}
  get phaseName(){return this.phase;}
@@ -44,6 +46,8 @@ export class NoahSouthForest{
   for(const p of swampStones){g.fillStyle(0x293e34,.5).fillEllipse(p.x+4,p.y+5,59,30);g.fillStyle(0x8f9b87).fillPoints([{x:p.x-26,y:p.y+6},{x:p.x-20,y:p.y-12},{x:p.x+6,y:p.y-18},{x:p.x+27,y:p.y-3},{x:p.x+20,y:p.y+13},{x:p.x-10,y:p.y+15}],true);g.lineStyle(2,0xc2c5a5).lineBetween(p.x-18,p.y-10,p.x+4,p.y-15);g.fillStyle(0x678153).fillEllipse(p.x+9,p.y+5,18,7);}
   let seed=312;const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
   for(let y=1380;y<2940;y+=64)for(let x=-1050;x< -60;x+=70){const xx=x+random()*32,yy=y+random()*20;if(distanceToSouthPath(xx,yy)<104||swampAt(xx,yy))continue;drawWoodlandTree(g,random,xx,yy,Math.floor(random()*3),.95+random()*.35);}
+  // Fallen, mossy trunks offer cover from the wind-driven spore field.
+  for(const cover of sporeShelters){const p={x:cover.x-34,y:cover.y-8};g.fillStyle(0x2c4838,.5).fillEllipse(p.x+3,p.y+9,65,35);g.fillStyle(0x67513b).fillRoundedRect(p.x-23,p.y-15,46,28,6);g.fillStyle(0x98754c).fillEllipse(p.x,p.y-14,45,19);g.lineStyle(1,0x604b36).strokeEllipse(p.x,p.y-14,31,12);g.fillStyle(0x617a40).fillEllipse(p.x-13,p.y-5,22,12);}
   // A living larch with warm bark and soft needles supplies naturally exuded resin.
   g.fillStyle(0x253e2c,.4).fillEllipse(resinTree.x,resinTree.y+14,140,30);
   drawWoodlandTree(g,random,resinTree.x,resinTree.y,2,1.5);
@@ -78,6 +82,8 @@ export class NoahSouthForest{
    if(t<.72){g.fillStyle(0x795838,.65).fillEllipse(x,y-t*4,r*2,r*1.3);g.lineStyle(1,0xb08d57,.7).strokeEllipse(x-1,y-t*4,r*1.7,r);g.fillStyle(0xc4a571,.65).fillEllipse(x-r*.25,y-t*4-r*.2,2,1);}
    else{const pop=(t-.72)/.28;g.lineStyle(1,0x9b7950,1-pop).strokeEllipse(x,y-2,12+pop*14,5+pop*5);for(let j=0;j<3;j++)g.fillStyle(0x8d6a45,1-pop).fillCircle(x+(j-1)*pop*10,y-2-Math.sin(pop*Math.PI)*(5+j),1.2);}
   }
+  this.drawSporeField(player,state.upgraded);
+  if(state.upgraded&&sporeFieldHurts(this.age,player,jumping)&&this.invulnerable===0){this.invulnerable=1.3;hurt();}
   this.minorCombat.update(dt,player,this.minorState,jumping,hurt);
   if(!inNoahSouth(player.x,player.y)||state.rootDefeated)return;
   const {x,y}=southRoot,d=Math.hypot(player.x-x,player.y-y);this.timer-=dt;
@@ -105,6 +111,16 @@ export class NoahSouthForest{
   for(let i=0;i<9;i++){const a=this.age*.3+i*2.4;g.fillStyle(0xd1c8a0,.35).fillCircle(x+Math.sin(a)*78,y-40+Math.cos(a*1.4)*40,1);}
  }
  reset(){this.minorCombat.reset();this.minorState={...createForest(),stick:true};this.hp=6;this.phase='rest';this.timer=1.4;}
+ private drawSporeField(player:{x:number;y:number},unlocked:boolean){
+  if(!unlocked)return;const g=this.art,phase=sporeFieldPhase(this.age),releasing=phase==='release',warning=phase==='warning';
+  for(const [i,p]of [{x:-780,y:1800},{x:-560,y:1830},{x:-765,y:1890}].entries()){
+   const swell=warning?1+Math.sin(this.age*9)*.1:1;g.fillStyle(0xada191).fillRoundedRect(p.x-6,p.y-22,12,30,4);g.fillStyle(0x715968).fillEllipse(p.x,p.y-28,58*swell,31*swell);g.fillStyle(0xbba6b3).fillEllipse(p.x-10,p.y-34,24,12);
+   for(let j=0;j<6;j++)g.fillStyle(warning?0xe6c294:0xcfbfc3).fillCircle(p.x+Math.cos(j*2.4)*18,p.y-29+Math.sin(j*2.4)*7,2.5);
+   if(releasing)for(let j=0;j<20;j++){const t=(this.age*.45+j*.077+i*.23)%1,x=p.x+t*160,y=p.y-22+Math.sin(j*2.4)*19;g.fillStyle(0xc5b396,(1-t)*.24).fillEllipse(x,y,20+t*35,12+t*17);g.fillStyle(0xe4cfa8,(1-t)*.7).fillCircle(x+Math.sin(j)*9,y-5,1+j%2);}
+  }
+  if(releasing)for(let i=0;i<45;i++){const x=-810+(i*47+this.age*60)%350,y=1782+i*31%120;g.fillStyle(0xc5baa2,.2).fillCircle(x,y,1+i%2);}
+  if(inSporeField(player.x,player.y)&&sporeSheltered(player.x,player.y))for(const p of sporeShelters)g.lineStyle(1,0xc4d39c,.45).strokeEllipse(p.x,p.y+6,58,32);
+ }
  private drawMushrooms(night:number){
   const g=this.fungi;g.clear();
   for(const p of mushrooms){const {x,y,s}=p,pulse=.82+Math.sin(this.age*1.7+x)*.18;

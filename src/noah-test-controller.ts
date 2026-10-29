@@ -1,3 +1,5 @@
+import {createExtraction,canLoadExtraction} from './extraction';
+import {EXPERIMENT_FINDING} from './story-archive';
 import Phaser from 'phaser';
 import {FarmerArt} from './character';
 import {southHerbs} from './south-forest-layout';
@@ -7,15 +9,15 @@ import {itemIcon} from './item-icons';
 import type {Snapshot} from './storage';
 import {noahLetter,noahGoal,noahReplyArrived,upgradeNoahStick,mixNoahExtract,type NoahTestConfig,type NoahTestState} from './noah-test-story';
 import {NoahSouthForest,resinTree,inNoahSouth,southRoot} from './noah-south-forest';
-type Host={read:()=>Snapshot;commit:(s:Snapshot,after:()=>void)=>Promise<boolean>;show:(title:string,text:string,label?:string)=>void;notice:(text:string)=>void;gather?:(point:{x:number;y:number})=>void};
+type Host={read:()=>Snapshot;commit:(s:Snapshot,after:()=>void)=>Promise<boolean>;show:(title:string,text:string,label?:string)=>void;notice:(text:string)=>void;record?:(id:'noah'|'result')=>void;gather?:(point:{x:number;y:number})=>void};
 export class NoahTestController{
  private swampArrival=()=>this.host.show('Mocsár','Az iszap lassan bugyog a felszín alatt. Nem szeretnék belesüllyedni.','SAM');
- readonly forest:NoahSouthForest;private steam:Phaser.GameObjects.Graphics;private batch:{step:number}|null=null;private added=new Set<string>();private pendingResult=false;private busy=false;private lab:ReturnType<typeof createNoahLab>|null=null;private labAvatars:HTMLImageElement[]=[];private labPosition:LabPosition={x:350,y:350,carrying:null};
+ readonly forest:NoahSouthForest;private steam:Phaser.GameObjects.Graphics;private extraction=createExtraction();private pendingResult=false;private busy=false;private lab:ReturnType<typeof createNoahLab>|null=null;private labAvatars:HTMLImageElement[]=[];private labPosition:LabPosition={x:350,y:350,carrying:null};
  constructor(private scene:Phaser.Scene,public state:NoahTestState,readonly config:NoahTestConfig,private host:Host){this.forest=new NoahSouthForest(scene);scene.events.on('noah-swamp-arrival',this.swampArrival);this.steam=scene.add.graphics().setDepth(108);
   for(let i=0;i<3;i++){const art=new FarmerArt(scene);art.equip('none');art.update(i>0,false,{x:0,y:1},.1+i*.08);const texture=scene.add.renderTexture(0,0,64,96);texture.draw(art.root,32,82);texture.setVisible(false);texture.snapshot(image=>{if(image instanceof HTMLImageElement)this.labAvatars[i]=image;texture.destroy();});art.root.destroy(true);}
  }
  updatePresentation(now:number){
-  this.forest.setUnlocked(this.state.upgraded);const g=this.steam;g.clear();if(!this.batch)return;
+  this.forest.setUnlocked(this.state.upgraded);const g=this.steam;g.clear();if(!['extract','filter','cool'].includes(this.extraction.phase))return;
   for(let i=0;i<7;i++){const t=((now/1500+i/7)%1);g.lineStyle(1.3,0xd6d8b6,(1-t)*.5).strokeEllipse(337+Math.sin(now/900+i)*10,3330-t*45,4+t*9,3+t*12);}
  }
  get hasResult(){return this.pendingResult||this.state.complete;}
@@ -26,7 +28,7 @@ export class NoahTestController{
  openLetter(){
   if(!this.hasUnreadLetter(this.host.read().clock.day))return;
   this.host.show('Noah levele',noahLetter,'LEVÉL A LABORBÓL');const panel=this.panel();
-  if(!this.state.letter)this.button(panel,'noah-take-package','Átveszem a küldeményt',()=>{this.state.letter=true;this.state.concentrate=this.config.shipment;this.host.show('Kísérleti koncentrátum',`${this.config.shipment} adag koncentrátum érkezett. `,'NOAH KÜLDEMÉNYE');});
+  if(!this.state.letter)this.button(panel,'noah-take-package','Átveszem a küldeményt',()=>{this.state.letter=true;this.host.record?.('noah');this.state.concentrate=this.config.shipment;this.host.show('Kísérleti koncentrátum',`${this.config.shipment} adag koncentrátum érkezett. `,'NOAH KÜLDEMÉNYE');});
  }
  openSimon(){
   if(!this.state.letter){this.host.show('Simon','Jó újra látni! Ma is akad néhány régi darab, amivel elbíbelődhetek.','EGY KEDVES SZÓ');return;}
@@ -47,11 +49,11 @@ export class NoahTestController{
   if(!this.state.letter){panel.textContent='Az első kísérlethez még hiányzik valami.';return;}
   document.querySelector<HTMLDialogElement>('#dialogue')!.dataset.presentation='noah-lab';
   const c=this.config;
-  const hint=document.createElement('p');hint.className='noah-lab-controls';hint.textContent='WASD / nyilak · E vagy kattintás';panel.append(hint);
-  this.lab=createNoahLab({avatars:this.labAvatars,position:this.labPosition,phase:()=>this.pendingResult?'done':this.batch?(['extract','filter','cool'] as const)[this.batch.step]:'load',added:this.added,ingredientName:c.ingredientName,counts:{thyme:c.thyme,plantain:c.plantain,ingredient:c.ingredient},available:id=>id==='ingredient'?this.state.ingredient>=c.ingredient:this.host.read().travel.estate.produce[id as 'thyme'|'plantain']>=c[id as 'thyme'|'plantain'],
-   add:id=>this.added.add(id),
-   start:()=>{if(this.busy||this.batch)return;const result=mixNoahExtract(this.host.read(),this.state,c);if(!result)return;this.busy=true;void this.host.commit(result.snapshot,()=>{this.state=result.state;this.batch={step:0};this.added.clear();}).finally(()=>{this.busy=false;});},
-   advance:()=>{if(!this.batch)return;if(this.batch.step<2)this.batch.step++;else{this.batch=null;this.pendingResult=true;this.state.mixtureMade=true;setTimeout(()=>{if(this.lab?.canvas.isConnected&&document.querySelector<HTMLDialogElement>('#dialogue')?.open)this.host.show('A kezelt minta elkészült','Egy kis részt félretettem az összehasonlításhoz.','SAM');},700);}}
+  const hint=document.createElement('p');hint.className='noah-lab-controls';hint.textContent='WASD / nyilak · E: felvétel, használat · Nyomva tartva: keverés, szűrés, töltés · Szelepek: kattintás / húzás';panel.append(hint);
+  this.lab=createNoahLab({avatars:this.labAvatars,position:this.labPosition,session:this.extraction,counts:{thyme:c.thyme,plantain:c.plantain,ingredient:c.ingredient},available:id=>id==='ingredient'?this.state.ingredient>=c.ingredient:id==='aid'?this.state.letter&&this.state.concentrate>=c.concentrate:this.host.read().travel.estate.produce[id as 'thyme'|'plantain']>=c[id as 'thyme'|'plantain'],
+   start:()=>{if(this.busy||this.extraction.phase!=='load'||!canLoadExtraction(this.extraction))return;const result=mixNoahExtract(this.host.read(),this.state,c);if(!result)return;this.busy=true;void this.host.commit(result.snapshot,()=>{this.state=result.state;this.extraction.phase='extract';}).finally(()=>{this.busy=false;});},
+   finish:()=>{if(this.pendingResult)return;this.pendingResult=true;this.state.mixtureMade=true;setTimeout(()=>{if(this.lab?.canvas.isConnected&&document.querySelector<HTMLDialogElement>('#dialogue')?.open)this.host.show('A kezelt minta elkészült','Egy kis részt félretettem az összehasonlításhoz.','SAM');},800);}
+
   });panel.append(this.lab.canvas);
  }
  openMicroscope(){
@@ -60,7 +62,7 @@ export class NoahTestController{
   const fields=document.createElement('div');fields.className='noah-microscopy';
   for(const treated of [false,true]){const column=document.createElement('div'),label=document.createElement('strong');label.textContent=treated?'Kezelt minta':'Kontroll';column.append(label);const field=document.createElement('div');field.className=`noah-micro-field ${treated?'treated':''} ${this.state.complete?'improved':''}`;let paths='';for(let i=0;i<12;i++){const x=15+i*6,y=20+(i*17)%57;paths+=`<path d="M${x} ${y}q12-9 18 8t-10 22m4-15 14-6m-10-3-9-8"/>`;}field.innerHTML=`<svg viewBox="0 0 100 100"><g fill="none" stroke="#7b7752" stroke-width="1.1">${paths}</g></svg>`;column.append(field);fields.append(column);}panel.append(fields);
   const focus=document.createElement('input');focus.type='range';focus.min='0';focus.max='100';focus.value='20';focus.id='noah-microscope-focus';focus.setAttribute('aria-label','Élesség');panel.append(focus);const apply=()=>fields.style.filter=`blur(${Math.abs(Number(focus.value)-72)/12}px)`;focus.oninput=()=>{apply();if(observe)observe.disabled=Math.abs(Number(focus.value)-72)>12;};apply();
-  const observe=this.pendingResult?this.button(panel,'noah-observe-result','Megvizsgálom',()=>{this.pendingResult=false;this.state.complete=true;this.host.show('Biztató eredmény','A kezelt mintán lassabban terjednek a gombafonalak, de ez még nem bizonyítja, hogy a keveréket biztonságosan használhatom a méhek közelében. Meg kell osztanom az eredményt Noah-val.','SAM');},true):null;
+  const observe=this.pendingResult?this.button(panel,'noah-observe-result','Megvizsgálom',()=>{this.pendingResult=false;this.state.complete=true;this.host.record?.('result');this.host.show('Biztató eredmény',EXPERIMENT_FINDING,'SAM');},true):null;
  }
  interactSouth(player:{x:number;y:number}){
   if(!inNoahSouth(player.x,player.y))return false;

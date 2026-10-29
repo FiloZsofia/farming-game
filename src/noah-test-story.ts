@@ -1,9 +1,10 @@
+import {recordStoryProgress,recordStoryEvent} from './story-archive';
 import type {Snapshot} from './storage';
 import {prepareMicroscopeTest} from './microscope-test-setup';
 
 export type NoahTestConfig={thyme:number;plantain:number;concentrate:number;shipment:number;ingredient:number;ingredientName:string;wood:number;scrap:number;gold:number};
 export const noahTestConfig:NoahTestConfig={thyme:2,plantain:2,concentrate:1,shipment:4,ingredient:1,ingredientName:'Vörösfenyőgyanta',wood:25,scrap:14,gold:310};
-export type NoahCheckpoint='waiting'|'letter'|'simon'|'forest'|'marsh'|'root'|'mix';
+export type NoahCheckpoint='waiting'|'letter'|'simon'|'forest'|'marsh'|'root'|'spores'|'mix';
 export type NoahTestState={herbsPicked:Record<string,number>;sentDay:number;mixtureMade:boolean;endSeen:boolean;letter:boolean;simonAsked:boolean;upgraded:boolean;complete:boolean;concentrate:number;ingredient:number;rootDefeated:boolean;ingredientGathered:boolean};
 export const noahLetter=`Sam!
 
@@ -27,12 +28,14 @@ export function prepareNoahTest(source:Snapshot,config:NoahTestConfig,checkpoint
  snapshot.clearing.wood=Math.max(snapshot.clearing.wood,config.wood);
  snapshot.travel.research.materials.scrap=Math.max(snapshot.travel.research.materials.scrap,config.scrap);
  snapshot.economy.gold=Math.max(snapshot.economy.gold,config.gold);
- const state:NoahTestState={herbsPicked:{},sentDay:snapshot.clock.day-(checkpoint==='waiting'?0:3),mixtureMade:false,endSeen:false,letter:checkpoint!=='letter'&&checkpoint!=='waiting',simonAsked:checkpoint==='forest'||checkpoint==='marsh'||checkpoint==='root'||checkpoint==='mix',upgraded:checkpoint==='forest'||checkpoint==='marsh'||checkpoint==='root'||checkpoint==='mix',complete:false,concentrate:checkpoint==='letter'||checkpoint==='waiting'?0:config.shipment,ingredient:checkpoint==='mix'?config.ingredient:0,rootDefeated:checkpoint==='mix',ingredientGathered:checkpoint==='mix'};
+ const state:NoahTestState={herbsPicked:{},sentDay:snapshot.clock.day-(checkpoint==='waiting'?0:3),mixtureMade:false,endSeen:false,letter:checkpoint!=='letter'&&checkpoint!=='waiting',simonAsked:checkpoint==='forest'||checkpoint==='marsh'||checkpoint==='root'||checkpoint==='spores'||checkpoint==='mix',upgraded:checkpoint==='forest'||checkpoint==='marsh'||checkpoint==='root'||checkpoint==='spores'||checkpoint==='mix',complete:false,concentrate:checkpoint==='letter'||checkpoint==='waiting'?0:config.shipment,ingredient:checkpoint==='mix'?config.ingredient:0,rootDefeated:checkpoint==='mix',ingredientGathered:checkpoint==='mix'};
  if(checkpoint==='simon')snapshot.player={x:320,y:4635};
  if(checkpoint==='mix')snapshot.player={x:337,y:3415};
  if(checkpoint==='forest')snapshot.player={x:-444,y:1140};
  if(checkpoint==='marsh')snapshot.player={x:-430,y:2000};
+ if(checkpoint==='spores')snapshot.player={x:-690,y:1750};
  if(checkpoint==='root'){snapshot.player={x:-665,y:2450};snapshot.clock.elapsed=390;}
+ recordStoryProgress(snapshot.travel,snapshot.clock.day);if(state.letter)recordStoryEvent(snapshot.travel,'noah',state.sentDay+3);
  return {snapshot,state};
 }
 // Existing saves already south of the barrier can leave; new entries are blocked.

@@ -2,6 +2,9 @@
 
 ## Változások a 0.1.0 óta — külön jóváhagyott verzióemelés nélkül
 
+- Minden termesztett zöldség és gyümölcs kezdettől ehető, a közös növényregiszterek alapján; egy darab egy szívet tölt. Hullott gyümölcs nem ehető.
+- Bővített, csak megismert eseményeket mutató történetarchívum, megőrzött felfedezési sorrenddel és a régi mentések pótlásával.
+- Aktívan kezelhető kivonatkészítő: külön gyantás hordozó, fűtés, keverés, szűrés, hűtés, adagolás és töltés; új spóramezős erdei ügyességi szakasz.
 - Egységes postaládazászló és javított bolti botkártya; ehető borsó és élelemre utaló vereségszöveg.
 - Noah-teszt: bugyogó mocsár, külön csapó gyökerek porral, további ellenfelek, éjszaka derengő lila gombák; teljes képernyős kivonatkészítő.
 - Noah-teszt: háromnapos válaszidő, olvasatlanlevél-jelzés és időrendi történetarchívum; megőrzött cél-előzmények és a Simon-beszélgetéshez kötött botfejlesztés.

@@ -62,9 +62,9 @@
 #app #dialogue:has(.noah-lab-canvas){width:min(900px,calc(100vw - 32px))}.noah-lab-canvas{width:min(100%,calc(60dvh * 700 / 430));max-height:none;object-fit:fill;margin:0 auto}
 
 /* The controllable extraction activity fills the viewport; reading windows stay compact. */
-#app #dialogue[data-presentation="noah-lab"]{width:100vw;max-width:100vw;height:100dvh;max-height:100dvh;inset:0;margin:0;padding:12px 20px;box-sizing:border-box;border-radius:0;overflow:auto}
+#app #dialogue[data-presentation="noah-lab"]{background:linear-gradient(#2b4332,#172e23);width:100vw;max-width:100vw;height:100dvh;max-height:100dvh;inset:0;margin:0;padding:12px 20px;box-sizing:border-box;border-radius:0;overflow:auto}
 #app #dialogue[data-presentation="noah-lab"] #dialogue-label,#app #dialogue[data-presentation="noah-lab"] #dialogue-text:empty{display:none}
 #app #dialogue[data-presentation="noah-lab"] #dialogue-title{font-size:20px;margin:0 0 8px}
 #app #dialogue[data-presentation="noah-lab"] .noah-lab-controls{margin:0 0 6px}
-#app #dialogue[data-presentation="noah-lab"] .noah-lab-canvas{width:min(100%,calc((100dvh - 150px) * 700 / 430));max-height:none;height:auto}
+#app #dialogue[data-presentation="noah-lab"] .noah-lab-canvas{width:min(100%,calc((100dvh - 150px) * 1000 / 620));max-height:none;height:auto}
 #app #dialogue[data-presentation="noah-lab"] #dialogue-close{margin:8px 0 0}
