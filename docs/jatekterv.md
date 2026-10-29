@@ -949,7 +949,7 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 - A déli erdő memóriabeli tesztjében két kipróbálható ügyességi rész van: láthatóan megduzzadó gombákkal előre jelzett, szakaszos spórakifújás; valamint egy mocsáron átvezető, Sam alatt süllyedő és oldalra billegő, folyamatos fatörzs. A törzsről leesés a meglévő mocsári visszahelyezés és egy szív levonásának útvonalát használja, tárgy- és aranyvesztés nélkül. A feladatokhoz nem készül külön fejlesztői kezdőpont; az erdő bejárása közben próbálhatók ki.
 - A híd utáni ösvény saját földszínű alakja fokozatosan szélesedik és erősödik; nem kerül zöld téglalap a meglévő tájra. Az északi fák koronái külön rétegben a déli talaj fölött maradnak.
 
-- A törött fatörzs alatti mélyedés is mocsaras, barnás, növekvő és kipukkanó buborékokkal. A buborékok nem takarják a járható törzsdarabokat. A törzs Sam súlya alatt süllyed és jobbra-balra mozog; az átkeléshez nem kell ugrani. A mellette lévő lila gomba előre jelzett ütemben mérgező gázt fúj, a meglévő egy szíves sebzéssel.
+- A törött fatörzs alatti mélyedés is mocsaras, barnás, növekvő és kipukkanó buborékokkal. A buborékok nem takarják a járható törzsdarabokat. A törzs Sam súlya alatt süllyed és jobbra-balra mozog; az átkeléshez nem kell ugrani. A mellette lévő lila gomba nem fúj gázt, és nincs gázkifújást előjelző animációja. A külön spórás átjáró megmarad.
 
 - A fatörzs szélén Sam lábának átfedése még alátámasztásnak számít; a valódi lelépés rövid türelmi idő után okoz leesést. A billegés és a süllyedés ugyanazt a járható felületet követi.
 - Az éjszakai gombák új látványa felváltja a fényfüstöt: csak a gomba teste világít, a talajon enyhe lilás visszfénnyel. Nincs fehér fénygyűrű vagy felszálló fénykör.

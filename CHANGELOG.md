@@ -2,6 +2,8 @@
 
 ## Változások a 0.1.0 óta — külön jóváhagyott verzióemelés nélkül
 
+- A fatörzs melletti lila gomba nem fúj gázt; a külön spórás átjáró megmarad.
+
 - Megengedőbb, a láb átfedését is figyelembe vevő fatörzsszél; a gombák fényfüst helyett saját testükön világítanak, enyhe lilás talajfénnyel.
 
 - Az éjszakai lila gombák lágyabb fényt és felfelé úszó, világító párát kapnak.

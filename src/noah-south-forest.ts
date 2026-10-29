@@ -1,4 +1,4 @@
-import {forestLog,logPoint,logCoordinates,onFloatingLog,logCrossingStep,floatingLogPose,logGasHurts} from './forest-log-crossing';
+import {forestLog,logPoint,logCoordinates,onFloatingLog,logCrossingStep,floatingLogPose} from './forest-log-crossing';
 import {sporeShelters,sporeFieldPhase,sporeFieldHurts,sporeSheltered,inSporeField} from './spore-field';
 import Phaser from 'phaser';
 import {ForestCombat} from './forest-combat';
@@ -86,8 +86,7 @@ export class NoahSouthForest{
   this.drawMushrooms(night);
   this.herbs.clear();if(state.upgraded)for(const p of southHerbs){if(state.herbsPicked[p.id]!==undefined&&day-state.herbsPicked[p.id]<3)continue;drawForestHerb(this.herbs,p);}
   this.sceneActor={x:player.x,y:player.y};const loaded=onFloatingLog(player)&&!jumping;
-  this.logLoad=Phaser.Math.Clamp(this.logLoad+dt*(loaded?.9:-.6),0,1);this.drawFloatingLog();this.drawLogGas();
-  if(state.upgraded&&logGasHurts(this.age,player)&&this.invulnerable===0){this.invulnerable=1.3;hurt();}
+  this.logLoad=Phaser.Math.Clamp(this.logLoad+dt*(loaded?.9:-.6),0,1);this.drawFloatingLog();
   const crossing=logCrossingStep(player,jumping,this.logSafe);this.logSafe=crossing.safe;this.logEdgeTime=crossing.fall?this.logEdgeTime+dt:0;if(this.logEdgeTime>=.18){this.logEdgeTime=0;fall?.(this.logSafe);return;}
   if(inNoahSouth(player.x,player.y)){const step=swampStep(player,jumping,this.lastSafe);this.lastSafe=step.safe;if(step.fall){fall?.(this.lastSafe);return;}}
   // Thin drifting mist and small bubbles make the marsh feel alive.
@@ -127,11 +126,6 @@ export class NoahSouthForest{
   for(let i=0;i<9;i++){const a=this.age*.3+i*2.4;g.fillStyle(0xd1c8a0,.35).fillCircle(x+Math.sin(a)*78,y-40+Math.cos(a*1.4)*40,1);}
  }
  reset(){this.minorCombat.reset();this.minorState={...createForest(),stick:true};this.hp=6;this.phase='rest';this.timer=1.4;}
- private drawLogGas(){const g=this.art,phase=sporeFieldPhase(this.age);if(phase==='quiet')return;
-  const source={x:-590,y:1515},pulse=.5+.5*Math.sin(this.age*10);
-  if(phase==='warning'){g.lineStyle(2,0xc2b58b,.4+pulse*.4).strokeEllipse(source.x,source.y,100+pulse*8,48+pulse*4);for(let i=0;i<8;i++)g.fillStyle(0xd1c29b,.6).fillCircle(source.x+(i-4)*7,source.y+21+Math.sin(this.age*8+i)*3,1.6);return;}
-  for(let i=0;i<65;i++){const t=(this.age*.55+i*.113)%1,x=source.x+t*245,y=source.y+25+t*90+Math.sin(i*5.1)*32;g.fillStyle(i%2?0xa4a37b:0xc3b4a0,(1-t)*.12).fillEllipse(x,y,38+t*37,18+t*20);g.fillStyle(0xd6c6a0,(1-t)*.6).fillCircle(x,y-3,1+i%2);}
- }
  private drawFloatingLog(){const g=this.logArt;g.clear();const pose=floatingLogPose(this.age,this.logLoad),local=(t:number,n:number)=>{const p=logPoint(t,n);return{x:p.x+pose.sway,y:p.y+pose.sink};};
   for(const [from,to]of [[.045,.96]]){
    const a=local(from,0),b=local(to,0);g.lineStyle(48,0x263b2c,.55).lineBetween(a.x+4,a.y+7,b.x+4,b.y+7);
@@ -166,7 +160,7 @@ export class NoahSouthForest{
  }
  private drawMushrooms(night:number){
   const g=this.fungi,h=this.glow,light=Math.min(1,night/.55);g.clear();h.clear();
-  for(const p of mushrooms){const {x,y,s:base}=p,s=base*(x===-590&&y===1580&&sporeFieldPhase(this.age)==='warning'?1+Math.sin(this.age*10)*.07:1),pulse=.82+Math.sin(this.age*1.7+x)*.18;
+  for(const p of mushrooms){const {x,y,s:base}=p,s=base,pulse=.82+Math.sin(this.age*1.7+x)*.18;
    if(night>0){
     // Purple emission follows the mushroom silhouette, with only a faint ground tint.
     for(let layer=8;layer>=1;layer--){const radius=(27+layer*3)*s,points=Array.from({length:24},(_,i)=>{const angle=i/24*Math.PI*2,r=radius*(1+.06*Math.sin(i*2.3+x));return{x:x+Math.cos(angle)*r,y:y+4*s+Math.sin(angle)*r*.34};});h.fillStyle(0x713593,light*.012*pulse).fillPoints(points,true);}

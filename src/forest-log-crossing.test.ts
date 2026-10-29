@@ -1,7 +1,7 @@
 import {it,expect} from 'vitest';
-import {logPoint,logCoordinates,logCrossingStep,floatingLogPose,logGasHurts} from './forest-log-crossing';
+import {logPoint,logCoordinates,logCrossingStep,floatingLogPose} from './forest-log-crossing';
 it('supports the entire trunk without requiring a jump',()=>{const safe=logPoint(0);for(const t of [.2,.3,.5,.7,.8])expect(logCrossingStep(logPoint(t),false,safe).fall).toBe(false);});
-it('sways and sinks only under load, and gas reaches the crossing only during release',()=>{expect(floatingLogPose(1,0)).toEqual({sway:0,sink:0});expect(floatingLogPose(1,1).sink).toBeGreaterThan(0);expect(floatingLogPose(1,1).sway).not.toEqual(floatingLogPose(2,1).sway);expect(logGasHurts(8,logPoint(.5))).toBe(false);expect(logGasHurts(10,logPoint(.5))).toBe(true);expect(logGasHurts(10,logPoint(0))).toBe(false);});
+it('sways and sinks only under load',()=>{expect(floatingLogPose(1,0)).toEqual({sway:0,sink:0});expect(floatingLogPose(1,1).sink).toBeGreaterThan(0);expect(floatingLogPose(1,1).sway).not.toEqual(floatingLogPose(2,1).sway);});
 it('prevents walking around the trunk in the hollow and retains the last dry bank',()=>{const safe=logPoint(0);for(const side of [-90,-35,35,90])expect(logCrossingStep(logPoint(.3,side),false,safe).fall).toBe(true);expect(logCrossingStep(logPoint(1),false,safe).safe).toEqual(logPoint(1));expect(logCoordinates(logPoint(.5,30)).across).toBeCloseTo(30);});
 
 it('keeps Sam supported while a foot overlaps either visible edge',()=>{const safe=logPoint(0);for(const edge of [-28,28])expect(logCrossingStep(logPoint(.5,edge),false,safe).fall).toBe(false);for(const outside of [-35,35])expect(logCrossingStep(logPoint(.5,outside),false,safe).fall).toBe(true);});

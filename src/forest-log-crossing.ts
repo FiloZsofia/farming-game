@@ -6,4 +6,3 @@ export function onFloatingLog(p:{x:number;y:number}){const c=logCoordinates(p);r
 export function logCrossingStep(p:{x:number;y:number},jumping:boolean,safe:{x:number;y:number}){const {t,across}=logCoordinates(p),ravine=t>.08&&t<.92&&Math.abs(across)<125,onLog=onFloatingLog(p);return{fall:!jumping&&ravine&&!onLog,safe:!jumping&&!ravine?{x:p.x,y:p.y}:safe};}
 
 export function floatingLogPose(age:number,load:number){return{sway:Math.sin(age*2.3)*7*load,sink:load*(9+Math.sin(age*1.7)*2)};}
-export function logGasHurts(age:number,p:{x:number;y:number}){const {t,across}=logCoordinates(p);return age%12>=9&&t>.08&&t<.92&&Math.abs(across)<60;}
