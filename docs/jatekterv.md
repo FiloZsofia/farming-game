@@ -948,3 +948,5 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 
 - A déli erdő memóriabeli tesztjében két kipróbálható ügyességi rész van: láthatóan megduzzadó gombákkal előre jelzett, szakaszos spórakifújás; valamint egy száraz mélyedésen átvezető, középen törött fatörzs. A törzsről leesés a meglévő mocsári visszahelyezés és egy szív levonásának útvonalát használja, tárgy- és aranyvesztés nélkül. A feladatokhoz nem készül külön fejlesztői kezdőpont; az erdő bejárása közben próbálhatók ki.
 - A híd utáni ösvény saját földszínű alakja fokozatosan szélesedik és erősödik; nem kerül zöld téglalap a meglévő tájra. Az északi fák koronái külön rétegben a déli talaj fölött maradnak.
+
+- A törött fatörzs alatti mélyedés is mocsaras, barnás, növekvő és kipukkanó buborékokkal. A buborékok nem takarják a járható törzsdarabokat. A súly alatt megsüllyedő törzs egyelőre csak felvetett ötlet.

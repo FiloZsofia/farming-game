@@ -2,6 +2,8 @@
 
 ## Változások a 0.1.0 óta — külön jóváhagyott verzióemelés nélkül
 
+- A törött fatörzs körül is bugyogó, barnás mocsár látszik.
+
 - Az ablakot kitöltő térkép, ráhelyezett Vissza gombbal és külön helyjelmagyarázat nélkül.
 - Javított talajátmenet a patakhíd után; a külön lombkoronaréteget már nem vágja le az ösvény.
 - Tesztelhető spórás átjáró és törött fatörzs az erdő bejárása közben.

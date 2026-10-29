@@ -50,9 +50,9 @@ export class NoahSouthForest{
   for(const p of swampStones){g.fillStyle(0x293e34,.5).fillEllipse(p.x+4,p.y+5,59,30);g.fillStyle(0x8f9b87).fillPoints([{x:p.x-26,y:p.y+6},{x:p.x-20,y:p.y-12},{x:p.x+6,y:p.y-18},{x:p.x+27,y:p.y-3},{x:p.x+20,y:p.y+13},{x:p.x-10,y:p.y+15}],true);g.lineStyle(2,0xc2c5a5).lineBetween(p.x-18,p.y-10,p.x+4,p.y-15);g.fillStyle(0x678153).fillEllipse(p.x+9,p.y+5,18,7);}
   let seed=312;const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
   for(let y=1380;y<2940;y+=64)for(let x=-1050;x< -60;x+=70){const xx=x+random()*32,yy=y+random()*20;if(distanceToSouthPath(xx,yy)<104||swampAt(xx,yy))continue;drawWoodlandTree(g,random,xx,yy,Math.floor(random()*3),.95+random()*.35);}
-  // A dry, root-lined hollow interrupts the path; two splintered pieces form the crossing.
+  // A muddy, root-lined pool interrupts the path; two splintered pieces form the crossing.
   const local=(t:number,n:number)=>logPoint(t,n),hollow=[local(.08,-118),local(.22,-130),local(.85,-122),local(.92,-100),local(.92,108),local(.75,126),local(.15,114),local(.08,90)];
-  g.fillStyle(0x657849).fillPoints(hollow,true);g.lineStyle(10,0x83905b).strokePoints(hollow,true);g.fillStyle(0x374b37).fillPoints(hollow.map(p=>({x:p.x,y:p.y+3})),true);
+  g.fillStyle(0x657849).fillPoints(hollow,true);g.lineStyle(10,0x83905b).strokePoints(hollow,true);g.fillStyle(0x3d5143).fillPoints(hollow.map(p=>({x:p.x,y:p.y+3})),true);
   for(let i=0;i<44;i++){const p=local(.12+i*.017,Math.sin(i*8.7)*88);g.fillStyle(i%2?0x526044:0x68704a,.5).fillEllipse(p.x,p.y,8+i%4*3,3);}
   for(let i=0;i<16;i++){const p=local(.14+i*.047,i%2?-92:86);g.lineStyle(2,0x6c6240).lineBetween(p.x,p.y,p.x+Math.sin(i*2.7)*12,p.y+13);}
   for(const [from,to]of [[.045,forestLog.gapStart],[forestLog.gapEnd,.96]]){
@@ -102,10 +102,10 @@ export class NoahSouthForest{
   if(state.upgraded)for(let i=0;i<10;i++){const x=-610+(i*39+this.age*5)%260,y=2090+i%4*35;g.fillStyle(0xc9d5b6,.035).fillEllipse(x,y,90,11);}
   if(state.upgraded)for(let i=0;i<22;i++){
    const x=-620+(i*71%285),y=2040+(i*47%238);if(!swampAt(x,y)||swampStones.some(p=>Math.hypot(p.x-x,p.y-y)<31))continue;
-   const t=(this.age*.5+i*.173)%1,r=2+Math.sin(Math.min(1,t/.72)*Math.PI/2)*(3+i%4);
-   if(t<.72){g.fillStyle(0x795838,.65).fillEllipse(x,y-t*4,r*2,r*1.3);g.lineStyle(1,0xb08d57,.7).strokeEllipse(x-1,y-t*4,r*1.7,r);g.fillStyle(0xc4a571,.65).fillEllipse(x-r*.25,y-t*4-r*.2,2,1);}
-   else{const pop=(t-.72)/.28;g.lineStyle(1,0x9b7950,1-pop).strokeEllipse(x,y-2,12+pop*14,5+pop*5);for(let j=0;j<3;j++)g.fillStyle(0x8d6a45,1-pop).fillCircle(x+(j-1)*pop*10,y-2-Math.sin(pop*Math.PI)*(5+j),1.2);}
+   this.drawMudBubble(g,x,y,i);
   }
+  if(state.upgraded)for(let i=0;i<34;i++){const across=-100+(i*43%202),t=.13+(i*19%68)/100;if(Math.abs(across)<30&&(t<forestLog.gapStart||t>forestLog.gapEnd))continue;const p=logPoint(t,across);this.drawMudBubble(g,p.x,p.y,i+22);}
+
   this.drawSporeField(player,state.upgraded);
   if(state.upgraded&&sporeFieldHurts(this.age,player,jumping)&&this.invulnerable===0){this.invulnerable=1.3;hurt();}
   this.minorCombat.update(dt,player,this.minorState,jumping,hurt);
@@ -135,6 +135,11 @@ export class NoahSouthForest{
   for(let i=0;i<9;i++){const a=this.age*.3+i*2.4;g.fillStyle(0xd1c8a0,.35).fillCircle(x+Math.sin(a)*78,y-40+Math.cos(a*1.4)*40,1);}
  }
  reset(){this.minorCombat.reset();this.minorState={...createForest(),stick:true};this.hp=6;this.phase='rest';this.timer=1.4;}
+ private drawMudBubble(g:Phaser.GameObjects.Graphics,x:number,y:number,i:number){
+  const t=(this.age*.5+i*.173)%1,r=2+Math.sin(Math.min(1,t/.72)*Math.PI/2)*(3+i%4);
+  if(t<.72){g.fillStyle(0x795838,.65).fillEllipse(x,y-t*4,r*2,r*1.3);g.lineStyle(1,0xb08d57,.7).strokeEllipse(x-1,y-t*4,r*1.7,r);g.fillStyle(0xc4a571,.65).fillEllipse(x-r*.25,y-t*4-r*.2,2,1);}
+  else{const pop=(t-.72)/.28;g.lineStyle(1,0x9b7950,1-pop).strokeEllipse(x,y-2,12+pop*14,5+pop*5);for(let j=0;j<3;j++)g.fillStyle(0x8d6a45,1-pop).fillCircle(x+(j-1)*pop*10,y-2-Math.sin(pop*Math.PI)*(5+j),1.2);}
+ }
  private drawSporeField(player:{x:number;y:number},unlocked:boolean){
   if(!unlocked)return;const g=this.art,phase=sporeFieldPhase(this.age),releasing=phase==='release',warning=phase==='warning';
   for(const [i,p]of [{x:-780,y:1800},{x:-560,y:1830},{x:-765,y:1890}].entries()){
