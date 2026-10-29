@@ -240,8 +240,8 @@ describe('Southern village and forest',()=>{
  it('does not show the locked-building goal before receiving the key',()=>{
   start();cy.get('#quest-tracker').should('not.be.visible');
  });
- it('receives Leo’s separate flower quest on day four without revealing the key',()=>{
-  start({...villageSave,player:{x:296,y:275},clock:{day:4,elapsed:0,collapseAt:580}});cy.get('#dialogue',{timeout:30000}).should('be.visible');cy.get('#speaker-name').should('have.text','Leo');cy.get('#dialogue-text').should('contain','szarvas faliméh').and('not.contain','kulcs');cy.get('#dialogue-close').click();cy.get('#toolbar [data-tool=wildflower]').should('not.exist');press('Tab','Tab',9);cy.contains('#carried-tools .carried-tool','Vadvirágmagok').should('contain','6');press('Escape','Escape',27);cy.get('#quest-tracker').should('contain','Elültetve: 0 / 6').and('not.contain','Fedezd fel, mit rejt a lezárt melléképület');
+ it('receives Leo’s flower quest on day one without revealing the key',()=>{
+  start({...villageSave,player:{x:296,y:275},clock:{day:1,elapsed:0,collapseAt:580}});cy.get('#dialogue',{timeout:30000}).should('be.visible');cy.get('#speaker-name').should('have.text','Leo');cy.get('#dialogue-text').should('contain','szarvas faliméh').and('not.contain','kulcs');cy.get('#dialogue-close').click();cy.get('#toolbar [data-tool=wildflower]').should('not.exist');press('Tab','Tab',9);cy.contains('#carried-tools .carried-tool','Vadvirágmagok').should('contain','6');press('Escape','Escape',27);cy.get('#quest-tracker').should('contain','Elültetve: 0 / 6').and('not.contain','Fedezd fel, mit rejt a lezárt melléképület');
  });
 
  it('explores the dark workshop, remembers the shutter and requires inspection before repair',()=>{

@@ -1260,7 +1260,7 @@ class Farm extends Phaser.Scene {
  private updateResearchLife(dt:number){
   const r=this.travel.research;
   if(!this.duckLife)this.duckLife=new DuckLife(this);this.duckLife.update(this.travel.estate,this.clock.elapsed);
-  if(this.clock.day>=4&&!r.gifted&&this.story.giftReceived&&this.clock.elapsed<360){
+  if(this.clock.day>=1&&!r.gifted&&this.story.giftReceived&&this.clock.elapsed<360){
    if(!this.leoVisitor){this.leoVisitor=this.add.container(170,510).setDepth(96);this.leoVisitor.add(this.add.ellipse(0,0,23,7,0x35442e,.25));this.leoVisitor.add(new LeoArt(this).root);this.leoStep=0;const zone=this.add.zone(0,-22,30,54).setInteractive({useHandCursor:true});zone.on('pointerdown',()=>void this.receiveFlowers());this.leoVisitor.add(zone);}
    const route=[[168,500],[207,404],[249,328],[296,275]],point=route[this.leoStep];if(point){const dx=point[0]-this.leoVisitor.x,dy=point[1]-this.leoVisitor.y,d=Math.hypot(dx,dy);if(d<2)this.leoStep++;else{this.leoVisitor.x+=dx/d*Math.min(d,dt*56);this.leoVisitor.y+=dy/d*Math.min(d,dt*56);}}else if(this.researchNearby()==='leo-visit')void this.receiveFlowers();
   }
