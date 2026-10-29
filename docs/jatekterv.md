@@ -909,3 +909,15 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 - **A normál történetbe való későbbi beépítéskor a történetvégi jelzést el kell mozgatni a mintaküldés utánról a friss történeti végpontra.** A teszt ezt már a kezelt minta megfigyelése után mutatja, az elfogadott szöveg változtatása nélkül. A normál játék még nem kapta meg a teljes új fejezetet.
 
 - A fejlesztői Noah-tesztben a „Következő reggel” gomb csak a memóriabeli példány napját lépteti; a háromnapos válaszvárás így valós reggeli átmenetekkel is tesztelhető. A mocsár külön kezdőpontból is indítható.
+
+### Noah-teszt finomításai — 2026. október 29.
+- Noah válaszát a postaláda meglévő sárga zászlója jelzi, ugyanúgy, mint a rendeléseket; külön borítékjelzés nincs.
+- A megerősített túrabot termékkártyája az aranyösszeg alatt, a többi termék között szerepel.
+- A mocsárban barnás buborékok nőnek és kipukkadnak, iszapfröccsenéssel és vízgyűrűkkel. Első megközelítéskor „Mocsár” című rövid Sam-gondolat jelenik meg.
+- Erdei vereségnél a hazajutás szövege kiegészül: „Talán legközelebb vihetnék magammal némi élelmet…” A borsó is ehető, a bogyósokhoz hasonlóan egy darab egy szívet tölt; teljes életerőnél nincs Eszem gomb.
+- A gyökércsomó külön-külön lendíti és csapja földbe messzire nyúló gyökereit. A becsapódási helyeken por száll fel, a sebzés ezekhez a csapásokhoz kötött.
+- A déli erdőben hét kisebb ellenfél és a gyökércsomó vár; a mocsár kőszigeteire nem helyezünk ellenfelet. Nagy, lila, világos pettyes gombák díszítik, melyek éjszaka derengenek.
+- Gyantaszedéskor az első vizsgálati ablakból az Összegyűjtöm gomb közvetlenül visszavisz a játékba; második megerősítő szöveg nincs.
+- A kivonatkészítő irányítható közelije teljes képernyős. A részletesebb főzési minijáték és az új erdei ügyességi feladat szabályai még tervezésre várnak, nincsenek véglegesítve.
+- A Történet archívumába további fejezetet csak a felhasználóval történő tartalmi egyeztetés után teszünk. A mostani kérés nem engedély minden párbeszéd automatikus archiválására.
+- A gyökércsomó és a világító gombák kipróbálásához külön esti kezdőpont is van a memóriabeli Noah-tesztben.

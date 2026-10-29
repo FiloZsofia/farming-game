@@ -9,8 +9,9 @@ import {noahLetter,noahGoal,noahReplyArrived,upgradeNoahStick,mixNoahExtract,typ
 import {NoahSouthForest,resinTree,inNoahSouth,southRoot} from './noah-south-forest';
 type Host={read:()=>Snapshot;commit:(s:Snapshot,after:()=>void)=>Promise<boolean>;show:(title:string,text:string,label?:string)=>void;notice:(text:string)=>void;gather?:(point:{x:number;y:number})=>void};
 export class NoahTestController{
+ private swampArrival=()=>this.host.show('Mocsár','Az iszap lassan bugyog a felszín alatt. Nem szeretnék belesüllyedni.','SAM');
  readonly forest:NoahSouthForest;private steam:Phaser.GameObjects.Graphics;private batch:{step:number}|null=null;private added=new Set<string>();private pendingResult=false;private busy=false;private lab:ReturnType<typeof createNoahLab>|null=null;private labAvatars:HTMLImageElement[]=[];private labPosition:LabPosition={x:350,y:350,carrying:null};
- constructor(scene:Phaser.Scene,public state:NoahTestState,readonly config:NoahTestConfig,private host:Host){this.forest=new NoahSouthForest(scene);this.steam=scene.add.graphics().setDepth(108);
+ constructor(private scene:Phaser.Scene,public state:NoahTestState,readonly config:NoahTestConfig,private host:Host){this.forest=new NoahSouthForest(scene);scene.events.on('noah-swamp-arrival',this.swampArrival);this.steam=scene.add.graphics().setDepth(108);
   for(let i=0;i<3;i++){const art=new FarmerArt(scene);art.equip('none');art.update(i>0,false,{x:0,y:1},.1+i*.08);const texture=scene.add.renderTexture(0,0,64,96);texture.draw(art.root,32,82);texture.setVisible(false);texture.snapshot(image=>{if(image instanceof HTMLImageElement)this.labAvatars[i]=image;texture.destroy();});art.root.destroy(true);}
  }
  updatePresentation(now:number){
@@ -36,7 +37,7 @@ export class NoahTestController{
   if(!this.state.simonAsked)return;
   const s=this.host.read(),c=this.config,card=document.createElement('article');card.className='shop-card';const text=document.createElement('div'),title=document.createElement('strong');title.textContent='Megerősített túrabot';const costs=document.createElement('p');costs.textContent=`Fa: ${s.clearing.wood} / ${c.wood} · Ócskavas: ${s.travel.research.materials.scrap} / ${c.scrap}`;text.append(title,costs);
   card.append(itemIcon('walkingStick'),text);
-  this.button(card,'noah-upgrade-stick',this.state.upgraded?'Megvásárolva':`${c.gold} gold · Megveszem`,()=>{const result=upgradeNoahStick(this.host.read(),this.state,c);if(!result||this.busy)return;this.busy=true;void this.host.commit(result.snapshot,()=>{this.state=result.state;refresh();this.host.notice('Megerősített túrabot');}).finally(()=>{this.busy=false;});},!upgradeNoahStick(s,this.state,c));panel.prepend(card);
+  this.button(card,'noah-upgrade-stick',this.state.upgraded?'Megvásárolva':`${c.gold} gold · Megveszem`,()=>{const result=upgradeNoahStick(this.host.read(),this.state,c);if(!result||this.busy)return;this.busy=true;void this.host.commit(result.snapshot,()=>{this.state=result.state;refresh();this.host.notice('Megerősített túrabot');}).finally(()=>{this.busy=false;});},!upgradeNoahStick(s,this.state,c));panel.append(card);
  }
  openMachine(){
   this.lab?.dispose();this.lab=null;
@@ -44,6 +45,7 @@ export class NoahTestController{
   if(this.state.complete){panel.textContent='A kísérlet eredménye megőrizve.';return;}
   if(this.pendingResult){panel.textContent='A kezelt minta vizsgálatra kész.';return;}
   if(!this.state.letter){panel.textContent='Az első kísérlethez még hiányzik valami.';return;}
+  document.querySelector<HTMLDialogElement>('#dialogue')!.dataset.presentation='noah-lab';
   const c=this.config;
   const hint=document.createElement('p');hint.className='noah-lab-controls';hint.textContent='WASD / nyilak · E vagy kattintás';panel.append(hint);
   this.lab=createNoahLab({avatars:this.labAvatars,position:this.labPosition,phase:()=>this.pendingResult?'done':this.batch?(['extract','filter','cool'] as const)[this.batch.step]:'load',added:this.added,ingredientName:c.ingredientName,counts:{thyme:c.thyme,plantain:c.plantain,ingredient:c.ingredient},available:id=>id==='ingredient'?this.state.ingredient>=c.ingredient:this.host.read().travel.estate.produce[id as 'thyme'|'plantain']>=c[id as 'thyme'|'plantain'],
@@ -67,12 +69,12 @@ export class NoahTestController{
   if(Math.hypot(player.x-resinTree.x,player.y-resinTree.y)>65)return false;
   if(!this.state.rootDefeated)return false;
   if(this.state.ingredientGathered){this.host.show('Vörösfenyő','A kifolyt gyantából már összegyűjtöttem egy adagot.','SAM');return true;}
-  this.host.show(this.config.ingredientName,'A vörösfenyő sérült kérgén aranyszínű gyantacseppek csillannak. A már kifolyt gyantából gyűjtök; a fát nem sebzem meg.','SAM');this.button(this.panel(),'noah-collect-ingredient','Összegyűjtöm',()=>{this.state.ingredientGathered=true;this.state.ingredient+=this.config.ingredient;this.host.show(this.config.ingredientName,'Ezt érdemes lesz kipróbálni.','SAM');});return true;
+  this.host.show(this.config.ingredientName,'A vörösfenyő sérült kérgén aranyszínű gyantacseppek csillannak. A már kifolyt gyantából gyűjtök; a fát nem sebzem meg.','SAM');this.button(this.panel(),'noah-collect-ingredient','Összegyűjtöm',()=>{this.state.ingredientGathered=true;this.state.ingredient+=this.config.ingredient;document.querySelector<HTMLDialogElement>('#dialogue')!.close();});return true;
  }
  statusPanel(panel:HTMLElement){
   const card=document.createElement('section');card.className='noah-test-items';const title=document.createElement('h3');title.textContent='Kísérleti anyagok';card.append(title);
   for(const [name,count]of [['Kísérleti koncentrátum',this.state.concentrate],[this.config.ingredientName,this.state.ingredient]] as const){if(!count)continue;const row=document.createElement('div');row.className='noah-test-item';const label=document.createElement('span');label.textContent=name;const amount=document.createElement('strong');amount.className='stack-count';amount.textContent=String(count);let icon:Element;if(name===this.config.ingredientName)icon=this.ingredientIcon();else{icon=itemIcon('glassJar');icon.classList.add('noah-concentrate-icon');}row.append(icon,label,amount);card.append(row);}panel.append(card);
  }
  private ingredientIcon(){const icon=document.createElement('span');icon.className='noah-resin-icon';icon.setAttribute('aria-hidden','true');return icon;}
- destroy(){this.lab?.dispose();this.forest.destroy();this.steam.destroy();}
+ destroy(){this.scene.events.off('noah-swamp-arrival',this.swampArrival);this.lab?.dispose();this.forest.destroy();this.steam.destroy();}
 }

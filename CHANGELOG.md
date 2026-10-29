@@ -2,6 +2,8 @@
 
 ## Változások a 0.1.0 óta — külön jóváhagyott verzióemelés nélkül
 
+- Egységes postaládazászló és javított bolti botkártya; ehető borsó és élelemre utaló vereségszöveg.
+- Noah-teszt: bugyogó mocsár, külön csapó gyökerek porral, további ellenfelek, éjszaka derengő lila gombák; teljes képernyős kivonatkészítő.
 - Noah-teszt: háromnapos válaszidő, olvasatlanlevél-jelzés és időrendi történetarchívum; megőrzött cél-előzmények és a Simon-beszélgetéshez kötött botfejlesztés.
 - Kanyargós déli erdő a három ismert gyógynövénnyel és ugrálós mocsári átkeléssel; irányítható, billentyűzettel és egérrel kezelhető kivonatkészítő-minijáték.
 

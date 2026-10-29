@@ -4,6 +4,7 @@ import {createForest} from './forest';
 import {drawForestHerb} from './forest-art';
 import {southRoute,southPath,distanceToSouthPath,swampAt,swampStones,swampStep,southHerbs} from './south-forest-layout';
 import {drawWoodlandTree} from './woodland-tree';
+import {rootStrike,rootStrikePose,ROOT_STRIKE_COUNT,ROOT_STRIKE_INTERVAL,ROOT_STRIKE_DURATION} from './root-strikes';
 import type {NoahTestState} from './noah-test-story';
 export const resinTree={x:-805,y:2770};
 export const southRoot={x:-650,y:2500};
@@ -17,17 +18,19 @@ export function southBlocked(x:number,y:number,state:NoahTestState){
  if(y>2475&&!state.rootDefeated)return true;
  return distanceToSouthPath(x,y)>(swampAt(x,y)?165:94);
 }
+const southEnemies=[{id:'vine',kind:'vine' as const,x:-325,y:1490,hp:3},{id:'spore-a',kind:'spore' as const,x:-665,y:1680,hp:2},{id:'spore-b',kind:'spore' as const,x:-555,y:1850,hp:2},{id:'vine-bramble',kind:'vine' as const,x:-360,y:1950,hp:3},{id:'spore-c',kind:'spore' as const,x:-570,y:2385,hp:2},{id:'vine-larch',kind:'vine' as const,x:-750,y:2670,hp:3},{id:'spore-d',kind:'spore' as const,x:-830,y:2820,hp:2}];
+const mushrooms=[{x:-380,y:1450,s:1.1},{x:-590,y:1580,s:1.5},{x:-755,y:1790,s:1.3},{x:-570,y:1930,s:1.7},{x:-335,y:2220,s:1.2},{x:-620,y:2390,s:1.6},{x:-800,y:2580,s:1.8},{x:-725,y:2760,s:1.2}];
 export class NoahSouthForest{
- private terrain:Phaser.GameObjects.Graphics;private art:Phaser.GameObjects.Graphics;
+ private terrain:Phaser.GameObjects.Graphics;private art:Phaser.GameObjects.Graphics;private fungi:Phaser.GameObjects.Graphics;private swampSeen=false;private struck=new Set<number>();
  private lastSafe={x:-444,y:2000};private herbs:Phaser.GameObjects.Graphics;
  private label:Phaser.GameObjects.Text;private minorCombat:ForestCombat;private minorState={...createForest(),stick:true};
- get minorRemaining(){return 2-this.minorState.defeated.length;}
- setUnlocked(value:boolean){this.terrain.setVisible(value);this.art.setVisible(value);this.herbs.setVisible(value);}
+ get minorRemaining(){return southEnemies.length-this.minorState.defeated.length;}
+ setUnlocked(value:boolean){this.terrain.setVisible(value);this.art.setVisible(value);this.herbs.setVisible(value);this.fungi.setVisible(value);}
  get phaseName(){return this.phase;}
  get hitPoints(){return this.hp;}
  private age=0;private timer=1.4;private phase:'rest'|'warn'|'strike'='rest';private hp=6;private invulnerable=0;private swing=0;private aim={x:0,y:-1};
  constructor(private scene:Phaser.Scene){
-  this.minorCombat=new ForestCombat(scene,[{id:'vine',kind:'vine',x:-325,y:1490,hp:3},{id:'spore-a',kind:'spore',x:-665,y:1680,hp:2}],inNoahSouth);this.terrain=scene.add.graphics().setDepth(-.4).setVisible(false);this.art=scene.add.graphics().setDepth(91);this.herbs=scene.add.graphics().setDepth(2);this.label=scene.add.text(southRoot.x+122,southRoot.y-78,'Gombával átszőtt gyökércsomó',{fontFamily:'sans-serif',fontSize:'11px',color:'#f1dfb9',stroke:'#263c2b',strokeThickness:3}).setOrigin(.5).setDepth(93);const g=this.terrain;
+  this.minorCombat=new ForestCombat(scene,southEnemies,inNoahSouth);this.terrain=scene.add.graphics().setDepth(-.4).setVisible(false);this.art=scene.add.graphics().setDepth(91);this.herbs=scene.add.graphics().setDepth(2);this.fungi=scene.add.graphics().setDepth(92);this.label=scene.add.text(southRoot.x+122,southRoot.y-78,'Gombával átszőtt gyökércsomó',{fontFamily:'sans-serif',fontSize:'11px',color:'#f1dfb9',stroke:'#263c2b',strokeThickness:3}).setOrigin(.5).setDepth(93);const g=this.terrain;
   // Match the existing meadow and blend the northern edge without a straight seam.
   g.fillStyle(0x759c48).fillRect(-1120,1510,1120,1440);
   for(let y=1320;y<1540;y+=10)for(let x=-1120;x<0;x+=17){const n=Math.abs(Math.sin(x*12.23+y*4.71));g.fillStyle(0x759c48,Math.min(1,(y-1320)/180)).fillRect(x,y,18,12);}
@@ -59,29 +62,57 @@ export class NoahSouthForest{
   this.hp-=upgraded?2:1;this.timer=Math.max(this.timer,.7);this.scene.cameras.main.shake(70,.0015);
   if(this.hp<=0)state.rootDefeated=true;return true;
  }
- update(dt:number,player:{x:number;y:number},state:NoahTestState,jumping:boolean,hurt:()=>void,fall?:(point:{x:number;y:number})=>void,day=1){
+ update(dt:number,player:{x:number;y:number},state:NoahTestState,jumping:boolean,hurt:()=>void,fall?:(point:{x:number;y:number})=>void,day=1,night=0){
   this.label.setVisible(inNoahSouth(player.x,player.y)&&!state.rootDefeated&&Math.hypot(player.x-southRoot.x,player.y-southRoot.y)<210);this.age+=dt;this.invulnerable=Math.max(0,this.invulnerable-dt);this.swing=Math.max(0,this.swing-dt);const g=this.art;g.clear();
   if(!state.ingredientGathered){const x=resinTree.x,y=resinTree.y;for(let i=0;i<4;i++){const yy=y-57+i*11+Math.sin(this.age*.8+i)*1.4;g.fillStyle(0xbf7c2d).fillEllipse(x+i%2*5-3,yy,7,11);g.fillStyle(0xe9b751).fillEllipse(x+i%2*5-4,yy-1,4,8);g.fillStyle(0xffdf9a).fillEllipse(x+i%2*5-5,yy-3,1.5,3);}}
 
+  this.drawMushrooms(night);
+  if(state.upgraded&&inNoahSouth(player.x,player.y)&&Math.hypot(player.x+444,player.y-2000)<110&&!this.swampSeen){this.swampSeen=true;this.scene.events.emit('noah-swamp-arrival');}
   this.herbs.clear();if(state.upgraded)for(const p of southHerbs){if(state.herbsPicked[p.id]!==undefined&&day-state.herbsPicked[p.id]<3)continue;drawForestHerb(this.herbs,p);}
   if(inNoahSouth(player.x,player.y)){const step=swampStep(player,jumping,this.lastSafe);this.lastSafe=step.safe;if(step.fall){fall?.(this.lastSafe);return;}}
   // Thin drifting mist and small bubbles make the marsh feel alive.
   if(state.upgraded)for(let i=0;i<10;i++){const x=-610+(i*39+this.age*5)%260,y=2090+i%4*35;g.fillStyle(0xc9d5b6,.035).fillEllipse(x,y,90,11);}
+  if(state.upgraded)for(let i=0;i<22;i++){
+   const x=-620+(i*71%285),y=2040+(i*47%238);if(!swampAt(x,y)||swampStones.some(p=>Math.hypot(p.x-x,p.y-y)<31))continue;
+   const t=(this.age*.5+i*.173)%1,r=2+Math.sin(Math.min(1,t/.72)*Math.PI/2)*(3+i%4);
+   if(t<.72){g.fillStyle(0x795838,.65).fillEllipse(x,y-t*4,r*2,r*1.3);g.lineStyle(1,0xb08d57,.7).strokeEllipse(x-1,y-t*4,r*1.7,r);g.fillStyle(0xc4a571,.65).fillEllipse(x-r*.25,y-t*4-r*.2,2,1);}
+   else{const pop=(t-.72)/.28;g.lineStyle(1,0x9b7950,1-pop).strokeEllipse(x,y-2,12+pop*14,5+pop*5);for(let j=0;j<3;j++)g.fillStyle(0x8d6a45,1-pop).fillCircle(x+(j-1)*pop*10,y-2-Math.sin(pop*Math.PI)*(5+j),1.2);}
+  }
   this.minorCombat.update(dt,player,this.minorState,jumping,hurt);
   if(!inNoahSouth(player.x,player.y)||state.rootDefeated)return;
   const {x,y}=southRoot,d=Math.hypot(player.x-x,player.y-y);this.timer-=dt;
-  if(this.timer<=0){if(this.phase==='rest'&&d<220){this.phase='warn';this.timer=1;this.aim={x:(player.x-x)/(d||1),y:(player.y-y)/(d||1)};}else if(this.phase==='warn'){this.phase='strike';this.timer=.35;}else{this.phase='rest';this.timer=1.65;}}
+  if(this.timer<=0){if(this.phase==='rest'&&d<220){this.phase='warn';this.timer=1;this.aim={x:(player.x-x)/(d||1),y:(player.y-y)/(d||1)};}else if(this.phase==='warn'){this.phase='strike';this.timer=ROOT_STRIKE_DURATION;this.struck.clear();}else{this.phase='rest';this.timer=1.65;}}
   g.fillStyle(0x172f24,.4).fillEllipse(x,y+12,130,42);
-  for(let i=0;i<9;i++){const a=i*Math.PI*2/9,stretch=this.phase==='strike'?125:55+Math.sin(this.age*2+i)*4;const xx=x+Math.cos(a)*stretch,yy=y+Math.sin(a)*stretch*.6;
-   g.lineStyle(9,0x433e2c).strokePoints([{x,y:y-12},{x:x+Math.cos(a)*35,y:y-48},{x:xx,y:yy}]);g.lineStyle(2,0x9c9870).lineBetween(x+Math.cos(a)*35,y-44,xx,yy-3);
-   g.fillStyle(0xd2c5a0).fillTriangle(xx-4,yy,xx,yy-16,xx+4,yy);}
+  const elapsed=ROOT_STRIKE_DURATION-this.timer;
+  for(let i=0;i<ROOT_STRIKE_COUNT;i++){
+   const tip=rootStrike(i,this.aim,southRoot),pose=rootStrikePose(elapsed,i),striking=this.phase==='strike',angle=i*Math.PI*2/ROOT_STRIKE_COUNT;
+   const end=striking?tip:{x:x+Math.cos(angle)*58,y:y+Math.sin(angle)*36};
+   const lifted=striking?pose.active?(1-pose.drop)*65:pose.impact?0:30:12;
+   const extension=striking?(pose.active||pose.impact?1:.32):1,xx=x+(end.x-x)*extension,yy=y+(end.y-y)*extension;
+   g.lineStyle(9,0x433e2c).strokePoints([{x,y:y-12},{x:x+(xx-x)*.45,y:y-45-lifted},{x:xx,y:yy-lifted}]);g.lineStyle(2,0x9c9870).lineBetween(x+(xx-x)*.45,y-42-lifted,xx,yy-lifted-3);
+   g.fillStyle(0xd2c5a0).fillTriangle(xx-4,yy-lifted,xx,yy-lifted-16,xx+4,yy-lifted);
+   if(this.phase==='warn'){g.lineStyle(1.5,0xe1b175,.65).strokeEllipse(tip.x,tip.y,54,24);}
+   if(striking&&pose.impact){
+    const age=elapsed-(i+.6)*ROOT_STRIKE_INTERVAL;
+    if(!this.struck.has(i)){this.struck.add(i);this.scene.cameras.main.shake(65,.001);if(!jumping&&Math.hypot(player.x-tip.x,player.y-tip.y)<38&&this.invulnerable===0){this.invulnerable=1.3;hurt();}}
+    if(age<.85)for(let j=0;j<8;j++){const a=j*2.4,r=7+age*25;g.fillStyle(j%2?0xa89a75:0x716449,(1-age/.85)*.6).fillEllipse(tip.x+Math.cos(a)*r,tip.y+Math.sin(a)*r*.4-age*13,7+age*10,4+age*6);}
+   }
+  }
   g.fillStyle(0x4e4d36).fillEllipse(x,y-13,76,61);g.fillStyle(0x777b58).fillEllipse(x-10,y-27,49,40);
   for(let i=0;i<11;i++){g.lineStyle(1,0xcbc9a9,.6).lineBetween(x-28+i*5,y-29+(i%3)*6,x-25+i*5,y+4);}
   if(this.phase==='warn'){g.lineStyle(2,0xe1b175,.8).strokeEllipse(x,y,240,135);g.fillStyle(0xf0bd69).fillEllipse(x-13,y-27,8,4).fillEllipse(x+13,y-27,8,4);}
-  if(this.phase==='strike'&&!jumping&&d<125&&this.invulnerable===0){this.invulnerable=1.3;hurt();}
   g.fillStyle(0x26382a).fillRoundedRect(x-30,y-66,60,5,2);g.fillStyle(0xc6c18a).fillRoundedRect(x-30,y-66,60*Math.max(0,this.hp)/6,5,2);
   for(let i=0;i<9;i++){const a=this.age*.3+i*2.4;g.fillStyle(0xd1c8a0,.35).fillCircle(x+Math.sin(a)*78,y-40+Math.cos(a*1.4)*40,1);}
  }
  reset(){this.minorCombat.reset();this.minorState={...createForest(),stick:true};this.hp=6;this.phase='rest';this.timer=1.4;}
- destroy(){this.terrain.destroy();this.art.destroy();this.label.destroy();this.herbs.destroy();this.minorCombat.destroy();}
+ private drawMushrooms(night:number){
+  const g=this.fungi;g.clear();
+  for(const p of mushrooms){const {x,y,s}=p,pulse=.82+Math.sin(this.age*1.7+x)*.18;
+   if(night>0){for(let i=3;i>=1;i--)g.fillStyle(0xb293ee,night*.11*pulse).fillEllipse(x,y-25*s,(58+i*20)*s,(40+i*12)*s);}
+   g.fillStyle(0x263b30,.3).fillEllipse(x+4,y+4,40*s,10*s);g.fillStyle(0xa99aab).fillRoundedRect(x-6*s,y-36*s,12*s,38*s,4*s);g.fillStyle(0xc1b3c0).fillRect(x-4*s,y-30*s,3*s,30*s);
+   g.fillStyle(0x493952).fillEllipse(x,y-31*s,58*s,14*s);g.fillStyle(0x775781).fillEllipse(x,y-42*s,60*s,32*s);g.fillStyle(0x9975a2).fillEllipse(x-9*s,y-48*s,34*s,18*s);g.lineStyle(1.5*s,0xc2a6c9,.7).strokeEllipse(x,y-32*s,54*s,9*s);
+   for(let i=0;i<7;i++){const xx=x+Math.cos(i*2.4)*(10+i%3*5)*s,yy=y-43*s+Math.sin(i*2.4)*8*s;g.fillStyle(0xe4d6df).fillEllipse(xx,yy,(3+i%2)*s,3*s);if(night>0)g.fillStyle(0xe8cfff,Math.min(.8,night*1.5)*pulse).fillCircle(xx,yy,3*s);}
+  }
+ }
+ destroy(){this.fungi.destroy();this.terrain.destroy();this.art.destroy();this.label.destroy();this.herbs.destroy();this.minorCombat.destroy();}
 }

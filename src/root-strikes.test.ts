@@ -1,0 +1,3 @@
+import {it,expect} from 'vitest';
+import {rootStrike,rootStrikePose,ROOT_STRIKE_COUNT,ROOT_STRIKE_INTERVAL} from './root-strikes';
+it('strikes separately, in the captured direction and well beyond the body',()=>{for(let i=0;i<ROOT_STRIKE_COUNT;i++){const tip=rootStrike(i,{x:0,y:-1},{x:0,y:0});expect(tip.y).toBeLessThan(-130);expect(Math.hypot(tip.x,tip.y)).toBeGreaterThanOrEqual(165);const time=(i+.8)*ROOT_STRIKE_INTERVAL;expect(rootStrikePose(time,i).active).toBe(true);expect(rootStrikePose(time,i).impact).toBe(true);if(i+1<ROOT_STRIKE_COUNT)expect(rootStrikePose(time,i+1).active).toBe(false);}});
