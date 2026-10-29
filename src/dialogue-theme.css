@@ -75,3 +75,18 @@
 
 /* Screen-space labels stay sharp independently of the pixel-art camera zoom. */
 .lab-world-label { position: absolute; z-index: 5; transform: translate(-50%, -100%); pointer-events: none; color: #fff2be; background: #29412a; border: 1px solid #819367; border-radius: 5px; padding: 6px 10px; font: 600 18px/1.25 system-ui, sans-serif; white-space: nowrap; box-shadow: 0 2px 5px #14271b55; }
+
+/* Arrival narration and beginner help stay outside the character's speech bubble. */
+#dialogue-note[hidden]{display:none}
+#dialogue-note{white-space:pre-line;font:15px/1.65 var(--reading-font);color:var(--window-ink);margin:20px 0 0 116px;padding-top:14px;border-top:1px solid #bda46a55}
+#app #dialogue[data-presentation="arrival"] form{display:grid;grid-template-columns:96px minmax(0,1fr);column-gap:20px;row-gap:10px}
+#app #dialogue[data-presentation="arrival"] #speaker{grid-column:1;grid-row:1 / 5;padding:0;align-self:start;min-height:0;display:flex;flex-direction:column;gap:9px}
+#app #dialogue[data-presentation="arrival"] #speaker-portrait{position:relative;top:auto;left:auto;flex:none}
+#app #dialogue[data-presentation="arrival"] #speaker-name{font-size:19px}
+#app #dialogue[data-presentation="arrival"] :is(#dialogue-label,#dialogue-title){display:block;grid-column:2;margin:0}
+#app #dialogue[data-presentation="arrival"] #dialogue-label{grid-row:1}
+#app #dialogue[data-presentation="arrival"] #dialogue-title{grid-row:2;font-size:23px;line-height:1.3}
+#app #dialogue[data-presentation="arrival"] #dialogue-text{grid-column:2;grid-row:3;margin:0}
+#app #dialogue[data-presentation="arrival"] #dialogue-note{grid-column:2;grid-row:4;margin:5px 0 0}
+#app #dialogue[data-presentation="arrival"] #dialogue-close{grid-column:2;grid-row:5;justify-self:end;margin:7px 0 0}
+@media(max-width:520px){#app #dialogue[data-presentation="arrival"] form{grid-template-columns:64px minmax(0,1fr);column-gap:14px}#app #dialogue[data-presentation="arrival"] #speaker{grid-row:1 / 3}#app #dialogue[data-presentation="arrival"] #dialogue-title{font-size:20px}#app #dialogue[data-presentation="arrival"] :is(#dialogue-text,#dialogue-note){grid-column:1 / 3;margin-left:0}#app #dialogue[data-presentation="arrival"] #dialogue-text:before{left:15px;top:-12px;border-right:13px solid transparent;border-left:0;border-bottom:14px solid #f0e5c8}}

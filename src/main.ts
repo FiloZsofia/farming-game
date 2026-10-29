@@ -86,6 +86,7 @@ function showDialogue(title:string,text:string,label='A BIRTOKON'){
  if(['IRÁNYÍTÁS','A RÉGI MŰHELY','EGY KEDVES SZÓ'].includes(label))text=workshopText(text,workshopIsKnown);label=workshopText(label,workshopIsKnown);
  delete dialogue.dataset.window;
  if(['MAGKATALÓGUS','POSTALÁDA','ELADÓLÁDA','ESTI NAPLÓ','HIRDETŐTÁBLA','SIMON','LEO','ANNIE'].includes(label)||['Készlet','Tárolóláda','Nádkosár','Levél a laborba','A küldemény úton van',...Object.values(blueprintNames)].includes(title))dialogue.dataset.window='utility';
+ const note=document.querySelector<HTMLElement>('#dialogue-note')!;note.hidden=true;note.textContent='';
  document.querySelector('#research-panel')!.classList.remove('controls-guide');
  release();dialogue.querySelector('.machine-petals')?.remove();delete dialogue.dataset.presentation;delete dialogue.dataset.speaker;document.querySelector<HTMLElement>('#speaker')!.hidden=true;document.querySelector('#speaker-portrait')!.replaceChildren();
  document.querySelector<HTMLButtonElement>('#sleep')!.hidden=true;
@@ -1023,7 +1024,8 @@ class Farm extends Phaser.Scene {
  private async receiveGift(){
   if(!this.canInteract()||this.story.giftReceived||!this.neighbor||Math.hypot(this.actor.x-this.neighbor.x,this.actor.y-this.neighbor.y)>55)return;
   await this.saveStory({...this.story,giftReceived:true},()=>{
-   showDialogue('Egy kedves szomszéd, Annie.','Szia, Annie vagyok, a szomszédod! Gondoltam, benézek, hogy megy a berendezkedés. Hoztam neked egy madárodút. A madarak nemcsak dalolnak: a kártevőket is segítenek távol tartani.\n\nVálassz neki egy szép helyet a farmon!\n\nA madárodú bekerült a készletedbe. Tab → Alapanyagok → Madárodú → Elhelyezem.','ÜDV A SZOMSZÉDBAN');
+   showDialogue('Egy kedves szomszéd, Annie.','Szia, Annie vagyok, a szomszédod! Gondoltam, benézek, hogy megy a berendezkedés. Hoztam neked egy madárodút. A madarak nemcsak dalolnak: a kártevőket is segítenek távol tartani.\n\nVálassz neki egy szép helyet a farmon!','ÜDV A SZOMSZÉDBAN');
+   this.showSpeaker('fishShop');dialogue.dataset.presentation='arrival';const note=document.querySelector<HTMLElement>('#dialogue-note')!;note.textContent='A madárodú bekerült a készletedbe. Tab → Alapanyagok → Madárodú → Elhelyezem.';note.hidden=false;
    this.neighbor?.destroy();this.neighbor=null;this.neighborArt=null;
   });
  }
