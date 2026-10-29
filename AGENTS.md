@@ -30,3 +30,6 @@
 - Minden átvehető postai levél vagy csomag érkezését a postaláda meglévő sárga zászlója jelzi. Ne készíts külön új jelzést egy új levéltípushoz. Átvétel után a jelzés csak akkor tűnjön el, ha sem levél, sem csomag nem vár átvételre.
 - A történetarchívum csak átélt eseményt mutathat. Új mentésekben őrizd meg a felfedezések tényleges sorrendjét; régi mentések hiányzó időpontját ne találd ki. A normál játékba kerülő Noah-fejezetnél is őrizd meg ezt és a kezdettől működő ehetőséget.
 - A vörösfenyőgyantát külön, Noah mellékelt előkészítő anyagával kell hordozóvá készíteni; nyers gyanta nem kerülhet közvetlenül a vizes főzetbe. A koncentrátumot csak a lehűlt keverékhez adjuk. Ezek a játékbeli kísérlet lépései, nem valós recept vagy természetben alkalmazható kezelés.
+
+- A kivonatkészítés az eredeti Műhely valódi játékterében működjön, ugyanazzal a szobával és főhőssel; ne válts külön, újrarajzolt minijátékszobára. A felhasználó kérésére itt feltűnő animált célpont és rövid aktuális műveleti útmutató segíthet; ez nem engedély a történeti célok túlmagyarázására.
+- A térkép egyelőre kizárólag memóriabeli tesztmódban érhető el M-mel (nyitás/zárás), és csak ilyenkor szerepeljen az Irányításban. Jóváhagyott területnevek: Öregfák ligete, Déli erdő, Mocsár. A térképi neveket külön jóváhagyás nélkül ne cseréld fantázianevekre.

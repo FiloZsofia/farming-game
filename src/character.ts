@@ -9,7 +9,7 @@ export class FarmerArt{
  setCarrying(value:boolean){this.carrying=value;}
  rummagePose(t:number){this.root.y=7+Math.sin(t*16);this.root.rotation=.08;this.head.y=-37;this.leftArm.setAngle(-65+Math.sin(t*22)*12);this.rightArm.setAngle(60-Math.sin(t*22)*15);}
  private contact:(()=>void)|null=null;private toolEnd=29;
- private tool:Phaser.GameObjects.Graphics;private action=0;private throwing=0;private phase=0;private equipped='hoe';private actionTool='hoe';private aim={x:0,y:1};
+ private tool:Phaser.GameObjects.Graphics;private action=0;private throwing=0;private phase=0;private equipped='';private actionTool='hoe';private aim={x:0,y:1};
  constructor(private scene:Phaser.Scene,neighbor=false){
   this.root=scene.add.container(0,0);
   if(!neighbor){
@@ -79,7 +79,7 @@ export class FarmerArt{
   this.cancelWork();this.equip('none');
   await Promise.all([new Promise<void>(resolve=>this.scene.tweens.add({targets:this.leftArm,angle:-170,duration:160,hold:650,yoyo:true,onComplete:()=>resolve()})),new Promise<void>(resolve=>this.scene.tweens.add({targets:this.rightArm,angle:170,duration:160,hold:650,yoyo:true,onComplete:()=>resolve()}))]);
  }
- equip(name:string){this.equipped=name;this.drawTool();}
+ equip(name:string){if(this.equipped===name)return;this.equipped=name;this.drawTool();}
  throwFish(dx:number){this.action=0;this.throwing=.85;this.aim={x:dx,y:0};this.equip('hand');}
  private reinforcedStick=false;
  setStickReinforced(value:boolean){if(this.reinforcedStick!==value){this.reinforcedStick=value;this.drawTool();}}

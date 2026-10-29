@@ -2,6 +2,9 @@
 
 ## Változások a 0.1.0 óta — külön jóváhagyott verzióemelés nélkül
 
+- A kivonatkészítés az eredeti Műhelyben működik, másik szoba nélkül, feltűnő animált célpontokkal és műveleti segítséggel.
+- M-mel kapcsolható, tesztmódra korlátozott térkép: Öregfák ligete, Déli erdő, Mocsár, farm és falusi helyszínek, Sam helyzetjelzésével.
+- Kevesebb képkockánkénti állapotmásolás; gyorsítótárazott déli erdő, időjárás és változatlan szerszámgrafika. Két spórapamacs jobb helyre került, az ellenségre célzott kattintás nem indít közeli gyantaszedést.
 - Minden termesztett zöldség és gyümölcs kezdettől ehető, a közös növényregiszterek alapján; egy darab egy szívet tölt. Hullott gyümölcs nem ehető.
 - Bővített, csak megismert eseményeket mutató történetarchívum, megőrzött felfedezési sorrenddel és a régi mentések pótlásával.
 - Aktívan kezelhető kivonatkészítő: külön gyantás hordozó, fűtés, keverés, szűrés, hűtés, adagolás és töltés; új spóramezős erdei ügyességi szakasz.

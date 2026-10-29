@@ -67,7 +67,12 @@ export function advanceEstate(estate:Estate,day:number,random=Math.random,farmNa
  if(next.duckArrivalDay!==null&&day-next.eggDay>=4){next.eggs=Math.min(999999,next.eggs+2+Math.min(2,Math.floor(random()*3)));next.eggDay=day;}
  return next;
 }
+export function canCollectEstate(estate:Estate,x:number,y:number){
+ const tree=estate.trees.find(t=>t.fruit>0&&Math.hypot(t.x-x,t.y-y)<50);if(tree)return estate.produce[tree.kind]+tree.fruit<=999999;
+ return shoreAt(x,y)&&(extras.some(k=>estate.roe[k]>0&&estate.produce[k]+estate.roe[k]<=999999)||estate.eggs>0&&estate.produce.duckEgg+estate.eggs<=999999);
+}
 export function collectEstate(estate:Estate,x:number,y:number,day:number){
+ if(!canCollectEstate(estate,x,y))return null;
  const next=structuredClone(estate),tree=next.trees.find(t=>t.fruit>0&&Math.hypot(t.x-x,t.y-y)<50);
  if(tree){if(next.produce[tree.kind]+tree.fruit>999999)return null;next.produce[tree.kind]+=tree.fruit;tree.fruit=0;tree.last=day;delete tree.fruitDay;delete tree.bloomState;return next;}
  if(!shoreAt(x,y))return null;let found=false;

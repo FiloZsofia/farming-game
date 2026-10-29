@@ -19,20 +19,20 @@ export function southBlocked(x:number,y:number,state:NoahTestState){
  if(y>2475&&!state.rootDefeated)return true;
  return distanceToSouthPath(x,y)>(swampAt(x,y)?165:94);
 }
-const southEnemies=[{id:'vine',kind:'vine' as const,x:-325,y:1490,hp:3},{id:'spore-a',kind:'spore' as const,x:-665,y:1680,hp:2},{id:'spore-b',kind:'spore' as const,x:-555,y:1850,hp:2},{id:'vine-bramble',kind:'vine' as const,x:-360,y:1950,hp:3},{id:'spore-c',kind:'spore' as const,x:-570,y:2385,hp:2},{id:'vine-larch',kind:'vine' as const,x:-750,y:2670,hp:3},{id:'spore-d',kind:'spore' as const,x:-830,y:2820,hp:2}];
+const southEnemies=[{id:'vine',kind:'vine' as const,x:-325,y:1490,hp:3},{id:'spore-a',kind:'spore' as const,x:-665,y:1680,hp:2},{id:'spore-b',kind:'spore' as const,x:-485,y:1908,hp:2},{id:'vine-bramble',kind:'vine' as const,x:-360,y:1950,hp:3},{id:'spore-c',kind:'spore' as const,x:-570,y:2385,hp:2},{id:'vine-larch',kind:'vine' as const,x:-750,y:2670,hp:3},{id:'spore-d',kind:'spore' as const,x:-850,y:2670,hp:2}];
 const mushrooms=[{x:-380,y:1450,s:1.1},{x:-590,y:1580,s:1.5},{x:-755,y:1790,s:1.3},{x:-570,y:1930,s:1.7},{x:-335,y:2220,s:1.2},{x:-620,y:2390,s:1.6},{x:-800,y:2580,s:1.8},{x:-725,y:2760,s:1.2}];
 export class NoahSouthForest{
- private terrain:Phaser.GameObjects.Graphics;private art:Phaser.GameObjects.Graphics;private fungi:Phaser.GameObjects.Graphics;private swampSeen=false;private struck=new Set<number>();
+ private terrain:Phaser.GameObjects.RenderTexture;private art:Phaser.GameObjects.Graphics;private fungi:Phaser.GameObjects.Graphics;private swampSeen=false;private struck=new Set<number>();
  private lastSafe={x:-444,y:2000};private herbs:Phaser.GameObjects.Graphics;
  private label:Phaser.GameObjects.Text;private minorCombat:ForestCombat;private minorState={...createForest(),stick:true};
  get fieldPhase(){return sporeFieldPhase(this.age);}
  get minorRemaining(){return southEnemies.length-this.minorState.defeated.length;}
- setUnlocked(value:boolean){this.terrain.setVisible(value);this.art.setVisible(value);this.herbs.setVisible(value);this.fungi.setVisible(value);}
+ setUnlocked(value:boolean){const v=this.scene.cameras.main.worldView,visible=value&&v.bottom>1300&&v.top<2950&&v.left<0;this.terrain.setVisible(visible);this.art.setVisible(visible);this.herbs.setVisible(visible);this.fungi.setVisible(visible);}
  get phaseName(){return this.phase;}
  get hitPoints(){return this.hp;}
  private age=0;private timer=1.4;private phase:'rest'|'warn'|'strike'='rest';private hp=6;private invulnerable=0;private swing=0;private aim={x:0,y:-1};
  constructor(private scene:Phaser.Scene){
-  this.minorCombat=new ForestCombat(scene,southEnemies,inNoahSouth);this.terrain=scene.add.graphics().setDepth(-.4).setVisible(false);this.art=scene.add.graphics().setDepth(91);this.herbs=scene.add.graphics().setDepth(2);this.fungi=scene.add.graphics().setDepth(92);this.label=scene.add.text(southRoot.x+122,southRoot.y-78,'Gombával átszőtt gyökércsomó',{fontFamily:'sans-serif',fontSize:'11px',color:'#f1dfb9',stroke:'#263c2b',strokeThickness:3}).setOrigin(.5).setDepth(93);const g=this.terrain;
+  this.minorCombat=new ForestCombat(scene,southEnemies,inNoahSouth);this.art=scene.add.graphics().setDepth(91);this.herbs=scene.add.graphics().setDepth(2);this.fungi=scene.add.graphics().setDepth(92);this.label=scene.add.text(southRoot.x+122,southRoot.y-78,'Gombával átszőtt gyökércsomó',{fontFamily:'sans-serif',fontSize:'11px',color:'#f1dfb9',stroke:'#263c2b',strokeThickness:3}).setOrigin(.5).setDepth(93);const g=scene.add.graphics();
   // Match the existing meadow and blend the northern edge without a straight seam.
   g.fillStyle(0x759c48).fillRect(-1120,1510,1120,1440);
   for(let y=1320;y<1540;y+=10)for(let x=-1120;x<0;x+=17){const n=Math.abs(Math.sin(x*12.23+y*4.71));g.fillStyle(0x759c48,Math.min(1,(y-1320)/180)).fillRect(x,y,18,12);}
@@ -55,6 +55,7 @@ export class NoahSouthForest{
   for(let i=0;i<6;i++)g.lineStyle(1.3,0xb28a58).lineBetween(resinTree.x-9+i*4,resinTree.y-76,resinTree.x-10+i*4,resinTree.y-7);
   g.lineStyle(3,0x4a3929).strokePoints([{x:resinTree.x-3,y:resinTree.y-65},{x:resinTree.x+3,y:resinTree.y-48},{x:resinTree.x-2,y:resinTree.y-30}]);
   for(let i=0;i<24;i++){const x=-900+random()*640,y=1450+random()*1390;g.fillStyle(0xb3a077,.35).fillRect(x,y,3,1);}
+  this.terrain=scene.add.renderTexture(-1120,1300,1120,1650).setOrigin(0).setDepth(-.4).setVisible(false);this.terrain.draw(g,1120,-1300);g.destroy();
  }
  attack(player:{x:number;y:number},direction:{x:number;y:number},upgraded:boolean,state:NoahTestState){
   if(this.swing>0)return false;
@@ -67,6 +68,7 @@ export class NoahSouthForest{
   if(this.hp<=0)state.rootDefeated=true;return true;
  }
  update(dt:number,player:{x:number;y:number},state:NoahTestState,jumping:boolean,hurt:()=>void,fall?:(point:{x:number;y:number})=>void,day=1,night=0){
+  if(!inNoahSouth(player.x,player.y)){this.label.setVisible(false);return;}
   this.label.setVisible(inNoahSouth(player.x,player.y)&&!state.rootDefeated&&Math.hypot(player.x-southRoot.x,player.y-southRoot.y)<210);this.age+=dt;this.invulnerable=Math.max(0,this.invulnerable-dt);this.swing=Math.max(0,this.swing-dt);const g=this.art;g.clear();
   if(!state.ingredientGathered){const x=resinTree.x,y=resinTree.y;for(let i=0;i<4;i++){const yy=y-57+i*11+Math.sin(this.age*.8+i)*1.4;g.fillStyle(0xbf7c2d).fillEllipse(x+i%2*5-3,yy,7,11);g.fillStyle(0xe9b751).fillEllipse(x+i%2*5-4,yy-1,4,8);g.fillStyle(0xffdf9a).fillEllipse(x+i%2*5-5,yy-3,1.5,3);}}
 

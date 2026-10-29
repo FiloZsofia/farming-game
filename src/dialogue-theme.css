@@ -58,13 +58,11 @@
 
 .noah-test-item{display:grid;grid-template-columns:38px minmax(0,1fr) auto;align-items:center;gap:10px;padding:10px 0}.noah-test-item .item-icon{width:36px;height:36px}.noah-concentrate-icon{filter:hue-rotate(75deg)}
 .story-chapter{border-bottom:1px solid #bda46a55;padding:14px 0}.story-chapter summary{cursor:pointer;font:18px var(--control-font);color:var(--window-title)}#dialogue .story-chapter p{white-space:pre-line;font:16px/1.8 var(--reading-font);margin-top:18px}
-.noah-lab-canvas{display:block;width:100%;height:auto;max-height:65dvh;object-fit:contain;border:1px solid #bda46a;border-radius:4px;image-rendering:pixelated;touch-action:none}.noah-lab-canvas:focus{outline:1px solid #d4be7c;outline-offset:2px}#dialogue .noah-lab-controls{font:13px var(--control-font);margin:0 0 12px;color:#d7d5b6}
-#app #dialogue:has(.noah-lab-canvas){width:min(900px,calc(100vw - 32px))}.noah-lab-canvas{width:min(100%,calc(60dvh * 700 / 430));max-height:none;object-fit:fill;margin:0 auto}
 
-/* The controllable extraction activity fills the viewport; reading windows stay compact. */
-#app #dialogue[data-presentation="noah-lab"]{background:linear-gradient(#2b4332,#172e23);width:100vw;max-width:100vw;height:100dvh;max-height:100dvh;inset:0;margin:0;padding:12px 20px;box-sizing:border-box;border-radius:0;overflow:auto}
-#app #dialogue[data-presentation="noah-lab"] #dialogue-label,#app #dialogue[data-presentation="noah-lab"] #dialogue-text:empty{display:none}
-#app #dialogue[data-presentation="noah-lab"] #dialogue-title{font-size:20px;margin:0 0 8px}
-#app #dialogue[data-presentation="noah-lab"] .noah-lab-controls{margin:0 0 6px}
-#app #dialogue[data-presentation="noah-lab"] .noah-lab-canvas{width:min(100%,calc((100dvh - 150px) * 1000 / 620));max-height:none;height:auto}
-#app #dialogue[data-presentation="noah-lab"] #dialogue-close{margin:8px 0 0}
+
+/* Extraction runs on the original Phaser room, across the entire game viewport. */
+#app:has(#game[data-laboratory="true"]) :is(.hud,.actions,#toolbar,#controls,#work,#jump,#run,#feedback,#status,#quest-tracker,#forest-health,#test-mode-banner,#crop-hint){visibility:hidden}
+#workshop-lab{position:absolute;z-index:20;bottom:12px;left:50%;transform:translateX(-50%);width:min(760px,calc(100% - 28px));box-sizing:border-box;padding:12px 16px;background:var(--window-surface);border:1px solid var(--window-border);border-radius:5px;color:var(--window-ink);box-shadow:var(--window-shadow);font:16px var(--control-font);display:grid;grid-template-columns:1fr auto;gap:6px 16px}
+#workshop-lab strong{font-size:20px;color:var(--window-title)}#workshop-lab p{grid-row:2;margin:0;line-height:1.35}#workshop-lab button{grid-column:2;grid-row:1 / 4;background:var(--button-surface);color:var(--button-ink);border:1px solid var(--button-border);border-radius:3px;box-shadow:inset 0 0 0 2px #172e1a,inset 0 0 0 3px #ac944b70;padding:10px 20px;font:16px var(--control-font)}#workshop-lab button:focus-visible{outline:2px solid #fff1bb;outline-offset:3px}#workshop-lab progress{width:100%;height:7px;accent-color:#c9b979;grid-column:1}#workshop-lab .lab-carried{display:flex;align-items:center;gap:8px;grid-column:1;font-size:14px;color:#f1d994}#workshop-lab .lab-carried:empty{display:none}#workshop-lab svg{width:27px;height:27px}
+@media(max-height:550px){#workshop-lab{padding:6px 10px;bottom:5px;font-size:13px;gap:3px 10px}#workshop-lab strong{font-size:16px}#workshop-lab button{padding:6px 10px}#workshop-lab .lab-carried{font-size:12px}}
+#app #dialogue[data-presentation="test-map"]{width:min(900px,calc(100vw - 30px));max-height:96dvh;padding:16px 22px}#app #dialogue[data-presentation="test-map"] #dialogue-title{margin:0 0 8px}#app #dialogue[data-presentation="test-map"] #dialogue-text:empty{display:none}.test-world-map{display:block;width:min(100%,calc(100dvh - 160px));height:auto;margin:0 auto;border-radius:5px}.map-player{animation:map-position 1.6s ease-in-out infinite}@keyframes map-position{50%{opacity:.4}}@media(prefers-reduced-motion:reduce){.map-player{animation:none}}
