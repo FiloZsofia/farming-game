@@ -2,6 +2,10 @@
 
 ## Változások a 0.1.0 óta — külön jóváhagyott verzióemelés nélkül
 
+- Botanikai terepnaplót idéző teszttérkép nagyobb helynevekkel, kizárólag meglévő helyszínekkel.
+- Lágyabb déli erdei ösvénykezdet, szabad ösvény a mocsár után; a mocsár felugró figyelmeztetése és a gyökércsomó neve eltávolítva.
+- Éles, képernyőméretű kivonatkészítési feliratok; Samet nem takarják ki a munkafelületek.
+
 - A kivonatkészítés az eredeti Műhelyben működik, másik szoba nélkül, feltűnő animált célpontokkal és műveleti segítséggel.
 - M-mel kapcsolható, tesztmódra korlátozott térkép: Öregfák ligete, Déli erdő, Mocsár, farm és falusi helyszínek, Sam helyzetjelzésével.
 - Kevesebb képkockánkénti állapotmásolás; gyorsítótárazott déli erdő, időjárás és változatlan szerszámgrafika. Két spórapamacs jobb helyre került, az ellenségre célzott kattintás nem indít közeli gyantaszedést.

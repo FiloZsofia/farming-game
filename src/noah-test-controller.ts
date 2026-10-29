@@ -11,9 +11,8 @@ import {noahLetter,noahGoal,noahReplyArrived,upgradeNoahStick,mixNoahExtract,typ
 import {NoahSouthForest,resinTree,inNoahSouth,southRoot} from './noah-south-forest';
 type Host={actor:()=>Phaser.GameObjects.Container;avatar:()=>FarmerArt;day:()=>number;map:()=>void;laboratory:(active:boolean)=>void;read:()=>Snapshot;commit:(s:Snapshot,after:()=>void)=>Promise<boolean>;show:(title:string,text:string,label?:string)=>void;notice:(text:string)=>void;record?:(id:'noah'|'result')=>void;gather?:(point:{x:number;y:number})=>void};
 export class NoahTestController{
- private swampArrival=()=>this.host.show('Mocsár','Az iszap lassan bugyog a felszín alatt. Nem szeretnék belesüllyedni.','SAM');
  readonly forest:NoahSouthForest;private steam:Phaser.GameObjects.Graphics;private extraction=createExtraction();private pendingResult=false;private busy=false;private lab:WorkshopExtraction|null=null;private labCarry={carrying:null as string|null};
- constructor(private scene:Phaser.Scene,public state:NoahTestState,readonly config:NoahTestConfig,private host:Host){this.forest=new NoahSouthForest(scene);scene.events.on('noah-swamp-arrival',this.swampArrival);this.steam=scene.add.graphics().setDepth(108);
+ constructor(private scene:Phaser.Scene,public state:NoahTestState,readonly config:NoahTestConfig,private host:Host){this.forest=new NoahSouthForest(scene);this.steam=scene.add.graphics().setDepth(108);
 
  }
  updatePresentation(now:number){
@@ -76,5 +75,5 @@ export class NoahTestController{
   for(const [name,count]of [['Kísérleti koncentrátum',this.state.concentrate],[this.config.ingredientName,this.state.ingredient]] as const){if(!count)continue;const row=document.createElement('div');row.className='noah-test-item';const label=document.createElement('span');label.textContent=name;const amount=document.createElement('strong');amount.className='stack-count';amount.textContent=String(count);let icon:Element;if(name===this.config.ingredientName)icon=this.ingredientIcon();else{icon=itemIcon('glassJar');icon.classList.add('noah-concentrate-icon');}row.append(icon,label,amount);card.append(row);}panel.append(card);
  }
  private ingredientIcon(){const icon=document.createElement('span');icon.className='noah-resin-icon';icon.setAttribute('aria-hidden','true');return icon;}
- destroy(){this.scene.events.off('noah-swamp-arrival',this.swampArrival);this.lab?.close();this.forest.destroy();this.steam.destroy();}
+ destroy(){this.lab?.close();this.forest.destroy();this.steam.destroy();}
 }

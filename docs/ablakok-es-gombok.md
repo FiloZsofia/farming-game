@@ -21,3 +21,8 @@ A mozgatható tárgyak felvétele Bontóvassal, a `placed-items.ts` közös útv
 - A Menü gombjai között megjelenő navigációs hivatkozások (pl. Hibabejelentés) a közös gombstílust használják: azonos szegély, belső keret, háttér és hover. A Főmenü lábléchivatkozása továbbra is visszafogott szöveg.
 
 - A boltok termékkártyáin a keretes vásárlógomb és az ikon ne tapadjon a kártya széléhez: asztali belső térköz 14×16 px, mobilon 12 px, kártyák között 10/8 px. Mobilon a gomb a termékszöveg alatt, balra igazodva jelenjen meg; a görgetősáv mellett is maradjon tér.
+
+### Teszttérkép és műhelyfeliratok
+
+- A térkép meleg papírra rajzolt, botanikai terepnaplót idéz. A helynevek vektoros, nagyobb betűk; épületikonjai és útvonalai a meglévő pályából származnak. Hangulati látványterv nem jogosít fel új épület vagy helyszín hozzáadására.
+- A kivonatkészítés világ fölötti célpontnevei képernyőtérben, rendszerbetűvel készülnek, nem kis felbontású, felnagyított játéktextúraként. A felirat szükség esetén feljebb mozdul, hogy ne fedje Samet.

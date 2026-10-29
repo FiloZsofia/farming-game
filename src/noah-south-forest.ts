@@ -20,11 +20,11 @@ export function southBlocked(x:number,y:number,state:NoahTestState){
  return distanceToSouthPath(x,y)>(swampAt(x,y)?165:94);
 }
 const southEnemies=[{id:'vine',kind:'vine' as const,x:-325,y:1490,hp:3},{id:'spore-a',kind:'spore' as const,x:-665,y:1680,hp:2},{id:'spore-b',kind:'spore' as const,x:-485,y:1908,hp:2},{id:'vine-bramble',kind:'vine' as const,x:-360,y:1950,hp:3},{id:'spore-c',kind:'spore' as const,x:-570,y:2385,hp:2},{id:'vine-larch',kind:'vine' as const,x:-750,y:2670,hp:3},{id:'spore-d',kind:'spore' as const,x:-850,y:2670,hp:2}];
-const mushrooms=[{x:-380,y:1450,s:1.1},{x:-590,y:1580,s:1.5},{x:-755,y:1790,s:1.3},{x:-570,y:1930,s:1.7},{x:-335,y:2220,s:1.2},{x:-620,y:2390,s:1.6},{x:-800,y:2580,s:1.8},{x:-725,y:2760,s:1.2}];
+const mushrooms=[{x:-380,y:1450,s:1.1},{x:-590,y:1580,s:1.5},{x:-755,y:1790,s:1.3},{x:-570,y:1930,s:1.7},{x:-335,y:2220,s:1.2},{x:-745,y:2390,s:1.6},{x:-800,y:2580,s:1.8},{x:-725,y:2760,s:1.2}];
 export class NoahSouthForest{
- private terrain:Phaser.GameObjects.RenderTexture;private art:Phaser.GameObjects.Graphics;private fungi:Phaser.GameObjects.Graphics;private swampSeen=false;private struck=new Set<number>();
+ private terrain:Phaser.GameObjects.RenderTexture;private art:Phaser.GameObjects.Graphics;private fungi:Phaser.GameObjects.Graphics;private struck=new Set<number>();
  private lastSafe={x:-444,y:2000};private herbs:Phaser.GameObjects.Graphics;
- private label:Phaser.GameObjects.Text;private minorCombat:ForestCombat;private minorState={...createForest(),stick:true};
+ private minorCombat:ForestCombat;private minorState={...createForest(),stick:true};
  get fieldPhase(){return sporeFieldPhase(this.age);}
  get minorRemaining(){return southEnemies.length-this.minorState.defeated.length;}
  setUnlocked(value:boolean){const v=this.scene.cameras.main.worldView,visible=value&&v.bottom>1300&&v.top<2950&&v.left<0;this.terrain.setVisible(visible);this.art.setVisible(visible);this.herbs.setVisible(visible);this.fungi.setVisible(visible);}
@@ -32,7 +32,7 @@ export class NoahSouthForest{
  get hitPoints(){return this.hp;}
  private age=0;private timer=1.4;private phase:'rest'|'warn'|'strike'='rest';private hp=6;private invulnerable=0;private swing=0;private aim={x:0,y:-1};
  constructor(private scene:Phaser.Scene){
-  this.minorCombat=new ForestCombat(scene,southEnemies,inNoahSouth);this.art=scene.add.graphics().setDepth(91);this.herbs=scene.add.graphics().setDepth(2);this.fungi=scene.add.graphics().setDepth(92);this.label=scene.add.text(southRoot.x+122,southRoot.y-78,'Gombával átszőtt gyökércsomó',{fontFamily:'sans-serif',fontSize:'11px',color:'#f1dfb9',stroke:'#263c2b',strokeThickness:3}).setOrigin(.5).setDepth(93);const g=scene.add.graphics();
+  this.minorCombat=new ForestCombat(scene,southEnemies,inNoahSouth);this.art=scene.add.graphics().setDepth(91);this.herbs=scene.add.graphics().setDepth(2);this.fungi=scene.add.graphics().setDepth(92);const g=scene.add.graphics();
   // Match the existing meadow and blend the northern edge without a straight seam.
   g.fillStyle(0x759c48).fillRect(-1120,1510,1120,1440);
   for(let y=1320;y<1540;y+=10)for(let x=-1120;x<0;x+=17){const n=Math.abs(Math.sin(x*12.23+y*4.71));g.fillStyle(0x759c48,Math.min(1,(y-1320)/180)).fillRect(x,y,18,12);}
@@ -40,6 +40,12 @@ export class NoahSouthForest{
   for(const p of southRoute){g.fillStyle(0x365b3c,.17).fillEllipse(p.x-150,p.y+20,210,110);g.fillEllipse(p.x+145,p.y-10,200,95);}
   // Draw the route as one network, then let the marsh interrupt its middle.
   g.lineStyle(48,0x647746).strokePoints(southPath);g.lineStyle(35,0x9b9566).strokePoints(southPath);g.lineStyle(27,0xb3a878).strokePoints(southPath);
+  // Fade the entrance into meadow without individual stroked segments or hard end caps.
+  for(let y=1300;y<1405;y+=2){const point=southPath.reduce((a,b)=>Math.abs(b.y-y)<Math.abs(a.y-y)?b:a),fade=1-(y-1300)/105;
+   g.fillStyle(0x759c48,fade).fillRect(point.x-30,y,60,2);
+  }
+  // Broken earth and grass gradually become a continuous trail beyond the bridge.
+  for(let i=0;i<65;i++){const y=1304+i*1.7,x=-444+Math.sin(i*12.7)*(4+i*.16);g.fillStyle(i%3?0xb3a878:0x91a35e,.2+i/100).fillEllipse(x,y,2+i%4,1+i%2);}
   const marsh=Array.from({length:40},(_,i)=>{const a=i/40*Math.PI*2,r=1+.05*Math.sin(i*2.7);return{x:-480+Math.cos(a)*165*r,y:2160+Math.sin(a)*143*r};});
   g.fillStyle(0x526447).fillPoints(marsh,true);g.lineStyle(14,0x78815a).strokePoints(marsh,true);g.fillStyle(0x3c6254).fillPoints(marsh,true);
   for(let i=0;i<65;i++){const x=-625+(i*73%290),y=2035+(i*47%245);if(swampAt(x,y)){g.fillStyle(0x7c9463,.35).fillEllipse(x,y,12+i%4*5,3);g.lineStyle(1,0x9fac75,.3).lineBetween(x,y,x+9,y);}}
@@ -68,12 +74,11 @@ export class NoahSouthForest{
   if(this.hp<=0)state.rootDefeated=true;return true;
  }
  update(dt:number,player:{x:number;y:number},state:NoahTestState,jumping:boolean,hurt:()=>void,fall?:(point:{x:number;y:number})=>void,day=1,night=0){
-  if(!inNoahSouth(player.x,player.y)){this.label.setVisible(false);return;}
-  this.label.setVisible(inNoahSouth(player.x,player.y)&&!state.rootDefeated&&Math.hypot(player.x-southRoot.x,player.y-southRoot.y)<210);this.age+=dt;this.invulnerable=Math.max(0,this.invulnerable-dt);this.swing=Math.max(0,this.swing-dt);const g=this.art;g.clear();
+  if(!inNoahSouth(player.x,player.y))return;
+  this.age+=dt;this.invulnerable=Math.max(0,this.invulnerable-dt);this.swing=Math.max(0,this.swing-dt);const g=this.art;g.clear();
   if(!state.ingredientGathered){const x=resinTree.x,y=resinTree.y;for(let i=0;i<4;i++){const yy=y-57+i*11+Math.sin(this.age*.8+i)*1.4;g.fillStyle(0xbf7c2d).fillEllipse(x+i%2*5-3,yy,7,11);g.fillStyle(0xe9b751).fillEllipse(x+i%2*5-4,yy-1,4,8);g.fillStyle(0xffdf9a).fillEllipse(x+i%2*5-5,yy-3,1.5,3);}}
 
   this.drawMushrooms(night);
-  if(state.upgraded&&inNoahSouth(player.x,player.y)&&Math.hypot(player.x+444,player.y-2000)<110&&!this.swampSeen){this.swampSeen=true;this.scene.events.emit('noah-swamp-arrival');}
   this.herbs.clear();if(state.upgraded)for(const p of southHerbs){if(state.herbsPicked[p.id]!==undefined&&day-state.herbsPicked[p.id]<3)continue;drawForestHerb(this.herbs,p);}
   if(inNoahSouth(player.x,player.y)){const step=swampStep(player,jumping,this.lastSafe);this.lastSafe=step.safe;if(step.fall){fall?.(this.lastSafe);return;}}
   // Thin drifting mist and small bubbles make the marsh feel alive.
@@ -132,5 +137,5 @@ export class NoahSouthForest{
    for(let i=0;i<7;i++){const xx=x+Math.cos(i*2.4)*(10+i%3*5)*s,yy=y-43*s+Math.sin(i*2.4)*8*s;g.fillStyle(0xe4d6df).fillEllipse(xx,yy,(3+i%2)*s,3*s);if(night>0)g.fillStyle(0xe8cfff,Math.min(.8,night*1.5)*pulse).fillCircle(xx,yy,3*s);}
   }
  }
- destroy(){this.fungi.destroy();this.terrain.destroy();this.art.destroy();this.label.destroy();this.herbs.destroy();this.minorCombat.destroy();}
+ destroy(){this.fungi.destroy();this.terrain.destroy();this.art.destroy();this.herbs.destroy();this.minorCombat.destroy();}
 }

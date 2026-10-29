@@ -941,3 +941,7 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 - Jóváhagyott nevek: északi erdő — Öregfák ligete; déli erdő — Déli erdő; mocsaras szakasz — Mocsár. Utóbbi új nevekről még csak ötletelés folyik, a javaslat nem átnevezési engedély. A már létező nevek megmaradnak: farm saját neve, Otthon, Műhely, Falu, Faiskola, Kertitó Szaküzlet, Műhelybolt. Az Erdei ösvény útjelző továbbra is az ösvényt nevezi meg.
 - Az Irányítás Ablakok részében tesztmódban „M · Térkép megnyitása / bezárása” szerepel; normál játékban nem hirdetünk még nem elérhető funkciót.
 - A vörösfenyős szakasz külön fejlesztői kezdőpontot kapott a közeli ellenfél és a fa interakciójának teszteléséhez.
+
+- Térképarculat: botanikai terepnapló, meleg papír, tintás növénydíszek, nagyobb feliratok. A generált látványterv hangulati minta: a működő térképen kizárólag a meglévő pálya épületei és helyszínei szerepelhetnek; templom, romok, új útvonal vagy helyszín nem kerülhet rá pusztán a kép alapján.
+- A déli erdei mocsár érkezési figyelmeztető ablaka és a gyökércsomó feletti név nem jelenik meg. A fizikai veszélyjelző tábla megmarad.
+- Kivonatkészítéskor a célpont neve a kamera nagyításától független, éles szöveg; a munkafelületek és a felirat nem takarhatják Samet.
