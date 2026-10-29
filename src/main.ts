@@ -41,7 +41,7 @@ import {weatherOnDay,weatherNames,randomWeatherSeed,waterFromRain} from './weath
 import {questEntries} from './quest-log';
 import {DuckLife} from './duck-life';
 import {drawResearch,drawWorkshop} from './research-art';
-import {WORKSHOP_ORIGIN,inWorkshop,salvageSites,researchMaterials,researchNames,repairNeeds,workshopObjects,inspectWorkshop,entranceShutterOpen,workshopLit,remainingWebs,clearCobweb,microscopeReady,workshopEntered,workshopText,shouldDeliverMicroscope,startResearch,plantFlower,flowerAt,advanceResearch,beeAvailable,beeAnchor,observeBee,grantKey,collectSalvage,supplyMaterial,repairMachine,type Research} from './research';
+import {FLOWER_DAYS,WORKSHOP_ORIGIN,inWorkshop,salvageSites,researchMaterials,researchNames,repairNeeds,workshopObjects,inspectWorkshop,entranceShutterOpen,workshopLit,remainingWebs,clearCobweb,microscopeReady,workshopEntered,workshopText,shouldDeliverMicroscope,startResearch,plantFlower,flowerAt,advanceResearch,beeAvailable,beeAnchor,observeBee,grantKey,collectSalvage,supplyMaterial,repairMachine,type Research} from './research';
 import {PondLife} from './pond-life';
 import {drawEstate,drawDuck} from './estate-art';
 import {goods,treeKinds,trees,goodNames,goodPrices,extraNames,extraPrices,extras,extraValue,emptyExtras,hasDuckNest,goodReachable,buyGood,placeGood,collectEstate,canCollectEstate,advanceEstate,cutReed,seasons,seasonIndex,seasonDay,type Good,type Extra,type Estate} from './estate';
@@ -561,7 +561,7 @@ class Farm extends Phaser.Scene {
   if(this.noahTest?.hasResult){this.noahTest.openMicroscope();return;}
   this.microscopeUI?.destroy();this.microscopeUI=null;
   const f=this.travel.forest??createForest(),samples:SampleId[]=[...f.microscopy?.slides??[]];
-  if(f.sample)samples.push('nest');for(const id of ['thyme','plantain','nettle'] as const)if(this.travel.estate.produce[id]>0)samples.push(id);if(this.travel.research.flowers.some(f=>f.growth>=4))samples.push('pollen');
+  if(f.sample)samples.push('nest');for(const id of ['thyme','plantain','nettle'] as const)if(this.travel.estate.produce[id]>0)samples.push(id);if(this.travel.research.flowers.some(f=>f.growth>=FLOWER_DAYS))samples.push('pollen');
   showDialogue('A mikroszkóp alatt','','VIZSGÁLAT');document.querySelector('#dialogue-close')!.textContent='Vissza';
   this.microscopeUI=new MicroscopePanel(document.querySelector<HTMLElement>('#research-panel')!,{state:f.microscopy,samples:[...new Set(samples)],focus:f.focus,examined:f.examined,day:this.clock.day,dayLabel:day=>{const d=calendarDay(day,this.farmName);return `${seasons[seasonIndex(d)]} ${seasonDay(d)}. nap`;},save:async state=>{const next=structuredClone(this.travel.forest??createForest());next.microscopy=state;next.focus=state.view.focus;return await this.commitForest(next,()=>{});},firstObservation:async()=>{
    const next=structuredClone(this.travel.forest??createForest());if(!next.sample)return false;next.examined=true;

@@ -8,8 +8,8 @@ export function questEntries(r:Research,garden:Garden,_day:number,_elapsed:numbe
  entries.push({id:'plant-flowers',title:'Ültess el 6 tasak vadvirágmagot',detail:`Elültetve: ${r.flowers.length} / 6.`,done:r.flowers.length===6});
  if(r.flowers.length===6){
   const progress=Math.min(...r.flowers.map(f=>Math.min(FLOWER_DAYS,f.growth+(garden.plots.get(tileKey(f))?.watered?1:0))));
-  const bloomed=r.flowers.every(f=>f.growth===FLOWER_DAYS);
-  entries.push({id:'grow-flowers',title:'Gondozd a vadvirágokat',detail:bloomed?'Mind a hat vadvirág kivirágzott.':`${progress} / 4 megöntözött nap`,done:bloomed});
+  const bloomed=r.flowers.every(f=>f.growth>=FLOWER_DAYS);
+  entries.push({id:'grow-flowers',title:'Gondozd a vadvirágokat',detail:bloomed?'Mind a hat vadvirág kivirágzott.':`${progress} / ${FLOWER_DAYS} megöntözött nap`,done:bloomed});
   if(bloomed)entries.push({id:'observe-bee',title:'Figyeld meg a virágokhoz látogató szarvas faliméhet',detail:'',done:!!r.observation});
  }
  if(r.observation)entries.push({id:'report-bee',title:'Meséld el Leonak a megfigyelésedet',detail:r.key?'Beszámoltál a látottakról.':'',done:r.key});

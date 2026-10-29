@@ -1,13 +1,13 @@
 import {drawMicroscope} from './bench-microscope-art';
 import {TILE} from './gardening';
 import Phaser from 'phaser';
-import {salvageSites,entranceShutterOpen,remainingWebs,microscopeReady,type Research} from './research';
+import {FLOWER_DAYS,salvageSites,entranceShutterOpen,remainingWebs,microscopeReady,type Research} from './research';
 export function drawResearch(scene:Phaser.Scene,r:Research){
  const root=scene.add.container(0,0).setDepth(3),g=scene.add.graphics();root.add(g);
  for(const s of salvageSites){if(s.kind==='scrap'||r.picked.includes(s.id))continue;g.fillStyle(0x33452c,.25).fillEllipse(s.x+3,s.y+4,29,10);
   {g.fillStyle(0x777d68).fillRoundedRect(s.x-10,s.y-20,20,23,4);g.lineStyle(4,0xa47e52).beginPath().moveTo(s.x,s.y-18).lineTo(s.x,s.y-30).lineTo(s.x+18,s.y-30).lineTo(s.x+18,s.y-20).strokePath();g.lineStyle(2,0xb7b093).strokeCircle(s.x,s.y-9,6);}
  }
- for(const f of r.flowers){g.save().translateCanvas(f.x,f.y).scaleCanvas(TILE/16,TILE/16);const x=8,y=10;for(let i=0;i<3;i++){const dx=(i-1)*4,h=4+f.growth*2;g.lineStyle(1,0x456a38).lineBetween(x+dx,y,x+dx-1,y-h);g.fillStyle(0x6e984d).fillEllipse(x+dx+2,y-4,5,2);if(f.growth===4){const c=[0xe9bf64,0xc99aaa,0xd6d9ee][i];for(let a=0;a<5;a++)g.fillStyle(c).fillCircle(x+dx-1+Math.cos(a*1.257)*2,y-h+Math.sin(a*1.257)*2,1.7);g.fillStyle(0xd9a34f).fillCircle(x+dx-1,y-h,1);}}g.restore();}
+ for(const f of r.flowers){g.save().translateCanvas(f.x,f.y).scaleCanvas(TILE/16,TILE/16);const x=8,y=10;for(let i=0;i<3;i++){const dx=(i-1)*4,h=4+f.growth*2;g.lineStyle(1,0x456a38).lineBetween(x+dx,y,x+dx-1,y-h);g.fillStyle(0x6e984d).fillEllipse(x+dx+2,y-4,5,2);if(f.growth>=FLOWER_DAYS){const c=[0xe9bf64,0xc99aaa,0xd6d9ee][i];for(let a=0;a<5;a++)g.fillStyle(c).fillCircle(x+dx-1+Math.cos(a*1.257)*2,y-h+Math.sin(a*1.257)*2,1.7);g.fillStyle(0xd9a34f).fillCircle(x+dx-1,y-h,1);}}g.restore();}
  return root;
 }
 export function drawWorkshop(scene:Phaser.Scene,r:Research){
