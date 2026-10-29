@@ -2,6 +2,9 @@
 
 ## Változások a 0.1.0 óta — külön jóváhagyott verzióemelés nélkül
 
+- Noah-teszt: háromnapos válaszidő, olvasatlanlevél-jelzés és időrendi történetarchívum; megőrzött cél-előzmények és a Simon-beszélgetéshez kötött botfejlesztés.
+- Kanyargós déli erdő a három ismert gyógynövénnyel és ugrálós mocsári átkeléssel; irányítható, billentyűzettel és egérrel kezelhető kivonatkészítő-minijáték.
+
 - A fejlesztői hivatkozás kis-, nagy- és vegyes betűkkel is működik (`?dev=1`, `?DEV=1`).
 - A déli erdő a küldetés előtt sűrű növényzet és figyelmeztető táblás lezárás mögött marad.
 - Új fejlesztői teszt: Noah levele, Simonnál vásárolható botfejlesztés, déli erdei harc és vörösfenyőgyanta gyűjtése, interaktív kivonatkészítés és mikroszkópos összehasonlítás. A normál történet és mentés nem változik.

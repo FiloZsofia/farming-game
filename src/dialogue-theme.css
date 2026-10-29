@@ -57,3 +57,6 @@
 @media(max-width:520px){.noah-ingredient{gap:8px}.noah-ingredient .item-icon,.noah-resin-icon{width:29px;height:32px}#dialogue .noah-ingredient button{font-size:13px;padding:8px 10px}.noah-ingredient>span{font-size:13px}.noah-microscopy{gap:12px}}
 
 .noah-test-item{display:grid;grid-template-columns:38px minmax(0,1fr) auto;align-items:center;gap:10px;padding:10px 0}.noah-test-item .item-icon{width:36px;height:36px}.noah-concentrate-icon{filter:hue-rotate(75deg)}
+.story-chapter{border-bottom:1px solid #bda46a55;padding:14px 0}.story-chapter summary{cursor:pointer;font:18px var(--control-font);color:var(--window-title)}#dialogue .story-chapter p{white-space:pre-line;font:16px/1.8 var(--reading-font);margin-top:18px}
+.noah-lab-canvas{display:block;width:100%;height:auto;max-height:65dvh;object-fit:contain;border:1px solid #bda46a;border-radius:4px;image-rendering:pixelated;touch-action:none}.noah-lab-canvas:focus{outline:1px solid #d4be7c;outline-offset:2px}#dialogue .noah-lab-controls{font:13px var(--control-font);margin:0 0 12px;color:#d7d5b6}
+#app #dialogue:has(.noah-lab-canvas){width:min(900px,calc(100vw - 32px))}.noah-lab-canvas{width:min(100%,calc(60dvh * 700 / 430));max-height:none;object-fit:fill;margin:0 auto}

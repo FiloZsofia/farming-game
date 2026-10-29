@@ -1,0 +1,4 @@
+import {expect,it} from 'vitest';
+import {swampAt,swampStones,swampStep,distanceToSouthPath,southRoute,southHerbs} from './south-forest-layout';
+it('supports every stepping stone while unjumped marsh steps fall back to the last safe landing',()=>{const safe={x:-430,y:2000};for(const p of swampStones)expect(swampStep(p,false,safe)).toEqual({fall:false,safe:p});const water={x:-580,y:2160};expect(swampAt(water.x,water.y)).toBe(true);expect(swampStep(water,false,safe)).toEqual({fall:true,safe});expect(swampStep(water,true,safe)).toEqual({fall:false,safe});});
+it('keeps the winding walking route connected and includes all three established herbs',()=>{for(const p of southRoute)expect(distanceToSouthPath(p.x,p.y)).toBeLessThan(1);expect(new Set(southHerbs.map(h=>h.kind))).toEqual(new Set(['thyme','plantain','nettle']));for(const p of southHerbs)expect(distanceToSouthPath(p.x,p.y)).toBeLessThan(62);});

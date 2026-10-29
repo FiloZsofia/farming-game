@@ -9,7 +9,7 @@ import {nearEmptyBlossoms,POLLINATION_OBSERVATION_TITLE,POLLINATION_OBSERVATION_
 import {ForestAtmosphere} from './forest-atmosphere';
 import {prepareMicroscopeTest} from './microscope-test-setup';
 import {NoahTestController} from './noah-test-controller';
-import {prepareNoahTest,noahTestConfig,closedSouthEntry,type NoahCheckpoint,type NoahTestConfig} from './noah-test-story';
+import {prepareNoahTest,noahTestConfig,closedSouthEntry,noahLetter,noahGoals,type NoahCheckpoint,type NoahTestConfig} from './noah-test-story';
 import {drawForestSouthGate} from './forest-south-gate';
 import {inNoahSouth,southBlocked} from './noah-south-forest';
 import {playMicroscopeDelivery} from './microscope-delivery';
@@ -97,7 +97,8 @@ function showDialogue(title:string,text:string,label='A BIRTOKON'){
  document.querySelector('#dialogue-label')!.textContent=label;
  if(!dialogue.open)dialogue.showModal();
 }
-document.querySelector('#story')!.addEventListener('click',()=>{showDialogue('Történet',story,'');dialogue.dataset.presentation='story';});
+let openStoryWindow=()=>{showDialogue('Történet',story,'');dialogue.dataset.presentation='story';};
+document.querySelector('#story')!.addEventListener('click',()=>openStoryWindow());
 document.querySelector('#help')!.addEventListener('click',()=>{
  showDialogue('Irányítás','WASD / nyilak · mozgás\nShift · futás\nSpace · ugrás / kitérés','');dialogue.dataset.presentation='controls';
  const panel=document.querySelector<HTMLElement>('#research-panel')!;panel.replaceChildren();panel.hidden=false;panel.classList.add('controls-guide');
@@ -444,6 +445,7 @@ class Farm extends Phaser.Scene {
  }
  private async acknowledgeStoryEnd(){
   if(this.transitioning)return;
+  if(this.noahTest){this.noahTest.state.endSeen=true;dialogue.close();release();return;}
   const next=this.currentSnapshot();next.travel.storyEndSeen=true;
   await this.commitChest(next,()=>{dialogue.close();if(this.travel.morning||this.travel.sale||this.travel.estate.duckArrivalPending)void this.presentMorning();});
  }
@@ -514,13 +516,13 @@ class Farm extends Phaser.Scene {
   for(const id of ['items','people','skills','goals','blueprints']){document.querySelector<HTMLElement>(`#${id}-page`)!.hidden=id!==selected;const tab=document.querySelector<HTMLButtonElement>(`#${id}-tab`)!;tab.setAttribute('aria-selected',String(id===selected));tab.tabIndex=id===selected?0:-1;}
  }
  private southGateArt:Phaser.GameObjects.Container|null=null;
- private redrawForest(){this.southGateArt?.destroy(true);this.southGateArt=drawForestSouthGate(this,!this.noahTest?.state.simonAsked);this.forestObjects?.destroy();this.forestObjects=drawForestObjects(this,this.travel.forest??createForest(),this.clock.day,this.travel.weatherSeed??0);}
+ private redrawForest(){this.southGateArt?.destroy(true);this.southGateArt=drawForestSouthGate(this,!this.noahTest?.state.upgraded);this.forestObjects?.destroy();this.forestObjects=drawForestObjects(this,this.travel.forest??createForest(),this.clock.day,this.travel.weatherSeed??0);}
  private forestNearby(){
   const f=this.travel.forest??createForest(),near=(p:{x:number;y:number},r=46)=>Math.hypot(this.actor.x-p.x,this.actor.y-p.y)<r;
   if(microscopeReady(this.travel.research)&&inWorkshop(this.actor.y)&&near(microscope,64))return 'microscope';
   if(f.examined&&!f.sent&&near({x:farmLayout.mailbox.x+12,y:farmLayout.mailbox.y+8},55))return 'send-sample';
   if(!inForest(this.actor.x,this.actor.y))return '';
-  if(!this.noahTest?.state.simonAsked&&near({x:-444,y:1295},65))return 'south-gate';
+  if(!this.noahTest?.state.upgraded&&near({x:-444,y:1295},65))return 'south-gate';
   if(!f.stick&&near(walkingStick))return 'forest-stick';
   if(near({x:-461,y:970},42))return 'forest-bench';
   if(near(forestNest,64))return 'forest-nest';
@@ -588,6 +590,14 @@ class Farm extends Phaser.Scene {
    });
   });
  }
+ private hurtNoah(){
+  const f=this.travel.forest!;f.health=(f.health??5)-1;this.cameras.main.shake(110,.003);
+  if(f.health<=0){f.health=5;this.noahTest?.forest.reset();this.actor.setPosition(START.x,START.y);this.fitCamera();showDialogue('Itthon biztonságban','Az erdei kaland most túl sok volt. Minden holmim és aranyam megmaradt.','SAM');return false;}return true;
+ }
+ private sinkNoah(point:{x:number;y:number}){
+  if(this.transitioning)return;this.transitioning=true;document.querySelector<HTMLElement>('#game')!.dataset.noahSinking='true';this.avatar.cancelWork();this.jumpRemaining=0;release();
+  this.tweens.add({targets:this.body,y:22,scaleY:.35,alpha:.3,duration:650,ease:'Sine.easeIn',onComplete:()=>{document.querySelector<HTMLElement>('#game')!.dataset.noahSinking='false';this.body.setY(0).setScale(1).setAlpha(1);if(this.hurtNoah())this.actor.setPosition(point.x,point.y);this.transitioning=false;this.fitCamera();this.lastTick=performance.now();}});
+ }
  private updateForest(dt:number){
   this.forestCombat??=new ForestCombat(this);const f=this.travel.forest??=createForest(),inside=inForest(this.actor.x,this.actor.y);
   if(this.forestPresence===null)this.forestCombat.health=f.health??5;
@@ -608,7 +618,7 @@ class Farm extends Phaser.Scene {
  private openCraftShop(message=''){
   showDialogue('Műhelybolt',message||'A lentieknek a tervrajzát vásárolhatod meg.','SIMON');const panel=document.querySelector<HTMLElement>('#shop-panel')!;panel.replaceChildren();panel.hidden=false;
   const wallet=document.createElement('p');wallet.textContent=`${this.economy.gold} gold`;panel.append(wallet);
-  this.noahTest?.appendShop(panel,()=>this.openCraftShop());
+  this.noahTest?.appendShop(panel,()=>{this.redrawForest();this.openCraftShop();});
   for(const id of blueprintIds){const card=document.createElement('article');card.className='shop-card';const text=document.createElement('div'),name=document.createElement('strong');name.textContent=blueprintNames[id];text.append(name);if(id==='beeHabitat'){const note=document.createElement('p');note.textContent='Simon jelenleg nem értékesíti ezt a tervrajzot a beporzók megfogyatkozása miatt.';text.append(note);}const buy=document.createElement('button');buy.type='button';const owned=this.travel.crafting?.blueprints.includes(id);buy.textContent=id==='beeHabitat'?'Nem kapható':owned?'Megvásárolva':`${recipes[id].price} gold · Megveszem`;buy.dataset.buyBlueprint=id;buy.disabled=id==='beeHabitat'||!!owned||this.economy.gold<recipes[id].price||this.transitioning;buy.onclick=()=>{if(shopAt(this.actor.y)!=='craftShop'||!shopsOpen(this.clock.elapsed)||this.transitioning)return;const next=buyBlueprint(this.currentSnapshot(),id);if(next)void this.commitChest(next,()=>this.openCraftShop());};if(id==='beeHabitat'){const price=document.createElement('s');price.className='unavailable-blueprint-price';price.dataset.unavailableBlueprint=id;price.textContent=`${recipes[id].price} gold`;card.append(itemIcon(id),text,price);}else card.append(itemIcon(id),text,buy);panel.append(card);}
  }
  private appendCraftRecipes(panel:HTMLElement){
@@ -757,9 +767,18 @@ class Farm extends Phaser.Scene {
   if(!people.children.length)people.textContent='Hamarosan megismered a szomszédaidat.';
   document.querySelector<HTMLElement>('#inventory-panel')!.hidden=false;document.querySelector('#dialogue-close')!.textContent='Vissza a kertbe';
  }
+ private openStoryArchive(){
+  showDialogue('Történet','','');dialogue.dataset.presentation='story';
+  const panel=document.querySelector<HTMLElement>('#research-panel')!;panel.replaceChildren();panel.hidden=false;
+  const chapters=[{title:'Egy új kezdet',text:story}];
+  if(this.noahTest?.state.letter)chapters.push({title:`Noah válasza · ${this.noahTest.state.sentDay+3}. nap`,text:noahLetter});
+  for(const [index,chapter]of chapters.entries()){const entry=document.createElement('details');entry.className='story-chapter';entry.open=index===chapters.length-1;const title=document.createElement('summary');title.textContent=chapter.title;const text=document.createElement('p');text.textContent=chapter.text;entry.append(title,text);panel.append(entry);}
+ }
  private drawMailFlag(){
-  if(!this.mailFlag)return;this.mailFlag.clear();
-  if(quantityTotal(this.orders.mailbox)>0){const m=farmLayout.mailbox;this.mailFlag.fillStyle(0xe7b55a);this.mailFlag.fillRect(m.x+m.w-3,m.y-10,3,13);this.mailFlag.fillRect(m.x+m.w,m.y-10,8,5);}
+  if(!this.mailFlag)return;this.mailFlag.clear();const m=farmLayout.mailbox;
+  if(quantityTotal(this.orders.mailbox)>0){this.mailFlag.fillStyle(0xe7b55a);this.mailFlag.fillRect(m.x+m.w-3,m.y-10,3,13);this.mailFlag.fillRect(m.x+m.w,m.y-10,8,5);}
+  const unread=Boolean(this.noahTest?.hasUnreadLetter(this.clock.day));document.querySelector<HTMLElement>('#game')!.dataset.noahUnreadMail=String(unread);
+  if(unread){const g=this.mailFlag,x=m.x+m.w/2,y=m.y-29;g.lineStyle(2,0xf5d689,.45+.15*Math.sin(this.time.now/400)).strokeCircle(x,y,17);g.fillStyle(0xf4e8c4).fillRoundedRect(x-12,y-8,24,16,2);g.lineStyle(1.5,0x846e49).strokePoints([{x:x-11,y:y-7},{x,y:y+1},{x:x+11,y:y-7}]);g.fillStyle(0xa66b54).fillCircle(x,y+2,2.5);}
  }
  private nearObject(area:{x:number;y:number;w:number;h:number},distance=55){return Math.hypot(this.actor.x-area.x-area.w/2,this.actor.y-area.y-area.h/2)<=distance;}
  private async gatherForage(id:string){
@@ -792,7 +811,7 @@ class Farm extends Phaser.Scene {
   document.querySelector('#location-label')!.textContent=region==='home'?'AZ OTTHONOD':region==='workshop'?'MŰHELY':region==='farm'?'AZ OTTHONOD':region==='forest'?'ERDEI ÖSVÉNY':shop==='nursery'?'FAISKOLA':shop==='fishShop'?'KERTITÓ SZAKÜZLET':shop==='craftShop'?'MŰHELYBOLT':'A FALU';
  }
  private fitCamera(){
-  if(this.noahTest&&inNoahSouth(this.actor.x,this.actor.y)){this.cameraRegion='south-forest';this.cameras.main.setZoom(Math.max(this.scale.width/800,this.scale.height/600)).setBounds(-1120,1100,1120,1180).startFollow(this.actor,true,1,1);return;}
+  if(this.noahTest&&inNoahSouth(this.actor.x,this.actor.y)){this.cameraRegion='south-forest';this.cameras.main.setZoom(Math.max(this.scale.width/800,this.scale.height/600)).setBounds(-1120,1100,1120,1880).startFollow(this.actor,true,1,1);return;}
   const shop=shopAt(this.actor.y);if(inHome(this.actor.y)){this.cameraRegion='home';this.cameras.main.setZoom(Math.max(this.scale.width/800,this.scale.height/600)).setBounds(0,HOME_ORIGIN,800,600).startFollow(this.actor,true,1,1);return;}if(inWorkshop(this.actor.y)){this.cameraRegion='workshop';this.cameras.main.setZoom(Math.max(this.scale.width/800,this.scale.height/600)).setBounds(0,WORKSHOP_ORIGIN,800,600).startFollow(this.actor,true,1,1);return;}this.cameraRegion=shop??(this.actor.y<600?'farm':'outside');this.cameras.main.setZoom(Math.max(this.scale.width/800,this.scale.height/600)).setBounds(shop?0:this.actor.y<600?farmBounds.left:FOREST_LEFT,shop?shopOrigins[shop]:farmBounds.top,shop?800:farmBounds.right-(this.actor.y<600?farmBounds.left:FOREST_LEFT),shop?600:WORLD_HEIGHT-farmBounds.top).startFollow(this.actor,true,1,1);
  }
  private async travelTo(point:{x:number;y:number},greeting?:Shop){
@@ -903,7 +922,7 @@ class Farm extends Phaser.Scene {
   finally{this.transitioning=false;this.lastTick=performance.now();if(!document.querySelector<HTMLElement>('#catalog-panel')!.hidden)document.querySelector<HTMLButtonElement>('#place-order')!.disabled=!purchaseSeeds(this.economy,this.orders,this.garden.seeds,this.readCart());}
  }
  private openMailbox(){
-  if(this.noahTest&&this.canInteract()&&this.nearObject(farmLayout.mailbox)){this.noahTest.openLetter();return;}
+  if(this.noahTest?.hasUnreadLetter(this.clock.day)&&this.canInteract()&&this.nearObject(farmLayout.mailbox)){this.noahTest.openLetter();return;}
   if(!this.canInteract())return;if(this.forestNearby()==='send-sample'){this.openSampleMail();return;}if(!this.nearObject(farmLayout.mailbox)){this.notice('A postaláda a kapu bal oldalán áll.');return;}
   showDialogue('Nézzük a postát.','', 'POSTALÁDA');
   this.renderMailbox();
@@ -1076,7 +1095,7 @@ class Farm extends Phaser.Scene {
  }
  private drawGoals(){
   const page=document.querySelector<HTMLElement>('#goals-page')!;page.replaceChildren();
-  const entries=this.noahTest?[{id:'noah-experiment',title:this.noahTest.goal,detail:'',done:this.noahTest.state.complete}]:questEntries(this.travel.research,this.garden,this.clock.day,this.clock.elapsed,this.travel.forest);
+  const entries=this.noahTest?noahGoals(this.noahTest.state,this.clock.day):questEntries(this.travel.research,this.garden,this.clock.day,this.clock.elapsed,this.travel.forest);
   for(const q of entries){
    const card=document.createElement('article');card.className=`quest-card${q.done?' completed':''}`;card.dataset.quest=q.id;
    const mark=document.createElement('span');mark.className='quest-mark';mark.setAttribute('aria-label',q.done?'Teljesítve':'Folyamatban');mark.textContent=q.done?'✓':'–';
@@ -1084,7 +1103,7 @@ class Farm extends Phaser.Scene {
   }
  }
  private updateResearchGoal(){
-  if(this.noahTest){const el=document.querySelector<HTMLElement>('#quest-tracker')!;el.hidden=this.choosingFarm||dialogue.open||!this.ready;el.textContent='• '+this.noahTest.goal;el.dataset.content='';return;}
+  if(this.noahTest){const el=document.querySelector<HTMLElement>('#quest-tracker')!;el.hidden=this.choosingFarm||dialogue.open||!this.ready||!this.noahTest.goal;el.textContent=this.noahTest.goal?'• '+this.noahTest.goal:'';el.dataset.content='';return;}
   const el=document.querySelector<HTMLElement>('#quest-tracker')!,r=this.travel.research;
   const active=questEntries(r,this.garden,this.clock.day,this.clock.elapsed,this.travel.forest).filter(q=>!q.done);
   el.hidden=this.choosingFarm||dialogue.open||!this.ready||!active.length;
@@ -1185,9 +1204,10 @@ class Farm extends Phaser.Scene {
   const noahSection=document.createElement('section');noahSection.className='noah-test-picker';
   const noahTitle=document.createElement('h3');noahTitle.textContent='Noah küldeménye – erdei kísérlet';
   const checkpoint=document.createElement('select');checkpoint.id='noah-test-checkpoint';checkpoint.setAttribute('aria-label','A teszt kezdőpontja');
-  for(const [value,label]of [['letter','Teljes folyamat · Noah levele előtt'],['simon','Indítás Simonnál'],['forest','Indítás a patakhídnál'],['mix','Indítás a kivonatkészítés előtt']])checkpoint.add(new Option(label,value));
+  for(const [value,label]of [['letter','Teljes folyamat · Noah válaszának napja'],['waiting','Indítás a minta elküldése után'],['simon','Indítás Simonnál'],['forest','Indítás a patakhídnál'],['marsh','Indítás a mocsári átkelőnél'],['mix','Indítás a kivonatkészítés előtt']])checkpoint.add(new Option(label,value));
   const start=document.createElement('button');start.type='button';start.id='start-noah-test';start.textContent='Teszt indítása';start.onclick=()=>{start.disabled=true;void this.startNoahTest(checkpoint.value as NoahCheckpoint,noahTestConfig).finally(()=>{start.disabled=false;});};
   noahSection.append(noahTitle,checkpoint,start);panel.append(noahSection);
+  if(this.noahTest){const nextMorning=document.createElement('button');nextMorning.type='button';nextMorning.id='noah-next-morning';nextMorning.textContent='Következő reggel';nextMorning.onclick=()=>{if(this.transitioning)return;dialogue.close();void this.finishDay(false);};panel.append(nextMorning);}
   if(this.store.testMode){const exit=document.createElement('button');exit.type='button';exit.id='exit-test-mode';exit.textContent='Kilépés a tesztmódból';exit.onclick=()=>{if(!this.transitioning&&this.store.selectedFarmId)this.reloadFarm(this.store.selectedFarmId);};panel.append(exit);}
  }
  private async startNoahTest(checkpoint:NoahCheckpoint,config:NoahTestConfig){
@@ -1196,7 +1216,7 @@ class Farm extends Phaser.Scene {
   try{
    if(!this.store.testMode){const original=structuredClone(this.currentSnapshot());await this.saveChecked(original);await this.store.beginTest();this.testBaseline=original;}
    const prepared=prepareNoahTest(this.testBaseline!,config,checkpoint);
-   this.noahTest?.destroy();this.noahTest=new NoahTestController(this,prepared.state,config,{read:()=>this.currentSnapshot(),commit:(s,after)=>this.commitChest(s,after),show:(title,text,label)=>showDialogue(title,text,label??''),notice:text=>this.notice(text)});
+   this.noahTest?.destroy();this.noahTest=new NoahTestController(this,prepared.state,config,{read:()=>this.currentSnapshot(),commit:(s,after)=>this.commitChest(s,after),show:(title,text,label)=>showDialogue(title,text,label??''),notice:text=>this.notice(text),gather:point=>this.avatar.use(point.x-this.actor.x,point.y-this.actor.y,'harvest')});
    this.transitioning=false;
    if(await this.commitChest(prepared.snapshot,()=>{
     this.clock=prepared.snapshot.clock;this.avatar.cancelWork();this.actor.setPosition(prepared.snapshot.player.x,prepared.snapshot.player.y).setAngle(0);this.body.setY(0);this.jumpRemaining=0;this.jumpCooldown=0;this.collapseRemaining=0;this.shadow.setScale(1);this.forestPresence=null;this.forestEquipped=false;this.forestCombat?.reset();this.redrawScenery();this.fitCamera();this.updateFarmTitle();this.nearby='';this.aimAhead();document.querySelector<HTMLElement>('#test-mode-banner')!.hidden=false;document.querySelector<HTMLElement>('#save-state')!.textContent='TESZTMÓD · csak memóriában';dialogue.close();release();
@@ -1460,6 +1480,7 @@ class Farm extends Phaser.Scene {
   document.querySelector('#start-settings')!.addEventListener('click',()=>this.openSettings('start'));
   document.querySelector('#pause-settings')!.addEventListener('click',()=>this.openSettings('pause'));
   document.querySelector('#settings-back')!.addEventListener('click',()=>this.closeSettings());
+  openStoryWindow=()=>this.openStoryArchive();
   document.querySelector('#test-mode-banner')!.addEventListener('click',()=>this.openMicroscopeTest());
   document.querySelector('#microscope-test')!.addEventListener('click',()=>this.openMicroscopeTest());
   document.querySelector('#place-order')!.addEventListener('click',()=>void this.placeOrder());
@@ -1500,13 +1521,14 @@ class Farm extends Phaser.Scene {
   if(!this.weatherEffects)this.weatherEffects=new WeatherEffects();this.weatherEffects.draw(playing?Math.min(seconds,.1):0,weather,outdoors,nightOpacity(this.clock),{x:this.cameras.main.worldView.x,y:this.cameras.main.worldView.y,zoom:this.cameras.main.zoom});this.rainSound.update(weather==='rain'&&outdoors&&playing);
   if(this.ready&&this.hasFarm&&weather==='rain'&&waterFromRain(this.garden))this.drawGarden();
   const surface=document.querySelector<HTMLElement>('#game')!;surface.dataset.cameraX=String(this.cameras.main.worldView.x);surface.dataset.cameraY=String(this.cameras.main.worldView.y);surface.dataset.zoom=String(this.cameras.main.zoom);surface.dataset.placing=this.placingCraft??this.placing??'';surface.dataset.craftMachines=String(this.travel.crafting?.machines.length??0);surface.dataset.mulch=String(this.travel.crafting?.items.mulch??0);surface.dataset.fish=String(this.travel.estate.fish.goldfish+this.travel.estate.fish.carp);surface.dataset.trees=String(this.travel.estate.trees.length);surface.dataset.morningStage=this.morningStage;surface.dataset.shopLeo=String(Boolean(this.shopLeo?.person.visible&&shopAt(this.actor.y)==='nursery'));surface.dataset.shopsOpen=String(shopsOpen(this.clock.elapsed));surface.dataset.shopAnnie=String(Boolean(this.shopAnnie?.person.visible&&shopAt(this.actor.y)==='fishShop'));surface.dataset.pendingSeeds=String(quantityTotal(this.orders.pending));surface.dataset.mailSeeds=String(quantityTotal(this.orders.mailbox));surface.dataset.gardeningXp=String(this.skill.xp);surface.dataset.gardeningReward=String(this.skill.rewarded);surface.dataset.gift=String(this.story.giftReceived);surface.dataset.birdhouse=String(Boolean(this.story.birdhouse));surface.dataset.morningSeen=String(this.story.morningSeen);surface.dataset.gold=String(this.economy.gold);surface.dataset.shipping=String(shippingValue(this.economy.shipping));surface.dataset.day=String(this.clock.day);surface.dataset.elapsed=String(this.clock.elapsed);surface.dataset.ready=String(this.ready);surface.dataset.jumping=String(this.jumpRemaining>0);
-  if(this.noahTest){const t=this.noahTest;surface.dataset.noahStage=t.state.complete?'complete':t.state.ingredientGathered?'ingredient':t.state.letter?'experiment':'letter';surface.dataset.noahMinorRemaining=String(t.forest.minorRemaining);surface.dataset.noahEnemyPhase=t.forest.phaseName;surface.dataset.noahEnemyHp=String(t.forest.hitPoints);surface.dataset.noahRootDefeated=String(t.state.rootDefeated);surface.dataset.noahUpgraded=String(t.state.upgraded);}
+  if(this.noahTest){const t=this.noahTest;surface.dataset.noahHealth=String(this.travel.forest?.health??5);surface.dataset.noahStage=t.state.complete?'complete':t.state.ingredientGathered?'ingredient':t.state.letter?'experiment':'letter';surface.dataset.noahMinorRemaining=String(t.forest.minorRemaining);surface.dataset.noahEnemyPhase=t.forest.phaseName;surface.dataset.noahEnemyHp=String(t.forest.hitPoints);surface.dataset.noahRootDefeated=String(t.state.rootDefeated);surface.dataset.noahUpgraded=String(t.state.upgraded);}
+  if(this.noahTest)this.drawMailFlag();
   this.noahTest?.updatePresentation(now);
   this.avatar.setStickReinforced(Boolean(this.noahTest?.state.upgraded));
   surface.dataset.weather=weather;surface.dataset.previewComplete=String(this.travel.forest?.sent===true);
   if(this.ready&&this.hasFarm&&!this.choosingFarm&&!dialogue.open&&!this.transitioning&&shouldDeliverMicroscope(this.travel.research,!!this.travel.forest?.sample,this.actor.y)){void this.deliverMicroscope();}
   if(this.hasFarm&&this.canInteract()&&!this.travel.pollinationObservation&&nearEmptyBlossoms(this.garden,this.travel.estate,this.actor))void this.observeEmptyBlossoms();
-  if(this.ready&&!this.choosingFarm&&!dialogue.open&&!this.transitioning&&storyEndPending(this.travel))this.showPreviewEnd();
+  if(this.ready&&!this.choosingFarm&&!dialogue.open&&!this.transitioning&&(this.noahTest?this.noahTest.state.complete&&!this.noahTest.state.endSeen:storyEndPending(this.travel)))this.showPreviewEnd();
   this.machineActivity??=this.add.graphics().setDepth(104);drawMachineActivity(this.machineActivity,this.travel.crafting,now);
   if(!this.ready||dialogue.open||this.transitioning||document.hidden||!document.hasFocus()){this.input.keyboard?.resetKeys();this.selection.setVisible(false);return;}
   if(this.collapseRemaining>0){
@@ -1531,9 +1553,9 @@ class Farm extends Phaser.Scene {
   const before={x:this.actor.x,y:this.actor.y};const rocks=activeDebris(this.clearing,this.garden).filter(d=>d.kind==='rock');
   const rockBlocked=(x:number,y:number)=>rocks.some(r=>{const radiusX=r.scale*17+6,radiusY=r.scale*12+3;const old=((before.x-r.x)/radiusX)**2+((before.y-r.y)/radiusY)**2,now=((x-r.x)/radiusX)**2+((y-r.y)/radiusY)**2;return now<1&&(old>=1||now<=old);});
   this.updateForest(Math.min(seconds,.05));
-  if(this.noahTest){const t=this.noahTest;t.forest.update(Math.min(seconds,.05),this.actor,t.state,this.jumpRemaining>0,()=>{const f=this.travel.forest!;f.health=(f.health??5)-1;this.cameras.main.shake(110,.003);if(f.health<=0){f.health=5;t.forest.reset();this.actor.setPosition(START.x,START.y);this.fitCamera();showDialogue('Itthon biztonságban','Az erdei kaland most túl sok volt. Minden holmim és aranyam megmaradt.','SAM');}});if(inNoahSouth(this.actor.x,this.actor.y)){this.avatar.equip('stick');const health=this.travel.forest?.health??5;const hud=document.querySelector<HTMLElement>('#forest-health')!;hud.hidden=false;hud.textContent='♥'.repeat(health)+'♡'.repeat(5-health);}}
-  if(this.actor.x!==before.x||this.actor.y!==before.y)return;
-  const next=move(before.x,before.y,dx,dy,seconds,movementSpeed(this.jumpRemaining>0,movementInput.running),(x,y)=>(!this.noahTest?.state.simonAsked&&closedSouthEntry(x,y,before))||this.skill.chests?.placed.some(c=>{const d=((x-c.x)/23)**2+((y-c.y)/15)**2,old=((before.x-c.x)/23)**2+((before.y-c.y)/15)**2;return d<1&&(old>=1||d<=old);})||this.forestCombat?.blocks(x,y,this.travel.forest??createForest())||(!junkBlocks(this.clearing,before.x,before.y)&&junkBlocks(this.clearing,x,y))||this.travel.crafting?.machines.some(m=>Math.hypot(m.x-x,m.y-y)<11&&Math.hypot(m.x-before.x,m.y-before.y)>=11)||rockBlocked(x,y)||this.travel.estate.trees.some(t=>Math.hypot(x-t.x,y-t.y)<12)||this.travel.estate.pond.some(p=>p.kind==='duckNest'&&Math.hypot(x-p.x,y-p.y)<12),(x,y)=>this.noahTest?(southBlocked(x,y,this.noahTest.state)??worldBlocked(x,y)):worldBlocked(x,y));this.actor.setPosition(next.x,next.y);
+  if(this.noahTest){const t=this.noahTest;t.forest.update(Math.min(seconds,.05),this.actor,t.state,this.jumpRemaining>0,()=>{this.hurtNoah();},point=>this.sinkNoah(point),this.clock.day);if(inNoahSouth(this.actor.x,this.actor.y)){this.avatar.equip('stick');const health=this.travel.forest?.health??5;const hud=document.querySelector<HTMLElement>('#forest-health')!;hud.hidden=false;hud.textContent='♥'.repeat(health)+'♡'.repeat(5-health);}}
+  if(this.transitioning||this.actor.x!==before.x||this.actor.y!==before.y)return;
+  const next=move(before.x,before.y,dx,dy,seconds,movementSpeed(this.jumpRemaining>0,movementInput.running),(x,y)=>(!this.noahTest?.state.upgraded&&closedSouthEntry(x,y,before))||this.skill.chests?.placed.some(c=>{const d=((x-c.x)/23)**2+((y-c.y)/15)**2,old=((before.x-c.x)/23)**2+((before.y-c.y)/15)**2;return d<1&&(old>=1||d<=old);})||this.forestCombat?.blocks(x,y,this.travel.forest??createForest())||(!junkBlocks(this.clearing,before.x,before.y)&&junkBlocks(this.clearing,x,y))||this.travel.crafting?.machines.some(m=>Math.hypot(m.x-x,m.y-y)<11&&Math.hypot(m.x-before.x,m.y-before.y)>=11)||rockBlocked(x,y)||this.travel.estate.trees.some(t=>Math.hypot(x-t.x,y-t.y)<12)||this.travel.estate.pond.some(p=>p.kind==='duckNest'&&Math.hypot(x-p.x,y-p.y)<12),(x,y)=>this.noahTest?(southBlocked(x,y,this.noahTest.state)??worldBlocked(x,y)):worldBlocked(x,y));this.actor.setPosition(next.x,next.y);
   surface.dataset.cleared=String(Object.keys(this.clearing.removed).length);surface.dataset.wood=String(this.clearing.wood);surface.dataset.stone=String(this.clearing.stone);surface.dataset.running=String(movementInput.running);surface.dataset.jumpHeight=String(height);
   const insideShop=shopAt(next.y);
   this.actor.setAlpha(inWorkshop(this.actor.y)&&!this.travel.research.shutter&&!entranceShutterOpen(this.travel.research)?.3:1);this.updateLocation();

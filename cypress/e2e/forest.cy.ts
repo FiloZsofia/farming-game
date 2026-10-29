@@ -40,8 +40,9 @@ it('runs Noah’s letter and extraction only in an isolated developer test',()=>
  press('e','KeyE',69);cy.get('#dialogue-title').should('have.text','Noah levele');cy.get('#dialogue-text').should('contain','gondolják helyesnek');cy.get('#noah-take-package').click();cy.get('#dialogue-close').click();
  cy.get('#quest-tracker').should('contain','Kérdezd meg Simont a kötőanyagról');
  cy.get('#test-mode-banner').click();cy.get('#noah-test-checkpoint').select('mix');cy.get('#start-noah-test').click();press('e','KeyE',69);
- cy.get('#noah-start-extraction').should('be.disabled');for(const id of ['thyme','plantain','ingredient'])cy.get(`#noah-add-${id}`).click();cy.get('#noah-start-extraction').should('not.be.disabled').click();
- cy.get('#dialogue-close').click();press('e','KeyE',69);cy.get('#noah-extraction-step').should('be.visible');
- for(let i=0;i<3;i++)cy.get('#noah-extraction-step').click();cy.get('#dialogue-close').click();
+ const labClick=(x:number,y:number)=>cy.get<HTMLCanvasElement>('.noah-lab-canvas').then(el=>{const r=el[0].getBoundingClientRect();cy.wrap(el).click(x*r.width/700,y*r.height/430);});
+ for(const [id,x]of [['thyme',105],['plantain',200],['ingredient',295]] as const){labClick(x,145);cy.get('.noah-lab-canvas',{timeout:7000}).should('have.attr','data-carrying',id);labClick(465,230);cy.get('.noah-lab-canvas',{timeout:7000}).should('have.attr','data-carrying','').and('have.attr','data-lab-throwing','false');}
+ labClick(465,230);cy.get('.noah-lab-canvas',{timeout:7000}).should('have.attr','data-lab-phase','extract');cy.get('#dialogue-close').click();press('e','KeyE',69);cy.get('.noah-lab-canvas').should('have.attr','data-lab-phase','extract');
+ labClick(590,145);cy.get('.noah-lab-canvas',{timeout:7000}).should('have.attr','data-lab-phase','filter');labClick(590,310);cy.get('.noah-lab-canvas',{timeout:7000}).should('have.attr','data-lab-phase','cool');labClick(105,330);cy.get('.noah-lab-canvas',{timeout:7000}).should('have.attr','data-carrying','concentrate');labClick(465,230);cy.get('#dialogue-title',{timeout:7000}).should('have.text','A kezelt minta elkészült');cy.get('#dialogue-close').click();
  cy.get('#test-mode-banner').click();cy.get('#exit-test-mode').click();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-gold','347').and('have.attr','data-forest-sample','false');cy.get('#test-mode-banner').should('not.be.visible');
 });

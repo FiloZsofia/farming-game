@@ -1,7 +1,7 @@
 import {natureSites,natureReady} from './nature-resources';
 import {drawWoodlandTree} from './woodland-tree';
 import Phaser from 'phaser';
-import {FOREST_LEFT,forestNest,forestPlants,walkingStick,type Forest} from './forest';
+import {FOREST_LEFT,forestNest,forestPlants,walkingStick,type Forest,type Herb} from './forest';
 // Paint into the village's own cached terrain: no overlay rectangle or separate palette.
 export function paintForest(g:Phaser.GameObjects.Graphics,random:()=>number,paintPaths?:()=>void){
  const oval=(x:number,y:number,w:number,h:number,c:number,a=1)=>g.fillStyle(c,a).fillEllipse(x,y,w,h);
@@ -75,7 +75,17 @@ export function paintForest(g:Phaser.GameObjects.Graphics,random:()=>number,pain
 }
 export function drawForestObjects(scene:Phaser.Scene,f:Forest,day:number,weatherSeed=0){
  const g=scene.add.graphics().setDepth(1);
- for(const p of forestPlants){if(f.picked[p.id]!==undefined&&day-f.picked[p.id]<3)continue;g.fillStyle(0x2f4f32,.22).fillEllipse(p.x,p.y+2,27,9);
+ for(const p of forestPlants){if(f.picked[p.id]!==undefined&&day-f.picked[p.id]<3)continue;drawForestHerb(g,p);}
+ for(const p of natureSites){if(p.kind==='wood'||!natureReady(f,p,day,weatherSeed))continue;if(p.kind==='clay'){g.fillStyle(0x8e674b,.65).fillEllipse(p.x,p.y,36,19);g.fillStyle(0xb67e59).fillEllipse(p.x-3,p.y-3,27,13);g.lineStyle(1,0xd09d72).lineBetween(p.x-11,p.y-5,p.x+4,p.y-2).lineBetween(p.x+3,p.y+2,p.x+11,p.y+5);g.lineStyle(1,0x795c43).lineBetween(p.x-5,p.y-5,p.x-2,p.y+4);continue;}
+  g.fillStyle(0x314a34,.28).fillEllipse(p.x+2,p.y+5,34,12);
+  {for(const [dx,dy,w,h,c]of [[-8,2,17,10,0xa7a99b],[7,0,14,11,0x89998e],[0,-5,12,8,0xc4c5b2]]){g.fillStyle(c).fillEllipse(p.x+dx,p.y+dy,w,h);g.lineStyle(.8,0xd9d4b9).lineBetween(p.x+dx-w*.25,p.y+dy-2,p.x+dx+2,p.y+dy-3);}g.lineStyle(1.2,0x67949a,.7).lineBetween(p.x-12,p.y+5,p.x-6,p.y+5).lineBetween(p.x+5,p.y+5,p.x+12,p.y+5);}
+ }
+ if(!f.stick){g.lineStyle(4,0x715238).strokePoints([{x:walkingStick.x-20,y:walkingStick.y+4},{x:walkingStick.x+12,y:walkingStick.y-4},{x:walkingStick.x+22,y:walkingStick.y-13}]);g.lineStyle(1,0xc6aa78).lineBetween(walkingStick.x-18,walkingStick.y+2,walkingStick.x+12,walkingStick.y-6);}
+ return g;
+}
+
+export function drawForestHerb(g:Phaser.GameObjects.Graphics,p:{x:number;y:number;kind:Herb}){
+ g.fillStyle(0x2f4f32,.22).fillEllipse(p.x,p.y+2,27,9);
   if(p.kind==='thyme'){for(let i=0;i<9;i++){const x=p.x+(i%3-1)*6,y=p.y-Math.floor(i/3)*4;g.lineStyle(1.5,0x527449).lineBetween(x,y+3,x,y-7);g.fillStyle(i%2?0xa789b5:0xc3a4c4).fillCircle(x,y-7,2);}}
   else if(p.kind==='plantain'){
    // Basal rosette of long narrow ribbed leaves, with upright brown flower spikes.
@@ -88,11 +98,4 @@ export function drawForestObjects(scene:Phaser.Scene,f:Forest,day:number,weather
     g.fillStyle(0x8caa60).fillTriangle(x-3,p.y-h+5,x,p.y-h-3,x+3,p.y-h+5);
    }
   }
- }
- for(const p of natureSites){if(p.kind==='wood'||!natureReady(f,p,day,weatherSeed))continue;if(p.kind==='clay'){g.fillStyle(0x8e674b,.65).fillEllipse(p.x,p.y,36,19);g.fillStyle(0xb67e59).fillEllipse(p.x-3,p.y-3,27,13);g.lineStyle(1,0xd09d72).lineBetween(p.x-11,p.y-5,p.x+4,p.y-2).lineBetween(p.x+3,p.y+2,p.x+11,p.y+5);g.lineStyle(1,0x795c43).lineBetween(p.x-5,p.y-5,p.x-2,p.y+4);continue;}
-  g.fillStyle(0x314a34,.28).fillEllipse(p.x+2,p.y+5,34,12);
-  {for(const [dx,dy,w,h,c]of [[-8,2,17,10,0xa7a99b],[7,0,14,11,0x89998e],[0,-5,12,8,0xc4c5b2]]){g.fillStyle(c).fillEllipse(p.x+dx,p.y+dy,w,h);g.lineStyle(.8,0xd9d4b9).lineBetween(p.x+dx-w*.25,p.y+dy-2,p.x+dx+2,p.y+dy-3);}g.lineStyle(1.2,0x67949a,.7).lineBetween(p.x-12,p.y+5,p.x-6,p.y+5).lineBetween(p.x+5,p.y+5,p.x+12,p.y+5);}
- }
- if(!f.stick){g.lineStyle(4,0x715238).strokePoints([{x:walkingStick.x-20,y:walkingStick.y+4},{x:walkingStick.x+12,y:walkingStick.y-4},{x:walkingStick.x+22,y:walkingStick.y-13}]);g.lineStyle(1,0xc6aa78).lineBetween(walkingStick.x-18,walkingStick.y+2,walkingStick.x+12,walkingStick.y-6);}
- return g;
 }

@@ -893,6 +893,19 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 - A gépben az összetevők külön behelyezhetők; kivonás, szűrés, hűtés, majd a koncentrátum hozzáadása következik. Ablakbezárás nem veszi el a folyamat állapotát, egy készítés nem vonhat le kétszer alapanyagot. A mikroszkóp alatt kontroll és kezelt minta hasonlítható össze, kézi élességállítással. A siker nem bizonyítja a természetbeli vagy méhek melletti biztonságosságot.
 - Kezdőpontok: teljes folyamat Noah levele előtt; Simon; patakhíd; kivonatkészítés előtt. Újraindítás mindig a tesztbe belépéskor megőrzött farmmásolatból indul. Kilépés vagy frissítés eldobja az egész kísérletet.
 
-- A déli erdő a küldetés előtt lezárt átjáró és sűrű növényzeti takarás mögött marad, veszélyt jelző táblával. A normál játékban még nincs hozzáférés; a fejlesztői tesztben Simon útmutatása nyitja meg. A lezárás oldalról sem kerülhető meg, de egy korábbi mentésben már mögötte álló játékost nem zárunk bent.
+- A déli erdő a küldetés előtt lezárt átjáró és sűrű növényzeti takarás mögött marad, veszélyt jelző táblával. A normál játékban még nincs hozzáférés; a fejlesztői tesztben a Simon beszélgetése után elérhető botmegerősítés nyitja meg. A lezárás oldalról sem kerülhető meg, de egy korábbi mentésben már mögötte álló játékost nem zárunk bent.
 
 - A fejlesztői URL-paraméter neve nem kis-/nagybetűérzékeny: `?dev=1`, `?DEV=1` és vegyes írásmód is működik, minden fejlesztői belépési pont ugyanazt a közös ellenőrzést használja.
+
+### Noah-teszt következő változata — 2026. október 28.
+- Noah válasza a mintaküldés napjától számított harmadik reggelen érkezik (hétfői küldés → csütörtöki válasz). A tesztben külön kezdőpont van a küldés utáni várakozáshoz; a teljes folyamat közvetlenül a válasz napján is indítható. A dátum és az archívum a teszt külön állapotához tartozik.
+- Olvasatlan válasz esetén a postaláda fölött pulzáló boríték látszik. Átvétel után a levél kikerül a postaládából, és a Történet ablakban, a bevezető után, dátummal ellátott fejezetként olvasható vissza.
+- A Célok fül minden már elért lépést megőriz sorrendben, teljesítéskor pipával. A HUD csak az aktuális feladatot mutatja, kész kísérlet után nem marad helyette ál-cél.
+- A botfejlesztés csak Noah levelének átvétele és Simon beszélgetése után kerül a bolti kínálatba. Külön feladat: „Erősíttesd meg a túrabotot”. A következő cél és a déli átjáró megnyitása a fejlesztéshez kötött.
+- Pontos cél: „Szerezz vörösfenyő gyantát a kísérlethez”. A déli erdőben a vadkakukkfű, lándzsás útifű és csalán is gyűjthető, a meglévő háromnapos újraszedhetőséggel és alapanyag-szereppel.
+- Az erdei út kanyargós, sűrű növényzettel, gyökérszűkületekkel és ködös mocsárral, amelyen kőszigetekre ugrálva kelhetünk át. Rossz lépéskor Sam rövid süllyedő animáció után az utolsó biztos pontra jut, és 1 szívet veszít; tárgyat vagy aranyat nem. Elfogyó életerőnél a szokásos biztonságos hazajutás érvényes.
+- A kivonatkészítés külön, irányítható műhelyközeli: Sam WASD/nyilakkal vagy kattintással mozog, E-vel vagy kattintással veszi fel és dobja az üstbe a hozzávalókat. Utána a szűrőt, hűtőspirált és a koncentrátumot kézzel kezeljük. Az elfogadott főhős meglévő grafikáját használjuk; a minijáték nem új karakterterv.
+- A minijáték bezárása megőrzi a felvett hozzávalót és a gép állapotát a teszten belül; újranyitás nem számolhatja el újra a recept költségét.
+- **A normál történetbe való későbbi beépítéskor a történetvégi jelzést el kell mozgatni a mintaküldés utánról a friss történeti végpontra.** A teszt ezt már a kezelt minta megfigyelése után mutatja, az elfogadott szöveg változtatása nélkül. A normál játék még nem kapta meg a teljes új fejezetet.
+
+- A fejlesztői Noah-tesztben a „Következő reggel” gomb csak a memóriabeli példány napját lépteti; a háromnapos válaszvárás így valós reggeli átmenetekkel is tesztelhető. A mocsár külön kezdőpontból is indítható.

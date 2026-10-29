@@ -1,0 +1,8 @@
+export const southRoute=[{x:-444,y:1231},{x:-444,y:1360},{x:-310,y:1450},{x:-325,y:1540},{x:-560,y:1610},{x:-695,y:1700},{x:-690,y:1820},{x:-510,y:1900},{x:-430,y:2000},{x:-444,y:2050},{x:-480,y:2110},{x:-520,y:2170},{x:-475,y:2230},{x:-440,y:2280},{x:-520,y:2350},{x:-680,y:2420},{x:-650,y:2500},{x:-760,y:2640},{x:-805,y:2770},{x:-800,y:2850}];
+export const southPath=southRoute.flatMap((a,i)=>{const b=southRoute[i+1];if(!b)return[a];return Array.from({length:12},(_,j)=>{const t=j/12,u=t*t*(3-2*t);return{x:a.x+(b.x-a.x)*u,y:a.y+(b.y-a.y)*t};});});
+export function distanceToSouthPath(x:number,y:number){let d=Infinity;for(let i=1;i<southPath.length;i++){const a=southPath[i-1],b=southPath[i],dx=b.x-a.x,dy=b.y-a.y,t=Math.max(0,Math.min(1,((x-a.x)*dx+(y-a.y)*dy)/(dx*dx+dy*dy)));d=Math.min(d,Math.hypot(x-a.x-t*dx,y-a.y-t*dy));}return d;}
+export const swampStones=[{x:-444,y:2050},{x:-480,y:2110},{x:-520,y:2170},{x:-475,y:2230},{x:-440,y:2280}];
+export const swampAt=(x:number,y:number)=>((x+480)/165)**2+((y-2160)/143)**2<1;
+export const onSwampStone=(x:number,y:number)=>swampStones.some(p=>Math.hypot(x-p.x,y-p.y)<27);
+export function swampStep(player:{x:number;y:number},jumping:boolean,safe:{x:number;y:number}){const land=!swampAt(player.x,player.y)||onSwampStone(player.x,player.y);return {fall:!jumping&&!land,safe:!jumping&&land?{x:player.x,y:player.y}:safe};}
+export const southHerbs=[{id:'south-thyme-bank',kind:'thyme',x:-380,y:1385},{id:'south-plantain-oak',kind:'plantain',x:-355,y:1530},{id:'south-nettle-root',kind:'nettle',x:-735,y:1770},{id:'south-thyme-rock',kind:'thyme',x:-480,y:1930},{id:'south-plantain-moss',kind:'plantain',x:-490,y:2350},{id:'south-nettle-larch',kind:'nettle',x:-800,y:2700}] as const;
