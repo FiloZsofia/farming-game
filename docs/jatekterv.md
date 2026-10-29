@@ -953,3 +953,6 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 
 - A fatörzs szélén Sam lábának átfedése még alátámasztásnak számít; a valódi lelépés rövid türelmi idő után okoz leesést. A billegés és a süllyedés ugyanazt a járható felületet követi.
 - Az éjszakai gombák új látványa felváltja a fényfüstöt: csak a gomba teste világít, a talajon enyhe lilás visszfénnyel. Nincs fehér fénygyűrű vagy felszálló fénykör.
+
+- A gyantát adó vörösfenyő az ösvénytől oldalt, mohás földháton áll egy párás, tűlevelekkel borított kis mélyedésben. A tisztás nyitott és körbejárható, a fa törzse akadály; a gyanta minden oldalról megközelíthető. Az ösvény utolsó kanyarja elkeskenyedve simul a tisztás talajába.
+- A vörösfenyő egységesen rajzolt, szabálytalan kérgű törzset, szétfutó gyökereket és levegős, lehajló tűleveles ágakat kap. Hátul sűrűbb fák, a tisztás szélén lila gombák keretezik. Alacsony, lassan mozgó pára és napos nappal keskeny, meleg fényfolt emeli ki a gyantát; éjszaka csak a környező gombák korábban egyeztetett testfénye dereng.

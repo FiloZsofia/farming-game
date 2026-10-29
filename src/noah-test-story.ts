@@ -34,7 +34,7 @@ export function prepareNoahTest(source:Snapshot,config:NoahTestConfig,checkpoint
  if(checkpoint==='log')snapshot.player={x:-350,y:1540};
  if(checkpoint==='forest')snapshot.player={x:-444,y:1140};
  if(checkpoint==='marsh')snapshot.player={x:-430,y:2000};
- if(checkpoint==='resin')snapshot.player={x:-850,y:2750};
+ if(checkpoint==='resin')snapshot.player={x:-867,y:2828};
  if(checkpoint==='spores')snapshot.player={x:-690,y:1750};
  if(checkpoint==='root'){snapshot.player={x:-665,y:2450};snapshot.clock.elapsed=390;}
  recordStoryProgress(snapshot.travel,snapshot.clock.day);if(state.letter)recordStoryEvent(snapshot.travel,'noah',state.sentDay+3);

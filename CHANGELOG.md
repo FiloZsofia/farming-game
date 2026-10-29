@@ -2,6 +2,8 @@
 
 ## Változások a 0.1.0 óta — külön jóváhagyott verzióemelés nélkül
 
+- A gyantát adó vörösfenyő párás, mohás mélyedésbe került az ösvény mellé, új törzzsel, gyökerekkel és finom tűlevelű ágakkal; természetesen végződő ösvény, erdős háttér, peremre helyezett gombák és napsütéses fényfolt kíséri.
+
 - A fatörzs melletti lila gomba nem fúj gázt; a külön spórás átjáró megmarad.
 
 - Megengedőbb, a láb átfedését is figyelembe vevő fatörzsszél; a gombák fényfüst helyett saját testükön világítanak, enyhe lilás talajfénnyel.

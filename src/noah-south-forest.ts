@@ -1,3 +1,5 @@
+import {resinTree,larchGlade,inLarchGlade,larchTrunkBlocked,drawLarchHollow,drawOldLarch} from './larch-glade';
+export {resinTree} from './larch-glade';
 import {forestLog,logPoint,logCoordinates,onFloatingLog,logCrossingStep,floatingLogPose} from './forest-log-crossing';
 import {sporeShelters,sporeFieldPhase,sporeFieldHurts,sporeSheltered,inSporeField} from './spore-field';
 import Phaser from 'phaser';
@@ -8,50 +10,51 @@ import {southRoute,southPath,distanceToSouthPath,swampAt,swampStones,swampStep,s
 import {drawWoodlandTree} from './woodland-tree';
 import {rootStrike,rootStrikePose,ROOT_STRIKE_COUNT,ROOT_STRIKE_INTERVAL,ROOT_STRIKE_DURATION} from './root-strikes';
 import type {NoahTestState} from './noah-test-story';
-export const resinTree={x:-805,y:2770};
 export const southRoot={x:-650,y:2500};
 export const inNoahSouth=(x:number,y:number)=>x<0&&y>=1300&&y<2920;
 export function southBlocked(x:number,y:number,state:NoahTestState){
  if(x>=0||y<1190)return null;
  if(!state.upgraded&&y>1295)return true;
  if(y>2880||x< -1040||x> -120)return true;
- if(Math.hypot(x-resinTree.x,y-resinTree.y)<15)return true;
+ if(larchTrunkBlocked(x,y))return true;
  if(y<1350)return Math.abs(x+444)>31;
  if(y>2475&&!state.rootDefeated)return true;
+ if(inLarchGlade(x,y))return false;
  return distanceToSouthPath(x,y)>(swampAt(x,y)?165:94);
 }
 const southEnemies=[{id:'vine',kind:'vine' as const,x:-325,y:1490,hp:3},{id:'spore-a',kind:'spore' as const,x:-665,y:1680,hp:2},{id:'spore-b',kind:'spore' as const,x:-485,y:1908,hp:2},{id:'vine-bramble',kind:'vine' as const,x:-360,y:1950,hp:3},{id:'spore-c',kind:'spore' as const,x:-570,y:2385,hp:2},{id:'vine-larch',kind:'vine' as const,x:-750,y:2670,hp:3},{id:'spore-d',kind:'spore' as const,x:-850,y:2670,hp:2}];
-const mushrooms=[{x:-380,y:1450,s:1.1},{x:-590,y:1580,s:1.5},{x:-755,y:1790,s:1.3},{x:-570,y:1930,s:1.7},{x:-335,y:2220,s:1.2},{x:-745,y:2390,s:1.6},{x:-800,y:2580,s:1.8},{x:-725,y:2760,s:1.2}];
+const mushrooms=[{x:-380,y:1450,s:1.1},{x:-590,y:1580,s:1.5},{x:-755,y:1790,s:1.3},{x:-570,y:1930,s:1.7},{x:-335,y:2220,s:1.2},{x:-745,y:2390,s:1.6},{x:-800,y:2580,s:1.8},{x:-680,y:2815,s:1.05},{x:-976,y:2865,s:.85}];
 export class NoahSouthForest{
  private terrain:Phaser.GameObjects.RenderTexture;private art:Phaser.GameObjects.Graphics;private fungi:Phaser.GameObjects.Graphics;private glow:Phaser.GameObjects.Graphics;private struck=new Set<number>();
- private lastSafe={x:-444,y:2000};private logSafe=logPoint(0);private logLoad=0;private logEdgeTime=0;private logArt:Phaser.GameObjects.Graphics;
+ private lastSafe={x:-444,y:2000};private logSafe=logPoint(0);private logLoad=0;private logEdgeTime=0;private logArt:Phaser.GameObjects.Graphics;private hollowFx:Phaser.GameObjects.Graphics;
  get logPose(){return onFloatingLog(this.sceneActor)?floatingLogPose(this.age,this.logLoad):{sway:0,sink:0};}
  private sceneActor={x:0,y:0};private herbs:Phaser.GameObjects.Graphics;
  private minorCombat:ForestCombat;private minorState={...createForest(),stick:true};
  get fieldPhase(){return sporeFieldPhase(this.age);}
  get minorRemaining(){return southEnemies.length-this.minorState.defeated.length;}
- setUnlocked(value:boolean){const v=this.scene.cameras.main.worldView,visible=value&&v.bottom>1300&&v.top<2950&&v.left<0;this.glow.setVisible(visible);this.logArt.setVisible(visible);this.terrain.setVisible(visible);this.art.setVisible(visible);this.herbs.setVisible(visible);this.fungi.setVisible(visible);}
+ setUnlocked(value:boolean){const v=this.scene.cameras.main.worldView,visible=value&&v.bottom>1300&&v.top<2950&&v.left<0;this.hollowFx.setVisible(visible);this.glow.setVisible(visible);this.logArt.setVisible(visible);this.terrain.setVisible(visible);this.art.setVisible(visible);this.herbs.setVisible(visible);this.fungi.setVisible(visible);}
  get phaseName(){return this.phase;}
  get hitPoints(){return this.hp;}
  private age=0;private timer=1.4;private phase:'rest'|'warn'|'strike'='rest';private hp=6;private invulnerable=0;private swing=0;private aim={x:0,y:-1};
  constructor(private scene:Phaser.Scene){
-  this.logArt=scene.add.graphics().setDepth(3);this.minorCombat=new ForestCombat(scene,southEnemies,inNoahSouth);this.art=scene.add.graphics().setDepth(91);this.herbs=scene.add.graphics().setDepth(2);this.glow=scene.add.graphics().setDepth(94).setBlendMode(Phaser.BlendModes.ADD);this.fungi=scene.add.graphics().setDepth(92);const g=scene.add.graphics();
+  this.hollowFx=scene.add.graphics().setDepth(4);this.logArt=scene.add.graphics().setDepth(3);this.minorCombat=new ForestCombat(scene,southEnemies,inNoahSouth);this.art=scene.add.graphics().setDepth(91);this.herbs=scene.add.graphics().setDepth(2);this.glow=scene.add.graphics().setDepth(94).setBlendMode(Phaser.BlendModes.ADD);this.fungi=scene.add.graphics().setDepth(92);const g=scene.add.graphics();
   // Match the existing meadow and blend the northern edge without a straight seam.
-  g.fillStyle(0x759c48).fillRect(-1120,1510,1120,1440);
+  g.fillStyle(0x759c48).fillRect(-1120,1510,1120,1470);
   for(let y=1320;y<1540;y+=10)for(let x=-1120;x<0;x+=17){const n=Math.abs(Math.sin(x*12.23+y*4.71));g.fillStyle(0x759c48,Math.min(1,(y-1320)/180)).fillRect(x,y,18,12);}
-  for(let i=0;i<21000;i++){const n=Math.abs(Math.sin(i*7.713)),x=-1120+(i*73%1117),y=1320+(i*47%1540);g.fillStyle([0x4f783f,0x9bb669,0xb1bf72][i%3],.5).fillRect(x+n*8,y,1+n*2,1);}
+  for(let i=0;i<21000;i++){const n=Math.abs(Math.sin(i*7.713)),x=-1120+(i*73%1117),y=1320+(i*47%1660);g.fillStyle([0x4f783f,0x9bb669,0xb1bf72][i%3],.5).fillRect(x+n*8,y,1+n*2,1);}
   for(const p of southRoute){g.fillStyle(0x365b3c,.17).fillEllipse(p.x-150,p.y+20,210,110);g.fillEllipse(p.x+145,p.y-10,200,95);}
+  drawLarchHollow(g);
   // Draw the route as one network, then let the marsh interrupt its middle.
   // Shared polygon edges taper the first steps into grass; never paint over existing crowns.
-  const edge=(i:number,width:number)=>{const p=southPath[i],a=southPath[Math.max(0,i-1)],b=southPath[Math.min(southPath.length-1,i+1)],d=Math.hypot(b.x-a.x,b.y-a.y)||1,t=Phaser.Math.Clamp((p.y-1231)/100,0,1);return {x:p.x,y:p.y,nx:-(b.y-a.y)/d*width*.5*Math.sqrt(t),ny:(b.x-a.x)/d*width*.5*Math.sqrt(t)};};
-  for(const [width,color]of [[48,0x647746],[35,0x9b9566],[27,0xb3a878]])for(let i=1;i<southPath.length;i++){const a=edge(i-1,width),b=edge(i,width),alpha=Phaser.Math.Clamp(((a.y+b.y)/2-1231)/85,0,1);g.fillStyle(color,alpha).fillPoints([{x:a.x-a.nx,y:a.y-a.ny},{x:b.x-b.nx,y:b.y-b.ny},{x:b.x+b.nx,y:b.y+b.ny},{x:a.x+a.nx,y:a.y+a.ny}],true);}
+  const edge=(i:number,width:number)=>{const p=southPath[i],a=southPath[Math.max(0,i-1)],b=southPath[Math.min(southPath.length-1,i+1)],d=Math.hypot(b.x-a.x,b.y-a.y)||1,endFade=p.y>2700?Phaser.Math.Clamp((2750-p.y)/50,0,1):1,t=Phaser.Math.Clamp((p.y-1231)/100,0,1);return {x:p.x,y:p.y,nx:-(b.y-a.y)/d*width*.5*Math.sqrt(t)*endFade,ny:(b.x-a.x)/d*width*.5*Math.sqrt(t)*endFade};};
+  for(const [width,color]of [[48,0x647746],[35,0x9b9566],[27,0xb3a878]])for(let i=1;i<southPath.length;i++){const a=edge(i-1,width),b=edge(i,width),alpha=Phaser.Math.Clamp(((a.y+b.y)/2-1231)/85,0,1)*Phaser.Math.Clamp((2750-(a.y+b.y)/2)/50,0,1);g.fillStyle(color,alpha).fillPoints([{x:a.x-a.nx,y:a.y-a.ny},{x:b.x-b.nx,y:b.y-b.ny},{x:b.x+b.nx,y:b.y+b.ny},{x:a.x+a.nx,y:a.y+a.ny}],true);}
   for(let i=0;i<40;i++){const y=1235+i*2.3,x=-444+Math.sin(i*12.7)*(3+i*.12);g.fillStyle(i%3?0xb3a878:0x91a35e,.2+i/75).fillEllipse(x,y,2+i%3,1);}
   const marsh=Array.from({length:40},(_,i)=>{const a=i/40*Math.PI*2,r=1+.05*Math.sin(i*2.7);return{x:-480+Math.cos(a)*165*r,y:2160+Math.sin(a)*143*r};});
   g.fillStyle(0x526447).fillPoints(marsh,true);g.lineStyle(14,0x78815a).strokePoints(marsh,true);g.fillStyle(0x3c6254).fillPoints(marsh,true);
   for(let i=0;i<65;i++){const x=-625+(i*73%290),y=2035+(i*47%245);if(swampAt(x,y)){g.fillStyle(0x7c9463,.35).fillEllipse(x,y,12+i%4*5,3);g.lineStyle(1,0x9fac75,.3).lineBetween(x,y,x+9,y);}}
   for(const p of swampStones){g.fillStyle(0x293e34,.5).fillEllipse(p.x+4,p.y+5,59,30);g.fillStyle(0x8f9b87).fillPoints([{x:p.x-26,y:p.y+6},{x:p.x-20,y:p.y-12},{x:p.x+6,y:p.y-18},{x:p.x+27,y:p.y-3},{x:p.x+20,y:p.y+13},{x:p.x-10,y:p.y+15}],true);g.lineStyle(2,0xc2c5a5).lineBetween(p.x-18,p.y-10,p.x+4,p.y-15);g.fillStyle(0x678153).fillEllipse(p.x+9,p.y+5,18,7);}
   let seed=312;const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
-  for(let y=1380;y<2940;y+=64)for(let x=-1050;x< -60;x+=70){const xx=x+random()*32,yy=y+random()*20;if(distanceToSouthPath(xx,yy)<104||swampAt(xx,yy))continue;drawWoodlandTree(g,random,xx,yy,Math.floor(random()*3),.95+random()*.35);}
+  for(let y=1380;y<3010;y+=64)for(let x=-1050;x< -60;x+=70){const xx=x+random()*32,yy=y+random()*20;if(distanceToSouthPath(xx,yy)<104||swampAt(xx,yy)||yy>2630&&((xx+820)/205)**2+((yy-2780)/175)**2<1)continue;drawWoodlandTree(g,random,xx,yy,Math.floor(random()*3),.95+random()*.35);}
   // A muddy, root-lined pool interrupts the path; a continuous floating trunk forms the crossing.
   const local=(t:number,n:number)=>logPoint(t,n),hollow=[local(.08,-118),local(.22,-130),local(.85,-122),local(.92,-100),local(.92,108),local(.75,126),local(.15,114),local(.08,90)];
   g.fillStyle(0x657849).fillPoints(hollow,true);g.lineStyle(10,0x83905b).strokePoints(hollow,true);g.fillStyle(0x3d5143).fillPoints(hollow.map(p=>({x:p.x,y:p.y+3})),true);
@@ -59,14 +62,11 @@ export class NoahSouthForest{
   for(let i=0;i<16;i++){const p=local(.14+i*.047,i%2?-92:86);g.lineStyle(2,0x6c6240).lineBetween(p.x,p.y,p.x+Math.sin(i*2.7)*12,p.y+13);}
   // Fallen, mossy trunks offer cover from the wind-driven spore field.
   for(const cover of sporeShelters){const p={x:cover.x-34,y:cover.y-8};g.fillStyle(0x2c4838,.5).fillEllipse(p.x+3,p.y+9,65,35);g.fillStyle(0x67513b).fillRoundedRect(p.x-23,p.y-15,46,28,6);g.fillStyle(0x98754c).fillEllipse(p.x,p.y-14,45,19);g.lineStyle(1,0x604b36).strokeEllipse(p.x,p.y-14,31,12);g.fillStyle(0x617a40).fillEllipse(p.x-13,p.y-5,22,12);}
-  // A living larch with warm bark and soft needles supplies naturally exuded resin.
-  g.fillStyle(0x253e2c,.4).fillEllipse(resinTree.x,resinTree.y+14,140,30);
-  drawWoodlandTree(g,random,resinTree.x,resinTree.y,2,1.5);
-  g.fillStyle(0x73523a).fillRoundedRect(resinTree.x-13,resinTree.y-83,26,85,5);
-  for(let i=0;i<6;i++)g.lineStyle(1.3,0xb28a58).lineBetween(resinTree.x-9+i*4,resinTree.y-76,resinTree.x-10+i*4,resinTree.y-7);
-  g.lineStyle(3,0x4a3929).strokePoints([{x:resinTree.x-3,y:resinTree.y-65},{x:resinTree.x+3,y:resinTree.y-48},{x:resinTree.x-2,y:resinTree.y-30}]);
+  // Dense rear trees frame the sheltered hollow, leaving its approach and floor open.
+  for(const [x,y,kind,scale]of [[-1015,2718,2,1.5],[-950,2678,0,1.3],[-860,2638,2,1.45],[-680,2700,2,1.4],[-646,2800,0,1.25]])drawWoodlandTree(g,random,x,y,kind,scale);
+  drawOldLarch(g);
   for(let i=0;i<24;i++){const x=-900+random()*640,y=1450+random()*1390;g.fillStyle(0xb3a077,.35).fillRect(x,y,3,1);}
-  this.terrain=scene.add.renderTexture(-1120,1190,1120,1760).setOrigin(0).setDepth(-.4).setVisible(false);this.terrain.draw(g,1120,-1190);g.destroy();
+  this.terrain=scene.add.renderTexture(-1120,1190,1120,1790).setOrigin(0).setDepth(-.4).setVisible(false);this.terrain.draw(g,1120,-1190);g.destroy();
  }
  attack(player:{x:number;y:number},direction:{x:number;y:number},upgraded:boolean,state:NoahTestState){
   if(this.swing>0)return false;
@@ -78,12 +78,12 @@ export class NoahSouthForest{
   this.hp-=upgraded?2:1;this.timer=Math.max(this.timer,.7);this.scene.cameras.main.shake(70,.0015);
   if(this.hp<=0)state.rootDefeated=true;return true;
  }
- update(dt:number,player:{x:number;y:number},state:NoahTestState,jumping:boolean,hurt:()=>void,fall?:(point:{x:number;y:number})=>void,day=1,night=0){
+ update(dt:number,player:{x:number;y:number},state:NoahTestState,jumping:boolean,hurt:()=>void,fall?:(point:{x:number;y:number})=>void,day=1,night=0,sunny=true){
   this.sceneActor={x:player.x,y:player.y};if(!inNoahSouth(player.x,player.y)){this.logLoad=0;this.logEdgeTime=0;return;}
   this.age+=dt;this.invulnerable=Math.max(0,this.invulnerable-dt);this.swing=Math.max(0,this.swing-dt);const g=this.art;g.clear();
   if(!state.ingredientGathered){const x=resinTree.x,y=resinTree.y;for(let i=0;i<4;i++){const yy=y-57+i*11+Math.sin(this.age*.8+i)*1.4;g.fillStyle(0xbf7c2d).fillEllipse(x+i%2*5-3,yy,7,11);g.fillStyle(0xe9b751).fillEllipse(x+i%2*5-4,yy-1,4,8);g.fillStyle(0xffdf9a).fillEllipse(x+i%2*5-5,yy-3,1.5,3);}}
 
-  this.drawMushrooms(night);
+  this.drawMushrooms(night);this.drawHollowAtmosphere(player,night,sunny);
   this.herbs.clear();if(state.upgraded)for(const p of southHerbs){if(state.herbsPicked[p.id]!==undefined&&day-state.herbsPicked[p.id]<3)continue;drawForestHerb(this.herbs,p);}
   this.sceneActor={x:player.x,y:player.y};const loaded=onFloatingLog(player)&&!jumping;
   this.logLoad=Phaser.Math.Clamp(this.logLoad+dt*(loaded?.9:-.6),0,1);this.drawFloatingLog();
@@ -158,6 +158,12 @@ export class NoahSouthForest{
   if(releasing)for(let i=0;i<45;i++){const x=-810+(i*47+this.age*60)%350,y=1782+i*31%120;g.fillStyle(0xc5baa2,.2).fillCircle(x,y,1+i%2);}
   if(inSporeField(player.x,player.y)&&sporeSheltered(player.x,player.y))for(const p of sporeShelters)g.lineStyle(1,0xc4d39c,.45).strokeEllipse(p.x,p.y+6,58,32);
  }
+ private drawHollowAtmosphere(player:{x:number;y:number},night:number,sunny:boolean){
+  const g=this.hollowFx;g.clear();if(Math.hypot(player.x-larchGlade.x,player.y-larchGlade.y)>420)return;
+  const {x,y}=larchGlade;
+  for(let i=0;i<6;i++){const cx=x-100+(this.age*5+i*43)%210,cy=y+32+i%3*19,points=[];for(let j=0;j<=18;j++){const xx=cx-65+j*7,yy=cy+Math.sin(j*.4+this.age*.3+i)*4;points.push({x:xx,y:yy});}for(let j=18;j>=0;j--){const xx=cx-65+j*7,yy=cy+Math.sin(j*.4+this.age*.3+i)*4+Math.sin(j/18*Math.PI)*7;points.push({x:xx,y:yy});}g.fillStyle(night>.2?0xa1a6b5:0xd6ddbd,.055).fillPoints(points,true);}
+  const sun=sunny?1-Math.min(1,night/.3):0;if(sun>0){for(let i=0;i<5;i++)g.fillStyle(0xf6d490,sun*.014).fillPoints([{x:resinTree.x-65-i*2,y:resinTree.y-195},{x:resinTree.x-45+i*2,y:resinTree.y-195},{x:resinTree.x+34+i*3,y:resinTree.y+20},{x:resinTree.x-5-i*3,y:resinTree.y+22}],true);}
+ }
  private drawMushrooms(night:number){
   const g=this.fungi,h=this.glow,light=Math.min(1,night/.55);g.clear();h.clear();
   for(const p of mushrooms){const {x,y,s:base}=p,s=base,pulse=.82+Math.sin(this.age*1.7+x)*.18;
@@ -174,5 +180,5 @@ export class NoahSouthForest{
    for(let i=0;i<7;i++){const xx=x+Math.cos(i*2.4)*(10+i%3*5)*s,yy=y-43*s+Math.sin(i*2.4)*8*s;g.fillStyle(0xe4d6df).fillEllipse(xx,yy,(3+i%2)*s,3*s);if(night>0)h.fillStyle(0xc5a0db,light*.35*pulse).fillCircle(xx,yy,3*s);}
   }
  }
- destroy(){this.glow.destroy();this.logArt.destroy();this.fungi.destroy();this.terrain.destroy();this.art.destroy();this.herbs.destroy();this.minorCombat.destroy();}
+ destroy(){this.hollowFx.destroy();this.glow.destroy();this.logArt.destroy();this.fungi.destroy();this.terrain.destroy();this.art.destroy();this.herbs.destroy();this.minorCombat.destroy();}
 }
