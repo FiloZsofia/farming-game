@@ -2,6 +2,10 @@
 
 ## Változások a 0.1.0 óta — külön jóváhagyott verzióemelés nélkül
 
+- Az éjszakai lila gombák lágyabb fényt és felfelé úszó, világító párát kapnak.
+
+- Ugrás nélkül bejárható, Sam alatt süllyedő és billegő mocsári fatörzs; a mellette álló lila gomba mérgező gázt fúj.
+
 - A törött fatörzs körül is bugyogó, barnás mocsár látszik.
 
 - Az ablakot kitöltő térkép, ráhelyezett Vissza gombbal és külön helyjelmagyarázat nélkül.

@@ -946,7 +946,9 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 - A déli erdei mocsár érkezési figyelmeztető ablaka és a gyökércsomó feletti név nem jelenik meg. A fizikai veszélyjelző tábla megmarad.
 - Kivonatkészítéskor a célpont neve a kamera nagyításától független, éles szöveg; a munkafelületek és a felirat nem takarhatják Samet.
 
-- A déli erdő memóriabeli tesztjében két kipróbálható ügyességi rész van: láthatóan megduzzadó gombákkal előre jelzett, szakaszos spórakifújás; valamint egy száraz mélyedésen átvezető, középen törött fatörzs. A törzsről leesés a meglévő mocsári visszahelyezés és egy szív levonásának útvonalát használja, tárgy- és aranyvesztés nélkül. A feladatokhoz nem készül külön fejlesztői kezdőpont; az erdő bejárása közben próbálhatók ki.
+- A déli erdő memóriabeli tesztjében két kipróbálható ügyességi rész van: láthatóan megduzzadó gombákkal előre jelzett, szakaszos spórakifújás; valamint egy mocsáron átvezető, Sam alatt süllyedő és oldalra billegő, folyamatos fatörzs. A törzsről leesés a meglévő mocsári visszahelyezés és egy szív levonásának útvonalát használja, tárgy- és aranyvesztés nélkül. A feladatokhoz nem készül külön fejlesztői kezdőpont; az erdő bejárása közben próbálhatók ki.
 - A híd utáni ösvény saját földszínű alakja fokozatosan szélesedik és erősödik; nem kerül zöld téglalap a meglévő tájra. Az északi fák koronái külön rétegben a déli talaj fölött maradnak.
 
-- A törött fatörzs alatti mélyedés is mocsaras, barnás, növekvő és kipukkanó buborékokkal. A buborékok nem takarják a járható törzsdarabokat. A súly alatt megsüllyedő törzs egyelőre csak felvetett ötlet.
+- A törött fatörzs alatti mélyedés is mocsaras, barnás, növekvő és kipukkanó buborékokkal. A buborékok nem takarják a járható törzsdarabokat. A törzs Sam súlya alatt süllyed és jobbra-balra mozog; az átkeléshez nem kell ugrani. A mellette lévő lila gomba előre jelzett ütemben mérgező gázt fúj, a meglévő egy szíves sebzéssel.
+
+- Éjszaka a déli erdő lila gombái rétegzett levendulás-kékes fényt és lassan felfelé szálló, elhalványuló fényfüstöt kapnak. Ez látványában elkülönül a mérgező gáz barnás felhőjétől; nappal nem látszik.
