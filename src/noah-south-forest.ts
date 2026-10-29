@@ -1,4 +1,4 @@
-import {forestLog,logPoint,logCoordinates,logCrossingStep,floatingLogPose,logGasHurts} from './forest-log-crossing';
+import {forestLog,logPoint,logCoordinates,onFloatingLog,logCrossingStep,floatingLogPose,logGasHurts} from './forest-log-crossing';
 import {sporeShelters,sporeFieldPhase,sporeFieldHurts,sporeSheltered,inSporeField} from './spore-field';
 import Phaser from 'phaser';
 import {ForestCombat} from './forest-combat';
@@ -24,8 +24,8 @@ const southEnemies=[{id:'vine',kind:'vine' as const,x:-325,y:1490,hp:3},{id:'spo
 const mushrooms=[{x:-380,y:1450,s:1.1},{x:-590,y:1580,s:1.5},{x:-755,y:1790,s:1.3},{x:-570,y:1930,s:1.7},{x:-335,y:2220,s:1.2},{x:-745,y:2390,s:1.6},{x:-800,y:2580,s:1.8},{x:-725,y:2760,s:1.2}];
 export class NoahSouthForest{
  private terrain:Phaser.GameObjects.RenderTexture;private art:Phaser.GameObjects.Graphics;private fungi:Phaser.GameObjects.Graphics;private glow:Phaser.GameObjects.Graphics;private struck=new Set<number>();
- private lastSafe={x:-444,y:2000};private logSafe=logPoint(0);private logLoad=0;private logArt:Phaser.GameObjects.Graphics;
- get logPose(){const p=logCoordinates(this.sceneActor);return p.t>.04&&p.t<.96&&Math.abs(p.across)<forestLog.halfWidth?floatingLogPose(this.age,this.logLoad):{sway:0,sink:0};}
+ private lastSafe={x:-444,y:2000};private logSafe=logPoint(0);private logLoad=0;private logEdgeTime=0;private logArt:Phaser.GameObjects.Graphics;
+ get logPose(){return onFloatingLog(this.sceneActor)?floatingLogPose(this.age,this.logLoad):{sway:0,sink:0};}
  private sceneActor={x:0,y:0};private herbs:Phaser.GameObjects.Graphics;
  private minorCombat:ForestCombat;private minorState={...createForest(),stick:true};
  get fieldPhase(){return sporeFieldPhase(this.age);}
@@ -79,16 +79,16 @@ export class NoahSouthForest{
   if(this.hp<=0)state.rootDefeated=true;return true;
  }
  update(dt:number,player:{x:number;y:number},state:NoahTestState,jumping:boolean,hurt:()=>void,fall?:(point:{x:number;y:number})=>void,day=1,night=0){
-  this.sceneActor={x:player.x,y:player.y};if(!inNoahSouth(player.x,player.y)){this.logLoad=0;return;}
+  this.sceneActor={x:player.x,y:player.y};if(!inNoahSouth(player.x,player.y)){this.logLoad=0;this.logEdgeTime=0;return;}
   this.age+=dt;this.invulnerable=Math.max(0,this.invulnerable-dt);this.swing=Math.max(0,this.swing-dt);const g=this.art;g.clear();
   if(!state.ingredientGathered){const x=resinTree.x,y=resinTree.y;for(let i=0;i<4;i++){const yy=y-57+i*11+Math.sin(this.age*.8+i)*1.4;g.fillStyle(0xbf7c2d).fillEllipse(x+i%2*5-3,yy,7,11);g.fillStyle(0xe9b751).fillEllipse(x+i%2*5-4,yy-1,4,8);g.fillStyle(0xffdf9a).fillEllipse(x+i%2*5-5,yy-3,1.5,3);}}
 
   this.drawMushrooms(night);
   this.herbs.clear();if(state.upgraded)for(const p of southHerbs){if(state.herbsPicked[p.id]!==undefined&&day-state.herbsPicked[p.id]<3)continue;drawForestHerb(this.herbs,p);}
-  this.sceneActor={x:player.x,y:player.y};const lp=logCoordinates(player),loaded=lp.t>.04&&lp.t<.96&&Math.abs(lp.across)<=forestLog.halfWidth&&!jumping;
+  this.sceneActor={x:player.x,y:player.y};const loaded=onFloatingLog(player)&&!jumping;
   this.logLoad=Phaser.Math.Clamp(this.logLoad+dt*(loaded?.9:-.6),0,1);this.drawFloatingLog();this.drawLogGas();
   if(state.upgraded&&logGasHurts(this.age,player)&&this.invulnerable===0){this.invulnerable=1.3;hurt();}
-  const crossing=logCrossingStep(player,jumping,this.logSafe);this.logSafe=crossing.safe;if(crossing.fall){fall?.(this.logSafe);return;}
+  const crossing=logCrossingStep(player,jumping,this.logSafe);this.logSafe=crossing.safe;this.logEdgeTime=crossing.fall?this.logEdgeTime+dt:0;if(this.logEdgeTime>=.18){this.logEdgeTime=0;fall?.(this.logSafe);return;}
   if(inNoahSouth(player.x,player.y)){const step=swampStep(player,jumping,this.lastSafe);this.lastSafe=step.safe;if(step.fall){fall?.(this.lastSafe);return;}}
   // Thin drifting mist and small bubbles make the marsh feel alive.
   if(state.upgraded)for(let i=0;i<10;i++){const x=-610+(i*39+this.age*5)%260,y=2090+i%4*35;g.fillStyle(0xc9d5b6,.035).fillEllipse(x,y,90,11);}
@@ -168,18 +168,16 @@ export class NoahSouthForest{
   const g=this.fungi,h=this.glow,light=Math.min(1,night/.55);g.clear();h.clear();
   for(const p of mushrooms){const {x,y,s:base}=p,s=base*(x===-590&&y===1580&&sporeFieldPhase(this.age)==='warning'?1+Math.sin(this.age*10)*.07:1),pulse=.82+Math.sin(this.age*1.7+x)*.18;
    if(night>0){
-    for(let i=5;i>=1;i--)h.fillStyle(i%2?0xb293ee:0x91b3dc,light*.07*pulse).fillEllipse(x,y-27*s,(56+i*21)*s,(32+i*13)*s);
-    h.fillStyle(0x8c6bb5,light*.19*pulse).fillEllipse(x,y-42*s,57*s,30*s);
-    // Fine luminous vapour rises above the caps; it is distinct from the brown toxic gas.
-    for(let i=0;i<11;i++){const t=(this.age*.14+i/11+(x+y)*.001)%1,lift=t*105*s,xx=x+Math.sin(t*5+i*2.3+this.age*.24)*(8+t*17)*s,yy=y-51*s-lift,alpha=light*Math.sin(t*Math.PI)*pulse;
-     h.fillStyle(i%2?0xbca6ec:0x9dbed9,alpha*.18).fillEllipse(xx,yy,(20+t*24)*s,(15+t*16)*s);
-     h.fillStyle(0xd4c3f4,alpha*.11).fillEllipse(xx-3*s,yy-3*s,(10+t*15)*s,(18+t*18)*s);
-     if(i%2===0){h.lineStyle(.65*s,0xe0d2f4,alpha*.35).strokePoints([{x:xx-3*s,y:yy+11*s},{x:xx+Math.sin(t*8)*5*s,y:yy},{x:xx+4*s,y:yy-12*s}]);h.fillStyle(0xeee4ff,alpha*.85).fillCircle(xx+8*s,yy-5*s,.75*s);}
-    }
+    // Purple emission follows the mushroom silhouette, with only a faint ground tint.
+    for(let layer=8;layer>=1;layer--){const radius=(27+layer*3)*s,points=Array.from({length:24},(_,i)=>{const angle=i/24*Math.PI*2,r=radius*(1+.06*Math.sin(i*2.3+x));return{x:x+Math.cos(angle)*r,y:y+4*s+Math.sin(angle)*r*.34};});h.fillStyle(0x713593,light*.012*pulse).fillPoints(points,true);}
+    h.fillStyle(0x8651b0,light*.27*pulse).fillRoundedRect(x-6*s,y-36*s,12*s,38*s,4*s);
+    h.fillStyle(0x9356bd,light*.34*pulse).fillEllipse(x,y-42*s,60*s,32*s);
+    h.fillStyle(0xb286cf,light*.16*pulse).fillEllipse(x-9*s,y-48*s,34*s,18*s);
    }
+
    g.fillStyle(0x263b30,.3).fillEllipse(x+4,y+4,40*s,10*s);g.fillStyle(0xa99aab).fillRoundedRect(x-6*s,y-36*s,12*s,38*s,4*s);g.fillStyle(0xc1b3c0).fillRect(x-4*s,y-30*s,3*s,30*s);
    g.fillStyle(0x493952).fillEllipse(x,y-31*s,58*s,14*s);g.fillStyle(0x775781).fillEllipse(x,y-42*s,60*s,32*s);g.fillStyle(0x9975a2).fillEllipse(x-9*s,y-48*s,34*s,18*s);g.lineStyle(1.5*s,0xc2a6c9,.7).strokeEllipse(x,y-32*s,54*s,9*s);
-   for(let i=0;i<7;i++){const xx=x+Math.cos(i*2.4)*(10+i%3*5)*s,yy=y-43*s+Math.sin(i*2.4)*8*s;g.fillStyle(0xe4d6df).fillEllipse(xx,yy,(3+i%2)*s,3*s);if(night>0)h.fillStyle(0xe8cfff,light*.8*pulse).fillCircle(xx,yy,3*s);}
+   for(let i=0;i<7;i++){const xx=x+Math.cos(i*2.4)*(10+i%3*5)*s,yy=y-43*s+Math.sin(i*2.4)*8*s;g.fillStyle(0xe4d6df).fillEllipse(xx,yy,(3+i%2)*s,3*s);if(night>0)h.fillStyle(0xc5a0db,light*.35*pulse).fillCircle(xx,yy,3*s);}
   }
  }
  destroy(){this.glow.destroy();this.logArt.destroy();this.fungi.destroy();this.terrain.destroy();this.art.destroy();this.herbs.destroy();this.minorCombat.destroy();}

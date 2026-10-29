@@ -951,4 +951,5 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 
 - A törött fatörzs alatti mélyedés is mocsaras, barnás, növekvő és kipukkanó buborékokkal. A buborékok nem takarják a járható törzsdarabokat. A törzs Sam súlya alatt süllyed és jobbra-balra mozog; az átkeléshez nem kell ugrani. A mellette lévő lila gomba előre jelzett ütemben mérgező gázt fúj, a meglévő egy szíves sebzéssel.
 
-- Éjszaka a déli erdő lila gombái rétegzett levendulás-kékes fényt és lassan felfelé szálló, elhalványuló fényfüstöt kapnak. Ez látványában elkülönül a mérgező gáz barnás felhőjétől; nappal nem látszik.
+- A fatörzs szélén Sam lábának átfedése még alátámasztásnak számít; a valódi lelépés rövid türelmi idő után okoz leesést. A billegés és a süllyedés ugyanazt a járható felületet követi.
+- Az éjszakai gombák új látványa felváltja a fényfüstöt: csak a gomba teste világít, a talajon enyhe lilás visszfénnyel. Nincs fehér fénygyűrű vagy felszálló fénykör.
