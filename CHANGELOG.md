@@ -2,6 +2,8 @@
 
 ## Változások a 0.1.0 óta — külön jóváhagyott verzióemelés nélkül
 
+- A lezárt melléképület felfedezésének célja csak Leo kulcsának átvétele után jelenik meg, nem az első napon.
+
 - A gyantát adó vörösfenyő párás, mohás mélyedésbe került az ösvény mellé, új törzzsel, gyökerekkel és finom tűlevelű ágakkal; természetesen végződő ösvény, erdős háttér, peremre helyezett gombák és napsütéses fényfolt kíséri.
 
 - A fatörzs melletti lila gomba nem fúj gázt; a külön spórás átjáró megmarad.

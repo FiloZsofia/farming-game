@@ -237,11 +237,11 @@ describe('Southern village and forest',()=>{
   start({...villageSave,farmName:'Teszt farm',clock:{day:16,elapsed:20,collapseAt:580}});cy.get('#game').should('have.attr','data-preview-complete','false').and('have.attr','data-day','16').and('have.attr','data-calendar-day','15');cy.get('#season-name').should('have.text','Tavasz');cy.get('#day-number').should('have.text','16.');reloadFarm();cy.get('#day-number').should('have.text','16.');cy.get('#dialogue').should('not.be.visible');
  });
 
- it('shows the first-day locked-building goal without giving a solution',()=>{
-  start();cy.get('#quest-tracker').should('be.visible').and('contain','Fedezd fel, mit rejt a lezárt melléképület');cy.get('#quest-tracker').should('not.contain','Leo').and('not.contain','kulcs');
+ it('does not show the locked-building goal before receiving the key',()=>{
+  start();cy.get('#quest-tracker').should('not.be.visible');
  });
  it('receives Leo’s separate flower quest on day four without revealing the key',()=>{
-  start({...villageSave,player:{x:296,y:275},clock:{day:4,elapsed:0,collapseAt:580}});cy.get('#dialogue',{timeout:30000}).should('be.visible');cy.get('#speaker-name').should('have.text','Leo');cy.get('#dialogue-text').should('contain','szarvas faliméh').and('not.contain','kulcs');cy.get('#dialogue-close').click();cy.get('#toolbar [data-tool=wildflower]').should('not.exist');press('Tab','Tab',9);cy.contains('#carried-tools .carried-tool','Vadvirágmagok').should('contain','6');press('Escape','Escape',27);cy.get('#quest-tracker').should('contain','Elültetve: 0 / 6').and('contain','Fedezd fel, mit rejt a lezárt melléképület');
+  start({...villageSave,player:{x:296,y:275},clock:{day:4,elapsed:0,collapseAt:580}});cy.get('#dialogue',{timeout:30000}).should('be.visible');cy.get('#speaker-name').should('have.text','Leo');cy.get('#dialogue-text').should('contain','szarvas faliméh').and('not.contain','kulcs');cy.get('#dialogue-close').click();cy.get('#toolbar [data-tool=wildflower]').should('not.exist');press('Tab','Tab',9);cy.contains('#carried-tools .carried-tool','Vadvirágmagok').should('contain','6');press('Escape','Escape',27);cy.get('#quest-tracker').should('contain','Elültetve: 0 / 6').and('not.contain','Fedezd fel, mit rejt a lezárt melléképület');
  });
 
  it('explores the dark workshop, remembers the shutter and requires inspection before repair',()=>{
@@ -251,7 +251,7 @@ describe('Southern village and forest',()=>{
   walk('down','y',3390);walk('left','x',145);press('e','KeyE',69);cy.get('#game').should('have.attr','data-cleared-webs','1');reloadFarm();cy.get('#game').should('have.attr','data-cleared-webs','1');walk('up','y',3378);walk('right','x',337);press('e','KeyE',69);cy.get('#dialogue-title').should('have.text','Üstszerű tartály');cy.get('#research-panel').should('contain','Fa: 0 / 35').and('contain','Ócskavas: 0 / 18');cy.get('#repair-machine').should('be.enabled').click();cy.get('#repair-warning').should('be.visible').and('have.text','Nincs nálad elég nyersanyag.');
  });
 
- it('offers a Goals tab with an independent locked-building objective and closes with Tab',()=>{start();press('Tab','Tab',9);cy.get('#goals-tab').click();cy.get('#goals-page').should('be.visible');cy.get('[data-quest=locked-building]').should('contain','Fedezd fel, mit rejt a lezárt melléképület').and('not.have.class','completed');press('Tab','Tab',9);cy.get('#dialogue').should('not.be.visible');});
+ it('keeps the locked-building objective out of Goals before the key and closes with Tab',()=>{start();press('Tab','Tab',9);cy.get('#goals-tab').click();cy.get('#goals-page').should('be.visible');cy.get('[data-quest=locked-building]').should('not.exist');press('Tab','Tab',9);cy.get('#dialogue').should('not.be.visible');});
 
  it('keeps a saved rainy day stable and waters existing crops and freshly tilled soil',()=>{
   start({...villageSave,version:17,travel:{...createTravel(),weatherSeed:13},player:{x:369,y:330},clock:{day:6,elapsed:20,collapseAt:580},plots:[['353,280',{crop:'radish',growth:0,regrowing:false,watered:false}]]});cy.get('#game').should('have.attr','data-weather','rain').and('have.attr','data-watered','1');cy.get('#weather-label').should('have.text','Esős');cy.get('#toolbar [data-tool=hoe]').click();clickWorld(377,288);cy.get('#game').should('have.attr','data-watered','2');reloadFarm();cy.get('#game').should('have.attr','data-weather','rain').and('have.attr','data-watered','2');

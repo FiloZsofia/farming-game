@@ -420,7 +420,7 @@ Az új farm elnevezésekor és a Menü → Történet felületen az alábbi köz
 
 ## A faliméhek nyomában — a gépjavításig
 
-- Már az első napon látható önálló cél: **„Fedezd fel, mit rejt a lezárt melléképület”**. Nincs hozzá útmutatás, kulcsra vagy későbbi küldetésre utalás.
+- A **„Fedezd fel, mit rejt a lezárt melléképület”** cél csak Leo kulcsának átvételekor jelenik meg a képernyőn és a Célok fülön. Az első naptól és a megfigyelés elmesélése előtt még nem látható. Nem kap külön belépési vagy redőnyös útmutatást.
 - A 4. napon Leo besétál a farmra. Beszélgetéskor 6 tasak vadvirágmagot ad. Ha a nap kimaradt, a következő nappali alkalommal várja a játékost; a régebbi tesztmentésekből is elkezdhető a történetszál.
 - Leo: „Tavaly ilyenkor sok szarvas faliméh járt a csemeték virágaira. Idén eddig alig láttam belőlük. Nálad megfordultak?” A választott, valós faj a **szarvas faliméh (Osmia cornuta)**, sötét fejjel és rozsdabarna potrohhal. Fontos tavaszi gyümölcsfa-beporzó. A történet helyi megfogyatkozást mutat, nem állít általános veszélyeztetettséget vagy bizonyított gombás fertőzést.
 - A virágos feladat külön cél, nem árulja el, hogy a kulcshoz vezet. A vadvirágmag a készletből és az alsó eszközsávból ültethető, üres felkapált földbe. Ültetéséért jár kertészkedési pont. **4 megöntözött nap** után virágzik, nem kell újravetni. A történeti virágos kert nem kapálható ki véletlenül.
