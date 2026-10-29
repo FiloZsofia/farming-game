@@ -960,3 +960,7 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 - Annie érkezési felső felirata „EGY KEDVES SZOMSZÉD, ANNIE”, alatta nincs ugyanezt ismétlő cím. Leo érkezési felső felirata „ÜDV A SZOMSZÉDBAN”; így kezdi: „Szia, Leo vagyok, én vezetem a falusi faiskolát.” Mindkét érkezés közös portrés megjelenést használ, a magok/ajándék készletbe kerüléséről szóló rendszerüzenet a beszédbuborékon kívül jelenik meg.
 
 - Ki nem helyezett madárodú esetén másnap nem jelenik meg a „De jó! Kiteszem a madárodút.” gondolat. A már kihelyezett odúhoz kapcsolódó, madaraknak örülő gondolat megmarad.
+
+- Az első napon a verandai napló körül finom, kör alakú pulzáló jelzés látszik. Első kattintásra külön segítség magyarázza az E-s közeli interakciót, a napközben is bármikor választható reggelig pihenést és az automatikus mentést. A segítség nem lépteti a napot. A megtekintés farmonként mentődik; utána, illetve a napló rendes megnyitása után a jelzés eltűnik, a későbbi napokon nem jelenik meg. A régi mentések új formátumverzió nélkül olvashatók.
+
+- A „Napló és mentés” segítség az Irányításban is állandóan elérhető, az első napi ablakéval közös szövegforrásból. Az Irányításban nem indít új napot és nem jelenít meg újra villogó jelzést.

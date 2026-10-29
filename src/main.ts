@@ -1,3 +1,4 @@
+import {JOURNAL_HELP_TITLE,JOURNAL_HELP_LINES} from './journal-help';
 import {createTestMap} from './test-map';
 import {archiveEntries,recordStoryProgress,recordStoryEvent,SAM_LETTER,NEST_FINDING,MACHINE_REVEAL} from './story-archive';
 import {placedItemAt,pickPlacedItem} from './placed-items';
@@ -64,7 +65,7 @@ import {FarmMusic,musicTracks,type MusicTrack} from './music';
 import {createGardenSkill,gainGardening,CHEST_XP,FIRST_REWARD_XP,SECOND_REWARD_XP,gardeningLevel,gardeningTarget,gardeningProgress,gardeningCredit,levelThreeSeeds,type LevelThreeSeed,rewardFruits,type RewardFruit} from './gardening-skill';
 import {FarmerArt,anniePortrait} from './character';
 import {Wildlife} from './wildlife';
-import {createStory,type FarmStory} from './story-events';
+import {createStory,journalHelpPending,type FarmStory} from './story-events';
 import {drawFarm} from './world-art';
 import {HouseExterior} from './house-exterior';
 import {WorkshopExterior} from './workshop-exterior';
@@ -108,7 +109,8 @@ document.querySelector('#help')!.addEventListener('click',()=>{
  for(const [title,lines]of [
   ['Eszközök',['1 · Kapa','2 · Öntözés','3 · Gyűjtés','4 · Bontóvas — bontás és tárgyak áthelyezése','5 · Túrabot (ha már nálad van)']],
   ['Használat',['Kattintás · művelet a kijelölt helyen','F · művelet a karakter előtt','E · közeli tárgy vagy szereplő','Ültetőanyagot és lehelyezhető tárgyat a Készletben választhatsz.']],
-  ['Ablakok',['Tab · Készlet megnyitása / bezárása',...(!document.querySelector<HTMLElement>('#test-mode-banner')!.hidden?['M · Térkép megnyitása / bezárása']:[]),'Esc · ablak bezárása','Esc a kertben · Főmenü megnyitása']]
+  ['Ablakok',['Tab · Készlet megnyitása / bezárása',...(!document.querySelector<HTMLElement>('#test-mode-banner')!.hidden?['M · Térkép megnyitása / bezárása']:[]),'Esc · ablak bezárása','Esc a kertben · Főmenü megnyitása']],
+  [JOURNAL_HELP_TITLE,JOURNAL_HELP_LINES]
  ]as const){const section=document.createElement('section'),heading=document.createElement('h3'),list=document.createElement('ul');heading.textContent=title;for(const line of lines){const item=document.createElement('li');item.textContent=line;list.append(item);}section.append(heading,list);panel.append(section);}
 });
 const held=new Set<string>();
@@ -384,10 +386,26 @@ class Farm extends Phaser.Scene {
   if(!this.ready||dialogue.open||this.transitioning||this.collapseRemaining>0||this.jumpRemaining>0||this.jumpCooldown>0)return;
   this.jumpRemaining=JUMP_DURATION;this.jumpCooldown=JUMP_DURATION+JUMP_COOLDOWN;
  }
+ private journalHint!:Phaser.GameObjects.Graphics;
+ private journalCalm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+ private acknowledgeJournalHelp(){if(this.story.journalHelpSeen)return;this.story={...this.story,journalHelpSeen:true};void this.persist();}
+ private openJournalHelp(){
+  if(!this.ready||dialogue.open||this.transitioning||!journalHelpPending(this.story,this.clock.day))return;
+  this.acknowledgeJournalHelp();
+  showDialogue('Napló a verandán',JOURNAL_HELP_LINES.join('\n\n'),JOURNAL_HELP_TITLE.toLocaleUpperCase('hu'));
+ }
+ private drawJournalHint(now:number){
+  const active=this.ready&&this.hasFarm&&!this.choosingFarm&&!dialogue.open&&!this.transitioning&&journalHelpPending(this.story,this.clock.day)&&this.actor.x>=farmBounds.left&&this.actor.y<600&&this.actor.y>=farmBounds.top;
+  this.journalHint.clear().setVisible(active);document.querySelector<HTMLElement>('#game')!.dataset.journalHint=String(active);if(!active)return;
+  const pulse=this.journalCalm?.5:(Math.sin(now/650)+1)/2,x=farmLayout.journal.x+9,y=farmLayout.journal.y+7;
+  this.journalHint.lineStyle(3,0xf0d789,.08+pulse*.07).strokeCircle(x,y,23+pulse);
+  this.journalHint.lineStyle(1,0xffe6a0,.3+pulse*.5).strokeCircle(x,y,21+pulse);
+ }
  private openJournal(){
   if(!this.ready||this.transitioning||this.collapseRemaining>0||dialogue.open)return;
   if(Math.hypot(this.actor.x-farmLayout.journal.x-9,this.actor.y-farmLayout.journal.y-7)>55){this.notice('A naplót a ház verandáján találod.');return;}
   if(this.jumpRemaining>0)return;
+  this.acknowledgeJournalHelp();
   showDialogue('Mára elég volt?','A kert holnap is megvár. Lezárom a naplót, és reggelig pihenek.','ESTI NAPLÓ');
   const observation=this.travel.research.observation,note=this.travel.pollinationObservation,panel=document.querySelector<HTMLElement>('#research-panel')!;panel.replaceChildren();
   if(observation){const p=document.createElement('p');p.textContent=`Első megfigyelés · Tavasz ${observation.seasonDay}. napja — Szarvas faliméh (Osmia cornuta). Egy példány a vadvirágoknál. Ez jó jel, de egyetlen megfigyelésből még nem tudom, miért lettek kevesebben.`;panel.append(p);}
@@ -1025,7 +1043,7 @@ class Farm extends Phaser.Scene {
  private async receiveGift(){
   if(!this.canInteract()||this.story.giftReceived||!this.neighbor||Math.hypot(this.actor.x-this.neighbor.x,this.actor.y-this.neighbor.y)>55)return;
   await this.saveStory({...this.story,giftReceived:true},()=>{
-   this.showArrival('fishShop','EGY KEDVES SZOMSZÉD, ANNIE','Szia, Annie vagyok, a szomszédod! Gondoltam, benézek, hogy megy a berendezkedés. Hoztam neked egy madárodút. A madarak nemcsak dalolnak: a kártevőket is segítenek távol tartani.\n\nVálassz neki egy szép helyet a farmon!','A madárodú bekerült a készletedbe. Tab → Alapanyagok → Madárodú → Elhelyezem.');
+   this.showArrival('fishShop','EGY KEDVES SZOMSZÉD, ANNIE','Szia, Annie vagyok, a szomszédod! Gondoltam, benézek, hogy megy a berendezkedés. Hoztam neked egy madárodút. A madarak nemcsak dalolnak: a kártevőket is segítenek távol tartani.\n\nVálassz neki egy szép helyet a farmon!','A madárodú bekerült a készletedbe. Tab → Készlet → Madárodú → Elhelyezem.');
    this.neighbor?.destroy();this.neighbor=null;this.neighborArt=null;
   });
  }
@@ -1372,7 +1390,8 @@ class Farm extends Phaser.Scene {
   for(const id of ['nursery','fishShop','craftShop'] as const){const door=villageLayout[id].door;objectZone(id,villageLayout[id].entrance,()=>{if(this.canInteract()&&Math.hypot(this.actor.x-door.x,this.actor.y-door.y)<50)this.inspectVillage(id);});}
   for(const [index,b]of villageLayout.benches.entries()){const pose=benchPose(b.angle);objectZone(`village-bench-${index}`,{x:pose.x-30,y:pose.y-25,w:60,h:50},()=>{if(this.canInteract()&&Math.hypot(this.actor.x-pose.x,this.actor.y-pose.y)<55)this.inspectVillage('bench');});}
   objectZone('shipping',farmLayout.shipping,()=>this.openShipping());
-  objectZone('journal',farmLayout.journal,()=>this.openJournal());
+  this.journalHint=this.add.graphics().setDepth(162);
+  objectZone('journal',{x:farmLayout.journal.x-14,y:farmLayout.journal.y-14,w:farmLayout.journal.w+28,h:farmLayout.journal.h+28},()=>journalHelpPending(this.story,this.clock.day)?this.openJournalHelp():this.openJournal());
   objectZone('house-door',{x:216,y:153+farmLayout.houseOffset.y,w:43,h:70},()=>{if(this.canInteract()&&Math.hypot(this.actor.x-farmLayout.houseDoor.x,this.actor.y-farmLayout.houseDoor.y)<55)void this.travelTo({x:400,y:HOME_ORIGIN+470});});
   objectZone('catalog',farmLayout.catalog,()=>this.openCatalog());
   objectZone('mailbox',farmLayout.mailbox,()=>this.openMailbox());
@@ -1547,6 +1566,7 @@ class Farm extends Phaser.Scene {
   if(this.ready&&this.hasFarm&&!this.choosingFarm&&!dialogue.open&&!this.transitioning&&shouldDeliverMicroscope(this.travel.research,!!this.travel.forest?.sample,this.actor.y)){void this.deliverMicroscope();}
   if(this.hasFarm&&this.canInteract()&&!this.travel.pollinationObservation&&nearEmptyBlossoms(this.garden,this.travel.estate,this.actor))void this.observeEmptyBlossoms();
   if(this.ready&&!this.choosingFarm&&!dialogue.open&&!this.transitioning&&(this.noahTest?this.noahTest.state.complete&&!this.noahTest.state.endSeen:storyEndPending(this.travel)))this.showPreviewEnd();
+  this.drawJournalHint(now);
   this.machineActivity??=this.add.graphics().setDepth(104);drawMachineActivity(this.machineActivity,this.travel.crafting,now);
   if(!this.ready||dialogue.open||this.transitioning||document.hidden||!document.hasFocus()){this.input.keyboard?.resetKeys();this.selection.setVisible(false);return;}
   if(this.collapseRemaining>0){

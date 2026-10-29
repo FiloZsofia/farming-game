@@ -213,3 +213,5 @@ it('keeps test saves in memory while preserving the normal farm and its backup',
  expect(await store.exportOriginal()).toBe(before);await expect(store.createFarm(test)).rejects.toThrow();store.close();
  const reopened=new SaveStore(factory);expect((await reopened.load()).data).toEqual(original);expect(reopened.selectedFarmId).toBe(id);expect(reopened.testMode).toBe(false);reopened.close();
 });
+
+it('keeps acknowledged journal help across a save reload without changing schema',async()=>{const factory=new IDBFactory(),store=new SaveStore(factory);await store.load();const data=fresh();data.story.journalHelpSeen=true;await store.save(data);store.close();const restored=new SaveStore(factory);const loaded=(await restored.load()).data!;expect(loaded.story.journalHelpSeen).toBe(true);expect(loaded.version).toBe(18);restored.close();});

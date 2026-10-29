@@ -2,6 +2,10 @@
 
 ## Változások a 0.1.0 óta — külön jóváhagyott verzióemelés nélkül
 
+- Annie madárodús útmutatásában a Készlet elnevezés szerepel az Alapanyagok helyett.
+
+- Első napi, pulzáló naplójelzés és egyszeri segítség az E-s használatról, a napközbeni reggelig pihenésről és az automatikus mentésről.
+
 - A faliméh már a vadvirágok kivirágzásának és a megfigyelési cél megjelenésének napján megfigyelhető. A korábbi várakozó mentések is folytathatók plusz egy nap nélkül.
 
 - Ki nem helyezett madárodú esetén nem jelenik meg a másnapi kihelyezési gondolat.
