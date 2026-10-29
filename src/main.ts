@@ -1047,7 +1047,7 @@ class Farm extends Phaser.Scene {
    else{this.neighborArt?.update(false,false,{x:0,y:1},dt);if(!this.eventRetry&&Math.hypot(this.actor.x-this.neighbor.x,this.actor.y-this.neighbor.y)<=55)void this.receiveGift();}
   }
   if(this.story.giftReceived&&this.clock.day>=2&&!this.story.morningSeen&&!this.eventRetry&&!this.transitioning){
-   void this.saveStory({...this.story,morningSeen:true},()=>{this.thought.setText(this.story.birdhouse?'De jó! A madarak is segítenek.':'De jó! Kiteszem a madárodút.');this.thoughtRemaining=8;});
+   void this.saveStory({...this.story,morningSeen:true},()=>{if(this.story.birdhouse){this.thought.setText('De jó! A madarak is segítenek.');this.thoughtRemaining=8;}});
   }
  }
  private showNightWarning(message:string){

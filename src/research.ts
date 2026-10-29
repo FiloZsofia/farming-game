@@ -24,12 +24,12 @@ export function plantFlower(r:Research,garden:Garden,tile:Tile,player:{x:number;
 }
 export function advanceResearch(r:Research,garden:Garden,day:number){
  const next=structuredClone(r);for(const f of next.flowers)if(garden.plots.get(tileKey(f))?.watered)f.growth=Math.min(FLOWER_DAYS,f.growth+1);
- if(next.beeDay===null&&next.flowers.length===6&&next.flowers.every(f=>f.growth>=FLOWER_DAYS))next.beeDay=day+1;
+ if((next.beeDay===null||next.beeDay>day)&&next.flowers.length===6&&next.flowers.every(f=>f.growth>=FLOWER_DAYS))next.beeDay=day;
  return next;
 }
-export function beeAvailable(r:Research,day:number,elapsed:number){return r.beeDay!==null&&day>=r.beeDay&&elapsed<360&&!r.observation;}
+export function beeAvailable(r:Research,day:number,elapsed:number){return day>=1&&r.flowers.length===6&&r.flowers.every(f=>f.growth>=FLOWER_DAYS)&&elapsed<360&&!r.observation;}
 export const beeAnchor=(r:Research)=>r.flowers[0]?{x:r.flowers[0].x+TILE/2,y:r.flowers[0].y+TILE/2}:null;
-export function observeBee(r:Research,day:number,elapsed:number,player:{x:number;y:number},displayDay:number){const p=beeAnchor(r);if(!p||!beeAvailable(r,day,elapsed)||Math.hypot(p.x-player.x,p.y-player.y)>55)return null;const next=structuredClone(r);next.observation={day,seasonDay:displayDay,plant:'Tavaszi vadvirágkeverék'};return next;}
+export function observeBee(r:Research,day:number,elapsed:number,player:{x:number;y:number},displayDay:number){const p=beeAnchor(r);if(!p||!beeAvailable(r,day,elapsed)||Math.hypot(p.x-player.x,p.y-player.y)>55)return null;const next=structuredClone(r);next.beeDay=Math.min(next.beeDay??day,day);next.observation={day,seasonDay:displayDay,plant:'Tavaszi vadvirágkeverék'};return next;}
 export function grantKey(r:Research){if(!r.observation||r.key)return null;return {...structuredClone(r),key:true};}
 export function collectSalvage(r:Research,id:string,player:{x:number;y:number},day=1){const site=salvageSites.find(s=>s.id===id);if(!site||r.picked.includes(id)||Math.hypot(site.x-player.x,site.y-player.y)>52)return null;const next=structuredClone(r);next.picked.push(id);next.salvageDays={...next.salvageDays,[id]:day};next.materials[site.kind]+=site.kind==='scrap'?2:1;return next;}
 export function supplyMaterial(r:Research,who:'annie'|'leo'){if(!r.discovered||r.repaired||r.supplied?.includes(who))return null;const key=who==='annie'?'glass':'linen';if(r.materials[key]>0)return null;const next=structuredClone(r);next.supplied=[...r.supplied??[],who];next.materials[key]++;return next;}

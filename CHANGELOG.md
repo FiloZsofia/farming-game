@@ -2,6 +2,10 @@
 
 ## Változások a 0.1.0 óta — külön jóváhagyott verzióemelés nélkül
 
+- A faliméh már a vadvirágok kivirágzásának és a megfigyelési cél megjelenésének napján megfigyelhető. A korábbi várakozó mentések is folytathatók plusz egy nap nélkül.
+
+- Ki nem helyezett madárodú esetén nem jelenik meg a másnapi kihelyezési gondolat.
+
 - Annie felső felirata „EGY KEDVES SZOMSZÉD, ANNIE”; Leo „ÜDV A SZOMSZÉDBAN” felirattal, bemutatkozással érkezik. A két látogatás közös portrés sablont használ.
 
 - Annie első látogatása portrés beszédablakot kap; a teljes szöveg megmarad, a készletkezelési segítség külön jelenik meg a beszédbuborék alatt.
