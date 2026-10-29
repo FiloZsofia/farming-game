@@ -2,6 +2,8 @@
 
 ## Változások a 0.1.0 óta — külön jóváhagyott verzióemelés nélkül
 
+- Annie felső felirata „EGY KEDVES SZOMSZÉD, ANNIE”; Leo „ÜDV A SZOMSZÉDBAN” felirattal, bemutatkozással érkezik. A két látogatás közös portrés sablont használ.
+
 - Annie első látogatása portrés beszédablakot kap; a teljes szöveg megmarad, a készletkezelési segítség külön jelenik meg a beszédbuborék alatt.
 
 - A vadvirágok három megöntözött nap alatt virágoznak ki; a korábbi négynapos, kész virágokat és történeti haladást tartalmazó mentések továbbra is olvashatók.

@@ -95,7 +95,7 @@ function showDialogue(title:string,text:string,label='A BIRTOKON'){
  document.querySelector<HTMLButtonElement>('#dialogue-close')!.hidden=false;
  document.querySelector('#dialogue-close')!.textContent='Vissza';
  document.querySelector('#dialogue-title')!.textContent=title;document.querySelector<HTMLElement>('#dialogue-title')!.hidden=!title;document.querySelector<HTMLElement>('#dialogue-label')!.hidden=!label;
- if(title){dialogue.setAttribute('aria-labelledby','dialogue-title');dialogue.removeAttribute('aria-label');}else{dialogue.removeAttribute('aria-labelledby');dialogue.setAttribute('aria-label','Sam története');}
+ if(title){dialogue.setAttribute('aria-labelledby','dialogue-title');dialogue.removeAttribute('aria-label');}else{dialogue.removeAttribute('aria-labelledby');dialogue.setAttribute('aria-label',label||'Sam története');}
  document.querySelector('#dialogue-text')!.textContent=text;
  document.querySelector('#dialogue-label')!.textContent=label;
  if(!dialogue.open)dialogue.showModal();
@@ -1021,11 +1021,11 @@ class Farm extends Phaser.Scene {
   catch{this.eventRetry=5;this.notice('Az eseményt nem sikerült menteni. Próbáljuk újra egy kicsit később.');}
   finally{this.transitioning=false;this.lastTick=performance.now();}
  }
+ private showArrival(shop:Shop,label:string,speech:string,note:string){showDialogue('',speech,label);this.showSpeaker(shop);dialogue.dataset.presentation='arrival';const help=document.querySelector<HTMLElement>('#dialogue-note')!;help.textContent=note;help.hidden=!note;}
  private async receiveGift(){
   if(!this.canInteract()||this.story.giftReceived||!this.neighbor||Math.hypot(this.actor.x-this.neighbor.x,this.actor.y-this.neighbor.y)>55)return;
   await this.saveStory({...this.story,giftReceived:true},()=>{
-   showDialogue('Egy kedves szomszéd, Annie.','Szia, Annie vagyok, a szomszédod! Gondoltam, benézek, hogy megy a berendezkedés. Hoztam neked egy madárodút. A madarak nemcsak dalolnak: a kártevőket is segítenek távol tartani.\n\nVálassz neki egy szép helyet a farmon!','ÜDV A SZOMSZÉDBAN');
-   this.showSpeaker('fishShop');dialogue.dataset.presentation='arrival';const note=document.querySelector<HTMLElement>('#dialogue-note')!;note.textContent='A madárodú bekerült a készletedbe. Tab → Alapanyagok → Madárodú → Elhelyezem.';note.hidden=false;
+   this.showArrival('fishShop','EGY KEDVES SZOMSZÉD, ANNIE','Szia, Annie vagyok, a szomszédod! Gondoltam, benézek, hogy megy a berendezkedés. Hoztam neked egy madárodút. A madarak nemcsak dalolnak: a kártevőket is segítenek távol tartani.\n\nVálassz neki egy szép helyet a farmon!','A madárodú bekerült a készletedbe. Tab → Alapanyagok → Madárodú → Elhelyezem.');
    this.neighbor?.destroy();this.neighbor=null;this.neighborArt=null;
   });
  }
@@ -1167,7 +1167,7 @@ class Farm extends Phaser.Scene {
  }
  private async receiveFlowers(){
   if(!this.canInteract()||this.researchNearby()!=='leo-visit')return;const research=startResearch(this.travel.research,this.clock.day);if(!research)return;
-  if(await this.commitResearch(research)){this.travel.metLeo=true;await this.persist();this.leoVisitor?.destroy();this.leoVisitor=null;showDialogue('Leo','Tavaly ilyenkor sok szarvas faliméh járt a csemeték virágaira. Idén eddig alig láttam belőlük. Nálad megfordultak?\n\nHoztam hat tasak vadvirágmagot. Ültesd el őket, és nézzük meg, kik látogatják a virágokat! A szarvas faliméh sötét fejű, rozsdabarna potrohú, tavasszal a gyümölcsfák fontos beporzója.\n\n6 vadvirágmag a készletedbe került.','A FALIMÉHEK NYOMÁBAN');this.showSpeaker('nursery');}
+  if(await this.commitResearch(research)){this.travel.metLeo=true;await this.persist();this.leoVisitor?.destroy();this.leoVisitor=null;this.showArrival('nursery','ÜDV A SZOMSZÉDBAN','Szia, Leo vagyok, én vezetem a falusi faiskolát.\n\nTavaly ilyenkor sok szarvas faliméh járt a csemeték virágaira. Idén eddig alig láttam belőlük. Nálad megfordultak?\n\nHoztam hat tasak vadvirágmagot. Ültesd el őket, és nézzük meg, kik látogatják a virágokat! A szarvas faliméh sötét fejű, rozsdabarna potrohú, tavasszal a gyümölcsfák fontos beporzója.','6 vadvirágmag a készletedbe került.');}
  }
  private async observeResearchBee(){
   if(!this.canInteract())return;const next=observeBee(this.travel.research,this.clock.day,this.clock.elapsed,this.actor,seasonDay(calendarDay(this.clock.day,this.farmName)));if(!next)return;

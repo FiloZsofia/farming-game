@@ -217,7 +217,7 @@ Az évszakváltás, építkezés és tárolóbővítés pontos ütemezése kül�
 
 - A főhős puhább, enyhén rajzfilmes testformákat kap. Barna magas lófarka szabadon hagyja a szemét; zöld hajdísz nincs.
 - Az üres, felásott föld újabb kapálással visszaegyengethető. A növényt a kapa megóvja; visszavonáskor magot és fejlődési pontot nem adunk.
-- A szomszéd neve Annie; bemutatkozó cím: „Egy kedves szomszéd, Annie.” Az inventory Készlet és Ismerősök fület kap; az ajándék átvétele után Annie portréval és rövid leírással megjelenik. Régi mentésben is megmarad az ismeretség.
+- A szomszéd neve Annie; bemutatkozó felső felirat: „EGY KEDVES SZOMSZÉD, ANNIE” (pont nélkül) Az inventory Készlet és Ismerősök fület kap; az ajándék átvétele után Annie portréval és rövid leírással megjelenik. Régi mentésben is megmarad az ismeretség.
 - A kertészkedés 2. szintje 36 érdemi művelet után érhető el, a kezdő kert rendes gondozásával körülbelül 2–3 nap alatt. Művelet közben öt másodpercre megjelenik a jobb alsó függőleges zöld csík.
 - Új föld felásása helyenként egyszer, ültetés, üres vagy beültetett föld öntözése és betakarítás naponta/helyenként egyszer, kézi gazszedés naponta/objektumonként egyszer ad pontot. Az öntözés ültetés előtt is fejleszt; az ugyanazon a napon és helyen ismételt azonos művelet, illetve a ki-be kapálás nem ad ismét pontot. A fejszés és csákányos munka nem része a kertészkedésnek.
 - A 2. szint jutalma egyszeri 4 eperpalánta, 4 mézbogyócsemete, 4 áfonyacsemete. Ekkor válik elérhetővé a katalógusban a három ültetőanyag; nem csak a jutalom gyümölcse, hanem a saját termés is eladható.
@@ -956,3 +956,5 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 
 - A gyantát adó vörösfenyő az ösvénytől oldalt, mohás földháton áll egy párás, tűlevelekkel borított kis mélyedésben. A tisztás nyitott és körbejárható, a fa törzse akadály; a gyanta minden oldalról megközelíthető. Az ösvény utolsó kanyarja elkeskenyedve simul a tisztás talajába.
 - A vörösfenyő egységesen rajzolt, szabálytalan kérgű törzset, szétfutó gyökereket és levegős, lehajló tűleveles ágakat kap. Hátul sűrűbb fák, a tisztás szélén lila gombák keretezik. Alacsony, lassan mozgó pára és napos nappal keskeny, meleg fényfolt emeli ki a gyantát; éjszaka csak a környező gombák korábban egyeztetett testfénye dereng.
+
+- Annie érkezési felső felirata „EGY KEDVES SZOMSZÉD, ANNIE”, alatta nincs ugyanezt ismétlő cím. Leo érkezési felső felirata „ÜDV A SZOMSZÉDBAN”; így kezdi: „Szia, Leo vagyok, én vezetem a falusi faiskolát.” Mindkét érkezés közös portrés megjelenést használ, a magok/ajándék készletbe kerüléséről szóló rendszerüzenet a beszédbuborékon kívül jelenik meg.
