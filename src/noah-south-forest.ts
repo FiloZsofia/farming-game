@@ -1,3 +1,4 @@
+import {forestLog,logPoint,logCrossingStep} from './forest-log-crossing';
 import {sporeShelters,sporeFieldPhase,sporeFieldHurts,sporeSheltered,inSporeField} from './spore-field';
 import Phaser from 'phaser';
 import {ForestCombat} from './forest-combat';
@@ -23,7 +24,7 @@ const southEnemies=[{id:'vine',kind:'vine' as const,x:-325,y:1490,hp:3},{id:'spo
 const mushrooms=[{x:-380,y:1450,s:1.1},{x:-590,y:1580,s:1.5},{x:-755,y:1790,s:1.3},{x:-570,y:1930,s:1.7},{x:-335,y:2220,s:1.2},{x:-745,y:2390,s:1.6},{x:-800,y:2580,s:1.8},{x:-725,y:2760,s:1.2}];
 export class NoahSouthForest{
  private terrain:Phaser.GameObjects.RenderTexture;private art:Phaser.GameObjects.Graphics;private fungi:Phaser.GameObjects.Graphics;private struck=new Set<number>();
- private lastSafe={x:-444,y:2000};private herbs:Phaser.GameObjects.Graphics;
+ private lastSafe={x:-444,y:2000};private logSafe=logPoint(0);private herbs:Phaser.GameObjects.Graphics;
  private minorCombat:ForestCombat;private minorState={...createForest(),stick:true};
  get fieldPhase(){return sporeFieldPhase(this.age);}
  get minorRemaining(){return southEnemies.length-this.minorState.defeated.length;}
@@ -39,19 +40,34 @@ export class NoahSouthForest{
   for(let i=0;i<21000;i++){const n=Math.abs(Math.sin(i*7.713)),x=-1120+(i*73%1117),y=1320+(i*47%1540);g.fillStyle([0x4f783f,0x9bb669,0xb1bf72][i%3],.5).fillRect(x+n*8,y,1+n*2,1);}
   for(const p of southRoute){g.fillStyle(0x365b3c,.17).fillEllipse(p.x-150,p.y+20,210,110);g.fillEllipse(p.x+145,p.y-10,200,95);}
   // Draw the route as one network, then let the marsh interrupt its middle.
-  g.lineStyle(48,0x647746).strokePoints(southPath);g.lineStyle(35,0x9b9566).strokePoints(southPath);g.lineStyle(27,0xb3a878).strokePoints(southPath);
-  // Fade the entrance into meadow without individual stroked segments or hard end caps.
-  for(let y=1300;y<1405;y+=2){const point=southPath.reduce((a,b)=>Math.abs(b.y-y)<Math.abs(a.y-y)?b:a),fade=1-(y-1300)/105;
-   g.fillStyle(0x759c48,fade).fillRect(point.x-30,y,60,2);
-  }
-  // Broken earth and grass gradually become a continuous trail beyond the bridge.
-  for(let i=0;i<65;i++){const y=1304+i*1.7,x=-444+Math.sin(i*12.7)*(4+i*.16);g.fillStyle(i%3?0xb3a878:0x91a35e,.2+i/100).fillEllipse(x,y,2+i%4,1+i%2);}
+  // Shared polygon edges taper the first steps into grass; never paint over existing crowns.
+  const edge=(i:number,width:number)=>{const p=southPath[i],a=southPath[Math.max(0,i-1)],b=southPath[Math.min(southPath.length-1,i+1)],d=Math.hypot(b.x-a.x,b.y-a.y)||1,t=Phaser.Math.Clamp((p.y-1231)/100,0,1);return {x:p.x,y:p.y,nx:-(b.y-a.y)/d*width*.5*Math.sqrt(t),ny:(b.x-a.x)/d*width*.5*Math.sqrt(t)};};
+  for(const [width,color]of [[48,0x647746],[35,0x9b9566],[27,0xb3a878]])for(let i=1;i<southPath.length;i++){const a=edge(i-1,width),b=edge(i,width),alpha=Phaser.Math.Clamp(((a.y+b.y)/2-1231)/85,0,1);g.fillStyle(color,alpha).fillPoints([{x:a.x-a.nx,y:a.y-a.ny},{x:b.x-b.nx,y:b.y-b.ny},{x:b.x+b.nx,y:b.y+b.ny},{x:a.x+a.nx,y:a.y+a.ny}],true);}
+  for(let i=0;i<40;i++){const y=1235+i*2.3,x=-444+Math.sin(i*12.7)*(3+i*.12);g.fillStyle(i%3?0xb3a878:0x91a35e,.2+i/75).fillEllipse(x,y,2+i%3,1);}
   const marsh=Array.from({length:40},(_,i)=>{const a=i/40*Math.PI*2,r=1+.05*Math.sin(i*2.7);return{x:-480+Math.cos(a)*165*r,y:2160+Math.sin(a)*143*r};});
   g.fillStyle(0x526447).fillPoints(marsh,true);g.lineStyle(14,0x78815a).strokePoints(marsh,true);g.fillStyle(0x3c6254).fillPoints(marsh,true);
   for(let i=0;i<65;i++){const x=-625+(i*73%290),y=2035+(i*47%245);if(swampAt(x,y)){g.fillStyle(0x7c9463,.35).fillEllipse(x,y,12+i%4*5,3);g.lineStyle(1,0x9fac75,.3).lineBetween(x,y,x+9,y);}}
   for(const p of swampStones){g.fillStyle(0x293e34,.5).fillEllipse(p.x+4,p.y+5,59,30);g.fillStyle(0x8f9b87).fillPoints([{x:p.x-26,y:p.y+6},{x:p.x-20,y:p.y-12},{x:p.x+6,y:p.y-18},{x:p.x+27,y:p.y-3},{x:p.x+20,y:p.y+13},{x:p.x-10,y:p.y+15}],true);g.lineStyle(2,0xc2c5a5).lineBetween(p.x-18,p.y-10,p.x+4,p.y-15);g.fillStyle(0x678153).fillEllipse(p.x+9,p.y+5,18,7);}
   let seed=312;const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
   for(let y=1380;y<2940;y+=64)for(let x=-1050;x< -60;x+=70){const xx=x+random()*32,yy=y+random()*20;if(distanceToSouthPath(xx,yy)<104||swampAt(xx,yy))continue;drawWoodlandTree(g,random,xx,yy,Math.floor(random()*3),.95+random()*.35);}
+  // A dry, root-lined hollow interrupts the path; two splintered pieces form the crossing.
+  const local=(t:number,n:number)=>logPoint(t,n),hollow=[local(.08,-118),local(.22,-130),local(.85,-122),local(.92,-100),local(.92,108),local(.75,126),local(.15,114),local(.08,90)];
+  g.fillStyle(0x657849).fillPoints(hollow,true);g.lineStyle(10,0x83905b).strokePoints(hollow,true);g.fillStyle(0x374b37).fillPoints(hollow.map(p=>({x:p.x,y:p.y+3})),true);
+  for(let i=0;i<44;i++){const p=local(.12+i*.017,Math.sin(i*8.7)*88);g.fillStyle(i%2?0x526044:0x68704a,.5).fillEllipse(p.x,p.y,8+i%4*3,3);}
+  for(let i=0;i<16;i++){const p=local(.14+i*.047,i%2?-92:86);g.lineStyle(2,0x6c6240).lineBetween(p.x,p.y,p.x+Math.sin(i*2.7)*12,p.y+13);}
+  for(const [from,to]of [[.045,forestLog.gapStart],[forestLog.gapEnd,.96]]){
+   const a=local(from,0),b=local(to,0);g.lineStyle(48,0x263b2c,.55).lineBetween(a.x+4,a.y+7,b.x+4,b.y+7);
+   g.fillStyle(0x735033).fillPoints([local(from,-22),local(to,-22),local(to,22),local(from,22)],true);
+   g.fillStyle(0xa67b4b).fillPoints([local(from,-20),local(to,-20),local(to,2),local(from,2)],true);
+   for(const offset of [-8,-3,5,10]){const x=local(from,offset),y=local(to,offset+1);g.lineStyle(1,offset<0?0xcc9f64:0x543d2c).lineBetween(x.x,x.y,y.x,y.y);}
+   const broken=from<.1?to:from,sign=from<.1?1:-1;
+   const ring=(radius:number)=>Array.from({length:18},(_,i)=>local(broken+Math.cos(i/18*Math.PI*2)*.012*radius,Math.sin(i/18*Math.PI*2)*21*radius));
+   g.fillStyle(0xc5a16b).fillPoints(ring(1),true);for(const radius of [.4,.7,.95])g.lineStyle(1,0x8d633d).strokePoints(ring(radius),true);
+   const knot=local((from+to)/2,4);g.fillStyle(0x523c2b).fillEllipse(knot.x,knot.y,7,5);g.lineStyle(1,0xd2ad70).strokeEllipse(knot.x,knot.y,11,7);
+   const branch=local((from+to)/2,-20),tip=local((from+to)/2+.035,-35);g.lineStyle(7,0x735033).lineBetween(branch.x,branch.y,tip.x,tip.y);g.fillStyle(0xb48b55).fillEllipse(tip.x,tip.y,5,4);
+   for(let i=0;i<5;i++){const p=local(broken,(i-2)*5),tip=local(broken+sign*(.025+i%2*.015),(i-2)*5+2);g.lineStyle(2,i%2?0xc8a16b:0x8a633d).lineBetween(p.x,p.y,tip.x,tip.y);}
+   for(let i=0;i<5;i++){const p=local(from+(to-from)*i/5,-8);g.fillStyle(0x779453,.8).fillEllipse(p.x,p.y,10,4);}
+  }
   // Fallen, mossy trunks offer cover from the wind-driven spore field.
   for(const cover of sporeShelters){const p={x:cover.x-34,y:cover.y-8};g.fillStyle(0x2c4838,.5).fillEllipse(p.x+3,p.y+9,65,35);g.fillStyle(0x67513b).fillRoundedRect(p.x-23,p.y-15,46,28,6);g.fillStyle(0x98754c).fillEllipse(p.x,p.y-14,45,19);g.lineStyle(1,0x604b36).strokeEllipse(p.x,p.y-14,31,12);g.fillStyle(0x617a40).fillEllipse(p.x-13,p.y-5,22,12);}
   // A living larch with warm bark and soft needles supplies naturally exuded resin.
@@ -61,7 +77,7 @@ export class NoahSouthForest{
   for(let i=0;i<6;i++)g.lineStyle(1.3,0xb28a58).lineBetween(resinTree.x-9+i*4,resinTree.y-76,resinTree.x-10+i*4,resinTree.y-7);
   g.lineStyle(3,0x4a3929).strokePoints([{x:resinTree.x-3,y:resinTree.y-65},{x:resinTree.x+3,y:resinTree.y-48},{x:resinTree.x-2,y:resinTree.y-30}]);
   for(let i=0;i<24;i++){const x=-900+random()*640,y=1450+random()*1390;g.fillStyle(0xb3a077,.35).fillRect(x,y,3,1);}
-  this.terrain=scene.add.renderTexture(-1120,1300,1120,1650).setOrigin(0).setDepth(-.4).setVisible(false);this.terrain.draw(g,1120,-1300);g.destroy();
+  this.terrain=scene.add.renderTexture(-1120,1190,1120,1760).setOrigin(0).setDepth(-.4).setVisible(false);this.terrain.draw(g,1120,-1190);g.destroy();
  }
  attack(player:{x:number;y:number},direction:{x:number;y:number},upgraded:boolean,state:NoahTestState){
   if(this.swing>0)return false;
@@ -80,6 +96,7 @@ export class NoahSouthForest{
 
   this.drawMushrooms(night);
   this.herbs.clear();if(state.upgraded)for(const p of southHerbs){if(state.herbsPicked[p.id]!==undefined&&day-state.herbsPicked[p.id]<3)continue;drawForestHerb(this.herbs,p);}
+  const crossing=logCrossingStep(player,jumping,this.logSafe);this.logSafe=crossing.safe;if(crossing.fall){fall?.(this.logSafe);return;}
   if(inNoahSouth(player.x,player.y)){const step=swampStep(player,jumping,this.lastSafe);this.lastSafe=step.safe;if(step.fall){fall?.(this.lastSafe);return;}}
   // Thin drifting mist and small bubbles make the marsh feel alive.
   if(state.upgraded)for(let i=0;i<10;i++){const x=-610+(i*39+this.age*5)%260,y=2090+i%4*35;g.fillStyle(0xc9d5b6,.035).fillEllipse(x,y,90,11);}
@@ -125,6 +142,8 @@ export class NoahSouthForest{
    for(let j=0;j<6;j++)g.fillStyle(warning?0xe6c294:0xcfbfc3).fillCircle(p.x+Math.cos(j*2.4)*18,p.y-29+Math.sin(j*2.4)*7,2.5);
    if(releasing)for(let j=0;j<20;j++){const t=(this.age*.45+j*.077+i*.23)%1,x=p.x+t*160,y=p.y-22+Math.sin(j*2.4)*19;g.fillStyle(0xc5b396,(1-t)*.24).fillEllipse(x,y,20+t*35,12+t*17);g.fillStyle(0xe4cfa8,(1-t)*.7).fillCircle(x+Math.sin(j)*9,y-5,1+j%2);}
   }
+  if(warning)for(let i=0;i<15;i++){const p=southPath.find(p=>p.y>=1775+i*8);if(!p)continue;const pulse=.35+Math.sin(this.age*10+i*.2)*.15;g.lineStyle(1,0xd7ba87,pulse).strokeEllipse(p.x,p.y,58,13);}
+  if(releasing)for(let i=0;i<70;i++){const y=1775+i*1.8,p=southPath.find(p=>p.y>=y);if(!p)continue;const t=(this.age*.7+i*.13)%1,x=p.x-100+t*200;g.fillStyle(0xb5b697,.1*Math.sin(t*Math.PI)).fillEllipse(x,y-16,42,20);g.fillStyle(0xe2d6ac,.7*Math.sin(t*Math.PI)).fillCircle(x,y-18+Math.sin(i)*10,1.5);}
   if(releasing)for(let i=0;i<45;i++){const x=-810+(i*47+this.age*60)%350,y=1782+i*31%120;g.fillStyle(0xc5baa2,.2).fillCircle(x,y,1+i%2);}
   if(inSporeField(player.x,player.y)&&sporeSheltered(player.x,player.y))for(const p of sporeShelters)g.lineStyle(1,0xc4d39c,.45).strokeEllipse(p.x,p.y+6,58,32);
  }

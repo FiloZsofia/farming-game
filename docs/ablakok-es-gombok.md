@@ -26,3 +26,6 @@ A mozgatható tárgyak felvétele Bontóvassal, a `placed-items.ts` közös útv
 
 - A térkép meleg papírra rajzolt, botanikai terepnaplót idéz. A helynevek vektoros, nagyobb betűk; épületikonjai és útvonalai a meglévő pályából származnak. Hangulati látványterv nem jogosít fel új épület vagy helyszín hozzáadására.
 - A kivonatkészítés világ fölötti célpontnevei képernyőtérben, rendszerbetűvel készülnek, nem kis felbontású, felnagyított játéktextúraként. A felirat szükség esetén feljebb mozdul, hogy ne fedje Samet.
+
+- A teszttérkép maga tölti ki a megnyíló ablakot, külön fejléc/párnázott keret nélkül. A Vissza gomb a térképre kerül; külön Sam-helye jelmagyarázat nincs.
+- A világban megjelenő Phaser-szövegek legalább 4-es felbontással készülnek, beleértve az interakciós kérdőjelet/három pontot, Sam gondolatait és a táblákat.

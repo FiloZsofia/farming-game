@@ -945,3 +945,6 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 - Térképarculat: botanikai terepnapló, meleg papír, tintás növénydíszek, nagyobb feliratok. A generált látványterv hangulati minta: a működő térképen kizárólag a meglévő pálya épületei és helyszínei szerepelhetnek; templom, romok, új útvonal vagy helyszín nem kerülhet rá pusztán a kép alapján.
 - A déli erdei mocsár érkezési figyelmeztető ablaka és a gyökércsomó feletti név nem jelenik meg. A fizikai veszélyjelző tábla megmarad.
 - Kivonatkészítéskor a célpont neve a kamera nagyításától független, éles szöveg; a munkafelületek és a felirat nem takarhatják Samet.
+
+- A déli erdő memóriabeli tesztjében két kipróbálható ügyességi rész van: láthatóan megduzzadó gombákkal előre jelzett, szakaszos spórakifújás; valamint egy száraz mélyedésen átvezető, középen törött fatörzs. A törzsről leesés a meglévő mocsári visszahelyezés és egy szív levonásának útvonalát használja, tárgy- és aranyvesztés nélkül. A feladatokhoz nem készül külön fejlesztői kezdőpont; az erdő bejárása közben próbálhatók ki.
+- A híd utáni ösvény saját földszínű alakja fokozatosan szélesedik és erősödik; nem kerül zöld téglalap a meglévő tájra. Az északi fák koronái külön rétegben a déli talaj fölött maradnak.

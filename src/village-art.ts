@@ -8,13 +8,13 @@ import Phaser from 'phaser';
 import {villageLayout as layout,villagePaths,woodlandTreeClear,villageTrees,forestTrees,WORLD_HEIGHT,WORLD_WIDTH,benchPose,benchPoint,type BenchPose,shopNames} from './village-layout';
 // Original procedural scenery, sharing coordinates with the walkable village.
 export function drawVillage(scene:Phaser.Scene){
- const g=scene.add.graphics().setDepth(-.5),labels:Phaser.GameObjects.Text[]=[];
+ const canopy=scene.add.graphics(),g=scene.add.graphics().setDepth(-.5),labels:Phaser.GameObjects.Text[]=[];
  let seed=193;const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
  const rect=(x:number,y:number,w:number,h:number,c:number,a=1)=>{g.fillStyle(c,a).fillRect(x,y,w,h);};
  const oval=(x:number,y:number,w:number,h:number,c:number,a=1)=>{g.fillStyle(c,a).fillEllipse(x,y,w,h);};
  const line=(x:number,y:number,xx:number,yy:number,c:number,w=1,a=1)=>{g.lineStyle(w,c,a).lineBetween(x,y,xx,yy);};
  const poly=(p:number[],c:number,a=1)=>{g.fillStyle(c,a).fillPoints(Array.from({length:p.length/2},(_,i)=>new Phaser.Geom.Point(p[i*2],p[i*2+1])),true);};
- const label=(x:number,y:number,text:string,size=9)=>{const t=scene.add.text(x,y,text,{fontFamily:'Georgia, serif',fontSize:`${size}px`,color:'#fff1ce',backgroundColor:'#574f37',padding:{x:6,y:4}}).setOrigin(.5).setDepth(5);labels.push(t);};
+ const label=(x:number,y:number,text:string,size=9)=>{const t=scene.add.text(x,y,text,{fontFamily:'Georgia, serif',fontSize:`${size}px`,color:'#fff1ce',backgroundColor:'#574f37',padding:{x:6,y:4},resolution:4}).setOrigin(.5).setDepth(5);labels.push(t);};
  rect(FOREST_LEFT,600,1200-FOREST_LEFT,WORLD_HEIGHT-600,0x759c48);rect(FOREST_LEFT,farmBounds.top,-400-FOREST_LEFT,600-farmBounds.top,0x759c48);
  // Layered hill shoulders: cool lower slopes and sunlit rounded crowns.
  for(const [x,y,w,h]of [[40,760,440,220],[110,965,470,280],[20,1160,450,210]]){
@@ -25,7 +25,7 @@ export function drawVillage(scene:Phaser.Scene){
  for(let i=0;i<9200;i++){const x=FOREST_LEFT+random()*(1200-FOREST_LEFT),y=600+random()*(WORLD_HEIGHT-600);rect(x,y,1+random()*2,1,[0x4f783f,0x9bb669,0xb1bf72][i%3],.6);}
  // Northern woodland backdrop continues beyond the farm's left edge, instead of blank green.
  for(let i=0;i<4700;i++){const x=FOREST_LEFT+random()*(-400-FOREST_LEFT),y=farmBounds.top+random()*(600-farmBounds.top);rect(x,y,1+random()*2,1,[0x4f783f,0x9bb669,0xb1bf72][i%3],.6);}
- paintForest(g,random,()=>drawPathNetwork(g,villagePaths));
+ paintForest(g,random,()=>drawPathNetwork(g,villagePaths),canopy);
  oval(479,1089,374,240,0x83915d);oval(476,1080,360,230,0xc3b697);
  for(let y=977;y<1183;y+=10)for(let x=298+(y%20?0:8);x<655;x+=17){if(((x-476)/176)**2+((y-1080)/109)**2>1)continue;rect(x,y,14,7,(x+y)%3?0xcabb9a:0xaeaa8e);line(x+2,y+1,x+12,y+1,0xdfcdae);}
  // A shallow stone fountain and a few pots give the square a quiet centre.
@@ -107,13 +107,14 @@ export function drawVillage(scene:Phaser.Scene){
   poly(arrow,0x604f35);poly(arrow.map((v,i)=>v+(i%2? -1:0)),0xa98a59);if(direction==='down'){line(left+3,top+4,left+3,top+48,0xcfb17b);line(left+width-3,top+4,left+width-3,top+48,0x735b3c);}else line(left+12,top+3,left+width-12,top+3,0xcfb17b);if(direction!=='down')line(left+12,top+19,left+width-12,top+19,0x735b3c);oval(postX,top+6,2,2,0x5c5b45);oval(postX,top+16,2,2,0x5c5b45);
   g.restore();
   const tx=left+width/2+(direction==='left'?3:direction==='right'?-3:0),ty=top+(direction==='down'?25:11),dx=tx-pivotX,dy=ty-pivotY;
-  const title=scene.add.text(pivotX+dx*Math.cos(tilt)-dy*Math.sin(tilt),pivotY+dx*Math.sin(tilt)+dy*Math.cos(tilt),text,{fontFamily:'Georgia,serif',fontSize:'9px',color:'#fff0c8',resolution:2}).setOrigin(.5).setRotation((direction==='down'?Math.PI/2:0)+tilt).setDepth(5);labels.push(title);
+  const title=scene.add.text(pivotX+dx*Math.cos(tilt)-dy*Math.sin(tilt),pivotY+dx*Math.sin(tilt)+dy*Math.cos(tilt),text,{fontFamily:'Georgia,serif',fontSize:'9px',color:'#fff0c8',resolution:4}).setOrigin(.5).setRotation((direction==='down'?Math.PI/2:0)+tilt).setDepth(5);labels.push(title);
  };
  sign(235,696,226,608,18,'Falu','down');sign(292,810,220,759,88,'Erdei ösvény','left');
 
  rect(416,930,4,42,0x615940);rect(409,925,18,18,0xd9c994);rect(408,924,20,3,0x5b6550);poly([406,924,418,913,430,924],0x566650);
  // This scenery is static too; keep tree canopies and paving out of the per-frame geometry pass.
  const terrain=scene.add.renderTexture(FOREST_LEFT,farmBounds.top,1200-FOREST_LEFT,WORLD_HEIGHT-farmBounds.top).setOrigin(0).setDepth(-.5);terrain.draw(g,-FOREST_LEFT,-farmBounds.top);g.destroy();
+ const crowns=scene.add.renderTexture(FOREST_LEFT,farmBounds.top,1200-FOREST_LEFT,WORLD_HEIGHT-farmBounds.top).setOrigin(0).setDepth(-.3);crowns.draw(canopy,-FOREST_LEFT,-farmBounds.top);canopy.destroy();
  return {graphics:terrain,labels};
 }
 export function drawForage(scene:Phaser.Scene,picked:Record<string,number>,day:number,weatherSeed=0){

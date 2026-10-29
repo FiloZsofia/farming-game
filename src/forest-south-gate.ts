@@ -15,5 +15,5 @@ export function drawForestSouthGate(scene:Phaser.Scene,closed:boolean){
  // The warning remains beside the open route after access becomes available.
  g.fillStyle(0x5e4932).fillRect(x+69,y-34,4,43);g.fillStyle(0x9b7950).fillRoundedRect(x+42,y-66,58,37,3);g.lineStyle(1,0xc0a16b).strokeRoundedRect(x+42,y-66,58,37,3);
  g.fillStyle(0xe0bd73).fillTriangle(x+71,y-61,x+60,y-43,x+82,y-43);g.lineStyle(2,0x4a3a28).lineBetween(x+71,y-56,x+71,y-50);g.fillStyle(0x4a3a28).fillCircle(x+71,y-47,1);
- const text=scene.add.text(x+71,y-39,'VESZÉLY',{fontFamily:'sans-serif',fontSize:'6px',color:'#f4e5bc'}).setOrigin(.5);root.add(text);return root;
+ const text=scene.add.text(x+71,y-39,'VESZÉLY',{fontFamily:'sans-serif',fontSize:'6px',resolution:4,color:'#f4e5bc'}).setOrigin(.5);root.add(text);return root;
 }

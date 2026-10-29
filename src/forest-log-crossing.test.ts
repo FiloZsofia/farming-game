@@ -1,0 +1,4 @@
+import {it,expect} from 'vitest';
+import {logPoint,logCoordinates,logCrossingStep} from './forest-log-crossing';
+it('supports both trunk pieces, but requires a jump across the broken middle',()=>{const safe=logPoint(0);expect(logCrossingStep(logPoint(.3),false,safe).fall).toBe(false);expect(logCrossingStep(logPoint(.7),false,safe).fall).toBe(false);expect(logCrossingStep(logPoint(.5),false,safe)).toEqual({fall:true,safe});expect(logCrossingStep(logPoint(.5),true,safe).fall).toBe(false);});
+it('prevents walking around the trunk in the hollow and retains the last dry bank',()=>{const safe=logPoint(0);for(const side of [-90,-30,30,90])expect(logCrossingStep(logPoint(.3,side),false,safe).fall).toBe(true);expect(logCrossingStep(logPoint(1),false,safe).safe).toEqual(logPoint(1));expect(logCoordinates(logPoint(.5,30)).across).toBeCloseTo(30);});

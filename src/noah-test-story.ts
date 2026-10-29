@@ -4,7 +4,7 @@ import {prepareMicroscopeTest} from './microscope-test-setup';
 
 export type NoahTestConfig={thyme:number;plantain:number;concentrate:number;shipment:number;ingredient:number;ingredientName:string;wood:number;scrap:number;gold:number};
 export const noahTestConfig:NoahTestConfig={thyme:2,plantain:2,concentrate:1,shipment:4,ingredient:1,ingredientName:'Vörösfenyőgyanta',wood:25,scrap:14,gold:310};
-export type NoahCheckpoint='waiting'|'letter'|'simon'|'forest'|'marsh'|'root'|'spores'|'resin'|'mix';
+export type NoahCheckpoint='waiting'|'letter'|'simon'|'forest'|'marsh'|'root'|'spores'|'resin'|'mix'|'log';
 export type NoahTestState={herbsPicked:Record<string,number>;sentDay:number;mixtureMade:boolean;endSeen:boolean;letter:boolean;simonAsked:boolean;upgraded:boolean;complete:boolean;concentrate:number;ingredient:number;rootDefeated:boolean;ingredientGathered:boolean};
 export const noahLetter=`Sam!
 
@@ -28,9 +28,10 @@ export function prepareNoahTest(source:Snapshot,config:NoahTestConfig,checkpoint
  snapshot.clearing.wood=Math.max(snapshot.clearing.wood,config.wood);
  snapshot.travel.research.materials.scrap=Math.max(snapshot.travel.research.materials.scrap,config.scrap);
  snapshot.economy.gold=Math.max(snapshot.economy.gold,config.gold);
- const state:NoahTestState={herbsPicked:{},sentDay:snapshot.clock.day-(checkpoint==='waiting'?0:3),mixtureMade:false,endSeen:false,letter:checkpoint!=='letter'&&checkpoint!=='waiting',simonAsked:checkpoint==='forest'||checkpoint==='marsh'||checkpoint==='root'||checkpoint==='spores'||checkpoint==='resin'||checkpoint==='mix',upgraded:checkpoint==='forest'||checkpoint==='marsh'||checkpoint==='root'||checkpoint==='spores'||checkpoint==='resin'||checkpoint==='mix',complete:false,concentrate:checkpoint==='letter'||checkpoint==='waiting'?0:config.shipment,ingredient:checkpoint==='mix'?config.ingredient:0,rootDefeated:checkpoint==='mix'||checkpoint==='resin',ingredientGathered:checkpoint==='mix'};
+ const state:NoahTestState={herbsPicked:{},sentDay:snapshot.clock.day-(checkpoint==='waiting'?0:3),mixtureMade:false,endSeen:false,letter:checkpoint!=='letter'&&checkpoint!=='waiting',simonAsked:checkpoint==='log'||checkpoint==='forest'||checkpoint==='marsh'||checkpoint==='root'||checkpoint==='spores'||checkpoint==='resin'||checkpoint==='mix',upgraded:checkpoint==='log'||checkpoint==='forest'||checkpoint==='marsh'||checkpoint==='root'||checkpoint==='spores'||checkpoint==='resin'||checkpoint==='mix',complete:false,concentrate:checkpoint==='letter'||checkpoint==='waiting'?0:config.shipment,ingredient:checkpoint==='mix'?config.ingredient:0,rootDefeated:checkpoint==='mix'||checkpoint==='resin',ingredientGathered:checkpoint==='mix'};
  if(checkpoint==='simon')snapshot.player={x:320,y:4635};
  if(checkpoint==='mix')snapshot.player={x:337,y:3415};
+ if(checkpoint==='log')snapshot.player={x:-350,y:1540};
  if(checkpoint==='forest')snapshot.player={x:-444,y:1140};
  if(checkpoint==='marsh')snapshot.player={x:-430,y:2000};
  if(checkpoint==='resin')snapshot.player={x:-850,y:2750};

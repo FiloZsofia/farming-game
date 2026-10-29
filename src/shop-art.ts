@@ -9,7 +9,7 @@ export function drawShop(scene:Phaser.Scene,shop:Shop){
  const rect=(x:number,y:number,w:number,h:number,c:number,a=1)=>g.fillStyle(c,a).fillRect(x,y+y0,w,h);
  const oval=(x:number,y:number,w:number,h:number,c:number,a=1)=>g.fillStyle(c,a).fillEllipse(x,y+y0,w,h);
  const line=(x:number,y:number,xx:number,yy:number,c:number,w=1)=>g.lineStyle(w,c).lineBetween(x,y+y0,xx,yy+y0);
- const label=(x:number,y:number,text:string,size=11)=>scene.add.text(x,y+y0,text,{fontFamily:'Georgia,serif',fontSize:`${size}px`,color:'#fff0c6',backgroundColor:'#5a523c',padding:{x:7,y:4}}).setOrigin(.5).setDepth(4);
+ const label=(x:number,y:number,text:string,size=11)=>scene.add.text(x,y+y0,text,{fontFamily:'Georgia,serif',fontSize:`${size}px`,color:'#fff0c6',backgroundColor:'#5a523c',padding:{x:7,y:4},resolution:4}).setOrigin(.5).setDepth(4);
  rect(0,0,800,600,0x263b31);rect(92,99,616,426,0x62523d);rect(100,108,600,404,0xc6b38c);rect(100,110,600,85,nursery?0xd2d0ad:0xb9c9b4);rect(100,188,600,12,0x766848);rect(100,200,600,312,0xa7865c);
  for(let y=202;y<511;y+=14){line(101,y,699,y,0x715b42);line(101,y+2,699,y+2,0xc4a06c);for(let x=110+(y%3)*45;x<690;x+=95)line(x,y,x,y+13,0x7d6748);}
  for(const x of [125,555]){rect(x-4,115,121,63,0x796c4f);rect(x,119,113,55,0xa9c5b4);for(let i=0;i<3;i++){line(x+28+i*28,119,x+28+i*28,173,0xe9ddb9,3);}line(x,146,x+113,146,0xe9ddb9,3);oval(x+30,136,29,17,0x78935e,.6);rect(x-7,175,128,6,0x9c8257);}

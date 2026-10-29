@@ -8,7 +8,7 @@ const config:NoahTestConfig={thyme:2,plantain:2,concentrate:1,shipment:4,ingredi
 const fresh=()=>{const s=snapshot({x:250,y:194},createClock(1),createGarden());s.farmName='Próba farm';return s;};
 it('prepares every checkpoint on an independent snapshot without changing a normal farm',()=>{
  const source=fresh(),original=structuredClone(source);
- for(const checkpoint of ['waiting','letter','simon','forest','mix'] as const){const test=prepareNoahTest(source,config,checkpoint);expect(validSnapshot(test.snapshot)).toBe(true);expect(test.snapshot.travel.forest).toMatchObject({sent:true,examined:true,sample:true});expect(test.snapshot.travel.research.microscopeDelivered).toBe(true);}
+ for(const checkpoint of ['waiting','letter','simon','forest','log','spores','marsh','root','resin','mix'] as const){const test=prepareNoahTest(source,config,checkpoint);expect(validSnapshot({...test.snapshot,player:source.player})).toBe(true);expect(test.snapshot.travel.forest).toMatchObject({sent:true,examined:true,sample:true});expect(test.snapshot.travel.research.microscopeDelivered).toBe(true);}
  expect(source).toEqual(original);
 });
 it('charges the stick upgrade once and leaves missing materials untouched',()=>{

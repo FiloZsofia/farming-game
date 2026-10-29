@@ -3,7 +3,7 @@ import {drawWoodlandTree} from './woodland-tree';
 import Phaser from 'phaser';
 import {FOREST_LEFT,forestNest,forestPlants,walkingStick,type Forest,type Herb} from './forest';
 // Paint into the village's own cached terrain: no overlay rectangle or separate palette.
-export function paintForest(g:Phaser.GameObjects.Graphics,random:()=>number,paintPaths?:()=>void){
+export function paintForest(g:Phaser.GameObjects.Graphics,random:()=>number,paintPaths?:()=>void,canopy=g){
  const oval=(x:number,y:number,w:number,h:number,c:number,a=1)=>g.fillStyle(c,a).fillEllipse(x,y,w,h);
  for(const [x,y,w,h]of [[-850,785,440,205],[-850,1210,440,220],[-380,730,570,145]]){
   oval(x+8,y+25,w,h,0x44683f,.38);oval(x-7,y+8,w*.98,h*.82,0x638743,.5);oval(x-35,y-8,w*.8,h*.56,0x8ba352,.36);
@@ -16,12 +16,12 @@ export function paintForest(g:Phaser.GameObjects.Graphics,random:()=>number,pain
  for(const [width,color]of [[40,0x617347],[32,0x9c9a70],[25,0x3c7778],[17,0x70aaa5]]){g.lineStyle(width,color).strokePoints(brook);for(const p of brook)oval(p.x,p.y,width,width,color);}
  for(let i=3;i<brook.length-3;i+=5){const p=brook[i];g.lineStyle(1.2,0xd5e3bd,.8).lineBetween(p.x-6,p.y-3,p.x+7,p.y-3);oval(p.x+(i%2?18:-18),p.y+7,8,5,0xa6ab89);g.lineStyle(1.5,0x5c8249).lineBetween(p.x+21,p.y,p.x+23,p.y-10).lineBetween(p.x+23,p.y,p.x+27,p.y-7);}
  for(let i=0;i<8;i++){g.fillStyle(i%2?0xae925f:0x947951).fillRect(-464,1167+i*8,40,6);}g.lineStyle(3,0x67533b).lineBetween(-465,1165,-465,1229).lineBetween(-423,1165,-423,1229);
- for(let i=0;i<46;i++){const x=-1080+random()*1030,y=i%2?700+random()*130:1260+random()*115;drawWoodlandTree(g,random,x,y,i%3,.85+(i%3)*.08);}
+ for(let i=0;i<46;i++){let x=-1080+random()*1030;const y=i%2?700+random()*130:1260+random()*115;if(y>1230&&Math.abs(x+444)<70)x=-525;drawWoodlandTree(canopy,random,x,y,i%3,.85+(i%3)*.08);}
  // Dense trunks and brambles follow the actual impassable shoulders of both gates.
  for(const [center,top,bottom]of [[-665,934,1020],[-885,954,1040]]){
   for(const x of [center-25,center,center+25]){
-   for(let y=725;y<top+1;y+=48)drawWoodlandTree(g,random,x+(y%3)*3,y,Math.abs(Math.round(x+y))%3,.9);
-   for(let y=bottom+99;y<1380;y+=47)drawWoodlandTree(g,random,x+(y%3)*3,y,Math.abs(Math.round(x+y))%3,.9);
+   for(let y=725;y<top+1;y+=48)drawWoodlandTree(canopy,random,x+(y%3)*3,y,Math.abs(Math.round(x+y))%3,.9);
+   for(let y=bottom+99;y<1380;y+=47)drawWoodlandTree(canopy,random,x+(y%3)*3,y,Math.abs(Math.round(x+y))%3,.9);
    for(let y=715;y<1340;y+=26)if(y<top-5||y>bottom+5){g.lineStyle(2,0x456b3c).lineBetween(x-12,y+7,x+8,y-3).lineBetween(x-4,y+9,x-9,y-8);g.fillStyle(0x6d8a49).fillEllipse(x-10,y,18,8).fillEllipse(x+4,y+4,20,7);}
   }
  }

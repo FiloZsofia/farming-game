@@ -2,6 +2,11 @@
 
 ## Változások a 0.1.0 óta — külön jóváhagyott verzióemelés nélkül
 
+- Az ablakot kitöltő térkép, ráhelyezett Vissza gombbal és külön helyjelmagyarázat nélkül.
+- Javított talajátmenet a patakhíd után; a külön lombkoronaréteget már nem vágja le az ösvény.
+- Tesztelhető spórás átjáró és törött fatörzs az erdő bejárása közben.
+- Élesebb világfeliratok: interakciós kérdőjel, három pont, gondolatok és táblák.
+
 - Botanikai terepnaplót idéző teszttérkép nagyobb helynevekkel, kizárólag meglévő helyszínekkel.
 - Lágyabb déli erdei ösvénykezdet, szabad ösvény a mocsár után; a mocsár felugró figyelmeztetése és a gyökércsomó neve eltávolítva.
 - Éles, képernyőméretű kivonatkészítési feliratok; Samet nem takarják ki a munkafelületek.

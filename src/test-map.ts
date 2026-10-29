@@ -43,6 +43,6 @@ export function createTestMap(player:{x:number;y:number},unlocked:boolean,farmNa
  const p=mapPoint(mapWorldPosition(player));element('circle',{cx:p.x,cy:p.y,r:12,fill:'#fff4c9',stroke:'#876739','stroke-width':2});element('circle',{cx:p.x,cy:p.y,r:6,fill:'#bf7945'}).classList.add('map-player');label('Sam',p.x,p.y-20,23);
  // A small compass and plant-like ink flourishes echo Sam’s field notebook.
  for(const [x,y,sx,sy]of [[33,33,1,1],[867,33,-1,1],[33,867,1,-1],[867,867,-1,-1]]){const g=element('g',{transform:`translate(${x} ${y}) scale(${sx} ${sy})`});element('path',{d:'M0 65Q4 22 65 0M7 45Q-3 28 3 16Q18 26 14 35M26 16Q24 2 39 1Q42 13 33 14',fill:'none',stroke:'#6c7c4e','stroke-width':1.5},g);}
- element('circle',{cx:770,cy:710,r:40,fill:'none',stroke:'#9a8357'});element('path',{d:'M770 671l8 39-8 39-8-39ZM731 710l39-8 39 8-39 8Z',fill:'#b09b69',stroke:'#6e7550','stroke-width':1});element('path',{d:'M770 671v39h39',fill:'none',stroke:'#46583b','stroke-width':2});label('É',770,658,22);label('• Sam helye',708,795,22);label('M / Esc · Vissza',708,831,22);
+ element('circle',{cx:770,cy:710,r:40,fill:'none',stroke:'#9a8357'});element('path',{d:'M770 671l8 39-8 39-8-39ZM731 710l39-8 39 8-39 8Z',fill:'#b09b69',stroke:'#6e7550','stroke-width':1});element('path',{d:'M770 671v39h39',fill:'none',stroke:'#46583b','stroke-width':2});label('É',770,658,22);
  return svg;
 }

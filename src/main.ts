@@ -618,7 +618,7 @@ class Farm extends Phaser.Scene {
   if(this.transitioning||performance.now()<this.eatingUntil)return;
   const health=this.travel.forest?.health??5;if(health>=5)return;
   const next=consumeFood(this.currentSnapshot(),crop);if(!next)return;
-  await this.commitChest(next,()=>{if(this.forestCombat)this.forestCombat.health=next.travel.forest!.health!;dialogue.close();release();this.eatingUntil=performance.now()+1200;this.avatar.use(0,-40,'hand');const heart=this.add.text(this.actor.x,this.actor.y-60,'♥ +1',{fontFamily:'sans-serif',fontSize:'13px',color:'#edaf9c',stroke:'#354b35',strokeThickness:3}).setOrigin(.5).setDepth(180);this.tweens.add({targets:heart,y:heart.y-28,alpha:0,duration:1200,onComplete:()=>heart.destroy()});});
+  await this.commitChest(next,()=>{if(this.forestCombat)this.forestCombat.health=next.travel.forest!.health!;dialogue.close();release();this.eatingUntil=performance.now()+1200;this.avatar.use(0,-40,'hand');const heart=this.add.text(this.actor.x,this.actor.y-60,'♥ +1',{fontFamily:'sans-serif',fontSize:'13px',resolution:4,color:'#edaf9c',stroke:'#354b35',strokeThickness:3}).setOrigin(.5).setDepth(180);this.tweens.add({targets:heart,y:heart.y-28,alpha:0,duration:1200,onComplete:()=>heart.destroy()});});
  }
  private openCraftShop(message=''){
   showDialogue('Műhelybolt',message||'A lentieknek a tervrajzát vásárolhatod meg.','SIMON');const panel=document.querySelector<HTMLElement>('#shop-panel')!;panel.replaceChildren();panel.hidden=false;
@@ -1214,7 +1214,7 @@ class Farm extends Phaser.Scene {
   const noahSection=document.createElement('section');noahSection.className='noah-test-picker';
   const noahTitle=document.createElement('h3');noahTitle.textContent='Noah küldeménye – erdei kísérlet';
   const checkpoint=document.createElement('select');checkpoint.id='noah-test-checkpoint';checkpoint.setAttribute('aria-label','A teszt kezdőpontja');
-  for(const [value,label]of [['letter','Teljes folyamat · Noah válaszának napja'],['waiting','Indítás a minta elküldése után'],['simon','Indítás Simonnál'],['forest','Indítás a patakhídnál'],['spores','Indítás a spóramező előtt'],['marsh','Indítás a mocsári átkelőnél'],['root','Indítás a gyökércsomónál · este'],['resin','Indítás a vörösfenyőnél'],['mix','Indítás a kivonatkészítés előtt']])checkpoint.add(new Option(label,value));
+  for(const [value,label]of [['letter','Teljes folyamat · Noah válaszának napja'],['waiting','Indítás a minta elküldése után'],['simon','Indítás Simonnál'],['forest','Indítás a patakhídnál'],['marsh','Indítás a mocsári átkelőnél'],['root','Indítás a gyökércsomónál · este'],['resin','Indítás a vörösfenyőnél'],['mix','Indítás a kivonatkészítés előtt']])checkpoint.add(new Option(label,value));
   const start=document.createElement('button');start.type='button';start.id='start-noah-test';start.textContent='Teszt indítása';start.onclick=()=>{start.disabled=true;void this.startNoahTest(checkpoint.value as NoahCheckpoint,noahTestConfig).finally(()=>{start.disabled=false;});};
   noahSection.append(noahTitle,checkpoint,start);panel.append(noahSection);
   if(this.noahTest){const nextMorning=document.createElement('button');nextMorning.type='button';nextMorning.id='noah-next-morning';nextMorning.textContent='Következő reggel';nextMorning.onclick=()=>{if(this.transitioning)return;dialogue.close();void this.finishDay(false);};panel.append(nextMorning);}
@@ -1422,8 +1422,8 @@ class Farm extends Phaser.Scene {
   this.avatar=new FarmerArt(this);this.body=this.avatar.root;this.actor.add(this.body);
   this.wildlife=new Wildlife(this);this.pondLife=new PondLife(this);this.villageAmbience=new VillageAmbience(this);
   this.thoughtBack=this.add.graphics().setDepth(159);
-  this.thought=this.add.text(0,0,'',{fontFamily:'Georgia',fontSize:'10px',color:'#344939',padding:{x:5,y:3},wordWrap:{width:112},align:'center'}).setOrigin(.5,1).setDepth(160).setResolution(2).setVisible(false);
-  this.bubble=this.add.text(0,0,'', {fontFamily:'Georgia',fontSize:'20px',color:'#fff4cf',backgroundColor:'#293e30',padding:{x:9,y:4}}).setOrigin(.5,1).setDepth(101).setInteractive({useHandCursor:true});
+  this.thought=this.add.text(0,0,'',{fontFamily:'Georgia',fontSize:'10px',color:'#344939',padding:{x:5,y:3},wordWrap:{width:112},align:'center'}).setOrigin(.5,1).setDepth(160).setResolution(4).setVisible(false);
+  this.bubble=this.add.text(0,0,'', {fontFamily:'Georgia',fontSize:'20px',color:'#fff4cf',backgroundColor:'#293e30',padding:{x:9,y:4}}).setOrigin(.5,1).setDepth(101).setResolution(4).setInteractive({useHandCursor:true});
   const inspect=()=>{
     if(this.noahTest?.labActive)return;
     if(!this.ready||dialogue.open||this.transitioning||this.collapseRemaining>0)return;
