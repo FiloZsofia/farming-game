@@ -2,6 +2,8 @@
 
 ## Változások a 0.1.0 óta — külön jóváhagyott verzióemelés nélkül
 
+- A látogatók nem takarják el a napló kattintási területét, és érkezési ablakuk nem írja felül az első napi segítséget. A jelzés feltűnőbb és csak a segítség nyugtázása után tűnik el.
+
 - Annie madárodús útmutatásában a Készlet elnevezés szerepel az Alapanyagok helyett.
 
 - Első napi, pulzáló naplójelzés és egyszeri segítség az E-s használatról, a napközbeni reggelig pihenésről és az automatikus mentésről.

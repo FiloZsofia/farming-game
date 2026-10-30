@@ -1,3 +1,4 @@
+import {journalHelpPending} from './story-events';
 import {describe,it,expect,vi} from 'vitest';
 import {IDBFactory} from 'fake-indexeddb';
 import {SaveStore,snapshot,validSnapshot,decodeSnapshot,DB_NAME} from './storage';
@@ -214,4 +215,6 @@ it('keeps test saves in memory while preserving the normal farm and its backup',
  const reopened=new SaveStore(factory);expect((await reopened.load()).data).toEqual(original);expect(reopened.selectedFarmId).toBe(id);expect(reopened.testMode).toBe(false);reopened.close();
 });
 
-it('keeps acknowledged journal help across a save reload without changing schema',async()=>{const factory=new IDBFactory(),store=new SaveStore(factory);await store.load();const data=fresh();data.story.journalHelpSeen=true;await store.save(data);store.close();const restored=new SaveStore(factory);const loaded=(await restored.load()).data!;expect(loaded.story.journalHelpSeen).toBe(true);expect(loaded.version).toBe(18);restored.close();});
+it('keeps acknowledged journal help across a save reload without changing schema',async()=>{const factory=new IDBFactory(),store=new SaveStore(factory);await store.load();const data=fresh();data.story.journalHelpSeen=true;data.story.journalHelpConfirmed=true;await store.save(data);store.close();const restored=new SaveStore(factory);const loaded=(await restored.load()).data!;expect(loaded.story.journalHelpSeen).toBe(true);expect(loaded.story.journalHelpConfirmed).toBe(true);expect(loaded.version).toBe(18);restored.close();});
+
+it('offers the journal help again for a day-one save marked seen by the old click handler',async()=>{const factory=new IDBFactory(),store=new SaveStore(factory);await store.load();const data=fresh();data.story.journalHelpSeen=true;await store.save(data);store.close();const reader=new SaveStore(factory),loaded=(await reader.load()).data!;expect(journalHelpPending(loaded.story,loaded.clock.day)).toBe(true);expect(loaded.story.journalHelpConfirmed).toBeUndefined();reader.close();});

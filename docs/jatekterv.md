@@ -961,6 +961,12 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 
 - Ki nem helyezett madárodú esetén másnap nem jelenik meg a „De jó! Kiteszem a madárodút.” gondolat. A már kihelyezett odúhoz kapcsolódó, madaraknak örülő gondolat megmarad.
 
-- Az első napon a verandai napló körül finom, kör alakú pulzáló jelzés látszik. Első kattintásra külön segítség magyarázza az E-s közeli interakciót, a napközben is bármikor választható reggelig pihenést és az automatikus mentést. A segítség nem lépteti a napot. A megtekintés farmonként mentődik; utána, illetve a napló rendes megnyitása után a jelzés eltűnik, a későbbi napokon nem jelenik meg. A régi mentések új formátumverzió nélkül olvashatók.
+- Az első napon a verandai napló körül finom, kör alakú pulzáló jelzés látszik. Első kattintásra külön segítség magyarázza az E-s közeli interakciót, a napközben is bármikor választható reggelig pihenést és az automatikus mentést. A segítség nem lépteti a napot. A segítség nyugtázása farmonként mentődik; csak a ténylegesen megnyitott segítség bezárása után tűnik el a jelzés, a későbbi napokon nem jelenik meg. A régi mentések új formátumverzió nélkül olvashatók.
 
 - A „Napló és mentés” segítség az Irányításban is állandóan elérhető, az első napi ablakéval közös szövegforrásból. Az Irányításban nem indít új napot és nem jelenít meg újra villogó jelzést.
+
+- A napló kattintási területe elsőbbséget kap az elé álló látogatóval szemben. Ha egy érkezési beszélgetés mentése még folyamatban van, a naplós segítségkérés megmarad; a két ablak nem írhatja felül egymást. A napló köre erősebb arany kontúrt és enyhe pulzáló fényt kap.
+
+- A korábbi első napi naplójelzésnél a „megnyitottnak” mentett állapot nem bizonyította, hogy a segítség olvasható is maradt. Az első napi régi mentésekben a javított segítség egyszer újra felkínálható; ezután külön, opcionális nyugtázási jelző őrzi a ténylegesen megnyitott és bezárt segítséget. A 18-as mentésformátum és a farm többi állapota változatlan.
+
+- A napló körjelzésének középpontja rögzített: a kör finoman összehúzódik és kitágul, oldalirányú vagy függőleges elmozdulás nélkül. A teljes látható kör kattintható. Első kattintáskor a segítség nyílik meg, nem a napló saját ablaka; csak a segítség nyugtázása után vált át a napló normál megnyitására.

@@ -31,7 +31,7 @@ function clickWorld(x:number,y:number){
  }));
 }
 function sleepTo(day:number){
- clickWorld(281,193);cy.get('#sleep').should('be.visible').click();cy.get('#game').should('have.attr','data-day',String(day));cy.get('#dialogue-close').should('be.visible').click();cy.get('#game',{timeout:8000}).should('have.attr','data-morning-stage','none');cy.get('#dialogue').should('not.be.visible');
+ clickWorld(281,193);cy.get('#dialogue').then(d=>{if(d.attr('data-presentation')==='journal-help'){cy.get('#dialogue-close').click();clickWorld(281,193);}});cy.get('#sleep').should('be.visible').click();cy.get('#game').should('have.attr','data-day',String(day));cy.get('#dialogue-close').should('be.visible').click();cy.get('#game',{timeout:8000}).should('have.attr','data-morning-stage','none');cy.get('#dialogue').should('not.be.visible');
 }
 describe('World interactions and uncluttered UI',()=>{
  it('removes redundant buttons and keeps help in one menu',()=>{

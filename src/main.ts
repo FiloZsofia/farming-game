@@ -387,25 +387,34 @@ class Farm extends Phaser.Scene {
   this.jumpRemaining=JUMP_DURATION;this.jumpCooldown=JUMP_DURATION+JUMP_COOLDOWN;
  }
  private journalHint!:Phaser.GameObjects.Graphics;
+ private journalClickZone!:Phaser.GameObjects.Zone;
+ private journalHelpRequested=false;
  private journalCalm=matchMedia('(prefers-reduced-motion: reduce)').matches;
- private acknowledgeJournalHelp(){if(this.story.journalHelpSeen)return;this.story={...this.story,journalHelpSeen:true};void this.persist();}
+ private acknowledgeJournalHelp(){if(this.story.journalHelpConfirmed)return;this.story={...this.story,journalHelpSeen:true,journalHelpConfirmed:true};void this.persist();}
  private openJournalHelp(){
-  if(!this.ready||dialogue.open||this.transitioning||!journalHelpPending(this.story,this.clock.day))return;
-  this.acknowledgeJournalHelp();
+  if(!this.ready||!journalHelpPending(this.story,this.clock.day))return;
+  if(dialogue.open||this.transitioning){this.journalHelpRequested=true;return;}
+  this.journalHelpRequested=false;
   showDialogue('Napló a verandán',JOURNAL_HELP_LINES.join('\n\n'),JOURNAL_HELP_TITLE.toLocaleUpperCase('hu'));
+  dialogue.dataset.presentation='journal-help';
+  dialogue.addEventListener('close',()=>{if(dialogue.dataset.presentation==='journal-help')this.acknowledgeJournalHelp();},{once:true});
  }
  private drawJournalHint(now:number){
+  if(this.choosingFarm||!this.hasFarm||!journalHelpPending(this.story,this.clock.day))this.journalHelpRequested=false;
+  if(this.journalHelpRequested&&!dialogue.open&&!this.transitioning)this.openJournalHelp();
   const active=this.ready&&this.hasFarm&&!this.choosingFarm&&!dialogue.open&&!this.transitioning&&journalHelpPending(this.story,this.clock.day)&&this.actor.x>=farmBounds.left&&this.actor.y<600&&this.actor.y>=farmBounds.top;
+  if(this.journalClickZone.input)(this.journalClickZone.input.hitArea as Phaser.Geom.Circle).radius=journalHelpPending(this.story,this.clock.day)?36:14;
   this.journalHint.clear().setVisible(active);document.querySelector<HTMLElement>('#game')!.dataset.journalHint=String(active);if(!active)return;
-  const pulse=this.journalCalm?.5:(Math.sin(now/650)+1)/2,x=farmLayout.journal.x+9,y=farmLayout.journal.y+7;
-  this.journalHint.lineStyle(3,0xf0d789,.08+pulse*.07).strokeCircle(x,y,23+pulse);
-  this.journalHint.lineStyle(1,0xffe6a0,.3+pulse*.5).strokeCircle(x,y,21+pulse);
+  const pulse=this.journalCalm?.5:(Math.sin(now/500)+1)/2,x=farmLayout.journal.x+9,y=farmLayout.journal.y+7;
+  this.journalHint.fillStyle(0xffdc83,.035+pulse*.025).fillCircle(x,y,20+pulse*5);
+  this.journalHint.lineStyle(5,0xefc36a,.15+pulse*.13).strokeCircle(x,y,23+pulse*5);
+  this.journalHint.lineStyle(2,0xffe6a0,.7+pulse*.3).strokeCircle(x,y,20+pulse*5);
  }
  private openJournal(){
   if(!this.ready||this.transitioning||this.collapseRemaining>0||dialogue.open)return;
   if(Math.hypot(this.actor.x-farmLayout.journal.x-9,this.actor.y-farmLayout.journal.y-7)>55){this.notice('A naplót a ház verandáján találod.');return;}
   if(this.jumpRemaining>0)return;
-  this.acknowledgeJournalHelp();
+  if(journalHelpPending(this.story,this.clock.day)){this.openJournalHelp();return;}
   showDialogue('Mára elég volt?','A kert holnap is megvár. Lezárom a naplót, és reggelig pihenek.','ESTI NAPLÓ');
   const observation=this.travel.research.observation,note=this.travel.pollinationObservation,panel=document.querySelector<HTMLElement>('#research-panel')!;panel.replaceChildren();
   if(observation){const p=document.createElement('p');p.textContent=`Első megfigyelés · Tavasz ${observation.seasonDay}. napja — Szarvas faliméh (Osmia cornuta). Egy példány a vadvirágoknál. Ez jó jel, de egyetlen megfigyelésből még nem tudom, miért lettek kevesebben.`;panel.append(p);}
@@ -1039,7 +1048,7 @@ class Farm extends Phaser.Scene {
   catch{this.eventRetry=5;this.notice('Az eseményt nem sikerült menteni. Próbáljuk újra egy kicsit később.');}
   finally{this.transitioning=false;this.lastTick=performance.now();}
  }
- private showArrival(shop:Shop,label:string,speech:string,note:string){showDialogue('',speech,label);this.showSpeaker(shop);dialogue.dataset.presentation='arrival';const help=document.querySelector<HTMLElement>('#dialogue-note')!;help.textContent=note;help.hidden=!note;}
+ private showArrival(shop:Shop,label:string,speech:string,note:string){if(dialogue.open){dialogue.addEventListener('close',()=>this.showArrival(shop,label,speech,note),{once:true});return;}showDialogue('',speech,label);this.showSpeaker(shop);dialogue.dataset.presentation='arrival';const help=document.querySelector<HTMLElement>('#dialogue-note')!;help.textContent=note;help.hidden=!note;}
  private async receiveGift(){
   if(!this.canInteract()||this.story.giftReceived||!this.neighbor||Math.hypot(this.actor.x-this.neighbor.x,this.actor.y-this.neighbor.y)>55)return;
   await this.saveStory({...this.story,giftReceived:true},()=>{
@@ -1155,7 +1164,7 @@ class Farm extends Phaser.Scene {
   const skill=gainGardening(this.skill,`plant:${this.clock.day}:${target.x},${target.y}`)??this.skill,garden=structuredClone(this.garden),travel=structuredClone(this.travel);travel.research=research;
   this.giveLevelSeeds(garden,skill);
   this.transitioning=true;this.saveRevision++;
-  try{await this.saveChecked(snapshot(this.actor,this.clock,garden,this.economy,this.orders,this.farmName,this.clearing,this.story,skill,this.farmerName,travel));const before=this.skill.xp;this.adoptTravel(travel);this.skill=skill;this.garden=garden;this.avatar.use(target.x+TILE/2-this.actor.x,target.y+TILE/2-this.actor.y,'radish');this.drawGarden();this.showGardening(before);this.notice('Vadvirág elültetve. Négy megöntözött nap alatt virágzik ki.');}
+  try{await this.saveChecked(snapshot(this.actor,this.clock,garden,this.economy,this.orders,this.farmName,this.clearing,this.story,skill,this.farmerName,travel));const before=this.skill.xp;this.adoptTravel(travel);this.skill=skill;this.garden=garden;this.avatar.use(target.x+TILE/2-this.actor.x,target.y+TILE/2-this.actor.y,'radish');this.drawGarden();this.showGardening(before);this.notice(`Vadvirág elültetve. ${FLOWER_DAYS} megöntözött nap alatt virágzik ki.`);}
   catch(error){console.error('Vadvirág ültetése',error);this.notice('Az ültetést nem sikerült menteni. A mag megmaradt.');}finally{this.transitioning=false;this.lastTick=performance.now();}
  }
  private researchNearby(){
@@ -1391,7 +1400,8 @@ class Farm extends Phaser.Scene {
   for(const [index,b]of villageLayout.benches.entries()){const pose=benchPose(b.angle);objectZone(`village-bench-${index}`,{x:pose.x-30,y:pose.y-25,w:60,h:50},()=>{if(this.canInteract()&&Math.hypot(this.actor.x-pose.x,this.actor.y-pose.y)<55)this.inspectVillage('bench');});}
   objectZone('shipping',farmLayout.shipping,()=>this.openShipping());
   this.journalHint=this.add.graphics().setDepth(162);
-  objectZone('journal',{x:farmLayout.journal.x-14,y:farmLayout.journal.y-14,w:farmLayout.journal.w+28,h:farmLayout.journal.h+28},()=>journalHelpPending(this.story,this.clock.day)?this.openJournalHelp():this.openJournal());
+  this.journalClickZone=this.add.zone(farmLayout.journal.x+9,farmLayout.journal.y+7,76,76).setName('journal').setDepth(165).setInteractive({hitArea:new Phaser.Geom.Circle(38,38,36),hitAreaCallback:Phaser.Geom.Circle.Contains,useHandCursor:true});
+  this.journalClickZone.on('pointerdown',()=>journalHelpPending(this.story,this.clock.day)?this.openJournalHelp():this.openJournal());
   objectZone('house-door',{x:216,y:153+farmLayout.houseOffset.y,w:43,h:70},()=>{if(this.canInteract()&&Math.hypot(this.actor.x-farmLayout.houseDoor.x,this.actor.y-farmLayout.houseDoor.y)<55)void this.travelTo({x:400,y:HOME_ORIGIN+470});});
   objectZone('catalog',farmLayout.catalog,()=>this.openCatalog());
   objectZone('mailbox',farmLayout.mailbox,()=>this.openMailbox());
@@ -1429,7 +1439,7 @@ class Farm extends Phaser.Scene {
   });
   this.input.on('pointerdown',(pointer:Phaser.Input.Pointer)=>{
     if(!this.ready||dialogue.open||this.noahTest?.labActive||pointer.button!==0)return;
-    const point=this.cameras.main.getWorldPoint(pointer.x,pointer.y);this.target=this.placing==='goldfish'||this.placing==='carp'?{x:point.x-TILE/2,y:point.y-TILE/2}:targetTile(point.x,point.y,this.garden.plots);if(!this.placing&&this.canInteract()&&this.gatherTargetWeed(point))return;if(inForest(this.actor.x,this.actor.y)||this.noahTest&&inNoahSouth(this.actor.x,this.actor.y)){const d=Math.hypot(point.x-this.actor.x,point.y-this.actor.y)||1;this.direction={x:(point.x-this.actor.x)/d,y:(point.y-this.actor.y)/d};}this.forestClick=point;void this.doWork();this.forestClick=null;
+    const point=this.cameras.main.getWorldPoint(pointer.x,pointer.y);if(journalHelpPending(this.story,this.clock.day)&&Math.hypot(point.x-farmLayout.journal.x-9,point.y-farmLayout.journal.y-7)<=36){this.openJournalHelp();return;}this.target=this.placing==='goldfish'||this.placing==='carp'?{x:point.x-TILE/2,y:point.y-TILE/2}:targetTile(point.x,point.y,this.garden.plots);if(!this.placing&&this.canInteract()&&this.gatherTargetWeed(point))return;if(inForest(this.actor.x,this.actor.y)||this.noahTest&&inNoahSouth(this.actor.x,this.actor.y)){const d=Math.hypot(point.x-this.actor.x,point.y-this.actor.y)||1;this.direction={x:(point.x-this.actor.x)/d,y:(point.y-this.actor.y)/d};}this.forestClick=point;void this.doWork();this.forestClick=null;
   });
   this.actor=this.add.container(START.x,START.y).setDepth(100);
   this.shadow=this.add.ellipse(0,0,20,7,0x35442e,0.25);this.actor.add(this.shadow);
