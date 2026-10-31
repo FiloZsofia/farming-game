@@ -42,7 +42,7 @@ export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),g
  for(let i=0;i<480;i++)oval(left+random()*width,top+random()*height,35+random()*70,15+random()*35,i%2?0x5b873c:0x9eb45c,.13);
  for(let i=0;i<12500;i++){const x=left+random()*width,y=top+random()*height;rect(x,y,1+random()*2,1,[0x658b3f,0xb0bf71,0x82a851][i%3],.55);if(i%10===0)tuft(x,y,.35);}
  }
- const pathStroke=(width:number,color:number)=>{for(const p of layout.paths){g.lineStyle(p.width+width,color);g.beginPath();p.points.forEach(([x,y],i)=>i?g.lineTo(x,y):g.moveTo(x,y));g.strokePath();for(const [x,y]of p.points)oval(x,y,p.width+width,p.width+width,color);}};
+ const pathStroke=(width:number,color:number)=>{for(const p of layout.paths){g.lineStyle(p.width+width,study?studyColor(color):color);g.beginPath();p.points.forEach(([x,y],i)=>i?g.lineTo(x,y):g.moveTo(x,y));g.strokePath();for(const [x,y]of p.points)oval(x,y,p.width+width,p.width+width,color);}};
  pathStroke(5,0x738354);pathStroke(1,0xa5936c);pathStroke(-3,0xc1ae85);
  // Texture follows the paths rather than spilling over their edges.
  for(const p of layout.paths)for(let i=1;i<p.points.length;i++){const [ax,ay]=p.points[i-1],[bx,by]=p.points[i],length=Math.hypot(bx-ax,by-ay);for(let j=0;j<length;j+=3){const t=j/length,offset=(random()-.5)*(p.width-7);rect(ax+(bx-ax)*t-(by-ay)/length*offset,ay+(by-ay)*t+(bx-ax)/length*offset,2,1,j%2?0x9f916e:0xd6c29a,.7);}}
@@ -132,9 +132,12 @@ export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),g
  for(let i=0;i<(study?0:110);i++){const x=45+random()*710,y=275+random()*265;if(Math.abs(x-215)<65||x>480&&y>340||x>325&&x<495&&y<380)continue;tuft(x,y,.6+random()*.4);if(i%4===0){line(x,y-3,x,y-9,0x4e7149);oval(x,y-10,4,3,i%2?0xd9cfac:0xb5a5bd);}}
  if(study)drawStudyBorders(g);
  // Bake the static landscape once; its thousands of marks become one draw per frame.
- const terrain=scene.add.renderTexture(left,top,width,height).setOrigin(0).setDepth(-1);
+ const resolution=study?2:1;
+ const terrain=scene.add.renderTexture(left,top,width*resolution,height*resolution).setOrigin(0).setScale(1/resolution).setDepth(-1);
+ if(study)terrain.camera.setOrigin(0,0).setZoom(resolution);
  terrain.draw(ground,-left,-top);ground.destroy();terrain.setVisible(false);
- const landscape=scene.add.renderTexture(left,top,width,height).setOrigin(0).setDepth(-1);
+ const landscape=scene.add.renderTexture(left,top,width*resolution,height*resolution).setOrigin(0).setScale(1/resolution).setDepth(-1);
+ if(study)landscape.camera.setOrigin(0,0).setZoom(resolution);
  const clutter=scene.add.graphics().setVisible(false);
  const redraw=(clearing:Clearing,garden:Garden,birdhouse:{x:number;y:number}|null)=>{g=clutter;clutter.clear();
  // Low, soil-bound stone groups replace identical loose boulders.

@@ -1,5 +1,5 @@
 import {farmLayout as layout} from './layout';
-export type StudyPlant={x:number;y:number;size:number;kind:'shrub'|'fern'|'spike'};
+export type StudyPlant={x:number;y:number;size:number;kind:'shrub'|'hazel'|'fern'|'spike'|'sedge'|'rock'};
 // Preserve every original route, veranda fixture, growing bed and the pond approach.
 export function studyPlantClear(x:number,y:number,radius:number){
  const boxes=[layout.houseBounds,layout.shedBounds,layout.porchBounds,layout.porchSteps,layout.shipping,layout.catalog,layout.journal,layout.mailbox,layout.dock,...layout.beds];
@@ -7,13 +7,14 @@ export function studyPlantClear(x:number,y:number,radius:number){
  if(Math.hypot((x-layout.pond.x)/(layout.pond.rx+radius+18),(y-layout.pond.y)/(layout.pond.ry+radius+18))<1)return false;
  return !layout.paths.some(p=>p.points.slice(1).some((b,i)=>{const a=p.points[i],dx=b[0]-a[0],dy=b[1]-a[1],t=Math.max(0,Math.min(1,((x-a[0])*dx+(y-a[1])*dy)/(dx*dx+dy*dy)));return Math.hypot(x-a[0]-dx*t,y-a[1]-dy*t)<p.width/2+radius+14;}));
 }
+// Curated groups rather than an even scatter of interchangeable bushes.
+const islands=[{x:20,y:260},{x:-35,y:390},{x:15,y:510},{x:440,y:110},{x:800,y:155},{x:835,y:315},{x:790,y:570},{x:560,y:95},{x:565,y:295}];
 export const studyPlants:StudyPlant[]=[];
 let seed=835;const random=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
 for(let i=0;i<430;i++){
- const x=Math.round(-100+random()*970),y=Math.round(-35+random()*575),size=12+Math.floor(random()*12),kind=i%7===0?'spike':i%3===0?'fern':'shrub';
- // Plant in irregular border groups, leaving a broad, usable central lawn.
- if(x>115&&x<550&&y>235&&y<535)continue;
- if(!studyPlantClear(x,y,size)||studyPlants.some(p=>Math.hypot(p.x-x,p.y-y)<(p.size+size)*.8))continue;
+ const island=islands[i%islands.length],x=Math.round(island.x+(random()-.5)*130),y=Math.round(island.y+(random()-.5)*105),size=10+Math.floor(random()*13);
+ const kind:StudyPlant['kind']=i%29===0?'spike':i%13===0?'rock':i%5===0?'sedge':i%3===0?'fern':i%2?'hazel':'shrub';
+ if(!studyPlantClear(x,y,size)||studyPlants.some(p=>Math.hypot(p.x-x,p.y-y)<(p.size+size)*.72))continue;
  studyPlants.push({x,y,size,kind});
 }
 

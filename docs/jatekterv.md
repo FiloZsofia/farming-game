@@ -1045,3 +1045,8 @@ Az Öregfák ligetébe és a Déli erdőbe visszatérve újra megjelennek a szö
 - Első mintaterület a ház–veranda–kert–tó környéke. Hűvös türkizes zöldek, kevés mályvás árnyék és lila virágzat; a ház meleg tónusai megmaradnak. Szilárd, lépcsőzetes pixelcsoportok, ritkás fűjelek, rétegzett bokrok és lombkoronák, páfrányok. Nincsenek földön elszórt virágszirmok vagy elmosódó fűfoltok.
 - A meglévő utak, ültetőágyások, veranda-tárgyak és tóhoz vezető út szabadon maradnak. Az új díszfák törzsei kikerülhetők. Sam egyelőre a meglévő megjelenésével szerepel: a korábbi hajtervek nem jelentik egyik változat elfogadását sem.
 - V-vel és az Eszközpanel gombjával ugyanazon a helyen váltható az eredeti és az új rajzolás. Nappali és esti fény választható; a teszt ideje nem halad magától. A normál játék és más tesztjelenetek eredeti látványa megmarad. A látványteszt első prototípus, nem a teljes világ végleges átrajzolása.
+
+
+### A látványteszt cseréje: kidolgozott farm — 2026. október 31.
+
+A felhasználó elvetette a korábbi, túl pixeles lilás–türkizes próbát. Helyette a jelenlegi játék formáit finomabban kidolgozó, rajzos látványteszt készül: meleg alap-paletta; változatosabb, erezett levelekkel rajzolt bokrok, páfrányok, sások és mohás kövek; finomabb házanyagok. A legutóbbi, a jelenlegi farmból kiinduló látványterv az irányadó. Nincsenek elszórt szirmok, elmosódó fűfoltok vagy felnagyított pixelcsoportok. Az aktív teszt neve „Látványteszt · Kidolgozott farm”; a korábbi próbát nem tartjuk külön választható lehetőségként. A memóriabeli elkülönítés, V-s összehasonlítás és fényválasztás megmarad. A normál játék látványa és Sam megjelenése nem változik ettől a próbától.

@@ -1,10 +1,10 @@
-# Erdőszéli látványteszt
+# Kidolgozott farm — bejárható látványteszt
 
-Első bejárható formanyelvi prototípus a lilás–türkizes, finoman meseszerű irányhoz. A ház–veranda–kert–tó ismerős elrendezésén próbálható ki. Saját, kóddal rajzolt elemekből épül, nem generált háttérképből.
+A jelenlegi játék rajzos formáinak részletesebb változata. Ez a próba **felváltja az elvetett, nagy pixelcsoportokkal rajzolt lilás–türkizes tesztet**; a menüben egyetlen aktív látványteszt marad.
 
 ## Megnyitás
 
-A játék `?dev=1` paraméterrel megnyitott változatában: mentett farm folytatása → Menü → Fejlesztői eszközök → **Látványteszt · Lilás–türkizes erdőszél**.
+A játék `?dev=1` paraméterrel megnyitott változatában: mentett farm folytatása → Menü → Fejlesztői eszközök → **Látványteszt · Kidolgozott farm**.
 
 - Mozgás: a meglévő WASD/nyilak vagy a képernyő gombjai.
 - **V**: ugyanabban a helyzetben az eredeti és az új látvány váltása. Az Eszközpanelről is elérhető.
@@ -15,7 +15,9 @@ A teszt saját memóriabeli mintafarmot használ. A normál farmot és biztonsá
 
 ## Vizuális alap
 
-Határozott, lépcsőzetes pixelcsoportok; homogénebb fűalap kevés apró fűjellel; türkizes árnyékok, mályvás részletek; rétegzett bokrok, páfrányok, kevés száron álló lila virágzat. Nincsenek elszórt virágszirmok. A növénycsoportok elkerülik az utakat, a verandát, a használható tárgyakat, az ágyásokat és a tó megközelítését. Az új díszfák törzsei akadályt képeznek, a bokrok alacsony dísznövényzetként működnek.
+A jelenlegi farm meleg, olívazöld–krém–terrakotta színeiből indulunk ki. Hegyes, erezett levelekkel rajzolt ágas bokrok; tömörebb cserjék; tagolt páfrányok; keskeny levelű sások; mohás kövek. A növényzet tudatos csoportokban kerül a szélekhez; a középső gyep, az utak, a veranda tárgyai, az ágyások és a tó megközelítése szabadon marad.
+
+A korábbi kétpixeles lépcsőzés helyett finom vonalak, levélformák, ellipszisek és sokszögek építik a növényeket. A táj tesztbeli gyorsítótárazott rétegei kétszeres felbontásúak, ugyanakkora játékbeli mérettel. A füvön apró, ritkás szálak vannak, nincsenek festett színfelhők vagy elszórt virágszirmok. A ház vakolatán, faanyagán és tetőzetén finom kopások, a zsalugátereken zsanérok és néhány futó levél jelenik meg. Minden elem saját, programmal rajzolt grafika, nem generált háttérkép.
 
 A normál farm alapértelmezett rajzolása megmarad. Sam haját és ruháját ez a próba még nem módosítja. A teljes világ átrajzolásáról a kipróbálás után döntünk; a változat nem új számozott kiadás.
 
@@ -23,12 +25,12 @@ A normál farm alapértelmezett rajzolása megmarad. Sam haját és ruháját ez
 
 - `npm test`: 391 sikeres teszt, köztük a mintafarm érvényessége, a szabad átjárók és a normál elsődleges/biztonsági mentés védelme.
 - `npm run build`: sikeres.
-- Elkülönített Chromium-eredeten ellenőrizve: indítás a felületről, mozgás, V-váltás, esti fény, mobilos elrendezés, másik két tesztmódba váltás, visszatérés a normál farmra. A tárhely teljes mentési exportja a próbák előtt és után azonos; JavaScript-kivétel nem jelentkezett. Cypress nem állt rendelkezésre, a böngészőpróba CDP-n futott.
+- Elkülönített Chromium-eredeten ellenőrizve: indítás a felületről, mozgás, V-váltás, esti fény, mobilos elrendezés, másik két tesztmódba váltás, visszatérés a normál farmra. A tárhely teljes mentési exportja a próbák előtt és után azonos. A böngészőpróba CDP-n futott; Cypress nem állt rendelkezésre.
 
 ### Képek a tényleges játékból
 
-- [Nappali látvány](concepts/art-study-woodland-day.png)
-- [Esti látvány](concepts/art-study-woodland-evening.png)
-- [Eredeti rajzolás összehasonlításhoz](concepts/art-study-original-comparison.png)
-- [Mobilos nézet](concepts/art-study-woodland-mobile.png)
-- [Eszközpanel](concepts/art-study-tools.png)
+- [Nappali látvány](concepts/refined-farm-day.png)
+- [Esti látvány](concepts/refined-farm-evening.png)
+- [Eredeti rajzolás összehasonlításhoz](concepts/refined-farm-original.png)
+- [Mobilos nézet](concepts/refined-farm-mobile.png)
+- [Eszközpanel](concepts/refined-farm-tools.png)

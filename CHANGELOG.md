@@ -2,6 +2,8 @@
 
 ## Változások a 0.2.0 óta — verzióemelés nélkül
 
+- A korábbi pixeles látványtesztet a „Kidolgozott farm” váltja fel: a jelenlegi formák finomabb részletekkel, új bokor-, páfrány- és sásformákkal, mohás kövekkel, kétszeres felbontású tájrétegekkel. Továbbra is csak memóriabeli teszt, a normál játék változatlan.
+
 - Új, bejárható erdőszéli látványteszt külön memóriabeli farmon: lilás–türkizes növényzet, határozott pixelcsoportok, ritkás fűtextúra, dúsabb bokrok és páfrányok. V-vel eredeti/új látvány, külön nappali/esti fény. A normál játék látványa és mentése változatlan.
 
 - A térképen a még meg nem nyitott déli rész neve „Felfedezetlen terület”.

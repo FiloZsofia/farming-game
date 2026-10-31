@@ -1,4 +1,4 @@
-import {studyColor} from './art-study-art';
+import {studyColor,drawStudyVine} from './art-study-art';
 import Phaser from 'phaser';
 import {farmLayout} from './layout';
 
@@ -41,6 +41,7 @@ export class WorkshopExterior {
   // Sparse ivy stays on the corner, away from the entrance and window.
   line(5,55,9,19,0x53613e);line(9,32,16,18,0x53613e);
   for(let i=0;i<11;i++){const a=5+(i%3)*4,b=17+i*3;g.fillStyle(i%2?0x677a48:0x47633f).fillEllipse(x+a,y+b,6,3);}
+  if(study){drawStudyVine(g,x+6,y+8,45);drawStudyVine(g,x+18,y+7,22);}
   // Terracotta pots sit beside the wall, never across the approach.
   for(const [a,b,s]of [[9,69,1],[22,65,.7]]){g.fillStyle(0x334a32,.25).fillEllipse(x+a,y+b+4,16*s,5*s);poly([a-6*s,b-9*s,a+6*s,b-9*s,a+4*s,b+3*s,a-4*s,b+3*s],0xa16b4d);line(a-7*s,b-9*s,a+7*s,b-9*s,0xd29d71,2);g.fillStyle(0x493f2e).fillEllipse(x+a,y+b-9*s,11*s,3*s);line(a-3*s,b-6*s,a-2*s,b+1*s,0xc38b60);}
   // Wall lantern on the right-hand corner, clear of the shutter.
