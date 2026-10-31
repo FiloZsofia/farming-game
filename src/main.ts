@@ -107,7 +107,7 @@ document.querySelector('#help')!.addEventListener('click',()=>{
  showDialogue('Irányítás','WASD / nyilak · mozgás\nShift · futás\nSpace · ugrás / kitérés','');dialogue.dataset.presentation='controls';
  const panel=document.querySelector<HTMLElement>('#research-panel')!;panel.replaceChildren();panel.hidden=false;panel.classList.add('controls-guide');
  for(const [title,lines]of [
-  ['Eszközök',['1 · Kapa','2 · Öntözés','3 · Gyűjtés','4 · Bontóvas — bontás és tárgyak áthelyezése','5 · Túrabot (ha már nálad van)']],
+  ['Eszközök',['1 · Kapa','2 · Öntözés','3 · Gyűjtés','4 · Bontóvas — nyersanyaggyűjtés és tárgyak áthelyezése','5 · Túrabot (ha már nálad van)']],
   ['Használat',['Kattintás · művelet a kijelölt helyen','F · művelet a karakter előtt','E · közeli tárgy vagy szereplő','Ültetőanyagot és lehelyezhető tárgyat a Készletben választhatsz.']],
   ['Ablakok',['Tab · Készlet megnyitása / bezárása',...(!document.querySelector<HTMLElement>('#test-mode-banner')!.hidden?['M · Térkép megnyitása / bezárása']:[]),'Esc · ablak bezárása','Esc a kertben · Főmenü megnyitása']],
   [JOURNAL_HELP_TITLE,JOURNAL_HELP_LINES]
@@ -806,7 +806,7 @@ class Farm extends Phaser.Scene {
   if(this.travel.metLeo){const card=document.createElement('article');card.className='person-card';card.dataset.person='leo';const text=document.createElement('div'),name=document.createElement('h3'),description=document.createElement('p');name.textContent='Leo';description.textContent='A faiskola barátságos kertésze. Facsemetéket gondoz, és szívesen mesél róluk.';text.append(name,description);card.append(leoPortrait(this),text);people.append(card);}
   if(this.travel.forest?.sent){const card=document.createElement('article');card.className='person-card';card.dataset.person='noah';const text=document.createElement('div'),name=document.createElement('h3'),description=document.createElement('p');name.textContent='Noah';description.textContent='Biológus, Sam korábbi munkatársa a laborból.';text.append(name,description);card.append(noahPortrait(this),text);people.append(card);}
   if(!people.children.length)people.textContent='Hamarosan megismered a szomszédaidat.';
-  document.querySelector<HTMLElement>('#inventory-panel')!.hidden=false;document.querySelector('#dialogue-close')!.textContent='Vissza a kertbe';
+  document.querySelector<HTMLElement>('#inventory-panel')!.hidden=false;document.querySelector('#dialogue-close')!.textContent='Vissza';
  }
  private openTestMap(){
   if(!this.store.testMode||!this.ready)return;
