@@ -92,3 +92,4 @@ A következő kiadások változásai legfelül kapnak új bejegyzést.
 - Az első sikeres kapálás után egyszeri ültetési segítség jelenik meg a mag Készletből történő kiválasztásáról.
 - Az otthoni ágy E-vel vagy kattintással reggelig pihenést és mentést indít, takaró alatti alvásanimációval és Zzzz felirattal. A naplósegítség és az Irányítás szövege az ágyas pihenést is bemutatja.
 - Az ültetést megszakító segítségablak helyett pulzáló kör vezeti a játékost a kapához, majd az első vadvirág elültetése után az öntözéshez.
+- A kapa körjelzése mind a hat vadvirág elültetéséig, az öntözésé mind a hat első megöntözéséig megmarad.

@@ -1,4 +1,4 @@
-import {plantingGuideTool} from './planting-guide';
+import {plantingGuideTools} from './planting-guide';
 import {JOURNAL_HELP_TITLE,JOURNAL_HELP_LINES,JOURNAL_HELP_TEXT} from './journal-help';
 import {createTestMap} from './test-map';
 import {archiveEntries,recordStoryProgress,recordStoryEvent,SAM_LETTER,NEST_FINDING,MACHINE_REVEAL} from './story-archive';
@@ -1400,15 +1400,14 @@ class Farm extends Phaser.Scene {
   const result=work(nextGarden,usedTool,target,this.actor);
   if(!result.ok){this.notice(result.message);return;}
   if(this.currentWeather()==='rain')waterFromRain(nextGarden);
-  const nextStory={...this.story};if(this.travel.research.gifted){if(usedTool==='hoe'&&!before)nextStory.flowerHoeDone=true;if(usedTool==='water'&&flowerAt(this.travel.research,target))nextStory.flowerWaterDone=true;}
   const tileKey=`${target.x},${target.y}`;
   const credit=gardeningCredit(usedTool,tileKey,this.clock.day,before);
   const nextSkill=credit?gainGardening(this.skill,credit)??this.skill:this.skill;
   this.giveLevelSeeds(nextGarden,nextSkill);
   this.transitioning=true;this.saveRevision++;
   try{
-   await this.saveChecked(snapshot(this.actor,this.clock,nextGarden,this.economy,this.orders,this.farmName,this.clearing,nextStory,nextSkill,this.farmerName,this.travel));
-   const previous=this.skill.xp;this.garden=nextGarden;this.skill=nextSkill;this.story=nextStory;document.querySelector('#save-state')!.textContent='Mentve ebben a böngészőben';
+   await this.saveChecked(snapshot(this.actor,this.clock,nextGarden,this.economy,this.orders,this.farmName,this.clearing,this.story,nextSkill,this.farmerName,this.travel));
+   const previous=this.skill.xp;this.garden=nextGarden;this.skill=nextSkill;document.querySelector('#save-state')!.textContent='Mentve ebben a böngészőben';
    this.animateWork(target.x+TILE/2,target.y+TILE/2,usedTool,usedTool==='water'?'water':usedTool==='harvest'?'harvest':'soil',()=>{this.drawGarden();if(usedTool==='harvest'&&before?.crop)this.harvestPop(before.crop,target.x+TILE/2,target.y+TILE/2,1);if(usedTool==='hoe')this.redrawScenery();this.notice(result.message+(usedTool==='harvest'?' Készlet: Tab.':''));if(credit)this.showGardening(previous);});
   }catch{this.notice('Nem sikerült menteni. A kert és a jártasság változatlan; próbáld újra.');}
   finally{this.transitioning=false;this.lastTick=performance.now();}
@@ -1607,8 +1606,8 @@ class Farm extends Phaser.Scene {
   if(this.hasFarm&&this.canInteract()&&!this.travel.pollinationObservation&&nearEmptyBlossoms(this.garden,this.travel.estate,this.actor))void this.observeEmptyBlossoms();
   if(this.ready&&!this.choosingFarm&&!dialogue.open&&!this.transitioning&&(this.noahTest?this.noahTest.state.complete&&!this.noahTest.state.endSeen:storyEndPending(this.travel)))this.showPreviewEnd();
   this.drawJournalHint(now);
-  const guide=this.hasFarm&&!this.choosingFarm?plantingGuideTool(this.story,this.travel.research,this.garden):null;
-  for(const tool of ['hoe','water'])document.querySelector(`#toolbar [data-tool="${tool}"]`)?.classList.toggle('tool-attention',guide===tool);
+  const guides=this.hasFarm&&!this.choosingFarm?plantingGuideTools(this.travel.research,this.garden):[];
+  for(const tool of ['hoe','water'])document.querySelector(`#toolbar [data-tool="${tool}"]`)?.classList.toggle('tool-attention',guides.includes(tool as 'hoe'|'water'));
   this.machineActivity??=this.add.graphics().setDepth(104);drawMachineActivity(this.machineActivity,this.travel.crafting,now);
   if(!this.ready||dialogue.open||this.transitioning||document.hidden||!document.hasFocus()){this.input.keyboard?.resetKeys();this.selection.setVisible(false);return;}
   if(this.collapseRemaining>0){
