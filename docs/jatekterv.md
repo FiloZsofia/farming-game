@@ -1002,3 +1002,9 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 - Külön, saját Web Audio-kompozíció: feszesebb moll hangzás, mély lüktetés, rövid pengetések és visszafogott magas motívum. Nincs külső hangfelvétel vagy új függőség.
 - Az Öregfák ligetében a pihenőpadhoz érve váltunk erre a zenére, az erdei ösvény elején még a megszokott dallam szól. A padtól befelé végig az erdei zene marad, nem csak az egyes támadások alatt.
 - A tesztmód Déli erdejében a hídon, a déli terület kezdetén indul, és az egész Déli erdőben szól. Hazatéréskor vagy a faluba visszaérve a játékos kiválasztott dallama tér vissza. A választott dallamot és a némítást nem írja felül, a háttérbe tett lap hangja szünetel.
+
+### Nyitott vörösfenyős tisztás (Noah-tesztmód)
+- A gyantás fa egy tágasabb, körbejárható tisztás bal oldalán áll. Hosszú, csupaszabb, időjárás koptatta törzse és szabálytalan oldalágai vannak, ritkás, csüngő tűlevélcsomókkal. A korábbi szabályosan emeletes, háromszögű lomb és a talpszerű gyökérállvány megszűnik.
+- A gyökerekből rövid, görbe szakaszok bukkannak elő, majd mohába és tűlevélavarba vesznek. A mélyedés finom terephajlat, a fa nincs látványos emelvényen.
+- A tisztás közepét és az odavezető út végét szabadon hagyjuk. A szélén sekély, tükröződő esővízmélyedés, mohás korhadó fatörzs, páfrányok és néhány besüllyedt kő látható. A háttér és oldalak erdőkeretet kapnak, az előtér fái nem takarják el a tisztás közepét és a korhadó törzset.
+- Finom, alacsony pára, napsütésben meleg fény, porszemek, enyhén mozduló fű és apró vízfodrok adják a hangulatot. A fa sérült ághelye alatt régi borostyános gyantafolyások látszanak. A gyantagyűjtés helye és elérhetősége megmarad; új veszély vagy küldetés nem kerül ide.

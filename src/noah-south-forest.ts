@@ -1,4 +1,4 @@
-import {resinTree,larchGlade,inLarchGlade,larchTrunkBlocked,drawLarchHollow,drawOldLarch} from './larch-glade';
+import {resinTree,larchGlade,gladePool,inLarchGlade,larchTrunkBlocked,drawLarchHollow,drawOldLarch} from './larch-glade';
 export {resinTree} from './larch-glade';
 import {forestLog,logPoint,logCoordinates,onFloatingLog,logCrossingStep,floatingLogPose} from './forest-log-crossing';
 import {sporeShelters,sporeFieldPhase,sporeFieldHurts,sporeSheltered,inSporeField} from './spore-field';
@@ -54,7 +54,7 @@ export class NoahSouthForest{
   for(let i=0;i<65;i++){const x=-625+(i*73%290),y=2035+(i*47%245);if(swampAt(x,y)){g.fillStyle(0x7c9463,.35).fillEllipse(x,y,12+i%4*5,3);g.lineStyle(1,0x9fac75,.3).lineBetween(x,y,x+9,y);}}
   for(const p of swampStones){g.fillStyle(0x293e34,.5).fillEllipse(p.x+4,p.y+5,59,30);g.fillStyle(0x8f9b87).fillPoints([{x:p.x-26,y:p.y+6},{x:p.x-20,y:p.y-12},{x:p.x+6,y:p.y-18},{x:p.x+27,y:p.y-3},{x:p.x+20,y:p.y+13},{x:p.x-10,y:p.y+15}],true);g.lineStyle(2,0xc2c5a5).lineBetween(p.x-18,p.y-10,p.x+4,p.y-15);g.fillStyle(0x678153).fillEllipse(p.x+9,p.y+5,18,7);}
   let seed=312;const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
-  for(let y=1380;y<3010;y+=64)for(let x=-1050;x< -60;x+=70){const xx=x+random()*32,yy=y+random()*20;if(distanceToSouthPath(xx,yy)<104||swampAt(xx,yy)||yy>2630&&((xx+820)/205)**2+((yy-2780)/175)**2<1)continue;drawWoodlandTree(g,random,xx,yy,Math.floor(random()*3),.95+random()*.35);}
+  for(let y=1380;y<3010;y+=64)for(let x=-1050;x< -60;x+=70){const xx=x+random()*32,yy=y+random()*20;if(distanceToSouthPath(xx,yy)<104||swampAt(xx,yy)||yy>2630&&((xx+820)/232)**2+((yy-2780)/(yy>2780?315:185))**2<1)continue;drawWoodlandTree(g,random,xx,yy,Math.floor(random()*3),.95+random()*.35);}
   // A muddy, root-lined pool interrupts the path; a continuous floating trunk forms the crossing.
   const local=(t:number,n:number)=>logPoint(t,n),hollow=[local(.08,-118),local(.22,-130),local(.85,-122),local(.92,-100),local(.92,108),local(.75,126),local(.15,114),local(.08,90)];
   g.fillStyle(0x657849).fillPoints(hollow,true);g.lineStyle(10,0x83905b).strokePoints(hollow,true);g.fillStyle(0x3d5143).fillPoints(hollow.map(p=>({x:p.x,y:p.y+3})),true);
@@ -63,7 +63,7 @@ export class NoahSouthForest{
   // Fallen, mossy trunks offer cover from the wind-driven spore field.
   for(const cover of sporeShelters){const p={x:cover.x-34,y:cover.y-8};g.fillStyle(0x2c4838,.5).fillEllipse(p.x+3,p.y+9,65,35);g.fillStyle(0x67513b).fillRoundedRect(p.x-23,p.y-15,46,28,6);g.fillStyle(0x98754c).fillEllipse(p.x,p.y-14,45,19);g.lineStyle(1,0x604b36).strokeEllipse(p.x,p.y-14,31,12);g.fillStyle(0x617a40).fillEllipse(p.x-13,p.y-5,22,12);}
   // Dense rear trees frame the sheltered hollow, leaving its approach and floor open.
-  for(const [x,y,kind,scale]of [[-1015,2718,2,1.5],[-950,2678,0,1.3],[-860,2638,2,1.45],[-680,2700,2,1.4],[-646,2800,0,1.25]])drawWoodlandTree(g,random,x,y,kind,scale);
+  for(const [x,y,kind,scale]of [[-1050,2735,2,1.35],[-1000,2635,0,1.25],[-845,2605,2,1.3],[-650,2650,2,1.25],[-590,2820,0,1.3]])drawWoodlandTree(g,random,x,y,kind,scale);
   drawOldLarch(g);
   for(let i=0;i<24;i++){const x=-900+random()*640,y=1450+random()*1390;g.fillStyle(0xb3a077,.35).fillRect(x,y,3,1);}
   this.terrain=scene.add.renderTexture(-1120,1190,1120,1790).setOrigin(0).setDepth(-.4).setVisible(false);this.terrain.draw(g,1120,-1190);g.destroy();
@@ -161,7 +161,12 @@ export class NoahSouthForest{
  private drawHollowAtmosphere(player:{x:number;y:number},night:number,sunny:boolean){
   const g=this.hollowFx;g.clear();if(Math.hypot(player.x-larchGlade.x,player.y-larchGlade.y)>420)return;
   const {x,y}=larchGlade;
-  for(let i=0;i<6;i++){const cx=x-100+(this.age*5+i*43)%210,cy=y+32+i%3*19,points=[];for(let j=0;j<=18;j++){const xx=cx-65+j*7,yy=cy+Math.sin(j*.4+this.age*.3+i)*4;points.push({x:xx,y:yy});}for(let j=18;j>=0;j--){const xx=cx-65+j*7,yy=cy+Math.sin(j*.4+this.age*.3+i)*4+Math.sin(j/18*Math.PI)*7;points.push({x:xx,y:yy});}g.fillStyle(night>.2?0xa1a6b5:0xd6ddbd,.055).fillPoints(points,true);}
+  for(let i=0;i<3;i++){const cx=x-100+(this.age*5+i*43)%210,cy=y+32+i%3*19,points=[];for(let j=0;j<=18;j++){const xx=cx-65+j*7,yy=cy+Math.sin(j*.4+this.age*.3+i)*4;points.push({x:xx,y:yy});}for(let j=18;j>=0;j--){const xx=cx-65+j*7,yy=cy+Math.sin(j*.4+this.age*.3+i)*4+Math.sin(j/18*Math.PI)*7;points.push({x:xx,y:yy});}g.fillStyle(night>.2?0xa1a6b5:0xd6ddbd,.055).fillPoints(points,true);}
+  // Small reflections and a falling needle ripple make the shallow pool readable.
+  const p=gladePool,ripple=(this.age*.16)%1;g.lineStyle(.8,0xc5d2b3,(1-ripple)*.28).strokeEllipse(p.x-9,p.y-1,3+ripple*42,1+ripple*9);
+  for(let i=0;i<3;i++){const xx=p.x-23+i*17+Math.sin(this.age*.6+i)*2;g.lineStyle(1,0xb6c7b2,.22).lineBetween(xx,p.y-4+i*3,xx+9,p.y-4+i*3);}
+  for(let i=0;i<12;i++){const t=(this.age*.035+i*.13)%1,xx=x-110+t*228,yy=y-54+i*29%103+Math.sin(this.age*.45+i)*3;g.fillStyle(night>.2?0xc5c6a5:0xf3d9a1,.2+Math.sin(t*Math.PI)*.22).fillRect(xx,yy,i%4===0?1.5:1,1);}
+  for(let i=0;i<8;i++){const xx=x+137+i%3*7,yy=y-52+i*17;g.lineStyle(1,0x6b8a4d,.7).lineBetween(xx,yy,xx+Math.sin(this.age*.9+i)*3,yy-7-i%3*2);}
   const sun=sunny?1-Math.min(1,night/.3):0;if(sun>0){for(let i=0;i<5;i++)g.fillStyle(0xf6d490,sun*.014).fillPoints([{x:resinTree.x-65-i*2,y:resinTree.y-195},{x:resinTree.x-45+i*2,y:resinTree.y-195},{x:resinTree.x+34+i*3,y:resinTree.y+20},{x:resinTree.x-5-i*3,y:resinTree.y+22}],true);}
  }
  private drawMushrooms(night:number){
