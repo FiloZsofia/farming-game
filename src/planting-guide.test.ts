@@ -19,3 +19,5 @@ it('counts each place once, accepts old progress and lets rain replace watering'
  garden.plots.set('341,272',{crop:null,growth:0,regrowing:false,watered:true});story=rememberPlantingGuide(story,research,garden);story=rememberPlantingGuide(story,research,garden);expect(story.guideHoed).toHaveLength(1);expect(story.guideWatered).toHaveLength(1);
  for(let i=1;i<6;i++)garden.plots.set(`${341+i*24},272`,{crop:null,growth:0,regrowing:false,watered:true});expect(plantingGuideTools(createStory(),research,garden)).toEqual([]);
 });
+
+it('never highlights watering in rain even before six places have been watered',()=>{const story=createStory(),research=createResearch(),garden=createGarden();research.gifted=true;garden.plots.set('341,272',{crop:null,growth:0,regrowing:false,watered:true});expect(plantingGuideTools(story,research,garden,true)).toEqual(['hoe']);expect(plantingGuideTools(story,research,garden,false)).toEqual(['hoe','water']);});

@@ -9,8 +9,8 @@ export function rememberPlantingGuide(story:FarmStory,research:Research,garden:G
  for(const f of research.flowers)if(f.growth>0)watered.add(`${f.x},${f.y}`);
  return {...story,guideHoed:[...hoed].slice(0,6),guideWatered:[...watered].slice(0,6)};
 }
-export function plantingGuideTools(story:FarmStory,research:Research,garden:Garden):('hoe'|'water')[]{
+export function plantingGuideTools(story:FarmStory,research:Research,garden:Garden,raining=false):('hoe'|'water')[]{
  if(!research.gifted)return [];
  const progress=rememberPlantingGuide(story,research,garden),hoed=progress.guideHoed!.length,watered=progress.guideWatered!.length;
- return [...(hoed<6?['hoe' as const]:[]),...(hoed>0&&watered<6?['water' as const]:[])];
+ return [...(hoed<6?['hoe' as const]:[]),...(!raining&&hoed>0&&watered<6?['water' as const]:[])];
 }

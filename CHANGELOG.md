@@ -94,3 +94,4 @@ A következő kiadások változásai legfelül kapnak új bejegyzést.
 - Az ültetést megszakító segítségablak helyett pulzáló kör vezeti a játékost a kapához, majd az első vadvirág elültetése után az öntözéshez.
 - A kapa körjelzése mind a hat vadvirág elültetéséig, az öntözésé mind a hat első megöntözéséig megmarad.
 - A kapa és az öntözés körjelzése hat hely felkapálása, illetve megöntözése után már elültetett mag nélkül is eltűnik; a teljesülés mentődik.
+- Esős napon az öntözés segítségköre nem jelenik meg részlegesen előkészített kertnél sem.

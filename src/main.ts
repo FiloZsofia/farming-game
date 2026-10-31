@@ -1608,7 +1608,7 @@ class Farm extends Phaser.Scene {
   if(this.hasFarm&&this.canInteract()&&!this.travel.pollinationObservation&&nearEmptyBlossoms(this.garden,this.travel.estate,this.actor))void this.observeEmptyBlossoms();
   if(this.ready&&!this.choosingFarm&&!dialogue.open&&!this.transitioning&&(this.noahTest?this.noahTest.state.complete&&!this.noahTest.state.endSeen:storyEndPending(this.travel)))this.showPreviewEnd();
   this.drawJournalHint(now);
-  const guides=this.hasFarm&&!this.choosingFarm?plantingGuideTools(this.story,this.travel.research,this.garden):[];
+  const guides=this.hasFarm&&!this.choosingFarm?plantingGuideTools(this.story,this.travel.research,this.garden,weather==='rain'):[];
   for(const tool of ['hoe','water'])document.querySelector(`#toolbar [data-tool="${tool}"]`)?.classList.toggle('tool-attention',guides.includes(tool as 'hoe'|'water'));
   this.machineActivity??=this.add.graphics().setDepth(104);drawMachineActivity(this.machineActivity,this.travel.crafting,now);
   if(!this.ready||dialogue.open||this.transitioning||document.hidden||!document.hasFocus()){this.input.keyboard?.resetKeys();this.selection.setVisible(false);return;}
