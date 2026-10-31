@@ -1,4 +1,5 @@
-import {larchCones,larchConesReady} from './larch-cones';
+import {MushroomLight} from './mushroom-light';
+import {availableLarchCones,coneVisualPoint} from './larch-cones';
 import {resinTree,larchGlade,gladePool,inLarchGlade,larchTrunkBlocked,drawLarchHollow,drawOldLarch} from './larch-glade';
 export {resinTree} from './larch-glade';
 import {forestLog,logPoint,logCoordinates,onFloatingLog,logCrossingStep,floatingLogPose} from './forest-log-crossing';
@@ -29,15 +30,17 @@ export class NoahSouthForest{
  private terrain:Phaser.GameObjects.RenderTexture;private art:Phaser.GameObjects.Graphics;private fungi:Phaser.GameObjects.Graphics;private glow:Phaser.GameObjects.Graphics;private struck=new Set<number>();
  private lastSafe={x:-444,y:2000};private logSafe=logPoint(0);private logLoad=0;private logEdgeTime=0;private logArt:Phaser.GameObjects.Graphics;private hollowFx:Phaser.GameObjects.Graphics;
  get logPose(){return onFloatingLog(this.sceneActor)?floatingLogPose(this.age,this.logLoad):{sway:0,sink:0};}
+ private mushroomLight:MushroomLight;
  private sceneActor={x:0,y:0};private herbs:Phaser.GameObjects.Graphics;
  private minorCombat:ForestCombat;private minorState={...createForest(),stick:true};
  get fieldPhase(){return sporeFieldPhase(this.age);}
  get minorRemaining(){return southEnemies.length-this.minorState.defeated.length;}
- setUnlocked(value:boolean){const v=this.scene.cameras.main.worldView,visible=value&&v.bottom>1300&&v.top<2950&&v.left<0;this.hollowFx.setVisible(visible);this.glow.setVisible(visible);this.logArt.setVisible(visible);this.terrain.setVisible(visible);this.art.setVisible(visible);this.herbs.setVisible(visible);this.fungi.setVisible(visible);}
+ setUnlocked(value:boolean){if(!value)this.mushroomLight.hide();const v=this.scene.cameras.main.worldView,visible=value&&v.bottom>1300&&v.top<2950&&v.left<0;this.hollowFx.setVisible(visible);this.glow.setVisible(visible);this.logArt.setVisible(visible);this.terrain.setVisible(visible);this.art.setVisible(visible);this.herbs.setVisible(visible);this.fungi.setVisible(visible);if(!visible)this.mushroomLight.hide();}
  get phaseName(){return this.phase;}
  get hitPoints(){return this.hp;}
  private age=0;private timer=1.4;private phase:'rest'|'warn'|'strike'='rest';private hp=6;private invulnerable=0;private swing=0;private aim={x:0,y:-1};
  constructor(private scene:Phaser.Scene){
+  this.mushroomLight=new MushroomLight(scene,mushrooms);
   this.hollowFx=scene.add.graphics().setDepth(4);this.logArt=scene.add.graphics().setDepth(3);this.minorCombat=new ForestCombat(scene,southEnemies,inNoahSouth);this.art=scene.add.graphics().setDepth(91);this.herbs=scene.add.graphics().setDepth(2);this.glow=scene.add.graphics().setDepth(94).setBlendMode(Phaser.BlendModes.ADD);this.fungi=scene.add.graphics().setDepth(92);const g=scene.add.graphics();
   // Match the existing meadow and blend the northern edge without a straight seam.
   g.fillStyle(0x759c48).fillRect(-1120,1510,1120,1470);
@@ -84,8 +87,8 @@ export class NoahSouthForest{
   this.age+=dt;this.invulnerable=Math.max(0,this.invulnerable-dt);this.swing=Math.max(0,this.swing-dt);const g=this.art;g.clear();
   if(!state.ingredientGathered){const x=resinTree.x,y=resinTree.y;for(let i=0;i<4;i++){const yy=y-60+i*12+Math.sin(this.age*.8+i)*.65,xx=x+i%2*6-3;g.fillStyle(0x56301b).fillEllipse(xx,yy+1,11,15);g.fillStyle(0xe99224).fillEllipse(xx,yy,9,13);g.fillStyle(0xffc94e).fillEllipse(xx-1,yy-2,6,9);g.fillStyle(0xfff0ab).fillEllipse(xx-2,yy-4,2.5,4);g.lineStyle(.8,0xffe3a0,.8).strokeEllipse(xx,yy,8,12);}const gleam=(Math.sin(this.age*1.7)+1)*.5;g.lineStyle(1,0xffefbe,.25+gleam*.55).lineBetween(x+3,y-54,x+9,y-54).lineBetween(x+6,y-57,x+6,y-51);}
 
-  if(larchConesReady(state.conePickedDay,day))for(let i=0;i<3;i++){const xx=larchCones.x+(i-1)*10,yy=larchCones.y+i%2*6;g.fillStyle(0x3f402c,.35).fillEllipse(xx+2,yy+3,11,5);g.fillStyle(0x65472d).fillEllipse(xx,yy-2,8,13);for(let row=0;row<3;row++)for(let side=0;side<2;side++){g.fillStyle((row+side)%2?0xbd985f:0x977042).fillTriangle(xx-4+side*4,yy-7+row*4,xx+1+side*4,yy-5+row*4,xx-2+side*4,yy-2+row*4);}}
-  this.drawMushrooms(night);this.drawHollowAtmosphere(player,night,sunny);
+  for(const cone of availableLarchCones(state,day)){const p=coneVisualPoint(cone),cos=Math.cos(cone.angle),sin=Math.sin(cone.angle),at=(dx:number,dy:number)=>({x:p.x+dx*cos-dy*sin,y:p.y+dx*sin+dy*cos});g.fillStyle(0x3f402c,.3).fillEllipse(p.x+2,p.y+3,12,5);g.fillStyle(0x63452c).fillPoints([at(0,-8),at(4,-4),at(5,1),at(1,7),at(-3,4),at(-5,-1)],true);for(let row=0;row<3;row++)for(let side=0;side<2;side++){g.fillStyle((row+side)%2?0xc29c62:0x977042).fillPoints([at(-4+side*4,-6+row*4),at(1+side*4,-4+row*4),at(-2+side*4,-1+row*4)],true);}}
+  this.drawMushrooms(night);this.mushroomLight.update(night,this.age);this.drawHollowAtmosphere(player,night,sunny);
   this.herbs.clear();if(state.upgraded)for(const p of southHerbs){if(state.herbsPicked[p.id]!==undefined&&day-state.herbsPicked[p.id]<3)continue;drawForestHerb(this.herbs,p);}
   this.sceneActor={x:player.x,y:player.y};const loaded=onFloatingLog(player)&&!jumping;
   this.logLoad=Phaser.Math.Clamp(this.logLoad+dt*(loaded?.9:-.6),0,1);this.drawFloatingLog();
@@ -176,10 +179,10 @@ export class NoahSouthForest{
   for(const p of mushrooms){const {x,y,s:base}=p,s=base,pulse=.82+Math.sin(this.age*1.7+x)*.18;
    if(night>0){
     // Purple emission follows the mushroom silhouette, with only a faint ground tint.
-    for(let layer=8;layer>=1;layer--){const radius=(27+layer*3)*s,points=Array.from({length:24},(_,i)=>{const angle=i/24*Math.PI*2,r=radius*(1+.06*Math.sin(i*2.3+x));return{x:x+Math.cos(angle)*r,y:y+4*s+Math.sin(angle)*r*.34};});h.fillStyle(0x713593,light*.012*pulse).fillPoints(points,true);}
-    h.fillStyle(0x8651b0,light*.27*pulse).fillRoundedRect(x-6*s,y-36*s,12*s,38*s,4*s);
-    h.fillStyle(0x9356bd,light*.34*pulse).fillEllipse(x,y-42*s,60*s,32*s);
-    h.fillStyle(0xb286cf,light*.16*pulse).fillEllipse(x-9*s,y-48*s,34*s,18*s);
+    for(let layer=8;layer>=1;layer--){const radius=(27+layer*3)*s,points=Array.from({length:24},(_,i)=>{const angle=i/24*Math.PI*2,r=radius*(1+.06*Math.sin(i*2.3+x));return{x:x+Math.cos(angle)*r,y:y+4*s+Math.sin(angle)*r*.34};});h.fillStyle(0x713593,light*.022*pulse).fillPoints(points,true);}
+    h.fillStyle(0x8651b0,light*.36*pulse).fillRoundedRect(x-6*s,y-36*s,12*s,38*s,4*s);
+    h.fillStyle(0x9356bd,light*.46*pulse).fillEllipse(x,y-42*s,60*s,32*s);
+    h.fillStyle(0xb286cf,light*.23*pulse).fillEllipse(x-9*s,y-48*s,34*s,18*s);
    }
 
    g.fillStyle(0x263b30,.3).fillEllipse(x+4,y+4,40*s,10*s);g.fillStyle(0xa99aab).fillRoundedRect(x-6*s,y-36*s,12*s,38*s,4*s);g.fillStyle(0xc1b3c0).fillRect(x-4*s,y-30*s,3*s,30*s);
@@ -187,5 +190,5 @@ export class NoahSouthForest{
    for(let i=0;i<7;i++){const xx=x+Math.cos(i*2.4)*(10+i%3*5)*s,yy=y-43*s+Math.sin(i*2.4)*8*s;g.fillStyle(0xe4d6df).fillEllipse(xx,yy,(3+i%2)*s,3*s);if(night>0)h.fillStyle(0xc5a0db,light*.35*pulse).fillCircle(xx,yy,3*s);}
   }
  }
- destroy(){this.hollowFx.destroy();this.glow.destroy();this.logArt.destroy();this.fungi.destroy();this.terrain.destroy();this.art.destroy();this.herbs.destroy();this.minorCombat.destroy();}
+ destroy(){this.mushroomLight.destroy();this.hollowFx.destroy();this.glow.destroy();this.logArt.destroy();this.fungi.destroy();this.terrain.destroy();this.art.destroy();this.herbs.destroy();this.minorCombat.destroy();}
 }

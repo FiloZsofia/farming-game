@@ -1,3 +1,4 @@
+import type {ConePatch} from './larch-cones';
 import {recordStoryProgress,recordStoryEvent} from './story-archive';
 import type {Snapshot} from './storage';
 import {prepareMicroscopeTest} from './microscope-test-setup';
@@ -5,7 +6,7 @@ import {prepareMicroscopeTest} from './microscope-test-setup';
 export type NoahTestConfig={thyme:number;plantain:number;concentrate:number;shipment:number;ingredient:number;ingredientName:string;wood:number;scrap:number;gold:number};
 export const noahTestConfig:NoahTestConfig={thyme:2,plantain:2,concentrate:1,shipment:4,ingredient:1,ingredientName:'Vörösfenyőgyanta',wood:25,scrap:14,gold:310};
 export type NoahCheckpoint='waiting'|'letter'|'simon'|'forest'|'marsh'|'root'|'spores'|'resin'|'mix'|'log';
-export type NoahTestState={conePickedDay?:number;herbsPicked:Record<string,number>;sentDay:number;mixtureMade:boolean;endSeen:boolean;letter:boolean;simonAsked:boolean;upgraded:boolean;complete:boolean;concentrate:number;ingredient:number;rootDefeated:boolean;ingredientGathered:boolean};
+export type NoahTestState={conePatch?:ConePatch;conePickedDay?:number;herbsPicked:Record<string,number>;sentDay:number;mixtureMade:boolean;endSeen:boolean;letter:boolean;simonAsked:boolean;upgraded:boolean;complete:boolean;concentrate:number;ingredient:number;rootDefeated:boolean;ingredientGathered:boolean};
 export const noahLetter=`Sam!
 
 A város környéki méhészetek közül többnél gombás fertőzést találtak a fiasításban. Nagy rajtunk a nyomás, hogy a hatóanyagot minél előbb biztosra fejlesszük, mert már egész méhcsaládok pusztultak ki, és a továbbterjedés felszámolásában néhányan a megmaradt családok elpusztítását gondolják helyesnek, ez azonban még nagyobb kárt okozna a természet egyensúlyában.

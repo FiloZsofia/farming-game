@@ -1,4 +1,4 @@
-import {larchCones,larchConesReady,gatherLarchCones} from './larch-cones';
+import {availableLarchCones,coneVisualPoint,gatherLarchCone} from './larch-cones';
 import {createExtraction,canLoadExtraction} from './extraction';
 import {EXPERIMENT_FINDING} from './story-archive';
 import Phaser from 'phaser';
@@ -65,8 +65,9 @@ export class NoahTestController{
  interactSouth(player:{x:number;y:number},target?:{x:number;y:number}|null){
   if(!inNoahSouth(player.x,player.y))return false;
   const day=this.host.day();
-  if(Math.hypot(player.x-larchCones.x,player.y-larchCones.y)<42&&(!target||Math.hypot(target.x-larchCones.x,target.y-larchCones.y)<25)&&larchConesReady(this.state.conePickedDay,day)){
-   if(!this.busy){const result=gatherLarchCones(this.host.read(),this.state.conePickedDay,day);if(result){this.busy=true;void this.host.commit(result.snapshot,()=>{this.state.conePickedDay=result.pickedDay;this.host.gather?.(larchCones);this.host.notice(`+${result.count} vörösfenyőtoboz`);}).finally(()=>{this.busy=false;});}}return true;
+  const cone=availableLarchCones(this.state,day).filter(c=>{const v=coneVisualPoint(c);return Math.hypot(player.x-c.x,player.y-c.y)<42&&(!target||Math.hypot(target.x-v.x,target.y-v.y)<20);}).sort((a,b)=>Math.hypot(a.x-player.x,a.y-player.y)-Math.hypot(b.x-player.x,b.y-player.y))[0];
+  if(cone){
+   if(!this.busy){const result=gatherLarchCone(this.host.read(),this.state.conePatch!,cone.id,day);if(result){this.busy=true;void this.host.commit(result.snapshot,()=>{this.state.conePatch=result.patch;this.host.gather?.(coneVisualPoint(cone));this.host.notice('+1 vörösfenyőtoboz');}).finally(()=>{this.busy=false;});}}return true;
   }
   const herb=southHerbs.find(p=>Math.hypot(p.x-player.x,p.y-player.y)<42&&(!target||Math.hypot(p.x-target.x,p.y-target.y)<24)&&(this.state.herbsPicked[p.id]===undefined||day-this.state.herbsPicked[p.id]>=3));
   if(herb){if(!this.busy){this.busy=true;const next=this.host.read();next.travel.estate.produce[herb.kind]++;void this.host.commit(next,()=>{this.state.herbsPicked[herb.id]=day;this.host.gather?.(herb);this.host.notice('+1 '+herbNames[herb.kind]);}).finally(()=>{this.busy=false;});}return true;}

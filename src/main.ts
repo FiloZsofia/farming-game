@@ -1,4 +1,4 @@
-import {larchCones,larchConesReady} from './larch-cones';
+import {availableLarchCones} from './larch-cones';
 import {larchGroundDrop} from './larch-glade';
 import {forestMusicZone} from './forest-music';
 import {plantingGuideTools,rememberPlantingGuide} from './planting-guide';
@@ -568,7 +568,7 @@ class Farm extends Phaser.Scene {
   const f=this.travel.forest??createForest(),near=(p:{x:number;y:number},r=46)=>Math.hypot(this.actor.x-p.x,this.actor.y-p.y)<r;
   if(microscopeReady(this.travel.research)&&inWorkshop(this.actor.y)&&near(microscope,64))return 'microscope';
   if(f.examined&&!f.sent&&near({x:farmLayout.mailbox.x+12,y:farmLayout.mailbox.y+8},55))return 'send-sample';
-  if(this.noahTest&&near(larchCones,42)&&larchConesReady(this.noahTest.state.conePickedDay,this.clock.day))return 'larch-cones';
+  if(this.noahTest&&availableLarchCones(this.noahTest.state,this.clock.day).some(c=>near(c,42)))return 'larch-cones';
   if(!inForest(this.actor.x,this.actor.y))return '';
   if(!this.noahTest?.state.upgraded&&near({x:-444,y:1295},65))return 'south-gate';
   if(!f.stick&&near(walkingStick))return 'forest-stick';

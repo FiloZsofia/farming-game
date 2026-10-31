@@ -100,3 +100,5 @@ A következő kiadások változásai legfelül kapnak új bejegyzést.
 - A tesztmód gyantás vörösfenyője szabálytalan, idős fává alakult, nyitott, avaros tisztással, sekély vízmélyedéssel, mohás korhadó törzzsel és finom légköri animációkkal.
 - A tesztmód vörösfenyőjének lombja és gyantája kontrasztosabb; a tisztás érzékelhető földes mélyedést és leereszkedést kapott.
 - A tisztáson háromnaponta 2–3 vörösfenyőtoboz gyűjthető későbbi kézműves alapanyagként, az egységes Készletben, új kategória nélkül.
+- A tesztmód tobozai véletlenszerűen szétszórva jelennek meg és egyenként gyűjthetők; az utolsó felvétel után három nappal új elrendezésben térnek vissza.
+- A déli erdő gombái erősebb, alakjukat követő lilás éjszakai fényt és lágy talajderengést kaptak.
