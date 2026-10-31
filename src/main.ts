@@ -395,7 +395,7 @@ class Farm extends Phaser.Scene {
   if(!this.ready||!journalHelpPending(this.story,this.clock.day))return;
   if(dialogue.open||this.transitioning){this.journalHelpRequested=true;return;}
   this.journalHelpRequested=false;
-  showDialogue('Napló a verandán',JOURNAL_HELP_LINES.join('\n\n'),JOURNAL_HELP_TITLE.toLocaleUpperCase('hu'));
+  showDialogue(JOURNAL_HELP_TITLE,JOURNAL_HELP_LINES.slice(1).join('\n\n'),'');
   dialogue.dataset.presentation='journal-help';
   dialogue.addEventListener('close',()=>{if(dialogue.dataset.presentation==='journal-help')this.acknowledgeJournalHelp();},{once:true});
  }
@@ -783,9 +783,9 @@ class Farm extends Phaser.Scene {
    if(group==='packed')addAction(card,'Elhelyezem',()=>{dialogue.close();this.selectTool('chest');});grid.append(card);
   }
   for(let i=used;i<16;i++){const slot=document.createElement('div');slot.className='backpack-slot empty';slot.setAttribute('aria-label','Szabad rekesz');grid.append(slot);}
-  const tool=(name:string,icon:Node,action?:()=>void,count?:number)=>{const card=document.createElement('div');card.className='carried-tool';const label=document.createElement('span');label.textContent=name;card.append(icon,label);if(count){const amount=document.createElement('strong');amount.textContent=String(count);card.append(amount);}if(action){card.tabIndex=0;card.setAttribute('role','button');card.onclick=()=>{dialogue.close();action();};card.onkeydown=e=>{if(e.key==='Enter'||e.code==='Space'){e.preventDefault();e.stopPropagation();card.click();}};}free.append(card);};
+  const tool=(name:string,icon:Node,action?:()=>void,count?:number)=>{const card=document.createElement('div');card.className='carried-tool';const label=document.createElement('span');label.textContent=name;card.append(icon,label);if(count){const amount=document.createElement('strong');amount.textContent=String(count);card.append(amount);}if(action){card.tabIndex=0;card.setAttribute('role','button');card.onclick=()=>{dialogue.close();action();};card.onkeydown=e=>{if(e.key==='Enter'||e.code==='Space'){e.preventDefault();e.stopPropagation();card.click();}};}free.append(card);return card;};
   for(const [id,name]of [['hoe','Kapa'],['water','Öntözés'],['harvest','Gyűjtés'],['crowbar','Bontóvas']] as const)tool(name,itemIcon(id==='harvest'?'harvest':id),()=>this.selectTool(id));
-  if(this.travel.forest?.stick)tool('Túrabot',itemIcon('walkingStick'),()=>this.selectTool('stick'));if(this.travel.forest?.sample)tool('Fészekminta',itemIcon('nestSample'));if(this.travel.research.key)tool(workshopText('Melléképület kulcsa',workshopEntered(this.travel.research)),itemIcon('workshopKey'));if(this.travel.research.seeds)tool('Vadvirágmagok',this.wildflowerIcon(),()=>this.selectTool('wildflower'),this.travel.research.seeds);
+  if(this.travel.forest?.stick)tool('Túrabot',itemIcon('walkingStick'),()=>this.selectTool('stick'));if(this.travel.forest?.sample)tool('Fészekminta',itemIcon('nestSample'));if(this.travel.research.key)tool(workshopText('Melléképület kulcsa',workshopEntered(this.travel.research)),itemIcon('workshopKey'));if(this.travel.research.seeds){const card=tool('Vadvirágmagok',this.wildflowerIcon(),()=>this.selectTool('wildflower'),this.travel.research.seeds);card.classList.add('wildflower-attention');}
  }
  private openInventory(tab:'items'|'people'|'skills'|'goals'|'blueprints'='items'){
   if(!this.ready||this.transitioning||this.fishThrowPlaying||this.collapseRemaining>0)return;
@@ -1194,7 +1194,7 @@ class Farm extends Phaser.Scene {
  }
  private async receiveFlowers(){
   if(!this.canInteract()||this.researchNearby()!=='leo-visit')return;const research=startResearch(this.travel.research,this.clock.day);if(!research)return;
-  if(await this.commitResearch(research)){this.travel.metLeo=true;await this.persist();this.leoVisitor?.destroy();this.leoVisitor=null;this.showArrival('nursery','ÜDV A SZOMSZÉDBAN','Szia, Leo vagyok, én vezetem a falusi faiskolát.\n\nTavaly ilyenkor sok szarvas faliméh járt a csemeték virágaira. Idén eddig alig láttam belőlük. Nálad megfordultak?\n\nHoztam hat tasak vadvirágmagot. Ültesd el őket, és nézzük meg, kik látogatják a virágokat! A szarvas faliméh sötét fejű, rozsdabarna potrohú, tavasszal a gyümölcsfák fontos beporzója.','6 vadvirágmag a készletedbe került.');}
+  if(await this.commitResearch(research)){this.travel.metLeo=true;await this.persist();this.leoVisitor?.destroy();this.leoVisitor=null;this.showArrival('nursery','ÜDV A SZOMSZÉDBAN','Szia, Leo vagyok, én vezetem a falusi faiskolát.\n\nTavaly ilyenkor sok szarvas faliméh járt a csemeték virágaira. Idén eddig alig láttam belőlük. Nálad megfordultak?\n\nHoztam hat tasak vadvirágmagot. Ültesd el őket, és nézzük meg, kik látogatják a virágokat! A szarvas faliméh sötét fejű, rozsdabarna potrohú, tavasszal a gyümölcsfák fontos beporzója.','6 vadvirágmag a készletedbe került. Kapálás → Ültetés → Öntözés.');}
  }
  private async observeResearchBee(){
   if(!this.canInteract())return;const next=observeBee(this.travel.research,this.clock.day,this.clock.elapsed,this.actor,seasonDay(calendarDay(this.clock.day,this.farmName)));if(!next)return;

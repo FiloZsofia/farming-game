@@ -25,6 +25,10 @@ describe('gardening actions',()=>{
  it('protects paths, pond, house and bed frames',()=>{
   for(const [x,y] of [[250,260],[638,464],[225,180],[337,270]])expect(cultivable(targetTile(x,y))).toBe(false);
  });
+ it('rejects tilling every tile overlapping the veranda or its steps',()=>{
+  for(const x of [144,168,192,216,240,264,288,312])for(const y of [168,192]){const t={x,y};expect(cultivable(t)).toBe(false);expect(work(createGarden(),'hoe',t,{x:x+12,y:y+12}).ok).toBe(false);}
+  for(const x of [192,216,240,264])expect(cultivable({x,y:216})).toBe(false);
+ });
  it('keeps adjacent bed cells distinct and allows meadow soil',()=>{
   expect(tileKey(targetTile(360,286))).not.toBe(tileKey(targetTile(376,286)));
   expect(cultivable(targetTile(290,430))).toBe(true);

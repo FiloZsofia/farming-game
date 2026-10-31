@@ -970,3 +970,9 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 - A korábbi első napi naplójelzésnél a „megnyitottnak” mentett állapot nem bizonyította, hogy a segítség olvasható is maradt. Az első napi régi mentésekben a javított segítség egyszer újra felkínálható; ezután külön, opcionális nyugtázási jelző őrzi a ténylegesen megnyitott és bezárt segítséget. A 18-as mentésformátum és a farm többi állapota változatlan.
 
 - A napló körjelzésének középpontja rögzített: a kör finoman összehúzódik és kitágul, oldalirányú vagy függőleges elmozdulás nélkül. A teljes látható kör kattintható. Első kattintáskor a segítség nyílik meg, nem a napló saját ablaka; csak a segítség nyugtázása után vált át a napló normál megnyitására.
+
+### Első napi segítségek finomítása
+- A napló egyszeri segítségablakában nincs felső címke; címe „Napló és mentés”. Szövege: „A naplónál bármikor reggelig pihenhetsz, akár napközben is. Nem kell megvárnod az estét.” és külön bekezdésben „A játék automatikusan is menti a haladásodat.” Az E-s útmutatás továbbra is olvasható az Irányításban.
+- Leo ajándékának külön útmutatása: „6 vadvirágmag a készletedbe került. Kapálás → Ültetés → Öntözés.”
+- A Készletben a vadvirágmagok ikonja körül a naplóéhoz igazodó, rögzített középpontú arany kör pulzál. Mindaddig megmarad, amíg van el nem ültetett vadvirágmag; csökkentett mozgás mellett álló jelzés.
+- A veranda teljes fapadlója és lépcsője járható, de nem művelhető terület. A teljes ültetőhely átfedését ellenőrizzük, nem csak a középpontját.

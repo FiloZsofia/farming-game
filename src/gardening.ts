@@ -40,6 +40,7 @@ function segmentDistance(x:number,y:number,a:readonly number[],b:readonly number
 }
 export function cultivable(tile:Tile):boolean{
  const {x,y}=tile;
+ if([farmLayout.porchBounds,farmLayout.porchSteps].some(b=>x<b.x+b.w&&x+TILE>b.x&&y<b.y+b.h&&y+TILE>b.y))return false;
  const bed=farmLayout.beds.find(b=>x>=b.x+4&&x+TILE<=b.x+4+3*TILE&&y>=b.y+2&&y+TILE<=b.y+2+2*TILE);
  if(bed)return true;
  // Free meadow can be cultivated throughout the farm, including beside beds.

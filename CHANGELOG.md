@@ -84,3 +84,5 @@ Az első számozott, fejlesztés alatti kiadás. A korábbi fejlesztéseket ezze
 - A játékverzió megjelenik a Főmenüben és a Menüben. A korábbi farmmentések formátuma és tartalma megmarad.
 
 A következő kiadások változásai legfelül kapnak új bejegyzést.
+
+- Pontosított naplósegítség és Leo-féle ültetési útmutató; pulzáló jelzés a Készlet vadvirágmagjain. A verandán és lépcsőjén nem lehet kapálni.
