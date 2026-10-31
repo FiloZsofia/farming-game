@@ -1,3 +1,4 @@
+import {plantingGuideTool} from './planting-guide';
 import {JOURNAL_HELP_TITLE,JOURNAL_HELP_LINES,JOURNAL_HELP_TEXT} from './journal-help';
 import {createTestMap} from './test-map';
 import {archiveEntries,recordStoryProgress,recordStoryEvent,SAM_LETTER,NEST_FINDING,MACHINE_REVEAL} from './story-archive';
@@ -399,10 +400,6 @@ class Farm extends Phaser.Scene {
  private journalHelpRequested=false;
  private journalCalm=matchMedia('(prefers-reduced-motion: reduce)').matches;
  private acknowledgeJournalHelp(){if(this.story.journalHelpConfirmed)return;this.story={...this.story,journalHelpSeen:true,journalHelpConfirmed:true};void this.persist();}
- private showPlantingHelp(){
-  if(dialogue.open){dialogue.addEventListener('close',()=>this.showPlantingHelp(),{once:true});return;}
-  showDialogue('Ültetés','A Készletben válassz magot, majd kattints a felkapált földre.','');
- }
  private openJournalHelp(){
   if(!this.ready||!journalHelpPending(this.story,this.clock.day))return;
   if(dialogue.open||this.transitioning){this.journalHelpRequested=true;return;}
@@ -1403,7 +1400,7 @@ class Farm extends Phaser.Scene {
   const result=work(nextGarden,usedTool,target,this.actor);
   if(!result.ok){this.notice(result.message);return;}
   if(this.currentWeather()==='rain')waterFromRain(nextGarden);
-  const plantingHelp=usedTool==='hoe'&&!before&&!this.story.plantingHelpSeen,nextStory=plantingHelp?{...this.story,plantingHelpSeen:true}:this.story;
+  const nextStory={...this.story};if(this.travel.research.gifted){if(usedTool==='hoe'&&!before)nextStory.flowerHoeDone=true;if(usedTool==='water'&&flowerAt(this.travel.research,target))nextStory.flowerWaterDone=true;}
   const tileKey=`${target.x},${target.y}`;
   const credit=gardeningCredit(usedTool,tileKey,this.clock.day,before);
   const nextSkill=credit?gainGardening(this.skill,credit)??this.skill:this.skill;
@@ -1412,7 +1409,7 @@ class Farm extends Phaser.Scene {
   try{
    await this.saveChecked(snapshot(this.actor,this.clock,nextGarden,this.economy,this.orders,this.farmName,this.clearing,nextStory,nextSkill,this.farmerName,this.travel));
    const previous=this.skill.xp;this.garden=nextGarden;this.skill=nextSkill;this.story=nextStory;document.querySelector('#save-state')!.textContent='Mentve ebben a böngészőben';
-   this.animateWork(target.x+TILE/2,target.y+TILE/2,usedTool,usedTool==='water'?'water':usedTool==='harvest'?'harvest':'soil',()=>{this.drawGarden();if(usedTool==='harvest'&&before?.crop)this.harvestPop(before.crop,target.x+TILE/2,target.y+TILE/2,1);if(usedTool==='hoe')this.redrawScenery();this.notice(result.message+(usedTool==='harvest'?' Készlet: Tab.':''));if(credit)this.showGardening(previous);if(plantingHelp)this.showPlantingHelp();});
+   this.animateWork(target.x+TILE/2,target.y+TILE/2,usedTool,usedTool==='water'?'water':usedTool==='harvest'?'harvest':'soil',()=>{this.drawGarden();if(usedTool==='harvest'&&before?.crop)this.harvestPop(before.crop,target.x+TILE/2,target.y+TILE/2,1);if(usedTool==='hoe')this.redrawScenery();this.notice(result.message+(usedTool==='harvest'?' Készlet: Tab.':''));if(credit)this.showGardening(previous);});
   }catch{this.notice('Nem sikerült menteni. A kert és a jártasság változatlan; próbáld újra.');}
   finally{this.transitioning=false;this.lastTick=performance.now();}
 
@@ -1446,7 +1443,7 @@ class Farm extends Phaser.Scene {
    const label=button.querySelector('span')!;
    const names={machine:'Berendezés',mulch:'Mulcs',hoe:'Kapa',water:'Öntözés',radish:'Retek',potato:'Burgonya',pea:'Borsó',harvest:'Gyűjtés',hand:'Gyűjtés',axe:'Bontóvas',pickaxe:'Bontóvas',crowbar:'Bontóvas',chest:'Tárolóláda',stick:'Túrabot',birdhouse:'Madárodú',strawberry:'Eper',honeyberry:'Mézbogyó',blueberry:'Áfonya',carrot:'Sárgarépa',lettuce:'Saláta',onion:'Hagyma'};
    if(tool==='hoe'||tool==='water'||tool==='harvest'||tool==='wildflower')for(const node of Array.from(button.childNodes))if(node.nodeType===Node.TEXT_NODE)node.remove();
-   if(tool==='wildflower')label.replaceChildren(document.createTextNode('Vadvirág'),document.createElement('br'),document.createTextNode('magok'));else label.textContent=names[tool];button.prepend(crops.includes(tool as typeof crops[number])?seedIcon(tool as typeof crops[number]):tool==='wildflower'?this.wildflowerIcon():tool==='stick'?itemIcon('walkingStick'):itemIcon(tool==='machine'?'composter':tool==='harvest'?'harvest':tool));button.setAttribute('aria-label',tool==='wildflower'?'Vadvirág magok':names[tool]);
+   if(tool==='wildflower')label.replaceChildren(document.createTextNode('Vadvirág'),document.createElement('br'),document.createTextNode('magok'));else label.textContent=names[tool];const icon=crops.includes(tool as typeof crops[number])?seedIcon(tool as typeof crops[number]):tool==='wildflower'?this.wildflowerIcon():tool==='stick'?itemIcon('walkingStick'):itemIcon(tool==='machine'?'composter':tool==='harvest'?'harvest':tool);if(tool==='hoe'||tool==='water'){const wrap=document.createElement('span');wrap.className='guide-tool-icon';wrap.append(icon);button.prepend(wrap);}else button.prepend(icon);button.setAttribute('aria-label',tool==='wildflower'?'Vadvirág magok':names[tool]);
   }
   const tools:FarmTool[]=['hoe','water','harvest','crowbar','stick','harvest','harvest','crowbar','crowbar'];
   document.querySelectorAll<HTMLButtonElement>('#toolbar [data-tool]').forEach(button=>button.addEventListener('click',(event)=>{this.selectTool(button.dataset.tool as FarmTool);if(event.detail>0)button.blur();}));
@@ -1610,6 +1607,8 @@ class Farm extends Phaser.Scene {
   if(this.hasFarm&&this.canInteract()&&!this.travel.pollinationObservation&&nearEmptyBlossoms(this.garden,this.travel.estate,this.actor))void this.observeEmptyBlossoms();
   if(this.ready&&!this.choosingFarm&&!dialogue.open&&!this.transitioning&&(this.noahTest?this.noahTest.state.complete&&!this.noahTest.state.endSeen:storyEndPending(this.travel)))this.showPreviewEnd();
   this.drawJournalHint(now);
+  const guide=this.hasFarm&&!this.choosingFarm?plantingGuideTool(this.story,this.travel.research,this.garden):null;
+  for(const tool of ['hoe','water'])document.querySelector(`#toolbar [data-tool="${tool}"]`)?.classList.toggle('tool-attention',guide===tool);
   this.machineActivity??=this.add.graphics().setDepth(104);drawMachineActivity(this.machineActivity,this.travel.crafting,now);
   if(!this.ready||dialogue.open||this.transitioning||document.hidden||!document.hasFocus()){this.input.keyboard?.resetKeys();this.selection.setVisible(false);return;}
   if(this.collapseRemaining>0){

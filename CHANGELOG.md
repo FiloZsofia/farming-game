@@ -91,3 +91,4 @@ A következő kiadások változásai legfelül kapnak új bejegyzést.
 - A Készlet bezárógombja „Vissza”; az Irányítás Bontóvas-leírásában „nyersanyaggyűjtés” szerepel.
 - Az első sikeres kapálás után egyszeri ültetési segítség jelenik meg a mag Készletből történő kiválasztásáról.
 - Az otthoni ágy E-vel vagy kattintással reggelig pihenést és mentést indít, takaró alatti alvásanimációval és Zzzz felirattal. A naplósegítség és az Irányítás szövege az ágyas pihenést is bemutatja.
+- Az ültetést megszakító segítségablak helyett pulzáló kör vezeti a játékost a kapához, majd az első vadvirág elültetése után az öntözéshez.

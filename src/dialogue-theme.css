@@ -95,7 +95,9 @@
 
 /* The journal's fixed-centre gold pulse also points to unplanted wildflower seeds. */
 .wildflower-attention .research-icon{position:relative;overflow:visible;isolation:isolate}
-.wildflower-attention .research-icon::after{content:"";position:absolute;pointer-events:none;left:50%;top:50%;width:42px;height:42px;border:2px solid #ffe6a0;border-radius:50%;background:#ffdc830c;box-shadow:0 0 0 4px #efc36a40;transform:translate(-50%,-50%) scale(1);animation:wildflower-attention-pulse 3.1416s ease-in-out infinite}
+.wildflower-attention .research-icon::after,.tool-attention .guide-tool-icon::after{content:"";position:absolute;pointer-events:none;left:50%;top:50%;width:42px;height:42px;border:2px solid #ffe6a0;border-radius:50%;background:#ffdc830c;box-shadow:0 0 0 4px #efc36a40;transform:translate(-50%,-50%) scale(1);animation:wildflower-attention-pulse 3.1416s ease-in-out infinite}
 @keyframes wildflower-attention-pulse{50%{transform:translate(-50%,-50%) scale(1.25);background:#ffdc8310;border-color:#ffe6a0;box-shadow:0 0 0 5px #efc36a48}}
-@media(prefers-reduced-motion:reduce){.wildflower-attention .research-icon::after{animation:none}}
+@media(prefers-reduced-motion:reduce){.wildflower-attention .research-icon::after,.tool-attention .guide-tool-icon::after{animation:none}}
 .wildflower-attention .research-icon{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;padding:0;font-size:30px;box-sizing:border-box}
+
+#toolbar .guide-tool-icon{position:relative;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;overflow:visible;isolation:isolate}
