@@ -35,3 +35,4 @@
 - A térkép egyelőre kizárólag memóriabeli tesztmódban érhető el M-mel (nyitás/zárás), és csak ilyenkor szerepeljen az Irányításban. Jóváhagyott területnevek: Öregfák ligete, Déli erdő, Mocsár. A térképi neveket külön jóváhagyás nélkül ne cseréld fantázianevekre.
 
 - A játékvilágban látható szövegek (kérdőjel, három pont, gondolat, táblafelirat) nagyításkor is maradjanak élesek: Phaser-szövegnél legalább négyszeres textúrafelbontás, képernyőhöz rögzített címkénél valódi HTML/szöveg használatos. Talajátmenettel ne takard ki a korábban rajzolt lombkoronát; a talaj és a fák külön gyorsítótárazott rétegek legyenek.
+- Dekoráció elhelyezésekor a füves, festett ösvény nélküli átjárókat is hagyd szabadon, különösen az erdei pihenőpadtól a patakhídhoz vezető sávot. Ne csak a kirajzolt úthálózat alapján ellenőrizd a helyet.

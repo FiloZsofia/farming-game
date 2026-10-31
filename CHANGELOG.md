@@ -104,3 +104,4 @@ A következő kiadások változásai legfelül kapnak új bejegyzést.
 - A déli erdő gombái erősebb, alakjukat követő lilás éjszakai fényt és lágy talajderengést kaptak.
 - A spórapamacsokhoz sima túrabottal három, megerősített túrabottal két találat szükséges mindkét erdőben; az életerőcsík is ehhez igazodik.
 - Ártalmatlan világító díszgombák kerültek az Öregfák ligetébe és az erdei ösvény mellé, a déli erdő gombáival közös éjszakai derengéssel. Az utakat és az interakciós helyeket szabadon hagyják.
+- A hídhoz vezető átjáróból a pad fölé került a jobb oldali díszgomba. A kijelölt erdei útszél és a falu patakparti füves része is kapott egy-egy gombát, az utóbbi nagyobb méretű; a fák megmaradtak.
