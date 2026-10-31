@@ -48,7 +48,7 @@ export class ForestCombat{
     for(let i=0;i<7;i++){const a=i*Math.PI*2/7+this.time*.55,drift=22+Math.sin(this.time*1.4+i)*5;g.fillStyle(0xded2a6,.4+(i%3)*.16).fillCircle(e.x+Math.cos(a)*drift,y-13+Math.sin(a)*20,1+i%2*.5);}
 
    }
-   const max=e.kind==='vine'?3:2;if(e.hp<max){g.fillStyle(0x303e30).fillRoundedRect(e.x-13,e.y-40,26,4,2);g.fillStyle(0xb3c17b).fillRoundedRect(e.x-13,e.y-40,26*e.hp/max,4,2);}
+   const max=this.definitions.find(d=>d.id===e.id)?.hp??3;if(e.hp<max){g.fillStyle(0x303e30).fillRoundedRect(e.x-13,e.y-40,26,4,2);g.fillStyle(0xb3c17b).fillRoundedRect(e.x-13,e.y-40,26*e.hp/max,4,2);}
   }
  }
  destroy(){this.art.destroy();}

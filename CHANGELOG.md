@@ -102,3 +102,4 @@ A következő kiadások változásai legfelül kapnak új bejegyzést.
 - A tisztáson háromnaponta 2–3 vörösfenyőtoboz gyűjthető későbbi kézműves alapanyagként, az egységes Készletben, új kategória nélkül.
 - A tesztmód tobozai véletlenszerűen szétszórva jelennek meg és egyenként gyűjthetők; az utolsó felvétel után három nappal új elrendezésben térnek vissza.
 - A déli erdő gombái erősebb, alakjukat követő lilás éjszakai fényt és lágy talajderengést kaptak.
+- A spórapamacsokhoz sima túrabottal három, megerősített túrabottal két találat szükséges mindkét erdőben; az életerőcsík is ehhez igazodik.

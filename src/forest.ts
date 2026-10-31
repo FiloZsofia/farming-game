@@ -8,7 +8,7 @@ export const forestNest={x:-946,y:974};
 export const forestBench={x:-461,y:970};
 export const walkingStick={x:-430,y:996};
 export const microscope={x:180,y:3340};
-export const forestEnemies=[{id:'vine',kind:'vine',x:-665,y:977,hp:3},{id:'spore-a',kind:'spore',x:-795,y:948,hp:2},{id:'spore-b',kind:'spore',x:-835,y:1030,hp:2},{id:'vine-inner',kind:'vine',x:-885,y:997,hp:3}] as const;
+export const forestEnemies=[{id:'vine',kind:'vine',x:-665,y:977,hp:3},{id:'spore-a',kind:'spore',x:-795,y:948,hp:3},{id:'spore-b',kind:'spore',x:-835,y:1030,hp:3},{id:'vine-inner',kind:'vine',x:-885,y:997,hp:3}] as const;
 export type Forest={gathered?:Record<string,number>;health?:number;microscopy?:Microscopy;revision?:2;enemyIntroSeen?:boolean;visitDefeated?:string[];stick:boolean;defeated:string[];picked:Record<string,number>;sample:boolean;examined:boolean;sent:boolean;focus:number};
 export const createForest=():Forest=>({revision:2,enemyIntroSeen:false,stick:false,defeated:[],picked:{},sample:false,examined:false,sent:false,focus:0});
 export const inForest=(x:number,y:number)=>x<0&&y>=650&&y<1400;

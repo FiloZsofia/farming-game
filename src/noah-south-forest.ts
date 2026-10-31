@@ -24,7 +24,7 @@ export function southBlocked(x:number,y:number,state:NoahTestState){
  if(inLarchGlade(x,y))return false;
  return distanceToSouthPath(x,y)>(swampAt(x,y)?165:94);
 }
-const southEnemies=[{id:'vine',kind:'vine' as const,x:-325,y:1490,hp:3},{id:'spore-a',kind:'spore' as const,x:-665,y:1680,hp:2},{id:'spore-b',kind:'spore' as const,x:-485,y:1908,hp:2},{id:'vine-bramble',kind:'vine' as const,x:-360,y:1950,hp:3},{id:'spore-c',kind:'spore' as const,x:-570,y:2385,hp:2},{id:'vine-larch',kind:'vine' as const,x:-750,y:2670,hp:3},{id:'spore-d',kind:'spore' as const,x:-850,y:2670,hp:2}];
+const southEnemies=[{id:'vine',kind:'vine' as const,x:-325,y:1490,hp:3},{id:'spore-a',kind:'spore' as const,x:-665,y:1680,hp:3},{id:'spore-b',kind:'spore' as const,x:-485,y:1908,hp:3},{id:'vine-bramble',kind:'vine' as const,x:-360,y:1950,hp:3},{id:'spore-c',kind:'spore' as const,x:-570,y:2385,hp:3},{id:'vine-larch',kind:'vine' as const,x:-750,y:2670,hp:3},{id:'spore-d',kind:'spore' as const,x:-850,y:2670,hp:3}];
 const mushrooms=[{x:-380,y:1450,s:1.1},{x:-590,y:1580,s:1.5},{x:-755,y:1790,s:1.3},{x:-570,y:1930,s:1.7},{x:-335,y:2220,s:1.2},{x:-745,y:2390,s:1.6},{x:-800,y:2580,s:1.8},{x:-680,y:2815,s:1.05},{x:-976,y:2865,s:.85}];
 export class NoahSouthForest{
  private terrain:Phaser.GameObjects.RenderTexture;private art:Phaser.GameObjects.Graphics;private fungi:Phaser.GameObjects.Graphics;private glow:Phaser.GameObjects.Graphics;private struck=new Set<number>();
