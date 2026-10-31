@@ -1,4 +1,4 @@
-import {JOURNAL_HELP_TITLE,JOURNAL_HELP_LINES} from './journal-help';
+import {JOURNAL_HELP_TITLE,JOURNAL_HELP_LINES,JOURNAL_HELP_TEXT} from './journal-help';
 import {createTestMap} from './test-map';
 import {archiveEntries,recordStoryProgress,recordStoryEvent,SAM_LETTER,NEST_FINDING,MACHINE_REVEAL} from './story-archive';
 import {placedItemAt,pickPlacedItem} from './placed-items';
@@ -32,7 +32,7 @@ import {ForestCombat} from './forest-combat';
 import {createForest,earlyNestObservation,collectForestSample,beginForestVisit,encounterDefeated,inForest,FOREST_LEFT,forestNest,forestPlants,forestEnemies,walkingStick,microscope,herbNames,type Forest} from './forest';
 import {drawForestObjects} from './forest-art';
 import {backpackSlots,backpackStacks,collectAvailableMail,canCarryChange,craftChest,transferChest,inventoryCounts,occupiedSlots,emptyChests} from './chests';
-import {HOME_ORIGIN,inHome,homeObjects,homeBlocked} from './home';
+import {HOME_ORIGIN,inHome,homeObjects,homeBlocked,homeBed,canRestAtBed} from './home';
 import {HomeLight} from './home-light';
 import {drawHome} from './home-art';
 import {MovementInput} from './movement-input';
@@ -407,7 +407,7 @@ class Farm extends Phaser.Scene {
   if(!this.ready||!journalHelpPending(this.story,this.clock.day))return;
   if(dialogue.open||this.transitioning){this.journalHelpRequested=true;return;}
   this.journalHelpRequested=false;
-  showDialogue(JOURNAL_HELP_TITLE,JOURNAL_HELP_LINES.slice(1).join('\n\n'),'');
+  showDialogue(JOURNAL_HELP_TITLE,JOURNAL_HELP_TEXT,'');
   dialogue.dataset.presentation='journal-help';
   dialogue.addEventListener('close',()=>{if(dialogue.dataset.presentation==='journal-help')this.acknowledgeJournalHelp();},{once:true});
  }
@@ -871,8 +871,26 @@ class Farm extends Phaser.Scene {
   catch{this.notice('Most nem sikerült menteni az átlépést. Próbáld újra.');}
   finally{this.transitioning=false;this.lastTick=performance.now();if(greeting&&shopAt(this.actor.y)===greeting)this.inspectVillage(greeting);}
  }
- private homeNearby(){if(!inHome(this.actor.y))return '';if(Math.hypot(this.actor.x-400,this.actor.y-HOME_ORIGIN-500)<38)return 'home-exit';const object=homeObjects.find(o=>Math.hypot(this.actor.x-o.x,this.actor.y-o.y)<55);return object?`home:${object.id}`:'';}
- private interactHome(){if(this.nearChest()>=0&&this.canInteract()){this.openChest(this.nearChest());return true;}const nearby=this.homeNearby();if(!nearby||!this.canInteract())return false;if(nearby==='home-exit'){void this.travelTo({x:farmLayout.houseDoor.x,y:274+farmLayout.houseOffset.y});return true;}const object=homeObjects.find(o=>`home:${o.id}`===nearby);if(object)showDialogue(object.title,object.text,'OTTHON');return true;}
+ private async restInBed(){
+  if(!this.canInteract()||!canRestAtBed(this.actor.x,this.actor.y))return;
+  this.transitioning=true;release();this.avatar.cancelWork();this.workEffects?.clear();this.bubble.setVisible(false);this.thought.setVisible(false);this.selection.setVisible(false);
+  const surface=document.querySelector<HTMLElement>('#game')!,shade=document.querySelector<HTMLElement>('#sleep-shade')!;
+  surface.dataset.bedSleeping='true';this.actor.setVisible(false);
+  const sleeper=new FarmerArt(this);sleeper.equip('none');sleeper.root.setPosition(193,HOME_ORIGIN+321).setDepth(100);
+  const quilt=this.add.graphics().setDepth(102);quilt.fillStyle(0x7c9164).fillRoundedRect(151,HOME_ORIGIN+290,83,63,4);quilt.fillStyle(0xa3b07b).fillRoundedRect(151,HOME_ORIGIN+287,83,11,3);for(let y=305;y<350;y+=11)quilt.lineStyle(1,0x5b7552,.6).lineBetween(155,HOME_ORIGIN+y,230,HOME_ORIGIN+y);
+  const snooze=this.add.text(208,HOME_ORIGIN+249,'Zzzz',{fontFamily:'Georgia',fontSize:'14px',color:'#f5e9cd',stroke:'#3b4b35',strokeThickness:3,resolution:4}).setOrigin(.5,1).setDepth(163);
+  const breathe=this.tweens.add({targets:sleeper.root,y:HOME_ORIGIN+322,duration:800,yoyo:true,repeat:-1,ease:'Sine.easeInOut'});
+  const drift=this.tweens.add({targets:snooze,y:HOME_ORIGIN+238,alpha:.4,duration:950,yoyo:true,repeat:-1,ease:'Sine.easeInOut'});
+  try{
+   await new Promise<void>(resolve=>this.time.delayedCall(1900,()=>resolve()));
+   await new Promise<void>(resolve=>this.tweens.addCounter({from:0,to:1,duration:550,onUpdate:t=>{shade.style.opacity=String(t.getValue());},onComplete:()=>resolve()}));
+   this.transitioning=false;await this.finishDay(false);
+  }finally{
+   breathe.stop();drift.stop();sleeper.root.destroy();quilt.destroy();snooze.destroy();this.actor.setVisible(true);surface.dataset.bedSleeping='false';shade.style.opacity='0';this.transitioning=false;this.lastTick=performance.now();
+  }
+ }
+ private homeNearby(){if(!inHome(this.actor.y))return '';if(canRestAtBed(this.actor.x,this.actor.y))return 'home-bed';if(Math.hypot(this.actor.x-400,this.actor.y-HOME_ORIGIN-500)<38)return 'home-exit';const object=homeObjects.find(o=>Math.hypot(this.actor.x-o.x,this.actor.y-o.y)<55);return object?`home:${object.id}`:'';}
+ private interactHome(){if(this.nearChest()>=0&&this.canInteract()){this.openChest(this.nearChest());return true;}const nearby=this.homeNearby();if(!nearby||!this.canInteract())return false;if(nearby==='home-bed'){void this.restInBed();return true;}if(nearby==='home-exit'){void this.travelTo({x:farmLayout.houseDoor.x,y:274+farmLayout.houseOffset.y});return true;}const object=homeObjects.find(o=>`home:${o.id}`===nearby);if(object)showDialogue(object.title,object.text,'OTTHON');return true;}
  private enterShop(shop:Shop){if(!shopsOpen(this.clock.elapsed)){this.notice(`${shopNames[shop]} · Éjszaka zárva. Reggel újra várunk!`);return;}void this.travelTo({x:400,y:shopOrigins[shop]+467},shop);}
  private leaveShop(){const shop=shopAt(this.actor.y);if(shop){const door=villageLayout[shop].door;void this.travelTo({x:door.x,y:door.y+18});}}
  private inspectVillage(place:string){
@@ -1416,6 +1434,7 @@ class Farm extends Phaser.Scene {
   this.journalClickZone=this.add.zone(farmLayout.journal.x+9,farmLayout.journal.y+7,76,76).setName('journal').setDepth(165).setInteractive({hitArea:new Phaser.Geom.Circle(38,38,36),hitAreaCallback:Phaser.Geom.Circle.Contains,useHandCursor:true});
   this.journalClickZone.on('pointerdown',()=>journalHelpPending(this.story,this.clock.day)?this.openJournalHelp():this.openJournal());
   objectZone('house-door',{x:216,y:153+farmLayout.houseOffset.y,w:43,h:70},()=>{if(this.canInteract()&&Math.hypot(this.actor.x-farmLayout.houseDoor.x,this.actor.y-farmLayout.houseDoor.y)<55)void this.travelTo({x:400,y:HOME_ORIGIN+470});});
+  objectZone('home-bed',homeBed,()=>void this.restInBed());
   objectZone('catalog',farmLayout.catalog,()=>this.openCatalog());
   objectZone('mailbox',farmLayout.mailbox,()=>this.openMailbox());
   this.mailFlag=this.add.graphics().setDepth(3);
@@ -1658,7 +1677,7 @@ class Farm extends Phaser.Scene {
   if(!this.nearby&&this.actor.y<600){const site=junkSites.filter(s=>{const p=junkPoint(this.clearing,s.id);return Math.hypot(p.x-this.actor.x,p.y-this.actor.y)<105;}).sort((a,b)=>{const aa=junkPoint(this.clearing,a.id),bb=junkPoint(this.clearing,b.id);return Math.hypot(aa.x-this.actor.x,aa.y-this.actor.y)-Math.hypot(bb.x-this.actor.x,bb.y-this.actor.y);})[0];if(site)this.nearby=`junk:${site.id}`;}
   this.nearby=this.forestNearby()|| (this.nearChest()>=0?'storage-chest':this.researchNearby()||this.nearby);
   this.bubble.setPosition(next.x,next.y-54).setText(estateReady?'…':this.nearby==='shed'?'?':this.nearby?'…':'').setVisible(Boolean(this.nearby||estateReady)&&!this.nearby.startsWith('junk:')&&this.jumpRemaining<=0);
-  document.querySelector('#status')!.textContent=(inForest(next.x,next.y)?this.forestCombat?.encounterName(this.actor,this.travel.forest??createForest()):'')||this.researchHint()|| (this.nearby==='village-notice'?'Hirdetőtábla · E / kattintás':this.nearby==='craft-machine'?`${blueprintNames[this.travel.crafting!.machines[this.nearMachine()].kind as Blueprint]??'Nádkosár'} · E`:estateReady?'Begyűjthető · E / F / Gyűjtés':this.nearby.startsWith('nature:')?'Gyűjtögetés · E / F':this.nearby.startsWith('junk:')?`${junkSites.find(s=>s.id===this.nearby.slice(5))?.name} · ${Math.min(3,junkProgress(this.clearing,this.nearby.slice(5) as JunkId,this.clock.day).part)+1} / 4 · Bontás: E / kattintás`:this.nearby==='leaveShop'?'Vissza a térre · E / koppintás':this.nearby==='merchant'?`${insideShop==='nursery'?'Leo':insideShop==='craftShop'?'Simon':'Annie'} · Beszélgetés · E / koppintás`:this.nearby==='shopCounter'?'Pult · E / koppintás':nearbyBush?(forageReady(this.travel,nearbyBush.id,this.clock.day)?'Erdei áfonya · E / F / koppintás':'Áfonyabokor · most pihen'):this.nearby==='nursery'||this.nearby==='fishShop'||this.nearby==='craftShop'?`${shopNames[this.nearby]} · ${shopsOpen(this.clock.elapsed)?'E / koppintás':'Zárva · reggel nyit'}`:this.nearby==='bench'?'Pihenőpad · E / koppintás':this.nearby==='neighbor'?'Szomszéd · E / kattintás':this.nearby==='shed'?'?':this.nearby==='catalog'?'Magkatalógus · E / kattintás':this.nearby==='mailbox'?`Postaláda${quantityTotal(this.orders.mailbox)>0||this.noahTest?.hasUnreadLetter(this.clock.day)?' · Küldemény érkezett':''} · E / kattintás`:this.nearby==='shipping'?'Eladóláda · E / koppints a ládára':this.nearby==='home-exit'?'Vissza a verandára · E':this.nearby.startsWith('home:')?'Megvizsgálom · E':this.nearby==='journal'?'Napló · E':this.nearby==='house'?'Otthon · Belépés · E':this.nearby==='pond'?'Tópart · E / koppints a buborékra':'');
+  document.querySelector('#status')!.textContent=(inForest(next.x,next.y)?this.forestCombat?.encounterName(this.actor,this.travel.forest??createForest()):'')||this.researchHint()|| (this.nearby==='village-notice'?'Hirdetőtábla · E / kattintás':this.nearby==='craft-machine'?`${blueprintNames[this.travel.crafting!.machines[this.nearMachine()].kind as Blueprint]??'Nádkosár'} · E`:estateReady?'Begyűjthető · E / F / Gyűjtés':this.nearby.startsWith('nature:')?'Gyűjtögetés · E / F':this.nearby.startsWith('junk:')?`${junkSites.find(s=>s.id===this.nearby.slice(5))?.name} · ${Math.min(3,junkProgress(this.clearing,this.nearby.slice(5) as JunkId,this.clock.day).part)+1} / 4 · Bontás: E / kattintás`:this.nearby==='leaveShop'?'Vissza a térre · E / koppintás':this.nearby==='merchant'?`${insideShop==='nursery'?'Leo':insideShop==='craftShop'?'Simon':'Annie'} · Beszélgetés · E / koppintás`:this.nearby==='shopCounter'?'Pult · E / koppintás':nearbyBush?(forageReady(this.travel,nearbyBush.id,this.clock.day)?'Erdei áfonya · E / F / koppintás':'Áfonyabokor · most pihen'):this.nearby==='nursery'||this.nearby==='fishShop'||this.nearby==='craftShop'?`${shopNames[this.nearby]} · ${shopsOpen(this.clock.elapsed)?'E / koppintás':'Zárva · reggel nyit'}`:this.nearby==='bench'?'Pihenőpad · E / koppintás':this.nearby==='neighbor'?'Szomszéd · E / kattintás':this.nearby==='shed'?'?':this.nearby==='catalog'?'Magkatalógus · E / kattintás':this.nearby==='mailbox'?`Postaláda${quantityTotal(this.orders.mailbox)>0||this.noahTest?.hasUnreadLetter(this.clock.day)?' · Küldemény érkezett':''} · E / kattintás`:this.nearby==='shipping'?'Eladóláda · E / koppints a ládára':this.nearby==='home-bed'?'Ágy · Pihenés reggelig · E / kattintás':this.nearby==='home-exit'?'Vissza a verandára · E':this.nearby.startsWith('home:')?'Megvizsgálom · E':this.nearby==='journal'?'Napló · E':this.nearby==='house'?'Otthon · Belépés · E':this.nearby==='pond'?'Tópart · E / koppints a buborékra':'');
  }
 }
 new Phaser.Game({type:Phaser.AUTO,parent:'game',width:800,height:600,pixelArt:true,backgroundColor:'#8da85e',scene:Farm,scale:{mode:Phaser.Scale.RESIZE,autoCenter:Phaser.Scale.CENTER_BOTH},input:{keyboard:true}});
