@@ -45,7 +45,7 @@ function validSnapshotRecord(value:unknown,legacy=false):value is Snapshot{
   const [key,plot]=row;if(typeof key!=='string'||keys.has(key))return false;
   keys.add(key);const parts=key.split(',');if(parts.length!==2)return false;
   const [x,y]=parts.map(Number);
-  if(!finite(x)||!finite(y)||tileKey({x,y})!==key||(tileKey((legacy?legacyTargetTile:targetTile)(x+1,y+1))!==key&&(legacy||x%TILE!==0||y%TILE!==0))||!(legacy?legacyCultivable:cultivable)({x,y}))return false;
+  if(!finite(x)||!finite(y)||tileKey({x,y})!==key||(tileKey((legacy?legacyTargetTile:targetTile)(x+1,y+1))!==key&&(legacy||x%TILE!==0||y%TILE!==0))||!(legacy?legacyCultivable({x,y}):cultivable({x,y},true)))return false;
   if(plot&&((plot.mulched!==undefined&&typeof plot.mulched!=='boolean')||(plot.moisture!==undefined&&(!plot.mulched||!Number.isSafeInteger(plot.moisture)||plot.moisture<0||plot.moisture>3||plot.watered!==(plot.moisture>0)))))return false;
   if(!plot||typeof plot!=='object'||typeof plot.watered!=='boolean'||!(plot.crop===null||crops.includes(plot.crop)))return false;
   if(plot.emptyDays!==undefined&&(plot.crop!==null||!Number.isSafeInteger(plot.emptyDays)||plot.emptyDays<0||plot.emptyDays>2))return false;

@@ -38,9 +38,10 @@ function segmentDistance(x:number,y:number,a:readonly number[],b:readonly number
  const dx=b[0]-a[0],dy=b[1]-a[1];const t=Math.max(0,Math.min(1,((x-a[0])*dx+(y-a[1])*dy)/(dx*dx+dy*dy)));
  return Math.hypot(x-a[0]-t*dx,y-a[1]-t*dy);
 }
-export function cultivable(tile:Tile):boolean{
+// Save validation must accept veranda plots created before the tilling restriction.
+export function cultivable(tile:Tile,allowHistoricalPorch=false):boolean{
  const {x,y}=tile;
- if([farmLayout.porchBounds,farmLayout.porchSteps].some(b=>x<b.x+b.w&&x+TILE>b.x&&y<b.y+b.h&&y+TILE>b.y))return false;
+ if(!allowHistoricalPorch&&[farmLayout.porchBounds,farmLayout.porchSteps].some(b=>x<b.x+b.w&&x+TILE>b.x&&y<b.y+b.h&&y+TILE>b.y))return false;
  const bed=farmLayout.beds.find(b=>x>=b.x+4&&x+TILE<=b.x+4+3*TILE&&y>=b.y+2&&y+TILE<=b.y+2+2*TILE);
  if(bed)return true;
  // Free meadow can be cultivated throughout the farm, including beside beds.

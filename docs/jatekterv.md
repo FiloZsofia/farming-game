@@ -976,3 +976,4 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 - Leo ajándékának külön útmutatása: „6 vadvirágmag a készletedbe került. Kapálás → Ültetés → Öntözés.”
 - A Készletben a vadvirágmagok ikonja körül a naplóéhoz igazodó, rögzített középpontú arany kör pulzál. Mindaddig megmarad, amíg van el nem ültetett vadvirágmag; csökkentett mozgás mellett álló jelzés.
 - A veranda teljes fapadlója és lépcsője járható, de nem művelhető terület. A teljes ültetőhely átfedését ellenőrizzük, nem csak a középpontját.
+- A kapálható terület szigorítása nem teheti olvashatatlanná a régi mentést. A korábban verandára került földkockák és növények adatait a mentésellenőrzés megőrzi; az új műveletek a jelenlegi területi korlátozást követik. A mentésformátum változatlan (18).

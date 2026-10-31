@@ -2,7 +2,7 @@ import {journalHelpPending} from './story-events';
 import {describe,it,expect,vi} from 'vitest';
 import {IDBFactory} from 'fake-indexeddb';
 import {SaveStore,snapshot,validSnapshot,decodeSnapshot,DB_NAME} from './storage';
-import {createGarden,targetTile,work} from './gardening';
+import {createGarden,targetTile,work,cultivable} from './gardening';
 import {createClock} from './clock';
 import {createEconomy,settleSales} from './economy';
 import {createOrders,deliverOrders,collectPackage} from './orders';
@@ -15,6 +15,13 @@ async function put(factory:IDBFactory,key:string,value:unknown){
  await new Promise<void>((resolve,reject)=>{const tx=db.transaction('saves','readwrite');tx.objectStore('saves').put(value,key);tx.oncomplete=()=>resolve();tx.onabort=()=>reject(tx.error);});db.close();
 }
 describe('persistent farm state',()=>{
+ it('loads and preserves historical veranda plots without permitting new tilling',async()=>{
+  const data=fresh();data.plots=[['264,192',{crop:null,watered:false,growth:0,regrowing:false}],['288,192',{crop:'radish',watered:true,growth:1,regrowing:false}]];
+  expect(validSnapshot(data)).toBe(true);expect(cultivable({x:264,y:192})).toBe(false);
+  const factory=new IDBFactory(),setup=new SaveStore(factory);await setup.load();setup.close();await put(factory,'active',data);await put(factory,'backup',data);
+  const store=new SaveStore(factory);expect((await store.load()).data).toEqual(data);await store.save(data);store.close();
+  const reader=new SaveStore(factory);expect((await reader.load()).data).toEqual(data);reader.close();
+ });
  it('restores player, exact time and exhaustion target, seeds and watered plants',async()=>{
   const factory=new IDBFactory();const store=new SaveStore(factory);await store.load();
   const garden=createGarden(),tile=targetTile(360,286),player={x:337,y:282};work(garden,'hoe',tile,player);work(garden,'pea',tile,player);work(garden,'water',tile,player);
