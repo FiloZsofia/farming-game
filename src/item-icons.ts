@@ -1,6 +1,6 @@
 import {goods,extras,type Good,type Extra} from './estate';
 import type {Crop} from './gardening';
-export type IconName='fallenFruit'|'cutReed'|'composter'|'basketMaker'|'beeHabitat'|'irrigation'|'mulch'|'gear'|'clay'|Good|Extra|Crop|'nestSample'|'chest'|'walkingStick'|'scrap'|'workshopKey'|'copperPipe'|'linenCloth'|'glassJar'|'hoe'|'water'|'harvest'|'axe'|'pickaxe'|'crowbar'|'hand'|'wood'|'stone'|'weed'|'birdhouse'|'annie'|'strawberry'|'honeyberry'|'blueberry';
+export type IconName='fallenFruit'|'cutReed'|'composter'|'basketMaker'|'beeHabitat'|'irrigation'|'mulch'|'gear'|'clay'|Good|Extra|Crop|'nestSample'|'chest'|'walkingStick'|'reinforcedStick'|'scrap'|'workshopKey'|'copperPipe'|'linenCloth'|'glassJar'|'hoe'|'water'|'harvest'|'axe'|'pickaxe'|'crowbar'|'hand'|'wood'|'stone'|'weed'|'birdhouse'|'annie'|'strawberry'|'honeyberry'|'blueberry';
 // Original, locally drawn interface icons; no external asset dependency.
 const artwork:Partial<Record<IconName,string>>={
  fallenFruit:'<ellipse cx="18" cy="31" rx="16" ry="3" fill="#596344" opacity=".4"/><path d="M5 18q4-9 13-5 12-6 15 5 1 13-14 15Q3 32 5 18z" fill="#b48655"/><path d="M8 19q4-5 10-2 5-4 10 1l-2 8-13 3z" fill="#caa46b"/><ellipse cx="24" cy="25" rx="5" ry="4" fill="#806848"/><path d="m18 15 1-10m0 4q8-8 12-3-4 7-12 3" fill="#75864d" stroke="#627342" stroke-width="2"/>',
@@ -54,7 +54,7 @@ const artwork:Partial<Record<IconName,string>>={
  pea:'<path fill="#3b6b39" d="m2 25 4-10L25 3l6-2-2 12L14 29l-9 2z"/><path fill="#6ea456" d="m5 25 5-9L27 5l-2 8-13 14z"/><circle fill="#bdd982" cx="12" cy="22" r="4"/><circle fill="#b0d575" cx="19" cy="15" r="4"/><circle fill="#c4dc8b" cx="25" cy="8" r="3"/>'
 };
 export function itemIcon(crop:IconName){
- const icon=document.createElementNS('http://www.w3.org/2000/svg','svg');icon.setAttribute('viewBox','0 0 36 36');icon.setAttribute('aria-hidden','true');icon.classList.add('item-icon');icon.innerHTML=artwork[crop]??estateIcon(crop);return icon;
+ const icon=document.createElementNS('http://www.w3.org/2000/svg','svg');icon.setAttribute('viewBox','0 0 36 36');icon.setAttribute('aria-hidden','true');icon.classList.add('item-icon');icon.innerHTML=crop==='reinforcedStick'?artwork.walkingStick+'<path d="m8 30 4 2 4-8-4-2z" fill="#9eafb0" stroke="#53686a" stroke-width=".8"/><path d="m9 30 2 1 4-8-2-1z" fill="#e4ece7"/><path d="m18 12 4 2 3-5-4-2z" fill="#abbcbb" stroke="#53686a" stroke-width=".8"/><path d="m19 12 2 1 3-5-2-1z" fill="#edf4ec"/>':artwork[crop]??estateIcon(crop);return icon;
 }
 
 export function seedIcon(crop:Crop){

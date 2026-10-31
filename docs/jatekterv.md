@@ -992,3 +992,13 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 - Az ültetési körök időtartama módosult: a kapa jelzése mind a hat vadvirág elültetéséig marad; az öntözésé az első ültetéstől addig, amíg mind a hat vadvirág legalább egyszer vizet kapott. Részleges ültetésnél mindkét eszköz jelzése látható. A korábbi egyetlen sikeres műveletet jelző mezők már nem zárják le a segítséget. A növények meglévő mentett növekedéséből és talajnedvességéből állapítjuk meg a teljesülést; az eső továbbra is helyettesíti az öntözést.
 - Pontosítás: a jelzések teljesülése nem függ a magok elültetésétől. Hat különböző hely sikeres felkapálása után a kapa körjelzése eltűnik; hat különböző hely egyszeri megöntözése után az öntözésé is, akkor is, ha mind a hat mag még a Készletben van. Az öntözés jelzése már az első felkapált hely után megjelenik. A teljesített helyeket a sikeres művelettel együtt mentjük; kiszáradás vagy üres föld visszafüvesedése nem indítja újra a segítséget. Régi mentésekben a meglévő földek, nedvesség és vadvirág-növekedés alapján vesszük figyelembe a megállapítható korábbi munkát. A magok készletbeli köre továbbra is az elültetésükig marad.
 - Esős napon az öntözés körjelzése soha nem jelenik meg, részlegesen előkészített kertnél sem: ilyenkor az eső helyettesíti az öntözést. A kapa jelzése ettől függetlenül működik.
+
+### Megerősített túrabot jelzése (Noah-tesztmód)
+- Az eszközsáv rövid neve továbbra is „Túrabot”. A megerősített változat ikonján ezüstszínű fémfoglalat látszik, kártyájának jobb felső sarkában kis ezüst csillag jelenik meg.
+- A Simonnál sikeresen átvett fejlesztés csillaga a bolt bezárása után egyszer röviden felcsillan, majd álló jelzés marad. A már fejlesztett állapotból induló teszthelyzet nem játssza újra az átvételi villanást. Csökkentett mozgásnál nincs villanó animáció.
+- A jelzés a memóriabeli Noah-teszt fejlesztési állapotát követi; a normál farmot és mentésformátumot nem módosítja. A normál túrabotnál nincs csillag vagy fémfoglalat. A Készlet túrabotikonja is a megerősített változatot mutatja a tesztben.
+
+### Erdei veszélyzene
+- Külön, saját Web Audio-kompozíció: feszesebb moll hangzás, mély lüktetés, rövid pengetések és visszafogott magas motívum. Nincs külső hangfelvétel vagy új függőség.
+- Az Öregfák ligetében a pihenőpadhoz érve váltunk erre a zenére, az erdei ösvény elején még a megszokott dallam szól. A padtól befelé végig az erdei zene marad, nem csak az egyes támadások alatt.
+- A tesztmód Déli erdejében a hídon, a déli terület kezdetén indul, és az egész Déli erdőben szól. Hazatéréskor vagy a faluba visszaérve a játékos kiválasztott dallama tér vissza. A választott dallamot és a némítást nem írja felül, a háttérbe tett lap hangja szünetel.

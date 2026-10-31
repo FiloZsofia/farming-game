@@ -13,11 +13,19 @@ const hz=(note:number)=>440*2**((note-69)/12);
 export class FarmMusic{
  private context:AudioContext|null=null;private output:GainNode|null=null;private timer:ReturnType<typeof setInterval>|null=null;private next=0;private beat=0;
  private sources=new Set<AudioScheduledSourceNode>();private brushBuffer:AudioBuffer|null=null;
+ private danger=false;
  private enabled=true;private track:MusicTrack='original';
  constructor(){try{this.enabled=localStorage.getItem('farm-music')!=='off';const saved=localStorage.getItem('farm-music-track');if(saved&&Object.hasOwn(musicTracks,saved))this.track=saved as MusicTrack;}catch{/* Preferences are optional. */}
   document.addEventListener('visibilitychange',()=>{if(document.hidden)void this.context?.suspend();else if(this.enabled)void this.activate();});
  }
  isEnabled(){return this.enabled;}
+ isDanger(){return this.danger;}
+ setDanger(active:boolean){
+  if(active===this.danger)return;this.danger=active;this.stopNotes();this.beat=0;this.next=(this.context?.currentTime??0)+.09;
+  document.querySelector<HTMLElement>('#app')!.dataset.musicMood=active?'danger':'ambient';
+  if(this.context&&this.output){const t=this.context.currentTime;this.output.gain.cancelScheduledValues(t);this.output.gain.setValueAtTime(.025,t);this.output.gain.linearRampToValueAtTime(.21,t+.4);}
+  if(this.enabled&&!document.hidden)void this.activate();
+ }
  getTrack(){return this.track;}
  async activate(){if(!this.enabled)return;try{await this.resume();}catch{/* Audio is optional when the browser cannot start it. */}}
  async toggle(){this.enabled=!this.enabled;try{localStorage.setItem('farm-music',this.enabled?'on':'off');}catch{}if(this.enabled)await this.activate();else{this.stopNotes();await this.context?.suspend();document.querySelector<HTMLElement>('#app')!.dataset.music='off';}}
@@ -55,9 +63,16 @@ export class FarmMusic{
  private schedule(){
   const ctx=this.context;if(!ctx||ctx.state!=='running'||!this.enabled||document.hidden)return;
   if(this.next<ctx.currentTime)this.next=ctx.currentTime+.03;
-  const step=60/(this.track==='original'?72:this.track==='sunny'?106:84)/2;
+  const step=60/(this.danger?116:this.track==='original'?72:this.track==='sunny'?106:84)/2;
   while(this.next<ctx.currentTime+.24){
-   if(this.track==='original'){
+   if(this.danger){
+    // A separate minor-key ostinato: low pulses, dry strings and a restrained high motif.
+    const n=this.beat%64,chord=[[45,52,57,60],[41,48,53,57],[43,50,55,58],[40,47,52,56]][Math.floor(n/16)],time=this.next;
+    this.acoustic(chord[[0,1,2,1,0,2,3,1][n%8]],time,'guitar',n%4===0?.12:.075,.24);
+    if(n%4===0)this.acoustic(chord[0]-12,time,'bass',.17,.4);
+    if(n%8===0){this.acoustic(chord[2]+12,time+.025,'keys',.09,.7);this.acoustic(chord[3]+12,time+.14,'keys',.06,.55);}
+    if(n%4===2)this.brush(time);
+   }else if(this.track==='original'){
     const n=this.beat%64,chord=chords[Math.floor(n/16)],tone=chord[[0,2,1,3,2,1,3,1][n%8]];this.note(tone,this.next,true,1.5);if(n%4===0)this.note(chord[0]-12,this.next,false,2.4);if(n%2===0){const lead=melody[Math.floor(n/2)];if(lead!==null)this.note(lead,this.next+.025,false,1.8);}
    }else if(this.track==='sunny'){
     const n=this.beat%64,chord=sunnyChords[Math.floor(n/8)],time=this.next;

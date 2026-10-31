@@ -9,7 +9,7 @@ import {itemIcon} from './item-icons';
 import type {Snapshot} from './storage';
 import {noahLetter,noahGoal,noahReplyArrived,upgradeNoahStick,mixNoahExtract,type NoahTestConfig,type NoahTestState} from './noah-test-story';
 import {NoahSouthForest,resinTree,inNoahSouth,southRoot} from './noah-south-forest';
-type Host={actor:()=>Phaser.GameObjects.Container;avatar:()=>FarmerArt;day:()=>number;map:()=>void;laboratory:(active:boolean)=>void;read:()=>Snapshot;commit:(s:Snapshot,after:()=>void)=>Promise<boolean>;show:(title:string,text:string,label?:string)=>void;notice:(text:string)=>void;record?:(id:'noah'|'result')=>void;gather?:(point:{x:number;y:number})=>void};
+type Host={stickUpgraded?:()=>void;actor:()=>Phaser.GameObjects.Container;avatar:()=>FarmerArt;day:()=>number;map:()=>void;laboratory:(active:boolean)=>void;read:()=>Snapshot;commit:(s:Snapshot,after:()=>void)=>Promise<boolean>;show:(title:string,text:string,label?:string)=>void;notice:(text:string)=>void;record?:(id:'noah'|'result')=>void;gather?:(point:{x:number;y:number})=>void};
 export class NoahTestController{
  readonly forest:NoahSouthForest;private steam:Phaser.GameObjects.Graphics;private extraction=createExtraction();private pendingResult=false;private busy=false;private lab:WorkshopExtraction|null=null;private labCarry={carrying:null as string|null};
  constructor(private scene:Phaser.Scene,public state:NoahTestState,readonly config:NoahTestConfig,private host:Host){this.forest=new NoahSouthForest(scene);this.steam=scene.add.graphics().setDepth(108);
@@ -41,7 +41,7 @@ export class NoahTestController{
   if(!this.state.simonAsked)return;
   const s=this.host.read(),c=this.config,card=document.createElement('article');card.className='shop-card';const text=document.createElement('div'),title=document.createElement('strong');title.textContent='Megerősített túrabot';const costs=document.createElement('p');costs.textContent=`Fa: ${s.clearing.wood} / ${c.wood} · Ócskavas: ${s.travel.research.materials.scrap} / ${c.scrap}`;text.append(title,costs);
   card.append(itemIcon('walkingStick'),text);
-  this.button(card,'noah-upgrade-stick',this.state.upgraded?'Megvásárolva':`${c.gold} gold · Megveszem`,()=>{const result=upgradeNoahStick(this.host.read(),this.state,c);if(!result||this.busy)return;this.busy=true;void this.host.commit(result.snapshot,()=>{this.state=result.state;refresh();this.host.notice('Megerősített túrabot');}).finally(()=>{this.busy=false;});},!upgradeNoahStick(s,this.state,c));panel.append(card);
+  this.button(card,'noah-upgrade-stick',this.state.upgraded?'Megvásárolva':`${c.gold} gold · Megveszem`,()=>{const result=upgradeNoahStick(this.host.read(),this.state,c);if(!result||this.busy)return;this.busy=true;void this.host.commit(result.snapshot,()=>{this.state=result.state;this.host.stickUpgraded?.();refresh();this.host.notice('Megerősített túrabot');}).finally(()=>{this.busy=false;});},!upgradeNoahStick(s,this.state,c));panel.append(card);
  }
  openMachine(){
   this.lab?.close();this.lab=null;

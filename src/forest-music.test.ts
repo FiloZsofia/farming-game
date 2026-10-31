@@ -1,0 +1,4 @@
+import {it,expect} from 'vitest';
+import {forestMusicZone} from './forest-music';
+it('keeps the trail entrance calm and changes near the resting bench and deeper in the grove',()=>{expect(forestMusicZone({x:-50,y:1000},false)).toBeNull();expect(forestMusicZone({x:-370,y:1000},false)).toBeNull();expect(forestMusicZone({x:-430,y:1000},false)).toBe('north');expect(forestMusicZone({x:-940,y:974},false)).toBe('north');expect(forestMusicZone({x:250,y:194},false)).toBeNull();});
+it('starts at the southern bridge and continues through the southern forest',()=>{expect(forestMusicZone({x:-350,y:1299},true)).toBeNull();expect(forestMusicZone({x:-350,y:1300},true)).toBe('south');expect(forestMusicZone({x:-900,y:2800},true)).toBe('south');expect(forestMusicZone({x:-350,y:1500},false)).toBeNull();expect(forestMusicZone({x:193,y:4021},true)).toBeNull();});
