@@ -16,6 +16,8 @@ Nem minden apró commit kap új számot. A main ágra feltöltött változtatás
 
 **Verziószámot kizárólag előzetes felhasználói egyeztetés és kifejezett jóváhagyás után emelhetsz.** Ha indokoltnak érzed az emelést, előbb ismertesd a változások körét és a javasolt új számot, majd kérdezz rá. Jóváhagyásig a javításokat a jelenlegi számmal készítsd és töltsd fel. Sem a módosítás mérete, sem a közzététel nem jelent automatikus engedélyt verzióemelésre.
 
+2026. október 31-én a felhasználó jóváhagyta a teljes Noah-fejezet normál játékba emelését **0.2.0** verzióval. A mentésformátum továbbra is 18.
+
 2026. október 28-án a felhasználó kérésére a játék verzióját visszaállítottuk **0.1.0**-ra. A közben önállóan létrehozott 0.1.1–0.1.3 címkék történeti hivatkozások maradnak; nem mozgatjuk át őket. Az elkészült funkciók megmaradnak.
 
 ## Kiadás menete
@@ -27,4 +29,4 @@ Nem minden apró commit kap új számot. A main ágra feltöltött változtatás
 
 ## Nem ugyanaz, mint a mentés verziója
 
-A farmmentés technikai formátumának száma a `storage.ts` feladata. Jelenleg 18; ennek semmi köze a játék 0.1.0 jelöléséhez. Pusztán a játékverzió emelése miatt ne módosítsd és ne migráld a mentéseket. Korábbi bevétel, készlet, kert vagy történeti haladás nem változik meg a számozástól.
+A farmmentés technikai formátumának száma a `storage.ts` feladata. Jelenleg 18; ennek semmi köze a játék 0.2.0 jelöléséhez. Pusztán a játékverzió emelése miatt ne módosítsd és ne migráld a mentéseket. Korábbi bevétel, készlet, kert vagy történeti haladás nem változik meg a számozástól.

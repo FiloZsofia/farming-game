@@ -3,7 +3,7 @@ import {createForest,forestEnemies} from './forest';
 import {createResearch} from './research';
 
 export function prepareMicroscopeTest(s:Snapshot):Snapshot|null{
- const next=structuredClone(s),f=next.travel.forest??=createForest();
+ const next=structuredClone(s);delete next.travel.noah;const f=next.travel.forest??=createForest();
  if(!next.travel.research.repaired){
   next.clock.day=Math.max(9,next.clock.day);
   const r=createResearch();r.gifted=true;r.flowers=Array.from({length:6},(_,i)=>({x:-168+i*24,y:-96,growth:4}));r.beeDay=9;r.observation={day:9,seasonDay:9,plant:'Tavaszi vadvirágkeverék'};r.key=true;r.shutter=true;r.entranceShutter=true;r.discovered=true;r.repaired=true;r.workshopEntered=true;r.examined=['vat','pipes','filter','coil'];

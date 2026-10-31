@@ -1028,3 +1028,12 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 - A híd felé vezető füves átjáróban álló jobb oldali díszgomba a felhasználó képe alapján a pad fölötti, keletebbre fekvő szabad foltra került (−400, 880). Az átjáró szabad sávját akkor is védjük, ha nincs rá festett ösvény.
 - A további képeken jelzett helyekre is kerültek ártalmatlan díszgombák: a falu felé forduló erdei ösvény melletti szabad foltra (174, 966), illetve egy nagyobb gomba a falu nyugati, patakhoz közeli füves részére (30, 1260). A környező fákat nem töröljük és nem ritkítjuk.
 - A gombák külön fénye a Phaser kirajzolása után, a kamera aktuális renderelési mátrixából kapja a képernyőpozícióját. Nem használhat előző képkockából származó kamerahelyzetet: séta és futás közben is a kalaphoz és a szárhoz kell rögzülnie. A közös megoldás mindkét erdő gombáira érvényes; eltávolításkor az eseményfigyelőt is lekapcsoljuk.
+
+
+### 0.2.0 — teljes Noah-fejezet a rendes játékban (2026. október 31.)
+
+A felhasználó elfogadta a tesztelt fejezetet és minden kapcsolódó kiegészítését a normál játékba. Ez a döntés felülírja a korábbi, kizárólag tesztmódra vonatkozó korlátozásokat: Noah válasza, Simon fejlesztése, Déli erdő, vörösfenyős mélyedés, gyanta, külön gyűjthető tobozok, gyógynövények, ellenfelek, Műhely-kísérlet és az eredmény megfigyelése normál mentéssel működik. A térkép M-mel normál játékban is nyitható; a feliratok élessége, a gombák fénye és elhelyezése, a zeneváltások és az ezüstcsillagos botjelzés megmaradnak.
+
+A fejezet a fészekminta elküldésekor indul, Noah válasza három nap múlva érkezik. Régi mentésnél a valóban tárolt elküldési napot használjuk; hiányzó dátumnál a folytatás napjától számolunk, nem találunk ki múltbeli dátumot. A mentés a megvásárolt fejlesztést, gyűjtési várakozást és a kivonatkészítés közbeni állapotot is megőrzi; a formátumszám 18 marad. A fejlesztői helyzetek továbbra is csak memóriabeli másolatot módosítanak.
+
+Az Öregfák ligetébe és a Déli erdőbe visszatérve újra megjelennek a szörnyek; ez nem törli a történeti teljesítést vagy a megszerzett anyagokat. A korábbi történetvégi üzenet változatlan szöveggel az első kísérleti eredmény megfigyelése után jelenik meg. A következő levél és történeti folytatás nincs ebben a kiadásban.

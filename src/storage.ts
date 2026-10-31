@@ -1,3 +1,4 @@
+import {southBlocked,inNoahSouth} from './south-forest-terrain';
 import {pollinationDependent,RIPE_FRUIT_DAYS} from './pollination';
 import {enlargeGarden} from './garden-migration';
 import {legacyTargetTile,legacyCultivable} from './legacy-garden-grid';
@@ -27,7 +28,7 @@ export function validSnapshot(value:unknown):value is Snapshot{return validSnaps
 function validSnapshotRecord(value:unknown,legacy=false):value is Snapshot{
  if(!value||typeof value!=='object')return false;
  const v=value as Snapshot;
- if(v.version!==(legacy?17:18)||!validTravel(v.travel,v.clock?.day,legacy)||!validGardenSkill(v.skill)||!validStory(v.story)||!validClearing(v.clearing)||!v.player||!finite(v.player.x)||!finite(v.player.y)||worldBlocked(v.player.x,v.player.y))return false;
+ if(v.version!==(legacy?17:18)||!validTravel(v.travel,v.clock?.day,legacy)||!validGardenSkill(v.skill)||!validStory(v.story)||!validClearing(v.clearing)||!v.player||!finite(v.player.x)||!finite(v.player.y)||(v.travel.noah?.upgraded&&inNoahSouth(v.player.x,v.player.y)?southBlocked(v.player.x,v.player.y,v.travel.noah):worldBlocked(v.player.x,v.player.y)))return false;
  if(!validEconomy(v.economy)||v.economy.lastSale&&v.economy.lastSale.day>=v.clock?.day)return false;
  if(!validOrders(v.orders)||crops.some(k=>{const c=k as keyof Garden['seeds'];return !v.seeds||!Number.isSafeInteger(v.seeds[c])||v.seeds[c]+v.orders.pending[c]+v.orders.mailbox[c]>999999;}))return false;
  if(v.farmName!==null&&(typeof v.farmName!=='string'||normalizeFarmName(v.farmName)!==v.farmName))return false;

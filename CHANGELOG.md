@@ -1,6 +1,15 @@
 # Változások
 
-## Változások a 0.1.0 óta — külön jóváhagyott verzióemelés nélkül
+## [0.2.0] — 2026-10-31
+
+- A teljes tesztelt Noah-fejezet bekerült a rendes játékba: levél és küldemény, Simon botfejlesztése, Déli erdő, gyógynövények és gyanta, a Műhelyben végezhető kivonatkészítés, majd a kísérleti eredmény mikroszkópos összehasonlítása.
+- A fejezet haladása, a gyűjtögetés várakozási ideje és a félbehagyott kivonatkészítés is mentődik. A korábbi farmok folytathatók; a mentésformátum száma 18 marad.
+- Az erdőkbe visszatérve újra megjelennek az ellenfelek, a történeti haladás és a begyűjtött holmik megmaradnak.
+- A térkép M-mel a rendes játékban is elérhető. A megerősített Túrabot ezüst csillagot és új ikont kap.
+- A vörösfenyős mélyedés, a külön gyűjthető 2–3 toboz háromnapos újratermelődéssel, a veszélytelen erdőszéli világító gombák, a harci zene és az élesebb feliratok is a kiadás részei.
+- A történet jelenlegi végét jelző ablak az első kísérlet eredményének megfigyelése után jelenik meg, változatlan szöveggel.
+
+### A kiadás további, korábban elkészült változásai
 
 - A látogatók nem takarják el a napló kattintási területét, és érkezési ablakuk nem írja felül az első napi segítséget. A jelzés feltűnőbb és csak a segítség nyugtázása után tűnik el.
 

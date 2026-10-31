@@ -1,7 +1,8 @@
+import {southRoot,inNoahSouth} from './south-forest-terrain';
 import {drawMushroomArt} from './mushroom-art';
 import {MushroomLight} from './mushroom-light';
 import {availableLarchCones,coneVisualPoint} from './larch-cones';
-import {resinTree,larchGlade,gladePool,inLarchGlade,larchTrunkBlocked,drawLarchHollow,drawOldLarch} from './larch-glade';
+import {resinTree,larchGlade,gladePool,inLarchGlade,drawLarchHollow,drawOldLarch} from './larch-glade';
 export {resinTree} from './larch-glade';
 import {forestLog,logPoint,logCoordinates,onFloatingLog,logCrossingStep,floatingLogPose} from './forest-log-crossing';
 import {sporeShelters,sporeFieldPhase,sporeFieldHurts,sporeSheltered,inSporeField} from './spore-field';
@@ -12,19 +13,8 @@ import {drawForestHerb} from './forest-art';
 import {southRoute,southPath,distanceToSouthPath,swampAt,swampStones,swampStep,southHerbs} from './south-forest-layout';
 import {drawWoodlandTree} from './woodland-tree';
 import {rootStrike,rootStrikePose,ROOT_STRIKE_COUNT,ROOT_STRIKE_INTERVAL,ROOT_STRIKE_DURATION} from './root-strikes';
-import type {NoahTestState} from './noah-test-story';
-export const southRoot={x:-650,y:2500};
-export const inNoahSouth=(x:number,y:number)=>x<0&&y>=1300&&y<2920;
-export function southBlocked(x:number,y:number,state:NoahTestState){
- if(x>=0||y<1190)return null;
- if(!state.upgraded&&y>1295)return true;
- if(y>2880||x< -1040||x> -120)return true;
- if(larchTrunkBlocked(x,y))return true;
- if(y<1350)return Math.abs(x+444)>31;
- if(y>2475&&!state.rootDefeated)return true;
- if(inLarchGlade(x,y))return false;
- return distanceToSouthPath(x,y)>(swampAt(x,y)?165:94);
-}
+import type {NoahTestState} from './noah-story';
+export {southRoot,inNoahSouth,southBlocked} from './south-forest-terrain';
 const southEnemies=[{id:'vine',kind:'vine' as const,x:-325,y:1490,hp:3},{id:'spore-a',kind:'spore' as const,x:-665,y:1680,hp:3},{id:'spore-b',kind:'spore' as const,x:-485,y:1908,hp:3},{id:'vine-bramble',kind:'vine' as const,x:-360,y:1950,hp:3},{id:'spore-c',kind:'spore' as const,x:-570,y:2385,hp:3},{id:'vine-larch',kind:'vine' as const,x:-750,y:2670,hp:3},{id:'spore-d',kind:'spore' as const,x:-850,y:2670,hp:3}];
 const mushrooms=[{x:-380,y:1450,s:1.1},{x:-590,y:1580,s:1.5},{x:-755,y:1790,s:1.3},{x:-570,y:1930,s:1.7},{x:-335,y:2220,s:1.2},{x:-745,y:2390,s:1.6},{x:-800,y:2580,s:1.8},{x:-680,y:2815,s:1.05},{x:-976,y:2865,s:.85}];
 export class NoahSouthForest{
@@ -39,6 +29,7 @@ export class NoahSouthForest{
  setUnlocked(value:boolean){if(!value)this.mushroomLight.hide();const v=this.scene.cameras.main.worldView,visible=value&&v.bottom>1300&&v.top<2950&&v.left<0;this.hollowFx.setVisible(visible);this.glow.setVisible(visible);this.logArt.setVisible(visible);this.terrain.setVisible(visible);this.art.setVisible(visible);this.herbs.setVisible(visible);this.fungi.setVisible(visible);if(!visible)this.mushroomLight.hide();}
  get phaseName(){return this.phase;}
  get hitPoints(){return this.hp;}
+ private rootKilled=false;
  private age=0;private timer=1.4;private phase:'rest'|'warn'|'strike'='rest';private hp=6;private invulnerable=0;private swing=0;private aim={x:0,y:-1};
  constructor(private scene:Phaser.Scene){
   this.mushroomLight=new MushroomLight(scene,mushrooms);
@@ -76,12 +67,12 @@ export class NoahSouthForest{
  attack(player:{x:number;y:number},direction:{x:number;y:number},upgraded:boolean,state:NoahTestState){
   if(this.swing>0)return false;
   const rootDistance=Math.hypot(southRoot.x-player.x,southRoot.y-player.y);
-  if(state.rootDefeated||rootDistance>110){this.minorCombat.power=upgraded?2:1;return this.minorCombat.attack(player,direction,this.minorState,id=>{if(!this.minorState.defeated.includes(id))this.minorState.defeated.push(id);});}
+  if(this.rootKilled||rootDistance>110){this.minorCombat.power=upgraded?2:1;return this.minorCombat.attack(player,direction,this.minorState,id=>{if(!this.minorState.defeated.includes(id))this.minorState.defeated.push(id);});}
   this.swing=.55;
   const dx=southRoot.x-player.x,dy=southRoot.y-player.y,d=Math.hypot(dx,dy);
   if(d>(upgraded?100:80)||d>25&&(dx*direction.x+dy*direction.y)/d<.1||this.phase!=='rest')return true;
   this.hp-=upgraded?2:1;this.timer=Math.max(this.timer,.7);this.scene.cameras.main.shake(70,.0015);
-  if(this.hp<=0)state.rootDefeated=true;return true;
+  if(this.hp<=0){this.rootKilled=true;state.rootDefeated=true;}return true;
  }
  update(dt:number,player:{x:number;y:number},state:NoahTestState,jumping:boolean,hurt:()=>void,fall?:(point:{x:number;y:number})=>void,day=1,night=0,sunny=true){
   this.sceneActor={x:player.x,y:player.y};if(!inNoahSouth(player.x,player.y)){this.logLoad=0;this.logEdgeTime=0;return;}
@@ -106,7 +97,7 @@ export class NoahSouthForest{
   this.drawSporeField(player,state.upgraded);
   if(state.upgraded&&sporeFieldHurts(this.age,player,jumping)&&this.invulnerable===0){this.invulnerable=1.3;hurt();}
   this.minorCombat.update(dt,player,this.minorState,jumping,hurt);
-  if(!inNoahSouth(player.x,player.y)||state.rootDefeated)return;
+  if(!inNoahSouth(player.x,player.y)||this.rootKilled)return;
   const {x,y}=southRoot,d=Math.hypot(player.x-x,player.y-y);this.timer-=dt;
   if(this.timer<=0){if(this.phase==='rest'&&d<220){this.phase='warn';this.timer=1;this.aim={x:(player.x-x)/(d||1),y:(player.y-y)/(d||1)};}else if(this.phase==='warn'){this.phase='strike';this.timer=ROOT_STRIKE_DURATION;this.struck.clear();}else{this.phase='rest';this.timer=1.65;}}
   g.fillStyle(0x172f24,.4).fillEllipse(x,y+12,130,42);
@@ -131,7 +122,8 @@ export class NoahSouthForest{
   g.fillStyle(0x26382a).fillRoundedRect(x-30,y-66,60,5,2);g.fillStyle(0xc6c18a).fillRoundedRect(x-30,y-66,60*Math.max(0,this.hp)/6,5,2);
   for(let i=0;i<9;i++){const a=this.age*.3+i*2.4;g.fillStyle(0xd1c8a0,.35).fillCircle(x+Math.sin(a)*78,y-40+Math.cos(a*1.4)*40,1);}
  }
- reset(){this.minorCombat.reset();this.minorState={...createForest(),stick:true};this.hp=6;this.phase='rest';this.timer=1.4;}
+ restoreRoot(cleared:boolean){this.rootKilled=cleared;if(cleared)this.hp=0;}
+ reset(){this.rootKilled=false;this.minorCombat.reset();this.minorState={...createForest(),stick:true};this.hp=6;this.phase='rest';this.timer=1.4;}
  private drawFloatingLog(){const g=this.logArt;g.clear();const pose=floatingLogPose(this.age,this.logLoad),local=(t:number,n:number)=>{const p=logPoint(t,n);return{x:p.x+pose.sway,y:p.y+pose.sink};};
   for(const [from,to]of [[.045,.96]]){
    const a=local(from,0),b=local(to,0);g.lineStyle(48,0x263b2c,.55).lineBetween(a.x+4,a.y+7,b.x+4,b.y+7);
