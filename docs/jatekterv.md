@@ -1037,3 +1037,11 @@ A felhasználó elfogadta a tesztelt fejezetet és minden kapcsolódó kiegész�
 A fejezet a fészekminta elküldésekor indul, Noah válasza három nap múlva érkezik. Régi mentésnél a valóban tárolt elküldési napot használjuk; hiányzó dátumnál a folytatás napjától számolunk, nem találunk ki múltbeli dátumot. A mentés a megvásárolt fejlesztést, gyűjtési várakozást és a kivonatkészítés közbeni állapotot is megőrzi; a formátumszám 18 marad. A fejlesztői helyzetek továbbra is csak memóriabeli másolatot módosítanak.
 
 Az Öregfák ligetébe és a Déli erdőbe visszatérve újra megjelennek a szörnyek; ez nem törli a történeti teljesítést vagy a megszerzett anyagokat. A korábbi történetvégi üzenet változatlan szöveggel az első kísérleti eredmény megfigyelése után jelenik meg. A következő levél és történeti folytatás nincs ebben a kiadásban.
+
+
+### Bejárható formanyelvi látványteszt — 2026. október 31.
+
+- Külön, memóriában futó mintafarm a Fejlesztői eszközök „Látványteszt · Lilás–türkizes erdőszél” gombjáról. A normál farm és a biztonsági másolata a `SaveStore.beginTest()` védelme alatt marad; kilépéskor újra az eredeti farm töltődik be. A látvány beállítása nem kerül a mentésbe.
+- Első mintaterület a ház–veranda–kert–tó környéke. Hűvös türkizes zöldek, kevés mályvás árnyék és lila virágzat; a ház meleg tónusai megmaradnak. Szilárd, lépcsőzetes pixelcsoportok, ritkás fűjelek, rétegzett bokrok és lombkoronák, páfrányok. Nincsenek földön elszórt virágszirmok vagy elmosódó fűfoltok.
+- A meglévő utak, ültetőágyások, veranda-tárgyak és tóhoz vezető út szabadon maradnak. Az új díszfák törzsei kikerülhetők. Sam egyelőre a meglévő megjelenésével szerepel: a korábbi hajtervek nem jelentik egyik változat elfogadását sem.
+- V-vel és az Eszközpanel gombjával ugyanazon a helyen váltható az eredeti és az új rajzolás. Nappali és esti fény választható; a teszt ideje nem halad magától. A normál játék és más tesztjelenetek eredeti látványa megmarad. A látványteszt első prototípus, nem a teljes világ végleges átrajzolása.

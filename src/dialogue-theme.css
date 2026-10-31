@@ -106,3 +106,7 @@
 #toolbar .stick-upgrade-badge.just-upgraded{animation:stick-upgrade-glint 1.1s ease-out 1}
 @keyframes stick-upgrade-glint{0%{transform:scale(.65);filter:brightness(1)}35%{transform:scale(1.4);filter:brightness(1.8) drop-shadow(0 0 5px #f0ffff)}100%{transform:scale(1);filter:brightness(1)}}
 @media(prefers-reduced-motion:reduce){#toolbar .stick-upgrade-badge.just-upgraded{animation:none}}
+
+@media(max-width:600px){body:has(#game[data-art-study="true"]) #test-mode-banner{top:auto;bottom:116px;left:auto;right:12px;transform:none;max-width:195px;width:max-content;box-sizing:border-box;font-size:12px;padding:7px 10px;}}
+
+.art-study-picker{display:flex;flex-wrap:wrap;gap:10px;padding-bottom:18px;margin-bottom:18px;border-bottom:1px solid #70836580}.art-study-picker>button{margin:0}.art-study-picker>button:first-child{flex-basis:100%}

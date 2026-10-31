@@ -2,6 +2,8 @@
 
 ## Változások a 0.2.0 óta — verzióemelés nélkül
 
+- Új, bejárható erdőszéli látványteszt külön memóriabeli farmon: lilás–türkizes növényzet, határozott pixelcsoportok, ritkás fűtextúra, dúsabb bokrok és páfrányok. V-vel eredeti/új látvány, külön nappali/esti fény. A normál játék látványa és mentése változatlan.
+
 - A térképen a még meg nem nyitott déli rész neve „Felfedezetlen terület”.
 - A kivonatkészítésnél a gyógynövények mellett látszik a Készletben lévő és a szükséges mennyiség. Hiányzó hozzávalónál a segítség a mennyiséget mutatja a végrehajthatatlan felvételi utasítás helyett.
 

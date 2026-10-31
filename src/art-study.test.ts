@@ -1,0 +1,11 @@
+import {it,expect} from 'vitest';
+import {IDBFactory} from 'fake-indexeddb';
+import {prepareArtStudy} from './art-study-setup';
+import {studyPlants,studyTrees,studyPlantClear} from './art-study-layout';
+import {SaveStore,snapshot,validSnapshot} from './storage';
+import {createGarden} from './gardening';
+import {createClock} from './clock';
+import {weatherOnDay} from './weather';
+it('builds an independent, quiet, valid walkable art study without altering the farm',()=>{const source=snapshot({x:250,y:194},createClock(28),createGarden());source.economy.gold=873;const before=structuredClone(source),study=prepareArtStudy(source);expect(validSnapshot(study)).toBe(true);expect(source).toEqual(before);expect(study.travel.noah).toBeUndefined();expect(study.story.morningSeen).toBe(true);expect(weatherOnDay(study.travel.weatherSeed!,study.clock.day)).toBe('cloudy');});
+it('keeps dense border planting away from paths, beds, veranda objects and pond access',()=>{expect(studyPlants.length).toBeGreaterThan(25);for(const p of studyPlants)expect(studyPlantClear(p.x,p.y,p.size)).toBe(true);for(const tree of studyTrees)expect(studyPlantClear(tree.x,tree.y,12)).toBe(true);expect(studyPlantClear(250,270,12)).toBe(false);expect(studyPlantClear(272,186,12)).toBe(false);expect(studyPlantClear(469,395,12)).toBe(false);});
+it('never writes art-study movement or gardening into the selected farm or its backup',async()=>{const factory=new IDBFactory(),store=new SaveStore(factory);await store.load();const source=snapshot({x:250,y:194},createClock(9),createGarden());source.farmName='Megőrzött farm';await store.createFarm(source);await store.save(source);await store.beginTest();const study=prepareArtStudy(source);await store.save(study);study.player={x:300,y:300};await store.save(study);store.close();const reader=new SaveStore(factory);expect((await reader.load()).data).toEqual(source);const disk=JSON.parse(await reader.exportOriginal());expect(disk.active).toEqual(source);expect(disk.backup).toEqual(source);expect(disk.selectedRecord.active).toEqual(source);expect(disk.selectedRecord.backup).toEqual(source);reader.close();});

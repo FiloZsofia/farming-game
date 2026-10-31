@@ -1,3 +1,4 @@
+import {studyColor} from './art-study-art';
 import Phaser from 'phaser';
 import {farmLayout} from './layout';
 
@@ -9,14 +10,14 @@ export class WorkshopExterior {
  private scene:Phaser.Scene;
  private open:boolean|null=null;
 
- constructor(scene:Phaser.Scene){
+ constructor(scene:Phaser.Scene,study=false){
   const x=601+farmLayout.shedOffset.x,y=133+farmLayout.shedOffset.y;
   this.scene=scene;this.art=scene.add.graphics().setDepth(-.9);this.window=scene.add.graphics().setDepth(-.8);this.light=document.createElement('div');this.light.className='workshop-lamp-light';this.light.setAttribute('aria-hidden','true');for(const name of ['halo','pool','core']){const part=document.createElement('i');part.className=name;this.light.append(part);}document.querySelector('#game')!.append(this.light);
   const scale=farmLayout.shedScale;for(const art of [this.art,this.window])art.setScale(scale).setPosition(632*(1-scale),181*(1-scale));
   const g=this.art;
-  const rect=(a:number,b:number,w:number,h:number,c:number)=>{g.fillStyle(c).fillRect(x+a,y+b,w,h);};
-  const line=(a:number,b:number,c:number,d:number,color:number,width=1)=>{g.lineStyle(width,color).lineBetween(x+a,y+b,x+c,y+d);};
-  const poly=(p:number[],c:number,alpha=1)=>{g.fillStyle(c,alpha).fillPoints(p.reduce<Phaser.Types.Math.Vector2Like[]>((v,_,i)=>{if(i%2===0)v.push({x:x+p[i],y:y+p[i+1]});return v;},[]),true);};
+  const rect=(a:number,b:number,w:number,h:number,c:number)=>{g.fillStyle(study?studyColor(c):c).fillRect(x+a,y+b,w,h);};
+  const line=(a:number,b:number,c:number,d:number,color:number,width=1)=>{g.lineStyle(width,study?studyColor(color):color).lineBetween(x+a,y+b,x+c,y+d);};
+  const poly=(p:number[],c:number,alpha=1)=>{g.fillStyle(study?studyColor(c):c,alpha).fillPoints(p.reduce<Phaser.Types.Math.Vector2Like[]>((v,_,i)=>{if(i%2===0)v.push({x:x+p[i],y:y+p[i+1]});return v;},[]),true);};
   g.fillStyle(0x294231,.25).fillEllipse(x+65,y+73,155,24);
   poly([118,0,130,-8,130,62,118,68],0x665b45);rect(0,0,118,68,0xa4916c);
   for(let i=0;i<118;i+=9){rect(i,2,1,55,0x625640);line(i+3,5,i+3,51,0xc0a77b);line(i+6,24+i%17,i+6,39+i%13,0x8b795b);}

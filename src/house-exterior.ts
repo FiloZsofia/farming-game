@@ -1,15 +1,16 @@
+import {studyColor} from './art-study-art';
 import Phaser from 'phaser';
 import {farmLayout} from './layout';
 export class HouseExterior {
  private art:Phaser.GameObjects.Graphics;
  private lights:HTMLDivElement[]=[];
- constructor(private scene:Phaser.Scene){
+ constructor(private scene:Phaser.Scene,study=false){
  const g=this.art=scene.add.graphics().setDepth(-.9).setScale(1.35,1.25).setPosition(239*(1-1.35),223*(1-1.25)+farmLayout.houseOffset.y);
  let seed=37;const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
- const rect=(x:number,y:number,w:number,h:number,c:number,a=1)=>{g.fillStyle(c,a).fillRect(x,y,w,h);};
- const oval=(x:number,y:number,w:number,h:number,c:number,a=1)=>{g.fillStyle(c,a).fillEllipse(x,y,w,h);};
- const poly=(p:number[],c:number,a=1)=>{g.fillStyle(c,a).fillPoints(p.reduce<Phaser.Types.Math.Vector2Like[]>((v,_,i)=>{if(i%2===0)v.push({x:p[i],y:p[i+1]});return v;},[]),true);};
- const line=(x:number,y:number,xx:number,yy:number,c:number,w=1,a=1)=>{g.lineStyle(w,c,a).lineBetween(x,y,xx,yy);};
+ const rect=(x:number,y:number,w:number,h:number,c:number,a=1)=>{g.fillStyle(study?studyColor(c):c,a).fillRect(x,y,w,h);};
+ const oval=(x:number,y:number,w:number,h:number,c:number,a=1)=>{g.fillStyle(study?studyColor(c):c,a).fillEllipse(x,y,w,h);};
+ const poly=(p:number[],c:number,a=1)=>{g.fillStyle(study?studyColor(c):c,a).fillPoints(p.reduce<Phaser.Types.Math.Vector2Like[]>((v,_,i)=>{if(i%2===0)v.push({x:p[i],y:p[i+1]});return v;},[]),true);};
+ const line=(x:number,y:number,xx:number,yy:number,c:number,w=1,a=1)=>{g.lineStyle(w,study?studyColor(c):c,a).lineBetween(x,y,xx,yy);};
  // Cottage: plaster, stone foundation, tiled roof, mullioned windows and porch.
  poly([132,204,347,204,375,243,159,248],0x284936,.28);oval(246,231,234,36,0x2e4333,.24);rect(132,128,215,95,0xe1d6ba);rect(132,138,215,8,0xb6a88a);rect(132,211,215,12,0x817b68);
  for(let x=134;x<345;x+=17){rect(x,213,15,7,x%2?0xaaa18a:0x99947e);line(x+1,220,x+14,220,0x656d5c);}
@@ -35,6 +36,7 @@ export class HouseExterior {
  g.fillStyle(0xd67b36).fillRoundedRect(218,235,36,14,2);g.lineStyle(1,0x9d482a).strokeRoundedRect(220,237,32,10,1);line(223,242,249,242,0xf2c78b,1.5);
  for(let y=237;y<249;y+=2){line(215,y,218,y,0xf4d6a0);line(254,y,257,y,0xf4d6a0);}
  for(const x of [206,213]){g.fillStyle(0x4e5a40).fillRoundedRect(x,220,5,9,1).fillRoundedRect(x-2,226,7,4,2);line(x+1,221,x+3,221,0xa09168);oval(x,229,3,1,0x8b704d);}
+ if(study){for(const x of [136,338])for(let i=0;i<7;i++){const yy=210-i*4;rect(x,yy,2,5,0x315b59);rect(x+(i%2?-4:2),yy,4,2,i%3?0x497c6c:0x789888);}}
  // Two wall-mounted lamps sit outside the veranda roof and window boxes.
  for(const x of [134,344]){line(x-3,185,x+2,185,0x3d493c,2);rect(x-3,188,8,12,0x46503f);rect(x-1,190,4,8,0xc3b17b);poly([x-5,188,x+1,183,x+7,188],0x4e5845);rect(x-4,200,10,2,0x3d493c);
  const light=document.createElement('div');light.className='workshop-lamp-light';light.setAttribute('aria-hidden','true');for(const name of ['halo','pool','core']){const el=document.createElement('i');el.className=name;light.append(el);}document.querySelector('#game')!.append(light);this.lights.push(light);}
