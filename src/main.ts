@@ -399,6 +399,10 @@ class Farm extends Phaser.Scene {
  private journalHelpRequested=false;
  private journalCalm=matchMedia('(prefers-reduced-motion: reduce)').matches;
  private acknowledgeJournalHelp(){if(this.story.journalHelpConfirmed)return;this.story={...this.story,journalHelpSeen:true,journalHelpConfirmed:true};void this.persist();}
+ private showPlantingHelp(){
+  if(dialogue.open){dialogue.addEventListener('close',()=>this.showPlantingHelp(),{once:true});return;}
+  showDialogue('Ültetés','A Készletben válassz magot, majd kattints a felkapált földre.','');
+ }
  private openJournalHelp(){
   if(!this.ready||!journalHelpPending(this.story,this.clock.day))return;
   if(dialogue.open||this.transitioning){this.journalHelpRequested=true;return;}
@@ -1381,15 +1385,16 @@ class Farm extends Phaser.Scene {
   const result=work(nextGarden,usedTool,target,this.actor);
   if(!result.ok){this.notice(result.message);return;}
   if(this.currentWeather()==='rain')waterFromRain(nextGarden);
+  const plantingHelp=usedTool==='hoe'&&!before&&!this.story.plantingHelpSeen,nextStory=plantingHelp?{...this.story,plantingHelpSeen:true}:this.story;
   const tileKey=`${target.x},${target.y}`;
   const credit=gardeningCredit(usedTool,tileKey,this.clock.day,before);
   const nextSkill=credit?gainGardening(this.skill,credit)??this.skill:this.skill;
   this.giveLevelSeeds(nextGarden,nextSkill);
   this.transitioning=true;this.saveRevision++;
   try{
-   await this.saveChecked(snapshot(this.actor,this.clock,nextGarden,this.economy,this.orders,this.farmName,this.clearing,this.story,nextSkill,this.farmerName,this.travel));
-   const previous=this.skill.xp;this.garden=nextGarden;this.skill=nextSkill;document.querySelector('#save-state')!.textContent='Mentve ebben a böngészőben';
-   this.animateWork(target.x+TILE/2,target.y+TILE/2,usedTool,usedTool==='water'?'water':usedTool==='harvest'?'harvest':'soil',()=>{this.drawGarden();if(usedTool==='harvest'&&before?.crop)this.harvestPop(before.crop,target.x+TILE/2,target.y+TILE/2,1);if(usedTool==='hoe')this.redrawScenery();this.notice(result.message+(usedTool==='harvest'?' Készlet: Tab.':''));if(credit)this.showGardening(previous);});
+   await this.saveChecked(snapshot(this.actor,this.clock,nextGarden,this.economy,this.orders,this.farmName,this.clearing,nextStory,nextSkill,this.farmerName,this.travel));
+   const previous=this.skill.xp;this.garden=nextGarden;this.skill=nextSkill;this.story=nextStory;document.querySelector('#save-state')!.textContent='Mentve ebben a böngészőben';
+   this.animateWork(target.x+TILE/2,target.y+TILE/2,usedTool,usedTool==='water'?'water':usedTool==='harvest'?'harvest':'soil',()=>{this.drawGarden();if(usedTool==='harvest'&&before?.crop)this.harvestPop(before.crop,target.x+TILE/2,target.y+TILE/2,1);if(usedTool==='hoe')this.redrawScenery();this.notice(result.message+(usedTool==='harvest'?' Készlet: Tab.':''));if(credit)this.showGardening(previous);if(plantingHelp)this.showPlantingHelp();});
   }catch{this.notice('Nem sikerült menteni. A kert és a jártasság változatlan; próbáld újra.');}
   finally{this.transitioning=false;this.lastTick=performance.now();}
 

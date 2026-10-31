@@ -89,3 +89,4 @@ A következő kiadások változásai legfelül kapnak új bejegyzést.
 - Mentéskompatibilitási javítás: a korábban verandára kapált föld többé nem akadályozza a farm betöltését. A meglévő adatok megmaradnak, új verandás kapálás továbbra sem engedett.
 - Betöltéskor eltűnnek a régi verandás földkockák, az odaültetett növény ültetőanyagként megmarad. Mentési hiba esetén ESC-pel is elérhető a Főmenü helyreállítási nézete.
 - A Készlet bezárógombja „Vissza”; az Irányítás Bontóvas-leírásában „nyersanyaggyűjtés” szerepel.
+- Az első sikeres kapálás után egyszeri ültetési segítség jelenik meg a mag Készletből történő kiválasztásáról.
