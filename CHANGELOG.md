@@ -105,3 +105,4 @@ A következő kiadások változásai legfelül kapnak új bejegyzést.
 - A spórapamacsokhoz sima túrabottal három, megerősített túrabottal két találat szükséges mindkét erdőben; az életerőcsík is ehhez igazodik.
 - Ártalmatlan világító díszgombák kerültek az Öregfák ligetébe és az erdei ösvény mellé, a déli erdő gombáival közös éjszakai derengéssel. Az utakat és az interakciós helyeket szabadon hagyják.
 - A hídhoz vezető átjáróból a pad fölé került a jobb oldali díszgomba. A kijelölt erdei útszél és a falu patakparti füves része is kapott egy-egy gombát, az utóbbi nagyobb méretű; a fák megmaradtak.
+- Javítva a gombafény elcsúszása séta és futás közben: a külön fényréteg a kirajzolt kameraképpel egyszerre frissül mindkét erdőben.
