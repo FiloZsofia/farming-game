@@ -78,7 +78,17 @@ export function decodeSnapshot(value:unknown):Snapshot|null{
   }
  }
 
- if(validSnapshot(value)){const result=structuredClone(value);result.skill=migrateGardenSkill(result.skill);if(result.travel.forest)result.travel.forest=migrateForest(result.travel.forest);if(result.travel.research.supplied===undefined&&(result.travel.research.materials.glass>0||result.travel.research.materials.linen>0))result.travel.research.supplied=[...(result.travel.research.materials.glass>0?['annie' as const]:[]),...(result.travel.research.materials.linen>0?['leo' as const]:[])];return result;}
+ if(validSnapshot(value)){const result=structuredClone(value);
+  // Remove historical veranda soil only after validating the original record.
+  // Return planted crops/flowers as planting material, never silently discard them.
+  const removed=new Set<string>();
+  result.plots=result.plots.filter(([key,plot])=>{const [x,y]=key.split(',').map(Number);if(cultivable({x,y}))return true;
+   if(plot.crop){if(result.seeds[plot.crop]>=999999)return true;result.seeds[plot.crop]++;}
+   const flower=result.travel.research.flowers.some(f=>tileKey(f)===key);if(flower&&result.travel.research.seeds>=999999)return true;
+   if(flower)result.travel.research.seeds++;removed.add(key);return false;
+  });
+  result.travel.research.flowers=result.travel.research.flowers.filter(f=>!removed.has(tileKey(f)));
+  result.skill=migrateGardenSkill(result.skill);if(result.travel.forest)result.travel.forest=migrateForest(result.travel.forest);if(result.travel.research.supplied===undefined&&(result.travel.research.materials.glass>0||result.travel.research.materials.linen>0))result.travel.research.supplied=[...(result.travel.research.materials.glass>0?['annie' as const]:[]),...(result.travel.research.materials.linen>0?['leo' as const]:[])];return result;}
  // Layout changes can cover saved debris and a placed birdhouse as well as the player.
  // Move only objects in the newly occupied strips; never reset the farm or its resources.
  if(value&&typeof value==='object'&&'version' in value&&(value.version===17||value.version===18)){

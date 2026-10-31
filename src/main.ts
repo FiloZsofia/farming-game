@@ -292,9 +292,17 @@ class Farm extends Phaser.Scene {
   document.querySelector<HTMLButtonElement>('#resume-game')!.focus();
  }
  private openSettings(origin:'start'|'pause'){
-  if(!this.ready||this.transitioning)return;this.settingsOrigin=origin;showDialogue('Beállítások','','');dialogue.dataset.menuOrigin=origin;document.querySelector<HTMLElement>('#settings-panel')!.hidden=false;document.querySelector<HTMLButtonElement>('#dialogue-close')!.hidden=true;document.querySelector<HTMLButtonElement>('#music-toggle')!.focus();
+  if((!this.ready&&!this.loadFailed)||this.transitioning)return;this.settingsOrigin=origin;showDialogue('Beállítások','','');dialogue.dataset.menuOrigin=origin;document.querySelector<HTMLElement>('#settings-panel')!.hidden=false;document.querySelector<HTMLButtonElement>('#dialogue-close')!.hidden=true;document.querySelector<HTMLButtonElement>('#music-toggle')!.focus();
  }
- private closeSettings(){if(this.transitioning)return;if(this.settingsOrigin==='start')void this.openStartMenu(false);else this.openPauseMenu();}
+ private closeSettings(){if(this.transitioning)return;if(this.loadFailed){this.openRecoveryMenu();return;}if(this.settingsOrigin==='start')void this.openStartMenu(false);else this.openPauseMenu();}
+ private openRecoveryMenu(){
+  this.choosingFarm=true;showDialogue('Főmenü','','');menuPresentation.home();
+  document.querySelector<HTMLElement>('#start-panel')!.hidden=false;
+  document.querySelector('#farm-list')!.replaceChildren();document.querySelector('#farm-list-error')!.textContent='A mentés nem tölthető be. Az eredeti mentést letöltheted a javításhoz.';
+  for(const id of ['continue-farm','new-farm','retry-farms'])document.querySelector<HTMLButtonElement>('#'+id)!.hidden=true;
+  const button=document.querySelector<HTMLButtonElement>('#export-save')!;button.hidden=false;button.textContent='Eredeti mentés letöltése';
+  document.querySelector<HTMLButtonElement>('#dialogue-close')!.hidden=true;
+ }
  private async openStartMenu(saveCurrent=true){
   if(this.store.testMode){this.openMicroscopeTest();return;}
   if(!this.ready||this.transitioning)return;
@@ -1499,6 +1507,7 @@ class Farm extends Phaser.Scene {
    if(document.querySelector<HTMLDialogElement>('#delete-farm-dialog')!.open){if(event.code==='Escape'&&this.transitioning)event.preventDefault();return;}
    if(event.code==='Escape'){
     event.preventDefault();if(event.repeat)return;
+    if(this.loadFailed){this.openRecoveryMenu();return;}
     if(dialogue.open){
      if(dialogue.dataset.presentation==='development-end'){void this.acknowledgeStoryEnd();return;}if(!document.querySelector<HTMLElement>('#settings-panel')!.hidden){this.closeSettings();return;}if(this.naming)return;
      if(this.choosingFarm){if(this.hasFarm){if(this.transitioning)this.closeStartMenuRequested=true;else{const resume=document.querySelector<HTMLButtonElement>('#continue-farm')!;if(!resume.hidden&&!resume.disabled)this.resumeCurrentFarm();}}return;}

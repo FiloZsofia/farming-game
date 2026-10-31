@@ -16,11 +16,11 @@ async function put(factory:IDBFactory,key:string,value:unknown){
 }
 describe('persistent farm state',()=>{
  it('loads and preserves historical veranda plots without permitting new tilling',async()=>{
-  const data=fresh();data.plots=[['264,192',{crop:null,watered:false,growth:0,regrowing:false}],['288,192',{crop:'radish',watered:true,growth:1,regrowing:false}]];
+  const data=fresh();data.plots=[['264,192',{crop:null,watered:true,growth:0,regrowing:false}],['288,192',{crop:'radish',watered:true,growth:1,regrowing:false}]];
   expect(validSnapshot(data)).toBe(true);expect(cultivable({x:264,y:192})).toBe(false);
   const factory=new IDBFactory(),setup=new SaveStore(factory);await setup.load();setup.close();await put(factory,'active',data);await put(factory,'backup',data);
-  const store=new SaveStore(factory);expect((await store.load()).data).toEqual(data);await store.save(data);store.close();
-  const reader=new SaveStore(factory);expect((await reader.load()).data).toEqual(data);reader.close();
+  const store=new SaveStore(factory);const cleaned=(await store.load()).data!;expect(cleaned.plots).toEqual([]);expect(cleaned.seeds.radish).toBe(data.seeds.radish+1);expect(data.plots).toHaveLength(2);await store.save(cleaned);store.close();
+  const reader=new SaveStore(factory);expect((await reader.load()).data).toEqual(cleaned);reader.close();
  });
  it('restores player, exact time and exhaustion target, seeds and watered plants',async()=>{
   const factory=new IDBFactory();const store=new SaveStore(factory);await store.load();

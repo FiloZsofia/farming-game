@@ -87,3 +87,4 @@ A következő kiadások változásai legfelül kapnak új bejegyzést.
 
 - Pontosított naplósegítség és Leo-féle ültetési útmutató; pulzáló jelzés a Készlet vadvirágmagjain. A verandán és lépcsőjén nem lehet kapálni.
 - Mentéskompatibilitási javítás: a korábban verandára kapált föld többé nem akadályozza a farm betöltését. A meglévő adatok megmaradnak, új verandás kapálás továbbra sem engedett.
+- Betöltéskor eltűnnek a régi verandás földkockák, az odaültetett növény ültetőanyagként megmarad. Mentési hiba esetén ESC-pel is elérhető a Főmenü helyreállítási nézete.
