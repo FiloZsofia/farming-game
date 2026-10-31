@@ -229,3 +229,7 @@ it('offers the journal help again for a day-one save marked seen by the old clic
 it('preserves the one-time planting help flag and accepts old saves without it',async()=>{
  const factory=new IDBFactory(),store=new SaveStore(factory);await store.load();const data=fresh();expect(validSnapshot(data)).toBe(true);data.story.plantingHelpSeen=true;data.story.flowerHoeDone=true;data.story.flowerWaterDone=true;await store.save(data);store.close();const reader=new SaveStore(factory);const restored=(await reader.load()).data!;expect(restored.story.plantingHelpSeen).toBe(true);expect(restored.story.flowerHoeDone).toBe(true);expect(restored.story.flowerWaterDone).toBe(true);reader.close();expect(validSnapshot({...data,story:{...data.story,plantingHelpSeen:'yes'}})).toBe(false);
 });
+
+it('keeps completed six-place guidance across reload and accepts older stories',async()=>{
+ const factory=new IDBFactory(),store=new SaveStore(factory);await store.load();const data=fresh();data.story.guideHoed=['341,272','365,272','389,272','341,296','365,296','389,296'];data.story.guideWatered=[...data.story.guideHoed];await store.save(data);store.close();const reader=new SaveStore(factory);expect((await reader.load()).data?.story).toEqual(data.story);reader.close();expect(validSnapshot({...data,story:{...data.story,guideWatered:['bad']}})).toBe(false);
+});

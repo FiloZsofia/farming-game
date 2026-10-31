@@ -1,4 +1,4 @@
-import {plantingGuideTools} from './planting-guide';
+import {plantingGuideTools,rememberPlantingGuide} from './planting-guide';
 import {JOURNAL_HELP_TITLE,JOURNAL_HELP_LINES,JOURNAL_HELP_TEXT} from './journal-help';
 import {createTestMap} from './test-map';
 import {archiveEntries,recordStoryProgress,recordStoryEvent,SAM_LETTER,NEST_FINDING,MACHINE_REVEAL} from './story-archive';
@@ -464,8 +464,9 @@ class Farm extends Phaser.Scene {
    nextTravel.sale=morningSale(nextEconomy.lastSale!,carriedEconomy.gold);
    const nextOrders=deliverOrders(this.orders);
    const nextClearing=regrowDebris(robbery?.clearing??this.clearing,nextClock.day,nextGarden,this.story.birdhouse,Math.random,[...this.skill.chests?.placed??[],...nextTravel.crafting?.machines??[],...junkSites.map(s=>junkPoint(this.clearing,s.id)),...nextTravel.estate.trees,...nextTravel.estate.pond,...salvageSites.filter(s=>!nextTravel.research.picked.includes(s.id))]);
-   await this.saveChecked(snapshot(START,nextClock,nextGarden,nextEconomy,nextOrders,this.farmName,nextClearing,this.story,this.skill,this.farmerName,nextTravel));
-   this.adoptTravel(nextTravel);if(this.forestCombat)this.forestCombat.health=5;this.thoughtRemaining=0;this.thought?.setVisible(false);this.thoughtBack?.clear();this.clearing=nextClearing;this.clock=nextClock;this.garden=nextGarden;this.redrawScenery();this.economy=nextEconomy;this.orders=nextOrders;this.actor.setPosition(START.x,START.y);this.actor.setAngle(0);this.body.setY(0);this.jumpRemaining=0;this.jumpCooldown=0;this.collapseRemaining=0;this.bubble.setVisible(false);this.nearby='';document.querySelector('#status')!.textContent='';this.shadow.setScale(1);this.drawGarden();this.aimAhead();
+   const nextStory=rememberPlantingGuide(rememberPlantingGuide(this.story,this.travel.research,this.garden),nextTravel.research,nextGarden);
+   await this.saveChecked(snapshot(START,nextClock,nextGarden,nextEconomy,nextOrders,this.farmName,nextClearing,nextStory,this.skill,this.farmerName,nextTravel));
+   this.story=nextStory;this.adoptTravel(nextTravel);if(this.forestCombat)this.forestCombat.health=5;this.thoughtRemaining=0;this.thought?.setVisible(false);this.thoughtBack?.clear();this.clearing=nextClearing;this.clock=nextClock;this.garden=nextGarden;this.redrawScenery();this.economy=nextEconomy;this.orders=nextOrders;this.actor.setPosition(START.x,START.y);this.actor.setAngle(0);this.body.setY(0);this.jumpRemaining=0;this.jumpCooldown=0;this.collapseRemaining=0;this.bubble.setVisible(false);this.nearby='';document.querySelector('#status')!.textContent='';this.shadow.setScale(1);this.drawGarden();this.aimAhead();
    this.warningAnimation?.cancel();this.warningAnimation=null;document.querySelector<HTMLElement>('#night-warning')!.hidden=true;
    document.querySelector<HTMLElement>('#sleep-shade')!.style.opacity='0';
    document.querySelector('#save-state')!.textContent='Mentve ebben a böngészőben';
@@ -1401,13 +1402,14 @@ class Farm extends Phaser.Scene {
   if(!result.ok){this.notice(result.message);return;}
   if(this.currentWeather()==='rain')waterFromRain(nextGarden);
   const tileKey=`${target.x},${target.y}`;
+  const nextStory=rememberPlantingGuide(this.story,this.travel.research,nextGarden);
   const credit=gardeningCredit(usedTool,tileKey,this.clock.day,before);
   const nextSkill=credit?gainGardening(this.skill,credit)??this.skill:this.skill;
   this.giveLevelSeeds(nextGarden,nextSkill);
   this.transitioning=true;this.saveRevision++;
   try{
-   await this.saveChecked(snapshot(this.actor,this.clock,nextGarden,this.economy,this.orders,this.farmName,this.clearing,this.story,nextSkill,this.farmerName,this.travel));
-   const previous=this.skill.xp;this.garden=nextGarden;this.skill=nextSkill;document.querySelector('#save-state')!.textContent='Mentve ebben a böngészőben';
+   await this.saveChecked(snapshot(this.actor,this.clock,nextGarden,this.economy,this.orders,this.farmName,this.clearing,nextStory,nextSkill,this.farmerName,this.travel));
+   const previous=this.skill.xp;this.garden=nextGarden;this.skill=nextSkill;this.story=nextStory;document.querySelector('#save-state')!.textContent='Mentve ebben a böngészőben';
    this.animateWork(target.x+TILE/2,target.y+TILE/2,usedTool,usedTool==='water'?'water':usedTool==='harvest'?'harvest':'soil',()=>{this.drawGarden();if(usedTool==='harvest'&&before?.crop)this.harvestPop(before.crop,target.x+TILE/2,target.y+TILE/2,1);if(usedTool==='hoe')this.redrawScenery();this.notice(result.message+(usedTool==='harvest'?' Készlet: Tab.':''));if(credit)this.showGardening(previous);});
   }catch{this.notice('Nem sikerült menteni. A kert és a jártasság változatlan; próbáld újra.');}
   finally{this.transitioning=false;this.lastTick=performance.now();}
@@ -1606,7 +1608,7 @@ class Farm extends Phaser.Scene {
   if(this.hasFarm&&this.canInteract()&&!this.travel.pollinationObservation&&nearEmptyBlossoms(this.garden,this.travel.estate,this.actor))void this.observeEmptyBlossoms();
   if(this.ready&&!this.choosingFarm&&!dialogue.open&&!this.transitioning&&(this.noahTest?this.noahTest.state.complete&&!this.noahTest.state.endSeen:storyEndPending(this.travel)))this.showPreviewEnd();
   this.drawJournalHint(now);
-  const guides=this.hasFarm&&!this.choosingFarm?plantingGuideTools(this.travel.research,this.garden):[];
+  const guides=this.hasFarm&&!this.choosingFarm?plantingGuideTools(this.story,this.travel.research,this.garden):[];
   for(const tool of ['hoe','water'])document.querySelector(`#toolbar [data-tool="${tool}"]`)?.classList.toggle('tool-attention',guides.includes(tool as 'hoe'|'water'));
   this.machineActivity??=this.add.graphics().setDepth(104);drawMachineActivity(this.machineActivity,this.travel.crafting,now);
   if(!this.ready||dialogue.open||this.transitioning||document.hidden||!document.hasFocus()){this.input.keyboard?.resetKeys();this.selection.setVisible(false);return;}
