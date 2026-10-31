@@ -1,3 +1,5 @@
+import {larchCones,larchConesReady} from './larch-cones';
+import {larchGroundDrop} from './larch-glade';
 import {forestMusicZone} from './forest-music';
 import {plantingGuideTools,rememberPlantingGuide} from './planting-guide';
 import {JOURNAL_HELP_TITLE,JOURNAL_HELP_LINES,JOURNAL_HELP_TEXT} from './journal-help';
@@ -566,6 +568,7 @@ class Farm extends Phaser.Scene {
   const f=this.travel.forest??createForest(),near=(p:{x:number;y:number},r=46)=>Math.hypot(this.actor.x-p.x,this.actor.y-p.y)<r;
   if(microscopeReady(this.travel.research)&&inWorkshop(this.actor.y)&&near(microscope,64))return 'microscope';
   if(f.examined&&!f.sent&&near({x:farmLayout.mailbox.x+12,y:farmLayout.mailbox.y+8},55))return 'send-sample';
+  if(this.noahTest&&near(larchCones,42)&&larchConesReady(this.noahTest.state.conePickedDay,this.clock.day))return 'larch-cones';
   if(!inForest(this.actor.x,this.actor.y))return '';
   if(!this.noahTest?.state.upgraded&&near({x:-444,y:1295},65))return 'south-gate';
   if(!f.stick&&near(walkingStick))return 'forest-stick';
@@ -1221,7 +1224,7 @@ class Farm extends Phaser.Scene {
   const salvage=salvageSites.find(s=>s.kind==='copper'&&!r.picked.includes(s.id)&&near(s.x,s.y,50));if(salvage)return `salvage:${salvage.id}`;
   return '';
  }
- private researchHint(){const n=this.nearby;if(n==='forest-bench')return 'Régi pihenőpad · E';if(n==='forest-stick')return 'Erős, lehullott ág · E';if(n==='forest-nest')return 'Elhagyott fészekjáratok · E';if(n==='microscope')return 'Sam mikroszkópja · E';if(n==='send-sample')return 'Postaláda · E';if(n.startsWith('herb:'))return `${herbNames[forestPlants.find(p=>p.id===n.slice(5))!.kind]} · E / F`;if(n==='storage-chest')return 'Tárolóláda · E';if(n.startsWith('cobweb:'))return 'Pókháló · Kézzel leszedhető · E / F';if(n==='leo-visit')return 'Leo · Beszélgetés · E / F';if(n==='observe-bee')return 'Szarvas faliméh · Megfigyelés · E / F';if(n==='workshop-exit')return 'Vissza a kertbe · E / F';if(n.startsWith('examine:'))return `${workshopObjects.find(o=>o.id===n.slice(8))?.name} · Megvizsgálom · E / F`;if(n.startsWith('salvage:'))return 'Régi alkatrészek · Begyűjtés · E / F';if(n==='shed'&&this.travel.research.key)return workshopText('Melléképület · Belépés · E',workshopEntered(this.travel.research));return '';}
+ private researchHint(){const n=this.nearby;if(n==='larch-cones')return 'Vörösfenyőtoboz · Gyűjtés · E / kattintás';if(n==='forest-bench')return 'Régi pihenőpad · E';if(n==='forest-stick')return 'Erős, lehullott ág · E';if(n==='forest-nest')return 'Elhagyott fészekjáratok · E';if(n==='microscope')return 'Sam mikroszkópja · E';if(n==='send-sample')return 'Postaláda · E';if(n.startsWith('herb:'))return `${herbNames[forestPlants.find(p=>p.id===n.slice(5))!.kind]} · E / F`;if(n==='storage-chest')return 'Tárolóláda · E';if(n.startsWith('cobweb:'))return 'Pókháló · Kézzel leszedhető · E / F';if(n==='leo-visit')return 'Leo · Beszélgetés · E / F';if(n==='observe-bee')return 'Szarvas faliméh · Megfigyelés · E / F';if(n==='workshop-exit')return 'Vissza a kertbe · E / F';if(n.startsWith('examine:'))return `${workshopObjects.find(o=>o.id===n.slice(8))?.name} · Megvizsgálom · E / F`;if(n.startsWith('salvage:'))return 'Régi alkatrészek · Begyűjtés · E / F';if(n==='shed'&&this.travel.research.key)return workshopText('Melléképület · Belépés · E',workshopEntered(this.travel.research));return '';}
  private researchInteraction(){
   if(!this.canInteract())return false;
   if(this.nearChest()>=0){this.openChest(this.nearChest());return true;}const n=this.researchNearby();
@@ -1679,7 +1682,7 @@ class Farm extends Phaser.Scene {
   if(this.sprayPending&&!dialogue.open){this.sprayPending=false;this.sprayUntil=now+6500;}
   this.sprayArt??=this.add.graphics().setDepth(105);drawIrrigationArcs(this.sprayArt,this.garden,this.travel.crafting,now,this.sprayUntil);
   if(this.junkArt)updateJunkIndicators(this.junkArt,this.actor);
-  this.avatar.update(walking,movementInput.running,this.direction,Math.min(seconds,.05),this.jumpRemaining>0);this.workEffects?.update(Math.min(seconds,.05),this.avatar.workFrame());const workFrame=this.avatar.workFrame();surface.dataset.working=String(this.avatar.isWorking());surface.dataset.workPhase=workFrame?.phase??'idle';surface.dataset.workProgress=String(workFrame?.progress??0);
+  this.avatar.update(walking,movementInput.running,this.direction,Math.min(seconds,.05),this.jumpRemaining>0);const gladeDrop=this.noahTest?larchGroundDrop(next.x,next.y):0;this.body.y+=gladeDrop;this.shadow.setY(gladeDrop);surface.dataset.gladeDrop=String(gladeDrop);this.workEffects?.update(Math.min(seconds,.05),this.avatar.workFrame());const workFrame=this.avatar.workFrame();surface.dataset.working=String(this.avatar.isWorking());surface.dataset.workPhase=workFrame?.phase??'idle';surface.dataset.workProgress=String(workFrame?.progress??0);
   this.wildlife.update(Math.min(seconds,.05),this.clock.day>=2&&this.story.giftReceived,this.clock.elapsed<360,this.actor.y<600?this.story.birdhouse:null,!insideShop&&!inWorkshop(next.y)&&!inHome(next.y)&&weather!=='rain',weather==='sunny'?1.5:.5);
   this.pondLife.update(Math.min(seconds,.05),this.travel.estate,this.clock.elapsed<360,!insideShop&&!inWorkshop(next.y)&&!inHome(next.y));
   this.updateVisit(Math.min(seconds,.05));this.updateResearchLife(Math.min(seconds,.05));

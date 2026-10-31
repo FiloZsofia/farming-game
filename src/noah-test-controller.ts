@@ -1,3 +1,4 @@
+import {larchCones,larchConesReady,gatherLarchCones} from './larch-cones';
 import {createExtraction,canLoadExtraction} from './extraction';
 import {EXPERIMENT_FINDING} from './story-archive';
 import Phaser from 'phaser';
@@ -63,7 +64,11 @@ export class NoahTestController{
  }
  interactSouth(player:{x:number;y:number},target?:{x:number;y:number}|null){
   if(!inNoahSouth(player.x,player.y))return false;
-  const day=this.host.day(),herb=southHerbs.find(p=>Math.hypot(p.x-player.x,p.y-player.y)<42&&(!target||Math.hypot(p.x-target.x,p.y-target.y)<24)&&(this.state.herbsPicked[p.id]===undefined||day-this.state.herbsPicked[p.id]>=3));
+  const day=this.host.day();
+  if(Math.hypot(player.x-larchCones.x,player.y-larchCones.y)<42&&(!target||Math.hypot(target.x-larchCones.x,target.y-larchCones.y)<25)&&larchConesReady(this.state.conePickedDay,day)){
+   if(!this.busy){const result=gatherLarchCones(this.host.read(),this.state.conePickedDay,day);if(result){this.busy=true;void this.host.commit(result.snapshot,()=>{this.state.conePickedDay=result.pickedDay;this.host.gather?.(larchCones);this.host.notice(`+${result.count} vörösfenyőtoboz`);}).finally(()=>{this.busy=false;});}}return true;
+  }
+  const herb=southHerbs.find(p=>Math.hypot(p.x-player.x,p.y-player.y)<42&&(!target||Math.hypot(p.x-target.x,p.y-target.y)<24)&&(this.state.herbsPicked[p.id]===undefined||day-this.state.herbsPicked[p.id]>=3));
   if(herb){if(!this.busy){this.busy=true;const next=this.host.read();next.travel.estate.produce[herb.kind]++;void this.host.commit(next,()=>{this.state.herbsPicked[herb.id]=day;this.host.gather?.(herb);this.host.notice('+1 '+herbNames[herb.kind]);}).finally(()=>{this.busy=false;});}return true;}
   if(Math.hypot(player.x-resinTree.x,player.y-resinTree.y)>65||target&&Math.hypot(target.x-resinTree.x,target.y-resinTree.y)>48)return false;
   if(!this.state.rootDefeated)return false;

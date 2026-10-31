@@ -4,11 +4,28 @@ export const larchGlade={x:-820,y:2780,rx:185,ry:126};
 export const gladePool={x:-708,y:2823,rx:43,ry:15};
 export const inLarchGlade=(x:number,y:number)=>((x-larchGlade.x)/larchGlade.rx)**2+((y-larchGlade.y)/larchGlade.ry)**2<1;
 export const larchTrunkBlocked=(x:number,y:number)=>((x-resinTree.x)/16)**2+((y-resinTree.y)/12)**2<1;
+export function larchGroundDrop(x:number,y:number){
+ const r=Math.hypot((x-larchGlade.x)/larchGlade.rx,(y-larchGlade.y-18)/larchGlade.ry);
+ const t=Math.max(0,Math.min(1,(1-r)/.55));return 16*t*t*(3-2*t);
+}
 export function drawLarchHollow(g:Phaser.GameObjects.Graphics){
  const {x,y}=larchGlade,t=resinTree;
  // A broad clearing: broken edges blend into the forest, with the middle left open.
  for(let i=6;i>=0;i--)g.fillStyle(i%2?0x859b56:0x929d5c,.12).fillEllipse(x+Math.sin(i*2)*8,y+i*2,360-i*13,244-i*11);
  for(let i=0;i<240;i++){const xx=x-180+i*67%360,yy=y-118+i*43%238;if(!inLarchGlade(xx,yy))continue;g.fillStyle(i%3?0x9dad67:0xb4b57a,.3).fillRect(xx,yy,2+i%3,1);}
+ // A sunken floor and exposed bank make the descent visible, with an open entrance.
+ const bx=x,by=y+18;
+ g.fillStyle(0x69794a,.55).fillEllipse(bx,by+13,330,211);g.fillStyle(0x8a9158,.26).fillEllipse(bx+15,by+22,287,173);
+ for(let i=0;i<36;i++){const a=Math.PI+i*Math.PI*2/36,b=a+Math.PI*2/36;
+  if(a>4.42&&a<4.91||a>6.75&&a<8.7)continue;
+  const top=(q:number)=>({x:bx+Math.cos(q)*(182+Math.sin(q*5)*5),y:by+Math.sin(q)*118-5});
+  const low=(q:number)=>{const fade=Math.max(0,Math.min(1,(Math.abs(q-4.67)-.23)/.25));return{x:bx+Math.cos(q)*(182-18*fade),y:by+Math.sin(q)*(118-16*fade)-5+22*fade};};
+  const u=top(a),v=top(b),w=low(b),z=low(a);
+  g.fillStyle(i%3?0x776a47:0x817550,.85).fillPoints([u,v,w,z],true);g.lineStyle(4,0x849953,.9).lineBetween(u.x,u.y,v.x,v.y);g.lineStyle(2,0x425a37,.65).lineBetween(z.x,z.y,w.x,w.y);
+  if(i%3===0){const xx=(u.x+v.x)/2,yy=(u.y+v.y)/2;g.lineStyle(2,0x4e4931,.6).lineBetween(xx,yy+4,xx+3,yy+12);}
+ }
+ // Exposed old roots follow the side of the bank, not the radial base of the tree.
+ for(const [dx,dy,side]of [[-142,-46,-1],[99,-63,1],[-164,20,-1]]){const xx=x+dx,yy=y+dy;g.lineStyle(4,0x604d34).strokePoints([{x:xx,y:yy-8},{x:xx+side*11,y:yy+3},{x:xx+side*9,y:yy+14},{x:xx+side*24,y:yy+24}]);g.lineStyle(1,0xb49965).lineBetween(xx,yy-6,xx+side*10,yy+5);g.lineStyle(2,0x6b5638).lineBetween(xx+side*9,yy+13,xx-side*7,yy+19);}
  // Fallen needles soften the ground at the old trunk; no pedestal or exposed root stand.
  for(let i=4;i>=0;i--)g.fillStyle(i%2?0x9e8053:0x9a905d,.17).fillEllipse(t.x+12+i*4,t.y+13,164-i*18,82-i*9);
  for(let i=0;i<180;i++){const xx=t.x-71+i*47%164,yy=t.y-24+i*31%81;if(((xx-t.x-10)/86)**2+((yy-t.y-12)/43)**2>1)continue;g.lineStyle(.8,i%3?0xb9a06b:0x726343,.6).lineBetween(xx,yy,xx+3+i%4,yy+(i%3-1)*2);}
@@ -43,10 +60,11 @@ export function drawOldLarch(g:Phaser.GameObjects.Graphics){
  // Broad, irregular side branches: no evenly stacked tiers or triangular fir silhouette.
  const branches=[[-4,-127,-43,-159,-92,-150],[3,-153,43,-184,81,-174],[-7,-176,-32,-207,-67,-204],[2,-192,23,-229,44,-221],[4,-132,59,-143,97,-127],[-8,-153,-64,-183,-104,-172],[1,-209,-10,-241,-27,-239]];
  for(const [sx,sy,mx,my,ex,ey]of branches){g.lineStyle(4,0x614b35).strokePoints([{x:x+sx,y:y+sy},{x:x+mx,y:y+my},{x:x+ex,y:y+ey}]);g.lineStyle(1.2,0xa48653).lineBetween(x+mx,y+my-1,x+ex,y+ey-1);
-  for(let j=1;j<=8;j++){const t=j/8,xx=x+mx+(ex-mx)*t,yy=y+my+(ey-my)*t,drop=10+(j*7%17);g.lineStyle(1,0x576b3e).strokePoints([{x:xx,y:yy},{x:xx+3,y:yy+drop*.6},{x:xx+1,y:yy+drop}]);for(let n=0;n<4;n++){const nx=xx+Math.sin(j+n)*2,ny=yy+n*drop/4;g.fillStyle([0x7f9c55,0x9eb66d,0x5e844b][(j+n)%3],.9).fillPoints([{x:nx-5,y:ny},{x:nx-2,y:ny-3},{x:nx+3,y:ny-1},{x:nx+6,y:ny+3},{x:nx+1,y:ny+5},{x:nx-4,y:ny+3}],true);}}
+  for(let j=1;j<=8;j++){const t=j/8,xx=x+mx+(ex-mx)*t,yy=y+my+(ey-my)*t,drop=10+(j*7%17);g.lineStyle(1,0x576b3e).strokePoints([{x:xx,y:yy},{x:xx+3,y:yy+drop*.6},{x:xx+1,y:yy+drop}]);for(let n=0;n<4;n++){const nx=xx+Math.sin(j+n)*2,ny=yy+n*drop/4;g.lineStyle(1.4,0x48683e,.85).strokePoints([{x:nx-5,y:ny},{x:nx-2,y:ny-3},{x:nx+3,y:ny-1},{x:nx+6,y:ny+3},{x:nx+1,y:ny+5},{x:nx-4,y:ny+3}],true);g.fillStyle([0xa9c582,0xc0d698,0x91b477][(j+n)%3],1).fillPoints([{x:nx-5,y:ny},{x:nx-2,y:ny-3},{x:nx+3,y:ny-1},{x:nx+6,y:ny+3},{x:nx+1,y:ny+5},{x:nx-4,y:ny+3}],true);g.lineStyle(.8,0xe4e6b9,.45).lineBetween(nx-3,ny-1,nx+1,ny+1);}}
  }
  // A broken old branch and amber trails identify the reachable resin-bearing face.
  g.fillStyle(0x5a432e).fillPoints([{x:x+4,y:y-84},{x:x+23,y:y-94},{x:x+27,y:y-89},{x:x+17,y:y-78},{x:x+7,y:y-76}],true);g.fillStyle(0xb29669).fillEllipse(x+24,y-91,7,5);
+ g.lineStyle(9,0x443527,.9).strokePoints([{x:x+4,y:y-68},{x:x-1,y:y-45},{x:x+4,y:y-24}]);
  g.lineStyle(3,0x4b3928).strokePoints([{x:x+4,y:y-68},{x:x-1,y:y-45},{x:x+4,y:y-24}]);
  for(let i=0;i<4;i++){g.lineStyle(1.5,0xb87a32,.8).strokePoints([{x:x+4+i%2*4,y:y-75},{x:x-1+i*2,y:y-56+i*2},{x:x+1+i*2,y:y-27+i*3}]);}
 }

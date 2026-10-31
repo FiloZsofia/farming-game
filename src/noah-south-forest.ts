@@ -1,3 +1,4 @@
+import {larchCones,larchConesReady} from './larch-cones';
 import {resinTree,larchGlade,gladePool,inLarchGlade,larchTrunkBlocked,drawLarchHollow,drawOldLarch} from './larch-glade';
 export {resinTree} from './larch-glade';
 import {forestLog,logPoint,logCoordinates,onFloatingLog,logCrossingStep,floatingLogPose} from './forest-log-crossing';
@@ -81,8 +82,9 @@ export class NoahSouthForest{
  update(dt:number,player:{x:number;y:number},state:NoahTestState,jumping:boolean,hurt:()=>void,fall?:(point:{x:number;y:number})=>void,day=1,night=0,sunny=true){
   this.sceneActor={x:player.x,y:player.y};if(!inNoahSouth(player.x,player.y)){this.logLoad=0;this.logEdgeTime=0;return;}
   this.age+=dt;this.invulnerable=Math.max(0,this.invulnerable-dt);this.swing=Math.max(0,this.swing-dt);const g=this.art;g.clear();
-  if(!state.ingredientGathered){const x=resinTree.x,y=resinTree.y;for(let i=0;i<4;i++){const yy=y-57+i*11+Math.sin(this.age*.8+i)*1.4;g.fillStyle(0xbf7c2d).fillEllipse(x+i%2*5-3,yy,7,11);g.fillStyle(0xe9b751).fillEllipse(x+i%2*5-4,yy-1,4,8);g.fillStyle(0xffdf9a).fillEllipse(x+i%2*5-5,yy-3,1.5,3);}}
+  if(!state.ingredientGathered){const x=resinTree.x,y=resinTree.y;for(let i=0;i<4;i++){const yy=y-60+i*12+Math.sin(this.age*.8+i)*.65,xx=x+i%2*6-3;g.fillStyle(0x56301b).fillEllipse(xx,yy+1,11,15);g.fillStyle(0xe99224).fillEllipse(xx,yy,9,13);g.fillStyle(0xffc94e).fillEllipse(xx-1,yy-2,6,9);g.fillStyle(0xfff0ab).fillEllipse(xx-2,yy-4,2.5,4);g.lineStyle(.8,0xffe3a0,.8).strokeEllipse(xx,yy,8,12);}const gleam=(Math.sin(this.age*1.7)+1)*.5;g.lineStyle(1,0xffefbe,.25+gleam*.55).lineBetween(x+3,y-54,x+9,y-54).lineBetween(x+6,y-57,x+6,y-51);}
 
+  if(larchConesReady(state.conePickedDay,day))for(let i=0;i<3;i++){const xx=larchCones.x+(i-1)*10,yy=larchCones.y+i%2*6;g.fillStyle(0x3f402c,.35).fillEllipse(xx+2,yy+3,11,5);g.fillStyle(0x65472d).fillEllipse(xx,yy-2,8,13);for(let row=0;row<3;row++)for(let side=0;side<2;side++){g.fillStyle((row+side)%2?0xbd985f:0x977042).fillTriangle(xx-4+side*4,yy-7+row*4,xx+1+side*4,yy-5+row*4,xx-2+side*4,yy-2+row*4);}}
   this.drawMushrooms(night);this.drawHollowAtmosphere(player,night,sunny);
   this.herbs.clear();if(state.upgraded)for(const p of southHerbs){if(state.herbsPicked[p.id]!==undefined&&day-state.herbsPicked[p.id]<3)continue;drawForestHerb(this.herbs,p);}
   this.sceneActor={x:player.x,y:player.y};const loaded=onFloatingLog(player)&&!jumping;

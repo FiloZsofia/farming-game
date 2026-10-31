@@ -98,3 +98,5 @@ A következő kiadások változásai legfelül kapnak új bejegyzést.
 - A Noah-tesztben a megerősített Túrabot ezüst csillagot és fémfoglalatos ikont kapott; átvétel után a csillag egyszer felcsillan. A rövid eszköznév megmaradt.
 - Külön feszültebb erdei zene szól az Öregfák ligetében a pihenőpadtól, illetve a tesztmód Déli erdejében már a hídtól. Visszatéréskor a választott dallam folytatódik, a némítás megmarad.
 - A tesztmód gyantás vörösfenyője szabálytalan, idős fává alakult, nyitott, avaros tisztással, sekély vízmélyedéssel, mohás korhadó törzzsel és finom légköri animációkkal.
+- A tesztmód vörösfenyőjének lombja és gyantája kontrasztosabb; a tisztás érzékelhető földes mélyedést és leereszkedést kapott.
+- A tisztáson háromnaponta 2–3 vörösfenyőtoboz gyűjthető későbbi kézműves alapanyagként, az egységes Készletben, új kategória nélkül.
