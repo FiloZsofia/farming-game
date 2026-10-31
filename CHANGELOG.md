@@ -1,5 +1,10 @@
 # Változások
 
+## Változások a 0.2.0 óta — verzióemelés nélkül
+
+- A térképen a még meg nem nyitott déli rész neve „Felfedezetlen terület”.
+- A kivonatkészítésnél a gyógynövények mellett látszik a Készletben lévő és a szükséges mennyiség. Hiányzó hozzávalónál a segítség a mennyiséget mutatja a végrehajthatatlan felvételi utasítás helyett.
+
 ## [0.2.0] — 2026-10-31
 
 - A teljes tesztelt Noah-fejezet bekerült a rendes játékba: levél és küldemény, Simon botfejlesztése, Déli erdő, gyógynövények és gyanta, a Műhelyben végezhető kivonatkészítés, majd a kísérleti eredmény mikroszkópos összehasonlítása.

@@ -19,7 +19,7 @@ export const workshopStations=[
  {id:'bottle',name:'Töltőcsap',x:515,y:3405,standX:515,standY:3446}
 ];
 export type WorkshopCarry={carrying:string|null};
-type Options={session:Extraction;carry:WorkshopCarry;actor:Phaser.GameObjects.Container;avatar:FarmerArt;available:(id:string)=>boolean;start:()=>void;finish:()=>void;changed:(active:boolean)=>void;map:()=>void};
+type Options={session:Extraction;carry:WorkshopCarry;actor:Phaser.GameObjects.Container;avatar:FarmerArt;available:(id:string)=>boolean;supply?:(id:string)=>{held:number;required:number}|null;start:()=>void;finish:()=>void;changed:(active:boolean)=>void;map:()=>void};
 export class WorkshopExtraction{
  active=true;private art:Phaser.GameObjects.Graphics;private marker:Phaser.GameObjects.Graphics;private label:HTMLDivElement;private held:Phaser.GameObjects.Graphics;private actorDepth:number;private hud:HTMLDivElement;private hint:HTMLParagraphElement;private title:HTMLElement;private carried:HTMLElement;private progress:HTMLProgressElement;private keys=new Set<string>();private destination:string|null=null;private pressed:string|null=null;private dial:{id:string;x:number;value:number}|null=null;private flight:{id:string;target:string;x:number;y:number;age:number}|null=null;private lastDraw=0;private shown='';
  constructor(private scene:Phaser.Scene,private o:Options){
@@ -30,7 +30,7 @@ export class WorkshopExtraction{
  pause=()=>{this.keys.clear();this.pressed=null;this.dial=null;};
  private station=(id:string)=>workshopStations.find(s=>s.id===id)!;
  private near=(id:string)=>{const s=this.station(id);return Math.hypot(this.o.actor.x-s.standX,this.o.actor.y-s.standY)<34;};
- private guide=()=>extractionGuide(this.o.session,this.o.carry.carrying);
+ private guide=()=>{const guide=extractionGuide(this.o.session,this.o.carry.carrying),supply=this.o.supply?.(guide.target);return !this.o.carry.carrying&&supply&&supply.held<supply.required?{...guide,text:`${this.station(guide.target).name} · Készlet: ${supply.held} / ${supply.required}`}:guide;};
  private keyDown=(e:KeyboardEvent)=>{
   if(!this.active||e.ctrlKey||e.metaKey||e.altKey)return;if(e.code==='KeyM'){e.preventDefault();e.stopImmediatePropagation();if(!e.repeat){this.pause();this.o.map();}return;}if(document.querySelector<HTMLDialogElement>('#dialogue')?.open)return;e.preventDefault();e.stopImmediatePropagation();if(e.code==='Escape'){this.close();return;}this.keys.add(e.code);if(e.code==='KeyE'&&!e.repeat){const id=this.guide().target;if(this.near(id))this.interact(id);}
   if((e.code==='KeyQ'||e.code==='KeyR')&&!e.repeat){const id=this.guide().target;if((id==='heat'||id==='cooler')&&this.near(id)){const field=id==='heat'?'heat':'coolant';this.o.session[field]=Phaser.Math.Clamp(this.o.session[field]+(e.code==='KeyQ'?-.2:.2),0,1);}}
@@ -77,7 +77,7 @@ export class WorkshopExtraction{
   const pulse=.5+.5*Math.sin(now/180),r=12+pulse*4;m.fillStyle(0xffdc72,.13+pulse*.13).fillCircle(target.x,target.y,r+5);m.lineStyle(1.8,0xffe398,.85).strokeCircle(target.x,target.y,r);m.fillStyle(0xffe6a0).fillTriangle(target.x-5,target.y-20-pulse*3,target.x+5,target.y-20-pulse*3,target.x,target.y-14-pulse*3);
   for(let i=0;i<5;i++){const t=(now/1700+i/5)%1;m.fillStyle(0xffdc86,Math.sin(t*Math.PI)*.7).fillCircle(a.x+(target.x-a.x)*t,a.y-20+(target.y-a.y+20)*t,1.4);}
   const camera=this.scene.cameras.main,screen=camera.worldView;
-  this.label.textContent=target.name;this.label.style.left=`${(target.x-screen.x)*camera.zoom}px`;
+  const supply=this.o.supply?.(guide.target);this.label.textContent=target.name+(supply?` · ${supply.held} / ${supply.required}`:'');this.label.style.left=`${(target.x-screen.x)*camera.zoom}px`;
   const overSam=Math.abs(target.x-a.x)<55&&Math.abs(target.y-27-(a.y-35))<35;
   this.label.style.top=`${((overSam?Math.min(target.y-27,a.y-64):target.y-27)-screen.y)*camera.zoom}px`;
   const heading={prepare:'Gyantás hordozó',load:'Hozzávalók',extract:'Kivonás',filter:'Szűrés',cool:'Hűtés',dose:'Koncentrátum',bottle:'Töltés',done:'Elkészült'}[s.phase];const state=heading+'|'+guide.text+'|'+this.o.carry.carrying;if(this.shown!==state){this.shown=state;this.title.textContent=heading;this.hint.textContent=guide.text;this.carried.replaceChildren();if(this.o.carry.carrying){const id=this.o.carry.carrying;this.carried.append(itemIcon(id==='thyme'||id==='plantain'?id:'glassJar'),document.createTextNode(this.station(id==='resin'?'resin':id==='aid'?'aid':id==='carrier'?'carrier':id==='concentrate'?'concentrate':id).name));}}
