@@ -1020,3 +1020,8 @@ Amikor Sam először közel sétál valóban sikertelen terméskötődést mutat
 - Egy Gyűjtés/E/kattintás egyetlen tobozt vesz fel; a többi a földön marad. Az utolsó darab felszedésétől számított három játéknap után új, véletlenszerű elrendezés jelenik meg. A Készlet továbbra is a közös rácsot használja, változatlan rekeszszabályokkal.
 - A gombák éjszakai fénye hangsúlyosabb: a kalap, a lemezek és a szár lilás fénye a gomba alakját követi; a környező talajon lágy, szabálytalan fényfolt jelenik meg. Nincs fehér fénykarika vagy felszálló fénygömb. A fény lassan, visszafogottan lüktet. Az emisszió külön rétege az éjszakai sötétítés fölött látszik, nappal és az erdőn kívül rejtett, a teszt lezárásakor eltávolítjuk.
 - A spórapamacsok életereje mindkét erdőben 3. A sima túrabot egyet, a megerősített kettőt sebez: legyőzésükhöz rendre három, illetve két sikeres találat kell. Az életerőcsík az ellenfél definíciójának tényleges maximumát követi.
+
+### Ártalmatlan világító gombák az északi erdőben
+- Az Öregfák ligetébe és a hozzá vezető erdei ösvény mellé is kerül néhány lila, pöttyös díszgomba. A déli gombák közös rajzolását és éjszakai fényét használják: a testük lilásan világít, a talajon lágy derengés látszik.
+- Ezek a gombák a normál játékban is láthatók, teljesen ártalmatlanok: nincs támadásuk, mérgező gázuk, sérülési vagy ütközési zónájuk. Nem tartoznak az ellenségekhez, nem változtatják meg az erdei harcot.
+- Az elhelyezésnél a kalap és a talajszinti rész is szabadon hagyja az ösvényeket, a padot, a túrabotot, a fészkes törzset és a gyűjthető növényeket. A fény nappal és más helyszíneken rejtett. Nem igényel mentésformátum- vagy verzióváltást.

@@ -103,3 +103,4 @@ A következő kiadások változásai legfelül kapnak új bejegyzést.
 - A tesztmód tobozai véletlenszerűen szétszórva jelennek meg és egyenként gyűjthetők; az utolsó felvétel után három nappal új elrendezésben térnek vissza.
 - A déli erdő gombái erősebb, alakjukat követő lilás éjszakai fényt és lágy talajderengést kaptak.
 - A spórapamacsokhoz sima túrabottal három, megerősített túrabottal két találat szükséges mindkét erdőben; az életerőcsík is ehhez igazodik.
+- Ártalmatlan világító díszgombák kerültek az Öregfák ligetébe és az erdei ösvény mellé, a déli erdő gombáival közös éjszakai derengéssel. Az utakat és az interakciós helyeket szabadon hagyják.
