@@ -1050,3 +1050,8 @@ Az Öregfák ligetébe és a Déli erdőbe visszatérve újra megjelennek a szö
 ### A látványteszt cseréje: kidolgozott farm — 2026. október 31.
 
 A felhasználó elvetette a korábbi, túl pixeles lilás–türkizes próbát. Helyette a jelenlegi játék formáit finomabban kidolgozó, rajzos látványteszt készül: meleg alap-paletta; változatosabb, erezett levelekkel rajzolt bokrok, páfrányok, sások és mohás kövek; finomabb házanyagok. A legutóbbi, a jelenlegi farmból kiinduló látványterv az irányadó. Nincsenek elszórt szirmok, elmosódó fűfoltok vagy felnagyított pixelcsoportok. Az aktív teszt neve „Látványteszt · Kidolgozott farm”; a korábbi próbát nem tartjuk külön választható lehetőségként. A memóriabeli elkülönítés, V-s összehasonlítás és fényválasztás megmarad. A normál játék látványa és Sam megjelenése nem változik ettől a próbától.
+
+
+### Sam megjelenése és járása — kizárólag tesztben (2026. október 31.)
+
+A felhasználó a jelenlegi Samet választotta alapul, javított copffal és arányokkal, kidolgozottabb ruházattal és könnyedebb járással. Nem a korábbi karakterlap A/B figurája készül el. A barna haj, krémszínű ing és olívazöld nadrág megmarad. A copf összefüggő, keskenyedő forma, a fej hátsó részéhez kapcsolódó hajgumival; finomított váll–kar átmenet, gallér, gombok, zsebek, varrások, felhajtott ujj, öv és bakancsrészletek egészítik ki. Csak a memóriabeli Kidolgozott farm látványtesztben működik; külön gombbal hasonlítható össze az eredetivel. A normál játék és a többi tesztjelenet eredeti Samjét és járását nem módosítjuk. A megjelenést nem mentjük a farmba.

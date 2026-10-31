@@ -71,7 +71,7 @@ import { farmLayout,farmBounds,porchInteraction } from './layout';
 import {findSeeds,unlockedSeeds} from './seed-find';
 import {FarmMusic,musicTracks,type MusicTrack} from './music';
 import {createGardenSkill,gainGardening,CHEST_XP,FIRST_REWARD_XP,SECOND_REWARD_XP,gardeningLevel,gardeningTarget,gardeningProgress,gardeningCredit,levelThreeSeeds,type LevelThreeSeed,rewardFruits,type RewardFruit} from './gardening-skill';
-import {FarmerArt,anniePortrait} from './character';
+import {FarmerArt,anniePortrait,type SamStyle} from './character';
 import {Wildlife} from './wildlife';
 import {createStory,journalHelpPending,type FarmStory} from './story-events';
 import {drawFarm} from './world-art';
@@ -893,7 +893,7 @@ class Farm extends Phaser.Scene {
   this.transitioning=true;release();this.avatar.cancelWork();this.workEffects?.clear();this.bubble.setVisible(false);this.thought.setVisible(false);this.selection.setVisible(false);
   const surface=document.querySelector<HTMLElement>('#game')!,shade=document.querySelector<HTMLElement>('#sleep-shade')!;
   surface.dataset.bedSleeping='true';this.actor.setVisible(false);
-  const sleeper=new FarmerArt(this);sleeper.equip('none');sleeper.root.setPosition(193,HOME_ORIGIN+321).setDepth(100);
+  const sleeper=new FarmerArt(this,false,this.artStudy?this.samStudyStyle:'original');sleeper.equip('none');sleeper.root.setPosition(193,HOME_ORIGIN+321).setDepth(100);
   const quilt=this.add.graphics().setDepth(102);quilt.fillStyle(0x7c9164).fillRoundedRect(151,HOME_ORIGIN+290,83,63,4);quilt.fillStyle(0xa3b07b).fillRoundedRect(151,HOME_ORIGIN+287,83,11,3);for(let y=305;y<350;y+=11)quilt.lineStyle(1,0x5b7552,.6).lineBetween(155,HOME_ORIGIN+y,230,HOME_ORIGIN+y);
   const snooze=this.add.text(208,HOME_ORIGIN+249,'Zzzz',{fontFamily:'Georgia',fontSize:'14px',color:'#f5e9cd',stroke:'#3b4b35',strokeThickness:3,resolution:4}).setOrigin(.5,1).setDepth(163);
   const breathe=this.tweens.add({targets:sleeper.root,y:HOME_ORIGIN+322,duration:800,yoyo:true,repeat:-1,ease:'Sine.easeInOut'});
@@ -1273,6 +1273,7 @@ class Farm extends Phaser.Scene {
   this.noahTest=this.makeNoahController(this.travel.noah,noahTestConfig);this.redrawForest();
  }
  private makeNoahController(state:import('./noah-story').NoahTestState,config:NoahTestConfig){return new NoahTestController(this,state,config,{herbCount:id=>this.travel.estate.produce[id],persist:()=>this.persist(),regularMicroscope:()=>this.openMicroscope(false),stickUpgraded:()=>this.syncStickUpgrade(true),actor:()=>this.actor,avatar:()=>this.avatar,day:()=>this.clock.day,map:()=>this.openTestMap(),laboratory:active=>{if(!active){if(worldBlocked(this.actor.x,this.actor.y))this.actor.setPosition(337,3415);void this.persist();}release();movementInput.clear();this.input.keyboard?.resetKeys();this.jumpRemaining=0;this.body.setY(0);this.selection.setVisible(!active);this.bubble.setVisible(false);this.fitCamera(active);},read:()=>this.currentSnapshot(),commit:(s,after)=>this.commitChest(s,after),show:(title,text,label)=>{showDialogue(title,text,label??'');if(title==='Simon')this.showSpeaker('craftShop');},notice:text=>this.notice(text),record:id=>recordStoryEvent(this.travel,id,this.clock.day),gather:point=>this.avatar.use(point.x-this.actor.x,point.y-this.actor.y,'harvest')});}
+ private samStudyStyle:SamStyle='refined';
  private artStudy=false;
  private artStudyOriginal=false;
  private preparingNoah=false;
@@ -1287,6 +1288,7 @@ class Farm extends Phaser.Scene {
   const art=document.createElement('button');art.type='button';art.id='start-art-study';art.textContent='Látványteszt · Kidolgozott farm';art.onclick=()=>{art.disabled=true;void this.startArtStudy().finally(()=>{art.disabled=false;});};artSection.append(art);
   if(this.artStudy){
    const compare=document.createElement('button');compare.type='button';compare.id='compare-art-study';compare.textContent=this.artStudyOriginal?'Új látvány':'Eredeti látvány';compare.onclick=()=>{this.toggleArtStudy();dialogue.close();};artSection.append(compare);
+   const sam=document.createElement('button');sam.type='button';sam.id='compare-sam-study';sam.textContent=this.avatar.style==='refined'?'Sam · eredeti megjelenés':'Sam · javított copf és ruházat';sam.onclick=()=>{this.samStudyStyle=this.avatar.style==='refined'?'original':'refined';this.setSamStyle(this.samStudyStyle);dialogue.close();release();};artSection.append(sam);
    for(const [label,elapsed]of [['Nappali fény',180],['Esti fény',370]] as const){const b=document.createElement('button');b.type='button';b.textContent=label;b.dataset.artStudyTime=String(elapsed);b.onclick=()=>{this.clock.elapsed=elapsed;dialogue.close();release();};artSection.append(b);}
   }
   const button=document.createElement('button');button.type='button';button.id='prepare-microscope-test';button.textContent=this.store.testMode?'A mikroszkóp megtalálása – jelenet · Újraindítás':'A mikroszkóp megtalálása – jelenet';button.onclick=async()=>{
@@ -1312,14 +1314,15 @@ class Farm extends Phaser.Scene {
   if(this.noahTest){const nextMorning=document.createElement('button');nextMorning.type='button';nextMorning.id='noah-next-morning';nextMorning.textContent='Következő reggel';nextMorning.onclick=()=>{if(this.transitioning)return;dialogue.close();void this.finishDay(false);};panel.append(nextMorning);}
   if(this.store.testMode){const exit=document.createElement('button');exit.type='button';exit.id='exit-test-mode';exit.textContent='Kilépés a tesztmódból';exit.onclick=()=>{if(!this.transitioning&&this.store.selectedFarmId)this.reloadFarm(this.store.selectedFarmId);};panel.append(exit);}
  }
- private clearArtStudy(){if(this.artStudy){this.artStudy=false;this.artStudyOriginal=false;this.scenery?.destroy();this.scenery=null;}document.querySelector<HTMLElement>('#test-mode-banner')!.textContent='TESZTMÓD · Eszközpanel';}
+ private setSamStyle(style:SamStyle){if(style==='refined'&&(!this.artStudy||!this.store.testMode))return;if(this.avatar.style===style)return;this.avatar.cancelWork();this.body.destroy();this.avatar=new FarmerArt(this,false,style);this.body=this.avatar.root;this.actor.add(this.body);this.avatar.equip(this.tool);this.avatar.setStickReinforced(Boolean(this.noahTest?.state.upgraded));}
+ private clearArtStudy(){if(this.artStudy){this.setSamStyle('original');this.artStudy=false;this.artStudyOriginal=false;this.scenery?.destroy();this.scenery=null;}document.querySelector<HTMLElement>('#test-mode-banner')!.textContent='TESZTMÓD · Eszközpanel';}
  private toggleArtStudy(){if(!this.artStudy||!this.store.testMode)return;this.artStudyOriginal=!this.artStudyOriginal;this.scenery?.destroy();this.scenery=null;this.redrawScenery();document.querySelector<HTMLElement>('#test-mode-banner')!.textContent=`TESZTMÓD · ${this.artStudyOriginal?'Eredeti látvány':'Kidolgozott farm'} · V: váltás`;}
  private async startArtStudy(){
   if(this.transitioning||!developerToolsEnabled())return;this.transitioning=true;this.preparingNoah=true;
   try{
    if(!this.store.testMode){const original=structuredClone(this.currentSnapshot());await this.saveChecked(original);await this.store.beginTest();this.testBaseline=original;}
    const next=prepareArtStudy(this.testBaseline!);this.noahTest?.destroy();this.noahTest=null;this.artStudy=true;this.artStudyOriginal=false;this.scenery?.destroy();this.scenery=null;this.transitioning=false;
-   await this.commitChest(next,()=>{this.clock=next.clock;this.farmName=next.farmName;this.farmerName=next.farmerName;this.avatar.cancelWork();this.actor.setPosition(next.player.x,next.player.y).setAngle(0);this.body.setY(0);this.jumpRemaining=0;this.jumpCooldown=0;this.collapseRemaining=0;this.shadow.setScale(1);this.forestPresence=null;this.forestCombat?.reset();this.thoughtRemaining=0;this.thought.setVisible(false);this.thoughtBack.clear();this.neighbor?.destroy();this.neighbor=null;this.neighborArt=null;this.leoVisitor?.destroy();this.leoVisitor=null;this.redrawScenery();this.fitCamera();this.drawGarden();this.updateFarmTitle();this.nearby='';this.aimAhead();document.querySelector<HTMLElement>('#test-mode-banner')!.hidden=false;document.querySelector<HTMLElement>('#test-mode-banner')!.textContent='TESZTMÓD · Kidolgozott farm · V: váltás';document.querySelector('#save-state')!.textContent='TESZTMÓD · csak memóriában';document.querySelector<HTMLElement>('#sleep-shade')!.style.opacity='0';dialogue.close();release();});
+   await this.commitChest(next,()=>{this.clock=next.clock;this.farmName=next.farmName;this.farmerName=next.farmerName;this.setSamStyle(this.samStudyStyle);this.avatar.cancelWork();this.actor.setPosition(next.player.x,next.player.y).setAngle(0);this.body.setY(0);this.jumpRemaining=0;this.jumpCooldown=0;this.collapseRemaining=0;this.shadow.setScale(1);this.forestPresence=null;this.forestCombat?.reset();this.thoughtRemaining=0;this.thought.setVisible(false);this.thoughtBack.clear();this.neighbor?.destroy();this.neighbor=null;this.neighborArt=null;this.leoVisitor?.destroy();this.leoVisitor=null;this.redrawScenery();this.fitCamera();this.drawGarden();this.updateFarmTitle();this.nearby='';this.aimAhead();document.querySelector<HTMLElement>('#test-mode-banner')!.hidden=false;document.querySelector<HTMLElement>('#test-mode-banner')!.textContent='TESZTMÓD · Kidolgozott farm · V: váltás';document.querySelector('#save-state')!.textContent='TESZTMÓD · csak memóriában';document.querySelector<HTMLElement>('#sleep-shade')!.style.opacity='0';dialogue.close();release();});
   }catch{this.notice('A látványtesztet nem sikerült elindítani.');}finally{this.transitioning=false;this.preparingNoah=false;this.lastTick=performance.now();}
  }
  private async startNoahTest(checkpoint:NoahCheckpoint,config:NoahTestConfig){
@@ -1652,7 +1655,7 @@ class Farm extends Phaser.Scene {
   const musicZone=this.ready&&this.hasFarm&&!this.choosingFarm?forestMusicZone(this.actor,Boolean(this.noahTest?.state.upgraded)):null;
   this.music.setDanger(musicZone!==null);
   this.avatar.setStickReinforced(Boolean(this.noahTest?.state.upgraded));this.syncStickUpgrade();
-  surface.dataset.artStudy=String(this.artStudy);surface.dataset.artStudyOriginal=String(this.artStudyOriginal);surface.dataset.weather=weather;surface.dataset.previewComplete=String(this.travel.forest?.sent===true);
+  surface.dataset.samStyle=this.avatar.style;surface.dataset.artStudy=String(this.artStudy);surface.dataset.artStudyOriginal=String(this.artStudyOriginal);surface.dataset.weather=weather;surface.dataset.previewComplete=String(this.travel.forest?.sent===true);
   if(this.ready&&this.hasFarm&&!this.choosingFarm&&!dialogue.open&&!this.transitioning&&shouldDeliverMicroscope(this.travel.research,!!this.travel.forest?.sample,this.actor.y)){void this.deliverMicroscope();}
   if(this.hasFarm&&this.canInteract()&&!this.travel.pollinationObservation&&nearEmptyBlossoms(this.garden,this.travel.estate,this.actor))void this.observeEmptyBlossoms();
   if(this.ready&&!this.choosingFarm&&!dialogue.open&&!this.transitioning&&(this.noahTest?this.noahTest.state.complete&&!this.noahTest.state.endSeen:storyEndPending(this.travel)))this.showPreviewEnd();

@@ -1,3 +1,5 @@
+import {drawSamStudy} from './sam-study-art';
+export type SamStyle='original'|'refined';
 import Phaser from 'phaser';
 import {WORK_SECONDS,WORK_CONTACT,workPose,workProgress,heavyTool,gentleWorkAngle} from './tool-motion';
 export class FarmerArt{
@@ -7,11 +9,14 @@ export class FarmerArt{
  private head:Phaser.GameObjects.Container;private pony:Phaser.GameObjects.Container;
  private armX:number;private armY:number;private carrying=false;
  setCarrying(value:boolean){this.carrying=value;}
- rummagePose(t:number){this.root.y=7+Math.sin(t*16);this.root.rotation=.08;this.head.y=-37;this.leftArm.setAngle(-65+Math.sin(t*22)*12);this.rightArm.setAngle(60-Math.sin(t*22)*15);}
+ rummagePose(t:number){this.root.y=7+Math.sin(t*16);this.root.rotation=.08;this.head.y=-37;if(this.style==='refined')this.pony.y=-36;this.leftArm.setAngle(-65+Math.sin(t*22)*12);this.rightArm.setAngle(60-Math.sin(t*22)*15);}
  private contact:(()=>void)|null=null;private toolEnd=29;
  private tool:Phaser.GameObjects.Graphics;private action=0;private throwing=0;private phase=0;private equipped='';private actionTool='hoe';private aim={x:0,y:1};
- constructor(private scene:Phaser.Scene,neighbor=false){
+ constructor(private scene:Phaser.Scene,neighbor=false,readonly style:SamStyle='original'){
   this.root=scene.add.container(0,0);
+  if(!neighbor&&style==='refined'){
+   const parts=drawSamStudy(scene,this.root);this.leftLeg=parts.leftLeg;this.rightLeg=parts.rightLeg;this.leftArm=parts.leftArm;this.rightArm=parts.rightArm;this.head=parts.head;this.pony=parts.pony;this.tool=parts.tool;this.armX=parts.armX;this.armY=parts.armY;this.equip('hoe');return;
+  }
   if(!neighbor){
    // First brown-haired appearance, restored from 8d40544.
    this.armX=6.8;this.armY=-29;
@@ -84,7 +89,7 @@ export class FarmerArt{
  private reinforcedStick=false;
  setStickReinforced(value:boolean){if(this.reinforcedStick!==value){this.reinforcedStick=value;this.drawTool();}}
  isWorking(){return this.action>0;}
- cancelWork(){this.action=0;this.contact=null;this.leftArm.setAngle(0);this.rightArm.setAngle(0).setPosition(this.armX,this.armY).setScale(1);this.tool.setScale(1).setY(0);this.root.setPosition(0,0).setRotation(0).setScale(1);this.head.y=-40;this.pony.angle=0;this.leftLeg.angle=0;this.rightLeg.angle=0;this.drawTool();}
+ cancelWork(){this.action=0;this.contact=null;this.leftArm.setAngle(0);this.rightArm.setAngle(0).setPosition(this.armX,this.armY).setScale(1);this.tool.setScale(1).setY(0);this.root.setPosition(0,0).setRotation(0).setScale(1);this.head.y=-40;this.pony.angle=0;if(this.style==='refined')this.pony.y=-39;this.leftLeg.angle=0;this.rightLeg.angle=0;this.drawTool();}
  use(dx=0,dy=1,tool=this.equipped,onContact?:()=>void){this.actionTool=tool;this.action=WORK_SECONDS;this.aim={x:dx,y:dy};this.contact=onContact??null;}
  workFrame(){if(!this.isWorking())return null;const tip=this.tool.getWorldTransformMatrix().transformPoint(0,this.toolEnd);return {tool:this.actionTool,progress:workProgress(this.action),phase:workPose(1,1,this.action).phase,tip:{x:tip.x,y:tip.y}};}
  private drawTool(){
@@ -104,28 +109,28 @@ export class FarmerArt{
   else if(['radish','potato','pea','carrot','lettuce','onion'].includes(name)){r(0,12,9,12,0xdfc796);r(1,14,7,6,0xf2e8c7);r(3,15,3,4,name==='radish'?0xdf8791:name==='potato'?0xa58451:0x7caa55);}
  }
  update(walking:boolean,running:boolean,dir:{x:number;y:number},dt:number,jumping=false){
-  const previous=this.action;this.phase+=walking?dt*(running?17:11):0;this.action=Math.max(0,this.action-dt);const contact=previous>WORK_SECONDS*(1-WORK_CONTACT)&&this.action<=WORK_SECONDS*(1-WORK_CONTACT)?this.contact:null;if(contact)this.contact=null;
-  const stride=walking?Math.sin(this.phase)*(running?25:18):0;
-  this.leftLeg.angle=stride;this.rightLeg.angle=-stride;this.leftLeg.y=-16+(walking?Math.max(0,Math.sin(this.phase))*2:0);this.rightLeg.y=-16+(walking?Math.max(0,-Math.sin(this.phase))*2:0);
+  const refined=this.style==='refined',previous=this.action;this.phase+=walking?dt*(running?17:refined?10.5:11):0;this.action=Math.max(0,this.action-dt);const contact=previous>WORK_SECONDS*(1-WORK_CONTACT)&&this.action<=WORK_SECONDS*(1-WORK_CONTACT)?this.contact:null;if(contact)this.contact=null;
+  const stride=walking?Math.sin(this.phase)*(running?25:refined?15:18):0;
+  this.leftLeg.angle=stride;this.rightLeg.angle=-stride;this.leftLeg.y=-16+(walking?Math.max(0,Math.sin(this.phase))*(refined?-1.3:2):0);this.rightLeg.y=-16+(walking?Math.max(0,-Math.sin(this.phase))*(refined?-1.3:2):0);
   this.throwing=Math.max(0,this.throwing-dt);
   const look=this.action>0||this.throwing>0?this.aim:dir;
   const working=this.action>0,heavy=working&&heavyTool(this.actionTool),mirror=look.x<0;
   const shoulderDx=this.aim.x-(mirror?-this.armX:this.armX),shoulderDy=this.aim.y-this.armY;
   const pose=workPose(shoulderDx,shoulderDy,this.action,mirror);
-  this.leftArm.rotation=heavy?pose.angle*.78:Phaser.Math.DegToRad(-stride*.6);
-  this.rightArm.rotation=working?(heavy?pose.angle:gentleWorkAngle(shoulderDx,shoulderDy,this.action,mirror)):Phaser.Math.DegToRad(stride*.45);
+  this.leftArm.rotation=heavy?pose.angle*.78:Phaser.Math.DegToRad(-stride*(refined?.42:.6));
+  this.rightArm.rotation=working?(heavy?pose.angle:gentleWorkAngle(shoulderDx,shoulderDy,this.action,mirror)):Phaser.Math.DegToRad(stride*(refined?.38:.45));
   this.rightArm.setPosition(this.armX+(heavy?pose.weight*3:0),this.armY+(heavy?Math.max(0,pose.weight)*5:0)).setScale(1);
   this.tool.setScale(1,heavy?pose.reach:1).setY(heavy?12-12*pose.reach:0);
   if(heavy&&this.actionTool==='crowbar'&&workProgress(this.action)>.6){this.rightArm.rotation-=Math.sin((workProgress(this.action)-.6)/.4*Math.PI)*.28;}
-  this.root.x=heavy?pose.weight*2:0;this.root.rotation=heavy?pose.weight*.045:0;
+  this.root.x=heavy?pose.weight*2:0;this.root.rotation=heavy?pose.weight*.045:refined&&walking&&!working&&!jumping?Math.sin(this.phase)*.008:0;
   if(heavy&&!walking){this.leftLeg.angle=-4*pose.weight;this.rightLeg.angle=4*pose.weight;}
   if(this.throwing>0){const t=1-this.throwing/.85;this.rightArm.setPosition(this.armX,this.armY).setScale(1);this.rightArm.rotation=-Math.sin(t*Math.PI)*2.8;this.leftArm.rotation=Math.sin(t*Math.PI)*.35;}
   if(working&&['harvest','restore','search'].includes(this.actionTool)){
    const t=workProgress(this.action),gather=this.actionTool==='harvest',bend=Math.sin(Math.min(1,t/.6)*Math.PI/2)*(t<.6?1:1-(t-.6)/.4),pull=gather?Math.sin(Math.max(0,(t-.45)/.55)*Math.PI):0;
    this.root.y=4*bend-3*pull;this.root.rotation=(mirror?-.07:.07)*bend;this.leftLeg.angle=-9*bend;this.rightLeg.angle=9*bend;this.leftArm.rotation=gentleWorkAngle(shoulderDx,shoulderDy,this.action,mirror)*.7-.28*bend;this.rightArm.rotation=gentleWorkAngle(shoulderDx,shoulderDy,this.action,mirror)-pull*.7;
   }
-  this.head.y=-40+(heavy?pose.weight*1.5:0)+(walking?Math.abs(Math.sin(this.phase))*-.7:0);this.pony.angle=heavy?-pose.weight*9:walking?Math.sin(this.phase)*12:0;this.pony.x=3;
-  this.root.scaleX=look.x<0?-.98:1;this.root.scaleY=1;this.root.y=jumping||working&&['harvest','restore','search'].includes(this.actionTool)?this.root.y:heavy?Math.max(0,pose.weight)*1.5:0;
+  this.head.y=-40+(heavy?pose.weight*1.5:0)+(walking?(refined?Math.sin(this.phase)**2*-.3:Math.abs(Math.sin(this.phase))*-.7):0);this.pony.angle=heavy?-pose.weight*(this.style==='refined'?5:9):walking?Math.sin(this.phase)*(this.style==='refined'?6:12):0;this.pony.x=3;if(this.style==='refined')this.pony.y=this.head.y+1;
+  this.root.scaleX=look.x<0?-.98:1;this.root.scaleY=1;this.root.y=jumping||working&&['harvest','restore','search'].includes(this.actionTool)?this.root.y:heavy?Math.max(0,pose.weight)*1.5:refined&&walking?-.4*Math.sin(this.phase)**2:0;
   this.drawTool();if(this.carrying){this.leftArm.setAngle(-65);this.rightArm.setAngle(65);this.tool.clear();}if(contact)contact();
  }
 }
