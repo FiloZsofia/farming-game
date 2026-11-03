@@ -1065,3 +1065,8 @@ A „Madárodú” hibabejelentés alapján a lehelyezésnél a teljes odúszilu
 ### Madárodú az épület előtt — 2026. november 3.
 
 A felhasználó pontosítása alapján a teljes képi átfedést tiltó szabály túl szigorú volt. A ház és a Műhely előtti szabad talajon állhat odú úgy, hogy a fal egy részét eltakarja. Külön rajzrétegen jelenik meg az épületek előtt; nem kerül többé a talajba sütött képbe. A ház mögötti, tető által fedett hely tiltott marad, a veranda, lépcső és ajtók előtti sáv szabad marad. A fal előtt látható régi odúkat a betöltés megőrzi, nem teszi vissza a Készletbe. Más tárgyak, fák és tárolók takarását továbbra is ellenőrizzük.
+
+
+### Egyszeri áthelyezési segítség — 2026. november 3.
+
+Az első sikeresen elmentett madárodú-lehelyezés után egyszer megjelenik a közös, szereplő és felső címke nélküli segítségablak. Címe „Tárgyak áthelyezése”. Elfogadott szövege: „A madárodút később is áthelyezheted. Válaszd a Bontóvasat (4), majd kattints az odúra: visszakerül a Készletbe, ahonnan újra lehelyezheted.” A megjelenési jelző ugyanabban a mentésben rögzül, mint a lehelyezés; tiltott hely vagy sikertelen mentés nem fogyasztja el. Felvétel, újralerakás és újratöltés megőrzi a jelzőt. A mező opcionális, a régi farmok betölthetők, a formátum száma 18 marad.

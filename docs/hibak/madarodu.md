@@ -23,3 +23,10 @@ A korábbi, már takart odú a mentés betöltésekor visszakerül a Készletbe,
 A játékban sikeresen ellenőrzött és feltöltött javítás után érdemes rövid megjegyzésben rögzíteni a változást és az ellenőrzést, majd **Close as completed** állapottal lezárni a jegyet. Ha a bejelentő újra elő tudja idézni, a jegy újranyitható.
 
 A GitHub API hozzáférési hibája miatt a jegyet ez a munkamenet nem tudta megnyitni; megjegyzést nem küldött és a jegyet nem zárta le.
+
+
+## Kiegészítés: egyszeri segítség az áthelyezéshez
+
+Az első sikeres lehelyezés után „Tárgyak áthelyezése” címmel az elfogadott Bontóvasas útmutató jelenik meg. A megjelenés farmonként mentődik; sikertelen lehelyezés/mentés után még várakozik, felvétel és újralerakás után nem ismétlődik. A régi mentések az új opcionális jelző nélkül is érvényesek. 402 automatikus teszt és a build sikeres. Böngészőben ellenőrizve az elfogadott szöveg, a sikertelen mentés, a két képernyőméret és a felvétel–újratöltés–újralerakás menete.
+
+[Segítségablak](../concepts/birdhouse-first-placement-help.png) · [Mobilos nézet](../concepts/birdhouse-first-placement-help-mobile.png)

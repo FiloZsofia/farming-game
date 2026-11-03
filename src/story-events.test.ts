@@ -14,3 +14,5 @@ describe('neighbor story validation',()=>{
 });
 
 it('offers the journal hint only on day one until acknowledged and accepts old stories',()=>{const old={giftReceived:false,morningSeen:false,birdhouse:null};expect(validStory(old)).toBe(true);expect(journalHelpPending(old,1)).toBe(true);expect(journalHelpPending(old,2)).toBe(false);expect(journalHelpPending({...old,journalHelpSeen:true},1)).toBe(true);expect(journalHelpPending({...old,journalHelpSeen:true,journalHelpConfirmed:true},1)).toBe(false);expect(validStory({...old,journalHelpSeen:true})).toBe(true);expect(validStory({...old,journalHelpSeen:'yes'})).toBe(false);expect(validStory({...old,journalHelpConfirmed:'yes'})).toBe(false);});
+
+it('accepts older stories and validates the optional one-time birdhouse move help marker',()=>{const old=createStory();expect(validStory(old)).toBe(true);expect(validStory({...old,birdhouseMoveHelpSeen:false})).toBe(true);expect(validStory({...old,birdhouseMoveHelpSeen:true})).toBe(true);expect(validStory({...old,birdhouseMoveHelpSeen:'yes'})).toBe(false);});

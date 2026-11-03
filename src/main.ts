@@ -1,3 +1,4 @@
+import {BIRDHOUSE_HELP_TITLE,BIRDHOUSE_HELP_TEXT} from './birdhouse-help';
 import {birdhouseVisible,birdhouseOverlaps,treeArtwork,machineArtwork} from './birdhouse-placement';
 import {studyTrunkBlocked} from './art-study-layout';
 import {prepareArtStudy} from './art-study-setup';
@@ -1112,7 +1113,8 @@ class Farm extends Phaser.Scene {
  private async placeBirdhouse(){
   if(!this.canInteract()||!this.target)return;const {x,y}=this.target,point={x:x+TILE/2,y:y+TILE/2};
   if(!this.canPlaceBirdhouse(point.x,point.y)){this.notice('Válassz egy közeli, szabad helyet a kertben.');return;}
-  await this.saveStory({...this.story,birdhouse:point},()=>{this.redrawScenery();this.selectTool('hand');this.notice('Az odú a helyén! Remélem, hamar beköltöznek a madarak.');});
+  const helpPending=!this.story.birdhouseMoveHelpSeen;
+  await this.saveStory({...this.story,birdhouse:point,birdhouseMoveHelpSeen:true},()=>{this.redrawScenery();this.selectTool('hand');this.notice('Az odú a helyén! Remélem, hamar beköltöznek a madarak.');if(helpPending)showDialogue(BIRDHOUSE_HELP_TITLE,BIRDHOUSE_HELP_TEXT,'');});
  }
  private updateVisit(dt:number){
   this.eventRetry=Math.max(0,this.eventRetry-dt);
