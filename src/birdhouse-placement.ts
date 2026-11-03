@@ -14,7 +14,15 @@ export const chestArtwork=(p:Point):VisualBox=>({x:p.x-20,y:p.y-28,w:40,h:36});
 export function birdhouseVisible(p:Point,s:World){
  // The farm's permanent border crowns and south fence must not cover the sprite.
  if(p.x<farmBounds.left+100||p.x>farmBounds.right-100||p.y<farmBounds.top+110||p.y>550)return false;
- const f=farmLayout,boxes:VisualBox[]=[...farmBuildingArtwork,{x:f.journal.x-5,y:f.journal.y-3,w:31,h:25},{x:f.catalog.x-5,y:f.catalog.y-6,w:31,h:27},{x:f.shipping.x,y:f.shipping.y,w:34,h:29},{x:f.mailbox.x,y:f.mailbox.y,w:f.mailbox.w,h:f.mailbox.h+20}];
+ const f=farmLayout;
+ // In front of a building, the birdhouse is drawn over its wall. Behind it,
+ // overlapping roof artwork would hide it and remains an invalid placement.
+ const fronts=[f.houseBounds.y+f.houseBounds.h,f.shedBounds.y+f.shedBounds.h];
+ if(farmBuildingArtwork.some((box,i)=>birdhouseOverlaps(p,box)&&p.y-4<fronts[i]))return false;
+ const foot={x:p.x-7,y:p.y-4,w:14,h:8};
+ const entrances=[f.porchBounds,f.porchSteps,{x:215,y:177,w:48,h:88},{x:610,y:173,w:44,h:65}];
+ if(entrances.some(b=>foot.x<b.x+b.w+2&&foot.x+foot.w>b.x-2&&foot.y<b.y+b.h+2&&foot.y+foot.h>b.y-2))return false;
+ const boxes:VisualBox[]=[{x:f.journal.x-5,y:f.journal.y-3,w:31,h:25},{x:f.catalog.x-5,y:f.catalog.y-6,w:31,h:27},{x:f.shipping.x,y:f.shipping.y,w:34,h:29},{x:f.mailbox.x,y:f.mailbox.y,w:f.mailbox.w,h:f.mailbox.h+20}];
  boxes.push(...s.travel.estate.trees.map(treeArtwork),...(s.travel.crafting?.machines??[]).map(machineArtwork),...(s.skill.chests?.placed??[]).map(chestArtwork));
  for(const site of junkSites){const q=junkPoint(s.clearing,site.id);boxes.push({x:q.x-103,y:q.y-88,w:206,h:126});}
  for(const q of s.travel.estate.pond)boxes.push({x:q.x-32,y:q.y-(q.kind==='reed'?65:28),w:64,h:q.kind==='reed'?70:44});

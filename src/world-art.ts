@@ -139,6 +139,9 @@ export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),g
  const landscape=scene.add.renderTexture(left,top,width*resolution,height*resolution).setOrigin(0).setScale(1/resolution).setDepth(-1);
  if(study)landscape.camera.setOrigin(0,0).setZoom(resolution);
  const clutter=scene.add.graphics().setVisible(false);
+ // Separate from the baked ground: in front of cottage/workshop walls (-.9),
+ // below machinery (.8), orchard crowns (2), and characters (100).
+ const birdhouseArt=scene.add.graphics().setDepth(-.6);
  const redraw=(clearing:Clearing,garden:Garden,birdhouse:{x:number;y:number}|null)=>{g=clutter;clutter.clear();
  // Low, soil-bound stone groups replace identical loose boulders.
  for(const item of activeDebris(clearing,garden).filter(d=>d.kind==='rock')){
@@ -163,9 +166,10 @@ export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),g
  }
  for(const {x,y}of activeDebris(clearing,garden).filter(d=>d.kind==='weed')){oval(x+2,y+2,25,9,0x314c2b,.3);for(let i=-2;i<=2;i++){tuft(x+i*3,y-Math.abs(i),1.3);line(x+i*2,y,x+i*3,y-13+Math.abs(i),0x3d7137,2);}oval(x-4,y-9,6,3,0x78a844);oval(x+5,y-7,7,3,0x9cbd57);}
  for(const item of activeDebris(clearing,garden)){const progress=clearing.progress?.[item.id];if(!progress)continue;for(let i=0;i<3;i++){oval(item.x+(i-1)*6,item.y+15,4,3,i<progress?0xe6c67c:0x3f5237);}}
+ g=birdhouseArt;birdhouseArt.clear();
  if(birdhouse){const {x,y}=birdhouse;oval(x+4,y+3,23,8,0x31472f,.3);rect(x-1,y-22,3,25,0x725639);rect(x-8,y-34,17,16,0xc69c64);rect(x-7,y-32,3,13,0xdfb77a);poly([x-12,y-33,x,y-45,x+13,y-33,x+10,y-30,x,y-39,x-9,y-30],0x80523c);oval(x+1,y-27,7,7,0x304a3b);rect(x,y-21,3,2,0xe5c88c);}
   landscape.clear().draw(terrain,0,0).draw(clutter,-left,-top);clutter.clear();
  };
  redraw(clearing,garden,birdhouse);
- return {redraw,destroy(){landscape.destroy();terrain.destroy();clutter.destroy();fixtures.destroy();}};
+ return {redraw,birdhouseArt,destroy(){birdhouseArt.destroy();landscape.destroy();terrain.destroy();clutter.destroy();fixtures.destroy();}};
 }

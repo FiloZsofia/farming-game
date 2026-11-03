@@ -1060,3 +1060,8 @@ A felhasználó a jelenlegi Samet választotta alapul, javított copffal és ar�
 ### Madárodú takarásának javítása — 2026. november 3.
 
 A „Madárodú” hibabejelentés alapján a lehelyezésnél a teljes odúsziluettet és a tetők/lombok/tárgyak látható területét ellenőrizzük, nem csak a talajpontot. A már álló odút az új fák, gépek és ládák lehelyezésénél is védjük. A korábbi takart odú betöltéskor egyetlen meglévő ajándékként visszakerül a Készletbe, a többi farmadat megőrzésével. A szabad helyen álló és a ládában őrzött odú változatlan marad. A Bontóvasas áthelyezési útvonal megmarad. Az előnézet és a lehelyezés a jelenlegi 24-es rács középpontját használja.
+
+
+### Madárodú az épület előtt — 2026. november 3.
+
+A felhasználó pontosítása alapján a teljes képi átfedést tiltó szabály túl szigorú volt. A ház és a Műhely előtti szabad talajon állhat odú úgy, hogy a fal egy részét eltakarja. Külön rajzrétegen jelenik meg az épületek előtt; nem kerül többé a talajba sütött képbe. A ház mögötti, tető által fedett hely tiltott marad, a veranda, lépcső és ajtók előtti sáv szabad marad. A fal előtt látható régi odúkat a betöltés megőrzi, nem teszi vissza a Készletbe. Más tárgyak, fák és tárolók takarását továbbra is ellenőrizzük.
