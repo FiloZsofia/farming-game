@@ -1,3 +1,4 @@
+import {birdhouseVisible} from './birdhouse-placement';
 import {southBlocked,inNoahSouth} from './south-forest-terrain';
 import {pollinationDependent,RIPE_FRUIT_DAYS} from './pollination';
 import {enlargeGarden} from './garden-migration';
@@ -80,6 +81,8 @@ export function decodeSnapshot(value:unknown):Snapshot|null{
  }
 
  if(validSnapshot(value)){const result=structuredClone(value);
+  // Recover a previously hidden gift as the same inventory item, never create a second one.
+  if(result.story.birdhouse&&!birdhouseVisible(result.story.birdhouse,result))result.story.birdhouse=null;
   // Remove historical veranda soil only after validating the original record.
   // Return planted crops/flowers as planting material, never silently discard them.
   const removed=new Set<string>();

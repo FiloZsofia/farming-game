@@ -1055,3 +1055,8 @@ A felhasználó elvetette a korábbi, túl pixeles lilás–türkizes próbát. 
 ### Sam megjelenése és járása — kizárólag tesztben (2026. október 31.)
 
 A felhasználó a jelenlegi Samet választotta alapul, javított copffal és arányokkal, kidolgozottabb ruházattal és könnyedebb járással. Nem a korábbi karakterlap A/B figurája készül el. A barna haj, krémszínű ing és olívazöld nadrág megmarad. A copf összefüggő, keskenyedő forma, a fej hátsó részéhez kapcsolódó hajgumival; finomított váll–kar átmenet, gallér, gombok, zsebek, varrások, felhajtott ujj, öv és bakancsrészletek egészítik ki. Csak a memóriabeli Kidolgozott farm látványtesztben működik; külön gombbal hasonlítható össze az eredetivel. A normál játék és a többi tesztjelenet eredeti Samjét és járását nem módosítjuk. A megjelenést nem mentjük a farmba.
+
+
+### Madárodú takarásának javítása — 2026. november 3.
+
+A „Madárodú” hibabejelentés alapján a lehelyezésnél a teljes odúsziluettet és a tetők/lombok/tárgyak látható területét ellenőrizzük, nem csak a talajpontot. A már álló odút az új fák, gépek és ládák lehelyezésénél is védjük. A korábbi takart odú betöltéskor egyetlen meglévő ajándékként visszakerül a Készletbe, a többi farmadat megőrzésével. A szabad helyen álló és a ládában őrzött odú változatlan marad. A Bontóvasas áthelyezési útvonal megmarad. Az előnézet és a lehelyezés a jelenlegi 24-es rács középpontját használja.

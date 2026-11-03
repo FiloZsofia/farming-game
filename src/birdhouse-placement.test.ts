@@ -1,0 +1,13 @@
+import {it,expect} from 'vitest';
+import {birdhouseVisible,birdhouseOverlaps,treeArtwork,machineArtwork,chestArtwork} from './birdhouse-placement';
+import {snapshot,decodeSnapshot,validSnapshot,SaveStore} from './storage';
+import {createClock} from './clock';
+import {createGarden} from './gardening';
+import {inventoryCounts} from './chests';
+import {createCrafting} from './crafting';
+import {IDBFactory} from 'fake-indexeddb';
+const fresh=()=>snapshot({x:250,y:260},createClock(8),createGarden());
+it('rejects the full roof, side eaves and porch even when the ground point is walkable',()=>{const s=fresh();for(const p of [{x:250,y:0},{x:80,y:100},{x:400,y:100},{x:250,y:240},{x:630,y:10},{x:750,y:100}])expect(birdhouseVisible(p,s),JSON.stringify(p)).toBe(false);expect(birdhouseVisible({x:280,y:400},s)).toBe(true);});
+it('reserves the whole birdhouse against mature crowns, high equipment and chest artwork',()=>{const s=fresh(),p={x:320,y:400};s.travel.estate.trees=[{x:320,y:470,kind:'apple',planted:1,last:0,fruit:0}];expect(birdhouseVisible(p,s)).toBe(false);s.travel.estate.trees=[];s.travel.crafting=createCrafting();s.travel.crafting.machines=[{kind:'beeHabitat',x:320,y:455,started:null,ready:0}];expect(birdhouseVisible(p,s)).toBe(false);expect(birdhouseOverlaps(p,treeArtwork({x:320,y:470}))).toBe(true);expect(birdhouseOverlaps(p,machineArtwork({x:320,y:455}))).toBe(true);expect(birdhouseOverlaps(p,chestArtwork({x:340,y:400}))).toBe(true);});
+it('recovers an old hidden gift once without changing possessions or modifying the original record',()=>{const s=fresh();s.story.giftReceived=true;s.story.birdhouse={x:250,y:0};s.economy.gold=237;s.clearing.wood=19;const original=structuredClone(s);expect(validSnapshot(s)).toBe(true);const recovered=decodeSnapshot(s)!;expect(recovered.story.birdhouse).toBeNull();expect(inventoryCounts(recovered)['special:birdhouse']).toBe(1);expect(recovered.economy).toEqual(s.economy);expect(recovered.clearing).toEqual(s.clearing);expect(recovered.clock).toEqual(s.clock);expect(s).toEqual(original);expect(decodeSnapshot(recovered)).toEqual(recovered);});
+it('preserves a visible odú through storage and does not duplicate an odú kept in a chest',async()=>{const s=fresh();s.story.giftReceived=true;s.story.birdhouse={x:280,y:400};const store=new SaveStore(new IDBFactory());await store.load();await store.save(s);expect((await store.load()).data?.story.birdhouse).toEqual(s.story.birdhouse);store.close();s.story.birdhouse=null;s.skill.birdhouseStored=true;s.skill.chests={packed:0,placed:[{x:324,y:420,items:{'special:birdhouse':1}}]};const loaded=decodeSnapshot(s)!;expect(inventoryCounts(loaded)['special:birdhouse']??0).toBe(0);expect(loaded.skill.chests!.placed[0].items['special:birdhouse']).toBe(1);});

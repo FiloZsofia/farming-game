@@ -2,6 +2,8 @@
 
 ## Változások a 0.2.0 óta — verzióemelés nélkül
 
+- 2026-11-03: a madárodú teljes látható helyigényét ellenőrizzük, ezért nem helyezhető háztető, lomb vagy tárgy takarásába. A régi takart odú a Készletbe kerül vissza; az előnézet és a lehelyezés középpontja egyezik.
+
 - Csak a látványtesztben: a jelenlegi Samre épülő javított copf, finomított arányok, részletesebb munkaruha és könnyedebb járás. Az eredetivel külön gombbal összehasonlítható; a normál játék karaktere és mentése változatlan.
 
 - A korábbi pixeles látványtesztet a „Kidolgozott farm” váltja fel: a jelenlegi formák finomabb részletekkel, új bokor-, páfrány- és sásformákkal, mohás kövekkel, kétszeres felbontású tájrétegekkel. Továbbra is csak memóriabeli teszt, a normál játék változatlan.

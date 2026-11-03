@@ -1,3 +1,4 @@
+import {birdhouseVisible,birdhouseOverlaps,treeArtwork,machineArtwork} from './birdhouse-placement';
 import {studyTrunkBlocked} from './art-study-layout';
 import {prepareArtStudy} from './art-study-setup';
 import {createNoahChapter} from './noah-story';
@@ -716,7 +717,7 @@ class Farm extends Phaser.Scene {
  private async placeCraftMachine(){
   const kind=this.placingCraft,p=this.craftPlacement();if(!kind||!p||!this.canInteract()||this.actor.y>=600||Math.hypot(p.x-this.actor.x,p.y-this.actor.y)>90)return;
   const occupied=this.garden.plots.size&&[...this.garden.plots.keys()].some(key=>{const[x,y]=key.split(',').map(Number);return Math.abs(x+TILE/2-p.x)<TILE/2+4&&Math.abs(y+TILE/2-p.y)<TILE/2+4;});
-  if(p.x<farmBounds.left+40||p.x>farmBounds.right-40||p.y<farmBounds.top+48||p.y>560||blocked(p.x,p.y)||occupied||junkAt(this.clearing,p.x,p.y)||debrisAt(this.clearing,this.garden,p.x,p.y)||this.travel.crafting?.machines.some(m=>Math.hypot(m.x-p.x,m.y-p.y)<22)||this.skill.chests?.placed.some(c=>Math.hypot(c.x-p.x,c.y-p.y)<30)||this.travel.estate.trees.some(t=>Math.hypot(t.x-p.x,t.y-p.y)<32)||this.story.birdhouse&&Math.hypot(this.story.birdhouse.x-p.x,this.story.birdhouse.y-p.y)<30){this.notice('Itt nincs szabad hely.');return;}
+  if(this.story.birdhouse&&birdhouseOverlaps(this.story.birdhouse,machineArtwork(p))||p.x<farmBounds.left+40||p.x>farmBounds.right-40||p.y<farmBounds.top+48||p.y>560||blocked(p.x,p.y)||occupied||junkAt(this.clearing,p.x,p.y)||debrisAt(this.clearing,this.garden,p.x,p.y)||this.travel.crafting?.machines.some(m=>Math.hypot(m.x-p.x,m.y-p.y)<22)||this.skill.chests?.placed.some(c=>Math.hypot(c.x-p.x,c.y-p.y)<30)||this.travel.estate.trees.some(t=>Math.hypot(t.x-p.x,t.y-p.y)<32)||this.story.birdhouse&&Math.hypot(this.story.birdhouse.x-p.x,this.story.birdhouse.y-p.y)<30){this.notice('Itt nincs szabad hely.');return;}
   const next=this.currentSnapshot();next.travel.crafting??=createCrafting();if(kind==='basket'){if(!next.travel.estate.produce.basket)return;next.travel.estate.produce.basket--;}else{if(!next.travel.crafting.items[kind])return;next.travel.crafting.items[kind]--;}
   next.travel.crafting.machines.push({kind,...p,started:null,ready:0});const garden={...this.garden,plots:new Map(next.plots)};if(kind==='irrigation')irrigate(garden,next.travel.crafting);next.plots=[...garden.plots];await this.commitChest(next,()=>{this.selectTool('harvest');this.sprayPending=true;});
  }
@@ -954,6 +955,7 @@ class Farm extends Phaser.Scene {
   finally{this.transitioning=false;this.lastTick=performance.now();}
  }
  private estateLand(x:number,y:number){
+  if(this.story.birdhouse&&birdhouseOverlaps(this.story.birdhouse,treeArtwork({x,y})))return false;
   if(junkAt(this.clearing,x,y)||this.travel.crafting?.machines.some(m=>Math.hypot(m.x-x,m.y-y)<32))return false;
   return !(this.skill.chests?.placed.some(c=>Math.hypot(c.x-x,c.y-y)<42))&&x>farmBounds.left+40&&x<farmBounds.right-40&&y>farmBounds.top+48&&y<565&&!blocked(x,y)&&!debrisAt(this.clearing,this.garden,x,y)&&![...this.garden.plots.keys()].some(key=>{const [px,py]=key.split(',').map(Number);return Math.hypot(px+TILE/2-x,py+TILE/2-y)<40;})&&!(this.story.birdhouse&&Math.hypot(x-this.story.birdhouse.x,y-this.story.birdhouse.y)<40)&&!farmLayout.paths.some(path=>path.points.slice(1).some((b,i)=>{const a=path.points[i],dx=b[0]-a[0],dy=b[1]-a[1],t=Math.max(0,Math.min(1,((x-a[0])*dx+(y-a[1])*dy)/(dx*dx+dy*dy)));return Math.hypot(x-a[0]-t*dx,y-a[1]-t*dy)<path.width/2+24;}));
  }
@@ -1104,11 +1106,11 @@ class Farm extends Phaser.Scene {
   });
  }
  private canPlaceBirdhouse(x:number,y:number){
-  if(junkAt(this.clearing,x,y)||this.travel.crafting?.machines.some(m=>Math.hypot(m.x-x,m.y-y)<32))return false;
+  if(!birdhouseVisible({x,y},{travel:this.travel,skill:this.skill,clearing:this.clearing})||junkAt(this.clearing,x,y)||this.travel.crafting?.machines.some(m=>Math.hypot(m.x-x,m.y-y)<32))return false;
   return this.story.giftReceived&&!this.story.birdhouse&&!this.skill.birdhouseStored&&!this.skill.chests?.placed.some(c=>Math.hypot(c.x-x,c.y-y)<42)&&!this.travel.estate.trees.some(t=>Math.hypot(t.x-x,t.y-y)<40)&&!this.travel.estate.pond.some(p=>Math.hypot(p.x-x,p.y-y)<28)&&!blocked(x,y)&&y>farmBounds.top+48&&x>farmBounds.left+40&&x<farmBounds.right-40&&y<570&&Math.hypot(x-this.actor.x,y-this.actor.y)<=60&&!debrisAt(this.clearing,this.garden,x,y)&&![...this.garden.plots.keys()].some(key=>{const [px,py]=key.split(',').map(Number);return Math.abs(px+8-x)<22&&Math.abs(py+8-y)<22;});
  }
  private async placeBirdhouse(){
-  if(!this.canInteract()||!this.target)return;const {x,y}=this.target,point={x:x+8,y:y+8};
+  if(!this.canInteract()||!this.target)return;const {x,y}=this.target,point={x:x+TILE/2,y:y+TILE/2};
   if(!this.canPlaceBirdhouse(point.x,point.y)){this.notice('Válassz egy közeli, szabad helyet a kertben.');return;}
   await this.saveStory({...this.story,birdhouse:point},()=>{this.redrawScenery();this.selectTool('hand');this.notice('Az odú a helyén! Remélem, hamar beköltöznek a madarak.');});
  }
