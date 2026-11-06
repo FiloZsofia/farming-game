@@ -2,6 +2,8 @@
 
 ## Változások a 0.2.0 óta — verzióemelés nélkül
 
+- A Magkatalógus ablakából eltűnt a címet megismétlő felső címke; az ablakcím megmarad.
+
 - 2026-11-06 — összefüggő kertészeti tesztbővítés: több szabad ágyás, közvetlen eszközsávos vetés/gondozás, öt jóváhagyott társítás, társításonként kibontott Magkatalógus és valódi átvételt igénylő rendelés; komposztálós mulcs, 20/40 pontos feloldások ünnepléssel, megfigyelési napló és egyszeri felismeréspontok, növényenként eltérő maggyűjtés. Bontóvassal mozgatható kézírásos jelölők, kövenként elszámolt szabad lépőkőutak, egy ágyáshoz kapcsolt öntöző; tesztbeli ládatervrajz Simonnál 160 goldért. A normál kertészeti rendszer és mentése még nem áll át.
 - 2026-11-06 — normál játék: szárazföldi kacsalábak, rövid tóparti séták és megállások; a Magkatalógus új, egyszerű címe. A kacsák tojás- és beköltözési szabályai változatlanok.
 

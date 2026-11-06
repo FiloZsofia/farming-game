@@ -1012,7 +1012,7 @@ class Farm extends Phaser.Scene {
  private materialName(crop:string){return crop==='potato'?'vetőgumó':crop==='strawberry'?'palánta':['honeyberry','blueberry'].includes(crop)?'csemete':'mag';}
  private openCatalog(){
   if(!this.canInteract())return;if(!this.nearObject(farmLayout.catalog)){this.notice('Sétálj a ház jobb oldali ablaka melletti magkatalógushoz.');return;}
-  showDialogue('Magkatalógus','A rendelés árát most fizeted ki. A magok másnap reggel a postaládába érkeznek.','MAGKATALÓGUS');
+  showDialogue('Magkatalógus','A rendelés árát most fizeted ki. A magok másnap reggel a postaládába érkeznek.','');
   const rows=document.querySelector<HTMLElement>('#catalog-rows')!;rows.replaceChildren();
   for(const crop of crops){
    if(!unlockedSeeds(this.skill).includes(crop))continue;

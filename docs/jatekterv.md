@@ -1256,3 +1256,6 @@ A mag birtoklása, megszerzése és megőrzése független a társítások megl�
 Sem az új rendszer bevezetése, sem egy társítás feloldása nem törölheti vagy szűrheti a korábban birtokolt magokat. A tárgy-/magnévjegyzék és a mentés teljes magkészletet kezeljen; ne a feloldott receptekből számolt fajlista legyen a Készlet vagy a migráció engedélyezőlistája. A társítás nélküli vagy még zárolt növény magja is látható és megőrizhető legyen a Készletben; a jelenlegi ágyásokba viszont csak az adott társítás megfelelő növénye vethető. Új külön Készlet-kategória ehhez sem szükséges.
 
 Jelenleg a normál játék tíz vetőmagfajtája közül a burgonya, hagyma, mézbogyó és áfonya nem szerepel az öt elfogadott társításban. A tervezett uborka, paprika és paradicsom társítása szintén későbbi feladat. Ezek nem törlendő vagy elvesző magok.
+
+
+A Magkatalógus ablakában ne legyen a címet ismétlő felső dialogue label: csak a „Magkatalógus” ablakcím maradjon. Elfogadva: 2026-11-06.
