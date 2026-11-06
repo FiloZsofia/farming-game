@@ -26,9 +26,6 @@
  #dialogue #shop-panel .shop-card button,#dialogue #shop-panel .unavailable-blueprint-price{grid-column:2;justify-self:start}
 }
 
-.noah-test-picker{margin-top:26px;padding-top:18px;border-top:1px solid #bda46a60}
-.noah-test-picker select{display:block;max-width:100%;padding:10px;background:#243e31;color:var(--window-ink);border:1px solid var(--window-border);border-radius:3px;font:14px var(--control-font)}
-#dialogue .noah-test-picker button{display:block;margin-left:0;margin-right:auto}
 .noah-ingredient{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #bda46a44}
 .noah-ingredient .item-icon,.noah-resin-icon{width:38px;height:38px;flex:none}
 .noah-ingredient>span:not(.noah-resin-icon){flex:1}
@@ -109,7 +106,6 @@
 
 @media(max-width:600px){body:has(#game[data-art-study="true"]) #test-mode-banner{top:auto;bottom:116px;left:auto;right:12px;transform:none;max-width:195px;width:max-content;box-sizing:border-box;font-size:12px;padding:7px 10px;}}
 
-.art-study-picker{display:flex;flex-wrap:wrap;gap:10px;padding-bottom:18px;margin-bottom:18px;border-bottom:1px solid #70836580}.art-study-picker>button{margin:0}.art-study-picker>button:first-child{flex-basis:100%}
 
 .merchant-actions{display:flex;flex-direction:column;gap:10px;margin-top:18px}.merchant-actions>button{margin:0;width:100%;text-align:left}
 #app #dialogue #dialogue-close[hidden]{display:none}
@@ -131,3 +127,19 @@
 @keyframes health-demo-mote{0%,53%,76%,100%{opacity:0;transform:translate(calc(-1 * var(--health-step)),var(--health-rise)) scale(.3)}56%{opacity:1;transform:translate(calc(-1 * var(--health-step)),var(--health-rise)) scale(.65)}62%{opacity:1;transform:translate(calc(-.5 * var(--health-step) + var(--mote-drift)),calc(.45 * var(--health-rise))) scale(1)}69%{opacity:1;transform:translate(-50%,-50%) scale(.6)}73%{opacity:0;transform:translate(-50%,-50%) scale(.2)}}
 @keyframes health-demo-halo{0%,63%,85%,100%{opacity:0;transform:scale(.7)}72%{opacity:1;transform:scale(1.12)}81%{opacity:0;transform:scale(1.5)}}
 @media(prefers-reduced-motion:reduce){.forest-health-demo .health-demo-heart,.forest-health-demo .health-demo-full,.forest-health-demo .health-demo-food,.forest-health-demo .health-demo-mote,.forest-health-demo .health-demo-halo{animation:none}.heart-5 .health-demo-full{opacity:0}.health-demo-food{opacity:1;transform:translateX(-50%)}}
+/* Developer tools share one section layout, including every preview. */
+#dialogue[data-presentation="developer-tools"] #research-panel{display:flex;flex-direction:column;gap:0}
+#dialogue[data-presentation="developer-tools"] .developer-tool-section{display:flex;flex-direction:column;align-items:flex-start;gap:12px;margin:0;padding:22px 0;border-top:1px solid #bda46a60}
+#dialogue[data-presentation="developer-tools"] .developer-tool-section:first-child{border-top:0;padding-top:0}
+#dialogue[data-presentation="developer-tools"] .developer-tool-section :is(h3,p,button,select){margin:0;max-width:100%;box-sizing:border-box}
+#dialogue[data-presentation="developer-tools"] .developer-tool-section h3{font-size:19px;line-height:1.35}
+#dialogue[data-presentation="developer-tools"] .developer-tool-section p{font-size:14px;line-height:1.6}
+#dialogue[data-presentation="developer-tools"] .developer-tool-section select{width:100%;padding:10px;background:#243e31;color:var(--window-ink);border:1px solid var(--window-border);border-radius:3px;font:14px var(--control-font)}
+#dialogue[data-presentation="developer-tools"] .developer-tool-section button{white-space:normal;text-align:left}
+#dialogue[data-presentation="developer-tools"] .developer-tool-footer{padding-top:22px;border-top:1px solid #bda46a60}
+.material-gift{position:fixed;z-index:60;pointer-events:none;transform:translate(-50%,-100%)}
+.material-gift-flight{display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 16px;border-radius:12px;background:radial-gradient(ellipse,#e7cd835c,transparent 72%);animation:material-gift-rise 2s ease-out both}
+.material-gift .item-icon{width:58px;height:58px;filter:drop-shadow(0 0 9px #f6df9299)}
+.material-gift span{padding:4px 9px;border:1px solid #bda46a99;border-radius:4px;background:#243c2ef2;color:#fff0c3;font:700 14px var(--control-font);white-space:nowrap;text-shadow:0 1px 2px #14271e}
+@keyframes material-gift-rise{0%{opacity:0;transform:translateY(12px) scale(.65)}20%{opacity:1;transform:translateY(-5px) scale(1.12)}32%,70%{opacity:1;transform:translateY(-9px) scale(1)}100%{opacity:0;transform:translateY(-30px) scale(.92)}}
+@media(prefers-reduced-motion:reduce){.material-gift-flight{animation:none}}

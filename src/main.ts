@@ -1,3 +1,4 @@
+import {showMaterialGift} from './material-gift';
 import {prepareMaterialConversationTest,type MaterialCheckpoint} from './material-conversation-test';
 import {FOREST_HELP_TITLE,FOREST_HELP_TEXT,forestHelpPending,appendForestHealthDemo} from './forest-help';
 import {IRRIGATION_DESCRIPTION} from './crafting';
@@ -945,7 +946,7 @@ class Farm extends Phaser.Scene {
    if(this.transitioning)return false;
    if(!merchantTopics(shop,this.travel.research,this.noahTest?.state).some(t=>t.id===id)){this.openMerchantMenu(shop);return false;}
    const ok=id==='binder'?await this.noahTest!.openSimon():await this.researchMerchant(shop,id);
-   if(ok)this.merchantBack(shop);else this.openMerchantMenu(shop);return Boolean(ok);
+   if(ok){if(id!=='material')this.merchantBack(shop);}else this.openMerchantMenu(shop);return Boolean(ok);
   },()=>this.openShop(shop),()=>dialogue.close());
  }
  private showSpeaker(shop:Shop){
@@ -1278,7 +1279,7 @@ class Farm extends Phaser.Scene {
   let next:Research|null=null,text='';
   if(topic==='bee'&&shop==='nursery'&&this.travel.research.observation&&!this.travel.research.key){next=grantKey(this.travel.research);text='Örülök, hogy láttál egyet! De figyeljük tovább őket. A birtok előző gazdája is sokat foglalkozott a kert élővilágával. Rám bízta a melléképület kulcsát; most már nálad a helye. Talán találsz ott valamit, ami segít megérteni, min dolgozott.';}
   else if(topic==='material'&&shopkeepers[shop].material){next=supplyMaterial(this.travel.research,shopkeepers[shop].material!);text=shop==='nursery'?'A régi berendezéshez szűrő kell? Van egy darab tiszta lenszövetem. Vidd csak el — kíváncsi vagyok, mire jutsz vele!':'Egy ép üvegedényre van szükséged? Ezt szívesen neked adom. Jó látni, hogy a régi műhely ismét életre kel.';}
-  if(!next)return false;if(await this.commitResearch(next)){showDialogue(shopkeepers[shop].name,text,'EGY KEDVES SZÓ');this.showSpeaker(shop);return true;}return false;
+  if(!next)return false;if(await this.commitResearch(next)){if(topic==='material'){dialogue.close();showMaterialGift(this,this.actor,shopkeepers[shop].material==='leo'?'linen':'glass');}else{showDialogue(shopkeepers[shop].name,text,'EGY KEDVES SZÓ');this.showSpeaker(shop);}return true;}return false;
  }
  private async removeCobweb(id:string){
   if(!this.canInteract()||!inWorkshop(this.actor.y))return;const web=remainingWebs(this.travel.research).find(w=>w.id===id);if(!web)return;const next=clearCobweb(this.travel.research,id,this.actor,'hand');if(!next){this.notice('Ezt kézzel le tudom szedni.');return;}
@@ -1307,17 +1308,19 @@ class Farm extends Phaser.Scene {
   if(!this.ready||this.transitioning||!developerToolsEnabled())return;
   showDialogue('Fejlesztői eszközök','A teszt külön memóriában fut. A normál farmod megmarad.','');
   const panel=document.querySelector<HTMLElement>('#research-panel')!;panel.replaceChildren();panel.hidden=false;
-  const heading=document.createElement('h3');heading.textContent='Tesztmódok';panel.append(heading);
-  const materials=document.createElement('section');materials.className='noah-test-picker';const materialTitle=document.createElement('h3');materialTitle.textContent='Műhelyalkatrészek · beszélgetésteszt';const materialPoint=document.createElement('select');materialPoint.id='material-test-checkpoint';materialPoint.setAttribute('aria-label','Az alkatrészes teszt kezdőpontja');for(const [value,label]of [['workshop','Műhely · az egyszeri gondolat előtt'],['annie','Annie · az üvegedényről kérdezek'],['leo','Leo · a szűrőhöz szükséges anyagról kérdezek']])materialPoint.add(new Option(label,value));const materialStart=document.createElement('button');materialStart.type='button';materialStart.id='start-material-test';materialStart.textContent='Alkatrészes teszt indítása';materialStart.onclick=()=>{materialStart.disabled=true;void this.startMaterialTest(materialPoint.value as MaterialCheckpoint).finally(()=>materialStart.disabled=false);};materials.append(materialTitle,materialPoint,materialStart);panel.append(materials);
-  const healthPreview=document.createElement('button');healthPreview.type='button';healthPreview.id='preview-forest-health-help';healthPreview.textContent='Életerő-segítség · animáció';healthPreview.onclick=()=>this.showForestHealthHelp();panel.append(healthPreview);
-  const artSection=document.createElement('section');artSection.className='art-study-picker';panel.append(artSection);
-  const art=document.createElement('button');art.type='button';art.id='start-art-study';art.textContent='Látványteszt · Kidolgozott farm';art.onclick=()=>{art.disabled=true;void this.startArtStudy().finally(()=>{art.disabled=false;});};artSection.append(art);
+  dialogue.dataset.presentation='developer-tools';
+  const section=(title:string,description?:string)=>{const el=document.createElement('section');el.className='developer-tool-section';const h=document.createElement('h3');h.textContent=title;el.append(h);if(description){const p=document.createElement('p');p.textContent=description;el.append(p);}panel.append(el);return el;};
+  const materials=section('Műhelyalkatrészek · beszélgetésteszt');const materialPoint=document.createElement('select');materialPoint.id='material-test-checkpoint';materialPoint.setAttribute('aria-label','Az alkatrészes teszt kezdőpontja');for(const [value,label]of [['workshop','Műhely · az egyszeri gondolat előtt'],['annie','Annie · az üvegedényről kérdezek'],['leo','Leo · a szűrőhöz szükséges anyagról kérdezek']])materialPoint.add(new Option(label,value));const materialStart=document.createElement('button');materialStart.type='button';materialStart.id='start-material-test';materialStart.textContent='Teszt indítása';materialStart.onclick=()=>{materialStart.disabled=true;void this.startMaterialTest(materialPoint.value as MaterialCheckpoint).finally(()=>materialStart.disabled=false);};materials.append(materialPoint,materialStart);
+  const healthSection=section('Életerő-segítség','Az animáció megtekintése a mentés módosítása nélkül.');const healthPreview=document.createElement('button');healthPreview.type='button';healthPreview.id='preview-forest-health-help';healthPreview.textContent='Előnézet';healthPreview.onclick=()=>this.showForestHealthHelp();healthSection.append(healthPreview);
+  const artSection=section('Látványteszt · Kidolgozott farm');
+  const art=document.createElement('button');art.type='button';art.id='start-art-study';art.textContent='Teszt indítása';art.onclick=()=>{art.disabled=true;void this.startArtStudy().finally(()=>{art.disabled=false;});};artSection.append(art);
   if(this.artStudy){
    const compare=document.createElement('button');compare.type='button';compare.id='compare-art-study';compare.textContent=this.artStudyOriginal?'Új látvány':'Eredeti látvány';compare.onclick=()=>{this.toggleArtStudy();dialogue.close();};artSection.append(compare);
    const sam=document.createElement('button');sam.type='button';sam.id='compare-sam-study';sam.textContent=this.avatar.style==='refined'?'Sam · eredeti megjelenés':'Sam · javított copf és ruházat';sam.onclick=()=>{this.samStudyStyle=this.avatar.style==='refined'?'original':'refined';this.setSamStyle(this.samStudyStyle);dialogue.close();release();};artSection.append(sam);
    for(const [label,elapsed]of [['Nappali fény',180],['Esti fény',370]] as const){const b=document.createElement('button');b.type='button';b.textContent=label;b.dataset.artStudyTime=String(elapsed);b.onclick=()=>{this.clock.elapsed=elapsed;dialogue.close();release();};artSection.append(b);}
   }
-  const button=document.createElement('button');button.type='button';button.id='prepare-microscope-test';button.textContent=this.store.testMode?'A mikroszkóp megtalálása – jelenet · Újraindítás':'A mikroszkóp megtalálása – jelenet';button.onclick=async()=>{
+  const microscopeSection=section('Mikroszkópos vizsgálat');
+  const button=document.createElement('button');button.type='button';button.id='prepare-microscope-test';button.textContent='Teszt indítása';button.onclick=async()=>{
    if(this.transitioning)return;button.disabled=true;
    try{
     if(!this.store.testMode){
@@ -1330,15 +1333,15 @@ class Farm extends Phaser.Scene {
      this.clock=next.clock;this.farmName=next.farmName;this.farmerName=next.farmerName;this.actor.setPosition(next.player.x,next.player.y).setAngle(0);this.body.setY(0);this.jumpRemaining=0;this.jumpCooldown=0;this.collapseRemaining=0;this.shadow.setScale(1);document.querySelector<HTMLElement>('#sleep-shade')!.style.opacity='0';this.forestPresence=true;this.forestEquipped=false;this.forestCombat?.reset();this.thoughtRemaining=0;this.thought.setVisible(false);this.thoughtBack.clear();this.redrawScenery();this.updateFarmTitle();this.fitCamera();this.nearby='';this.aimAhead();document.querySelector<HTMLElement>('#test-mode-banner')!.hidden=false;document.querySelector<HTMLElement>('#save-state')!.textContent='TESZTMÓD · csak memóriában';dialogue.close();release();
     });
    }catch{this.notice('A tesztet nem sikerült elindítani.');}finally{this.transitioning=false;button.disabled=false;}
-  };const description=document.createElement('p');description.id='microscope-test-description';description.textContent='Indulás a fészekminta megszerzése előtt.';button.setAttribute('aria-describedby',description.id);panel.append(button,description);
-  const noahSection=document.createElement('section');noahSection.className='noah-test-picker';
-  const noahTitle=document.createElement('h3');noahTitle.textContent='Noah küldeménye – erdei kísérlet';
+  };const description=document.createElement('p');description.id='microscope-test-description';description.textContent='Indulás a fészekminta megszerzése előtt.';button.setAttribute('aria-describedby',description.id);microscopeSection.append(description,button);
+  const noahSection=section('Noah küldeménye – erdei kísérlet');
   const checkpoint=document.createElement('select');checkpoint.id='noah-test-checkpoint';checkpoint.setAttribute('aria-label','A teszt kezdőpontja');
   for(const [value,label]of [['letter','Teljes folyamat · Noah válaszának napja'],['waiting','Indítás a minta elküldése után'],['simon','Indítás Simonnál'],['forest','Indítás a patakhídnál'],['marsh','Indítás a mocsári átkelőnél'],['root','Indítás a gyökércsomónál · este'],['resin','Indítás a vörösfenyőnél'],['mix','Indítás a kivonatkészítés előtt']])checkpoint.add(new Option(label,value));
   const start=document.createElement('button');start.type='button';start.id='start-noah-test';start.textContent='Teszt indítása';start.onclick=()=>{start.disabled=true;void this.startNoahTest(checkpoint.value as NoahCheckpoint,noahTestConfig).finally(()=>{start.disabled=false;});};
-  noahSection.append(noahTitle,checkpoint,start);panel.append(noahSection);
-  if(this.noahTest){const nextMorning=document.createElement('button');nextMorning.type='button';nextMorning.id='noah-next-morning';nextMorning.textContent='Következő reggel';nextMorning.onclick=()=>{if(this.transitioning)return;dialogue.close();void this.finishDay(false);};panel.append(nextMorning);}
-  if(this.store.testMode){const exit=document.createElement('button');exit.type='button';exit.id='exit-test-mode';exit.textContent='Kilépés a tesztmódból';exit.onclick=()=>{if(!this.transitioning&&this.store.selectedFarmId)this.reloadFarm(this.store.selectedFarmId);};panel.append(exit);}
+  noahSection.append(checkpoint,start);
+  panel.append(materials,microscopeSection,noahSection,artSection,healthSection);
+  if(this.noahTest){const nextMorning=document.createElement('button');nextMorning.type='button';nextMorning.id='noah-next-morning';nextMorning.textContent='Következő reggel';nextMorning.onclick=()=>{if(this.transitioning)return;dialogue.close();void this.finishDay(false);};noahSection.append(nextMorning);}
+  if(this.store.testMode){const exit=document.createElement('button');exit.type='button';exit.id='exit-test-mode';exit.textContent='Kilépés a tesztmódból';exit.onclick=()=>{if(!this.transitioning&&this.store.selectedFarmId)this.reloadFarm(this.store.selectedFarmId);};const footer=document.createElement('div');footer.className='developer-tool-footer';footer.append(exit);panel.append(footer);}
  }
  private async startMaterialTest(checkpoint:MaterialCheckpoint){
   if(this.transitioning||!developerToolsEnabled())return;this.transitioning=true;

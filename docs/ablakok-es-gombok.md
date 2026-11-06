@@ -31,3 +31,8 @@ A mozgatható tárgyak felvétele Bontóvassal, a `placed-items.ts` közös útv
 - A világban megjelenő Phaser-szövegek legalább 4-es felbontással készülnek, beleértve az interakciós kérdőjelet/három pontot, Sam gondolatait és a táblákat.
 
 - Annie első érkezése is a közös portrés beszédablakot használja. Az érkezési felső felirat és a szereplő neve látszik, ismétlődő külön cím nélkül; a szereplő szavai a beszédbuborékba, a készletbe kerülésről és kezelésről szóló kezdő segítség külön, a buborék alá kerül. Más ablak nyitása törli ezt a kiegészítő megjegyzést.
+
+
+### Fejlesztői eszközök
+
+Minden teszt és előnézet azonos `.developer-tool-section` szakaszt használ: cím, szükség esetén leírás és kezdőpontválasztó, majd az indítógomb. A szakaszok között egyetlen közös elválasztóvonal és azonos térköz van. A látványteszt is ezt követi. A teszt neve a címben, a művelet a gombon szerepel („Teszt indítása” / „Előnézet”).

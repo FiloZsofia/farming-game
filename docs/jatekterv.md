@@ -1098,3 +1098,12 @@ Elfogadott cím: „Életerő az erdőben”. Teljes szöveg: „Az erdőben az 
 Jóváhagyott módosítás: sérüléskor röviden megremegnek a szívek; az elvesző két szív egymás után vörösen felvillan és kiürül. Evéskor a játék saját almaikonjából öt aranyló fénypont indul a negyedik szívhez. A szív alulról feltöltődik, majd megdobban és rövid fényudvart kap. A nyolc másodperces bemutató ismétlődik, a tényleges életerőt nem módosítja. Csökkentett mozgásnál statikus négy teli szív, egy üres szív és alma látszik. A megadott segítségszöveg változatlan.
 
 A Fejlesztői eszközök „Életerő-segítség · animáció” gombja mentésmódosítás nélkül nyit előnézetet. Nem fogyasztja el és nem törli a normál játék egyszeri megjelenési jelzőjét.
+
+
+### Egységes fejlesztői panel és alkatrészátadás — 2026. november 6.
+
+A Fejlesztői eszközök egységes, elválasztóvonalas szakaszokat használ. Sorrend: műhelyalkatrészek, mikroszkópos vizsgálat, Noah erdei kísérlete, látványteszt, életerő-segítség előnézete. Minden teszt címe a szakaszfejlécben szerepel, indítógombja „Teszt indítása”; az előnézeté „Előnézet”. A látványteszt összehasonlító és fényváltó gombjai a saját szakaszában maradnak. A következő reggel Noah szakaszához, a tesztből kilépés külön lábléchez tartozik.
+
+Az üvegedény/lenszövet témájának kiválasztásakor a sikeres mentés után bezárul a beszélgetés, és Sam fölött két másodperces tárgyátadó animáció jelenik meg a meglévő tárgyikonnal és +1 névjelzéssel. A kamera és a karakter mozgását követi, utána megszűnik. Sikertelen mentésnél nincs tárgy vagy animáció, a választás újrapróbálható. A méhecskés beszámoló párbeszéde és Simon történeti beszélgetése változatlan.
+
+A beszélgetésgombok szélességéről és az egyszeri gondolat időzítéséről a felhasználó véleményt kért; ezek ebben a módosításban változatlanok. A szűrőházhoz kötött gondolat egyelőre javaslat.

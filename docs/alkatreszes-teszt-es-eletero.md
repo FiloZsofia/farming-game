@@ -27,3 +27,10 @@ Menü → Fejlesztői eszközök → **Életerő-segítség · animáció**. Bá
 2026-11-06: Chromium CDP-vel ellenőrizve az egymás utáni sérülés, az alma és öt aranyló fénypont, az alulról feltöltés, a dobbanás és fényudvar, a 390 × 844 mobilnézet és a csökkentett mozgás statikus változata. A normál mentés változatlan maradt. Cypress-bináris továbbra sem állt rendelkezésre.
 
 [Alma és fénypontok](concepts/health-help-animated-motes.png) · [Feltöltődés](concepts/health-help-animated-filling.png) · [Gyógyulás](concepts/health-help-animated-healed.png) · [Mobil](concepts/health-help-animated-mobile.png)
+
+
+## Egységes panel és tárgyátadás ellenőrzése — 2026-11-06
+
+410 teszt és a build sikeres. Chromium CDP-vel, izolált profilban és memóriateszten ellenőrizve: öt egységes szakasz, sorrend és elválasztók, asztali és 390 × 844 mobilnézet, aktív látványteszt saját szakaszában maradó összehasonlító gombjai. Az üvegedény és a lenszövet sikeres átvétele bezárja a párbeszédet; az animáció megjelenik, követi a kamerát és két másodperc után eltűnik. Nincs ismételt ajándék. Szimulált mentési hibánál nincs animáció vagy tárgy; helyreállított mentés után újrapróbálható. A normál farm exportja a memóriateszt előtt és után azonos. Cypress-bináris helyett Chromium CDP futott.
+
+[Panel](concepts/developer-tools-unified-desktop-bottom.png) · [Mobil](concepts/developer-tools-unified-mobile-bottom.png) · [Aktív látványteszt](concepts/developer-tools-unified-art-active.png) · [Üvegedény](concepts/annie-glass-gift-animation.png) · [Lenszövet](concepts/leo-linen-gift-animation.png)
