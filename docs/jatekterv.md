@@ -1130,3 +1130,12 @@ A felhasználó jóváhagyta az alsó, jobbra igazított Vissza és Vásárlás 
 Sam gondolata, a kérdőjelek/három pont, táblafeliratok, Zzzz és lebegő életerő-felirat közös natív szövegréteget kap. Ezeket a böngésző rajzolja éles betűként, a Phaser pozícióját, kameráját és interakcióit követve. A korábbi puszta négyszeres textúrafelbontás nem oldotta meg a pixeles vászon nagyításából eredő problémát.
 
 Mindezek a normál játékban is működnek; nem kizárólag a tesztindítók mögött. A tesztmód csak az előkészített helyzeteket biztosítja. Az alternatív farmgrafika és Sam új külseje/járása továbbra is csak látványteszt. A játék és a mentésformátum verziója nem változik. Az aktuális hatókör összefoglalója: `docs/jatek-es-tesztmod.md`.
+
+
+### Élő ágyás — csak kertészeti teszt, 2026. november 6.
+
+A felhasználó jóváhagyott egy külön kipróbálható alapot a saját kertészkedési formanyelv kereséséhez. A prototípusban egy egész ágyás előkészítése után vegyes társítás ültethető; a talaj több napig tartja a nedvességet, mulcsozható, az eső átáztatja. A növény állapota a talaj színén, a leveleken, virágokon és rovarokon is látszik. A szedhető növényt leszedhetjük vagy virágozni és magot érlelni hagyhatjuk, a kakukkfű és a borsó visszanő.
+
+A felhasználó a gyors, kézzel léptethető próbanapokat választotta. Külön Következő nap és Esős nap segíti az összehasonlítást. A próbához használt kezdeti számok nem végleges játékegyensúlyi döntések. A próbakosár csak az eredmény szemléltetése, nem új Készlet-kategória.
+
+A fejlesztői panel első egységes szakasza: „Kertészeti próba · Élő ágyás”. Ez kizárólag memóriabeli teszt, `SaveStore.beginTest()` védelemmel. A normál kertészkedés, a rendes farm és mentésformátuma változatlan; a rendszer játékba emelése külön döntés lesz. A részletes hatókör és kipróbálás: `docs/elo-agyas-teszt.md`.

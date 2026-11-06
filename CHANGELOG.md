@@ -2,6 +2,8 @@
 
 ## Változások a 0.2.0 óta — verzióemelés nélkül
 
+- 2026-11-06 — csak tesztmódban: új „Élő ágyás” kertészeti próba, egyben előkészíthető vegyes ágyással, három társítással, megmaradó nedvességgel, mulccsal, szedés vagy virágoztatás döntéssel, maggyűjtéssel és újrahajtással. Kézzel léptethető napok, külön esős nap; a normál farm és a rendes kertészkedési rendszer változatlan.
+
 - 2026-11-06: a bolti Vissza és Vásárlás közös alsó sorba került. Az alkatrészátadás eredeti mondata ismét megjelenik, az animáció az ablak bezárása után indul. Natív, éles világfeliratok váltják a pixeles vászonra rajzolt gondolatot, jelzéseket, táblákat, Zzzz-t és életerő-feliratot. Ezek a normál játék javításai; a látványkísérletek továbbra is csak tesztben élnek.
 
 - 2026-11-06: új „Vizsgáld meg a régi berendezést” cél, 1 / 4 – 4 / 4 haladással, a Célok fülön a felfedezés és a javítás között. A javítás, az anyaglista, az alkatrészes bolti témák és Sam egyszeri gondolata csak a negyedik vizsgálat után jelennek meg. A bolti beszélgetésgombok kisebbek és a feliratukhoz igazodnak. A régi mentések haladása és alkatrészei megmaradnak.

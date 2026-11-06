@@ -16,12 +16,13 @@ Aktuális állapot: 2026-11-06. Játékverzió: 0.2.0; a legutóbbi javítások 
 
 Ezek a közös játékútvonalakon működnek; egyik sem kizárólag a fejlesztői indítógombokhoz kötött.
 
-## Csak látványteszt
+## Csak tesztmód
 
+- Az **Élő ágyás kertészeti próba**: vegyes ágyás, nedvesség, mulcs, szedés/virágoztatás és kézzel léptethető napok. Nem váltja le a normál kertészkedést. [Kipróbálás és hatókör](elo-agyas-teszt.md).
 - A Kidolgozott farm alternatív grafikája, új növényzettel és részletesebb formákkal.
 - Sam átdolgozott külseje, copfja, ruhája, arányai és könnyedebb járása.
 
-Ezek normál játékba emelésére még nincs jóváhagyás. Az eredetivel való összehasonlítás a tesztpanelen érhető el.
+Ezek normál játékba emelésére még nincs jóváhagyás. A látványtesztben az eredetivel való összehasonlítás a tesztpanelen érhető el.
 
 ## Mit csinálnak a fejlesztői tesztindítók?
 
