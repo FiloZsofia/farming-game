@@ -1148,3 +1148,69 @@ Az új rendszer tervezett kezdése szabad ágyáselhelyezés, nem három rögzí
 A felhasználó pontosítása: betakarítás után az üres helyre a társítás bármely olyan növénye ültethető, amelyhez van magunk. A próbában ez már működik tesztmagkészlettel; a vetés fogyasztja, a maggyűjtés növeli ezt a készletet. Ez még nem a normál Magkatalógushoz bekötött gazdaság.
 
 A Magkatalógus és a posta megőrzése, a jártasságos társításfeloldás, a Komposztálóból származó mulcs, a három kezdő társítás kertészeti megalapozása és a régi mentések átállása további tervezési feladat. Uborka, paprika és paradicsom felvétele a tervezett növénykínálatba szintén kérés; játékmeneti számaik nincsenek véglegesítve. A kerek lépőkövekből álló, szabadon rajzolható utak egyelőre javaslatok, nem megvalósított funkciók. A részletes státusz és terv: `docs/kerteszkedes-atallasi-terv.md`.
+
+
+### Jóváhagyott kertészeti alapelvek — 2026. november 6.
+
+Egy mag egy növényhez elég. A teljes társítás egyetlen művelettel elültethető, a fajonként szükséges magok levonásával. Egyenkénti utánvetésnél a játékos az alsó sávban magot választ, majd az üres helyre kattint; a választott faj a társításhoz tartozzon, és legyen hozzá mag. Egy külön „Üres helyek utánvetése” művelet az eredeti társítás hiányzó növényeit töltheti vissza, ha minden szükséges mag megvan.
+
+Egy adag, a Komposztálóból átvett mulcs egy egész ágyásra elég. Az uborka, paprika és paradicsom magjai az őket használó társítás megjelenésekor válnak rendelhetővé, külön növényszint-korlát nélkül; ez nem azonos egy általános, szintfüggetlen évszakos feloldással.
+
+A kézzel írt hatású fa táblafelirat, az alsó eszközsávon keresztüli közvetlen ágyáskattintásos műveletek és a Menü/eszközsáv eltakarásának megszüntetése a felhasználó kérésére csak a következő összefüggő tesztbővítéssel együtt készüljenek, ne külön apró módosításként.
+
+Felvetés, még nem végrehajtott vagy véglegesített átállási szabály: az éles bevezetéskor egyszeri felugró ablak tájékoztassa a meglévő farmok játékosait az új kertészkedésről. A felhasználó régi növények eltávolításával számol; a kompenzáció, a biztonsági másolat és az átállás pontos működése még megbeszélendő. Jelenleg semmit nem törlünk a normál farmokról.
+
+
+### Jóváhagyott éles kertészeti átállás — 2026. november 6.
+
+A felhasználó elfogadta a tiszta kerttel történő későbbi átállást kompenzációval. A korábbi ültetések eltávolítása előtt visszaállítható biztonsági másolat készül. Az érett termés a Készletbe kerül, a még növekvő növények magja visszajár. Ezt a folyamatot mentésenként egyszer, duplikált termés-/magátadás nélkül kell majd végrehajtani. A tényleges átalakítás még nincs implementálva és most nem történik normál farm törlése.
+
+Az első frissítés utáni belépéskor, Sam irányítása előtt egyszer felugró tájékoztató jelenjen meg. Elfogadott cím: „Megújult a kertészkedés”. Elfogadott szöveg: „Mostantól szabadon elhelyezhető, vegyes ágyásokat alakíthatsz ki, amelyekben együtt gondozhatod a növényeidet.
+
+A korábbi ültetéseidet az átállás során eltávolítottuk. Az érett terméseket és a még növekvő növények magjait megőriztük a Készletedben.” A szöveg csak a valóban elkészült megőrzési és migrációs folyamat mellett jelenhet meg. A Készlet kapacitását meghaladó visszatérítés nem veszhet el; ennek átvételi módja és a felhasznált mulcs kezelése még részletesen tervezendő.
+
+
+### Kezdő társítások és lépőkövek elfogadott iránya — 2026. november 6.
+
+A felhasználó a virágos, zöldséges és fűszeres kezdő társítások irányát választotta: virágos retekágyás; borsós–salátás–retkes veteményes; szárazabb kakukkfüves–szurokfüves–zsályás fűszerszegély. A hat vadvirágos kezdőküldetés az elsőhöz kapcsolódjon. A végleges fajonkénti mennyiségek még nem kaptak külön jóváhagyást.
+
+A felhasználó a lépőkőösvénynél kövenkénti elszámolást választotta: egy lerakott kerek kő egy követ használ a Készletből; rajzolás közben előre látszik a teljes szükséglet, Bontóvassal kövenként visszavehető. Ezek még az összefüggő következő tesztbővítés specifikációi, nem már megvalósított kőút vagy éles kertészeti átállás.
+
+
+### További elfogadott kertészeti szabályok — 2026. november 6.
+
+Ezek a következő összefüggő kertészeti tesztbővítés követelményei, még nem megvalósított funkciók vagy éles módosítások.
+
+- A kilenc ültetési helyes kezdő társítások: 6 vadvirág + 3 retek; 3 borsó + 3 saláta + 3 retek; 3 kakukkfű + 3 szurokfű + 3 zsálya. A paradicsomos, paprikás és uborkás társítás mind az első kertészkedési szinten válik elérhetővé, ekkor a magjaik is rendelhetők.
+- Az ágyás kis fa jelölője külön, a közös Bontóvasas felvételi útvonalon visszavehető a Készletbe, majd az eredeti ágyás közvetlen oldalai mellett szabadon újra lehelyezhető. A jelölő mozgatása nem változtatja meg az ágyást vagy a növényeket. Ne kerüljön automatikusan olyan helyre, amely más tárgy helyét foglalná vagy takarásba esik.
+- A tárolóláda tervrajzát ezentúl Simon árulja. A már megszerzett tervrajzok megmaradnak. A kertészkedési jártasság emelkedésének jutalmai új társítások legyenek a ládatervrajz helyett; a további szintek konkrét társításai még egyeztetendők.
+- Egy öntözőrendszer egy teljes ágyást gondoz, az utánvetett növényeket is beleértve. Elhelyezéskor egyértelműen látszódjon, melyik ágyást fogja öntözni. A mulcs továbbra is lassítja a talaj kiszáradását. A meglévő berendezéseket is az új működéshez kell igazítani.
+- Az öntözőrendszer működésének megváltoztatásával együtt a Tervrajzok fül és a bolti leírás is frissítendő: egy teljes ágyás öntözését ígérjék, ne a korábbi parcellaszámot. Ezek a leírások csak a tényleges működés átállításával együtt változzanak.
+
+
+### Elfogadott jártassági irány az új ágyásokhoz — 2026. november 6.
+
+A kertészkedési fejlődés az elvégzett munkához, nem a kattintások számához igazodik. A teljes társítás elültetése a ténylegesen elültetett növények után számítson ugyanúgy, mint az egyenkénti utánvetés. Az öntözés és mulcsozás ágyásonként számítson; a felesleges újraöntözés ne adjon pontot. A betakarítás és a saját vetőmag gyűjtése is járuljon hozzá a fejlődéshez.
+
+A tesztben az első új társítások nagyjából az első sikeresen végiggondozott és betakarított ágyás után váljanak elérhetővé. A jelenlegi 36 pontos első küszöböt ehhez kell majd igazítani, és több ágyás mellett is ellenőrizni kell a fejlődés tempóját. Konkrét új pontértékeket és szintküszöböket ezzel még nem rögzítettünk; ezek tesztbeli hangolása következik. A meglévő jártasság és megszerzett jutalmak megőrzendők. Ez elfogadott tesztkövetelmény, még nem megvalósított változás a rendes játékban.
+
+
+### Elfogadott társítások és gyümölcskörforgás — 2026. november 6.
+
+A felhasználó a következő összeállítást elfogadta. Ez felülírja a korábbi retkes Korai veteményest, az első szinten egyszerre megnyíló három nyári zöldséges társítás tervét, valamint az uborkás első és epres második szintű köztes javaslatot. Az alábbiak a megvalósítandó kertészeti teszt tervei; a dokumentálás nem jelenti, hogy a tesztben vagy a normál játékban már átálltak a receptek.
+
+| Elérhetőség | Társítás | Növények és elfogadott arányok |
+| --- | --- | --- |
+| Kezdettől | Virágos retekágyás | 6 vadvirág + 3 retek |
+| Kezdettől | Korai veteményes | 3 borsó + 3 saláta + 3 sárgarépa; a sárgarépa váltja a retket |
+| Kezdettől | Száraz fűszerszegély | 3 kakukkfű + 3 szurokfű + 3 zsálya |
+| 1. kertészkedési szint | Epres méhlegelő | Eper, körömvirág, borágó; arányaik még egyeztetendők |
+| 2. kertészkedési szint | Esti teakert | Citromfű, kamilla; arányaik még egyeztetendők |
+
+Az új társítások legyenek változatosabbak, ne ismételjük mindenütt a salátát és retket. A borágó nagyobb helyigényét a gyümölcsös ágyás arányainál figyelembe kell venni; nem kötelező egyenlő arányban ültetni a fajokat. Az Esti teakert kétféle növénye elegendő, nem kell harmadik fajt erőltetni. A levendula egy későbbi, szárazabb társításba illene; ez nem most elfogadott harmadik teanövény. Az uborka, paprika és paradicsom továbbra is a tervezett növénykínálat része, de jelenleg nincs hozzájuk elfogadott társítás vagy feloldási szint.
+
+A gyümölcsös társítás már az első jártassági szinten megjelenik, hogy a beporzók megfogyatkozásának hatása korán érzékelhető legyen a gyümölcshozamon. Minden szintlépésnél megmarad az ünneplős ablak; röviden bemutatja az újonnan elérhető társítást és növényeit. A szint jutalma társításfeloldás, nem automatikusan kapott vetőmag vagy ládatervrajz.
+
+A hullott gyümölcs megmarad a Komposztáló alapanyagaként. Két külön jelenséget kell érthetően megjeleníteni: gyenge beporzás esetén kevesebb gyümölcs fejlődik; az elmaradó betakarítás miatt a már megérett gyümölcs később lehullik vagy túlérik. Fáknál „hullott gyümölcs”, epernél „túlérett gyümölcs” a megfelelő megnevezés. Ne legyen gyors, sürgető büntetés. Az időzítés, a mennyiségek és a közös vagy külön készletbeli kezelés még nincs véglegesítve; a meglévő játék 3 napos szabálya e döntéssel nem változik automatikusan.
+
+Simon a tárolóláda tervrajzát 160 goldért árulja majd; ez a felhasználó által megadott ár. A korábban megszerzett tervrajzok megmaradnak.
