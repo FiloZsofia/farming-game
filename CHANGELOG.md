@@ -2,6 +2,8 @@
 
 ## Változások a 0.2.0 óta — verzióemelés nélkül
 
+- 2026-11-06: Simon vásárlási szövege jelzi a megerősített túrabot kivételét. Az Öntözőrendszernél a bolt és a Tervrajzok is mutatja a 6 növényes hatókört. Új, memóriabeli alkatrészes beszélgetésteszt három kezdőponttal. Első erdei belépéskor egyszeri, mentett életerő-segítség jelenik meg öt animált szívvel: sérüléskor fogynak, evéssel egy visszatöltődik.
+
 - 2026-11-06: a boltokba belépve nem nyílik meg automatikusan a vásárlás. Leo, Annie és Simon a pult elől E-vel vagy kattintással megszólítható; a beszélgetési témák és a Vásárlás külön választhatók. A hiányzó műhelyalkatrészekhez konkrét beszélgetésnevek és egyetlen, mentett Sam-gondolat tartozik.
 
 - 2026-11-03: az első sikeres madárodú-lehelyezés után egyszer megjelenik a „Tárgyak áthelyezése” segítség a Bontóvasas visszavételről. A megjelenés farmonként mentődik, újratöltés vagy áthelyezés után nem ismétlődik.

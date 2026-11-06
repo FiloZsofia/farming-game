@@ -1077,3 +1077,12 @@ Az első sikeresen elmentett madárodú-lehelyezés után egyszer megjelenik a k
 A boltba belépés nem nyitja meg a vásárlóablakot. A pult vásárlói oldaláról E-vel, a szereplőre vagy a pultra kattintva a megszokott rövid köszöntés és a beszélgetési menü nyílik meg. Az elérhető történeti témák külön gombok; a Vásárlás külön nyitja meg a boltot. Innen és a történeti párbeszédből a Vissza a beszélgetési menüre vezet, annak Vissza gombja a játékba. Leo méhecskés beszámolója, az alkatrészek és Simon kísérleti beszélgetése csak a megfelelő téma kiválasztásával teljesülnek. A közös működés minden jelenlegi és jövőbeli boltra vonatkozik.
 
 Az alkatrészekhez tartozó elfogadott gombnevek: „Az üvegedényről kérdezek”, illetve „A szűrőhöz szükséges anyagról kérdezek”. A hiányzó alkatrészek első felismerésekor Sam gondolata: „Talán érdemes lenne másokat is megkérdeznem ezekről.” A megjelenési jelző ugyanabban a mentésben rögzül; sikertelen mentés nem fogyasztja el, újratöltés után nem ismétlődik. A régi mentésekben opcionális mező, a mentésformátum és a játék verziószáma nem változik.
+
+
+### Bolti tájékoztatás, alkatrészes teszt és életerő-segítség — 2026. november 6.
+
+Simon Vásárlás utáni szövege: „A lentieknek a tervrajzát vásárolhatod meg (a megerősített túrabot kivételével, mely egyből az eszköztáradba kerül).” Az Öntözőrendszer bolti és tervrajzos leírása: „Egy sorban legfeljebb 6 növényt öntöz meg: a két oldalán 3–3 mezőt.” A tényleges hatókör nem változik.
+
+A Fejlesztői eszközökben a „Műhelyalkatrészek · beszélgetésteszt” három kezdőpontja a Műhely (egyszeri gondolat előtt), Annie és Leo. Mindig memóriabeli másolat, a rendes farm megmarad.
+
+Az első erdei belépéskor egyszer jelenik meg az „Életerő az erdőben” segítség. Elmagyarázza a sérülést és a Készletben elérhető Eszem gombot: egy zöldség vagy gyümölcs 1 szívet tölt vissza. A felhasználó külön kérésére öt nagy animált szív szemlélteti a sérülést (5-ről 3-ra), majd az evést (3-ról 4-re). A csökkentett mozgás beállítást tiszteletben tartja. A megjelenés sikeres mentéskor rögzül, ismételt erdei látogatáskor nem jelenik meg újra. Az ellenfelek visszatérése megmarad. A jelző opcionális; a régi mentések, a játék és a mentésformátum verziószáma változatlan.

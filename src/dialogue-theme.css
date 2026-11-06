@@ -113,3 +113,13 @@
 
 .merchant-actions{display:flex;flex-direction:column;gap:10px;margin-top:18px}.merchant-actions>button{margin:0;width:100%;text-align:left}
 #app #dialogue #dialogue-close[hidden]{display:none}
+.forest-health-demo{display:flex;justify-content:center;gap:clamp(6px,2vw,18px);padding:22px 0 28px;color:#efd18b;filter:drop-shadow(0 3px 5px #071b15)}
+.health-demo-heart{position:relative;display:inline-block;font-size:clamp(38px,8vw,64px);line-height:1.2}
+.health-demo-full{position:absolute;inset:0;text-align:center;text-shadow:0 0 12px #e7bc6b66}
+.heart-4 .health-demo-full{animation:health-demo-recover 7s ease-in-out infinite}
+.heart-5 .health-demo-full{animation:health-demo-damage 7s ease-in-out infinite}
+@keyframes health-demo-damage{0%,18%,94%,100%{opacity:1;transform:scale(1)}24%{opacity:1;transform:translateY(-5px) scale(1.2);color:#f19480}32%,86%{opacity:0;transform:scale(.45)}}
+@keyframes health-demo-recover{0%,27%,94%,100%{opacity:1;transform:scale(1)}33%{opacity:1;transform:translateY(-5px) scale(1.2);color:#f19480}40%,56%{opacity:0;transform:scale(.45)}65%{opacity:1;transform:scale(1.28);color:#f4e9b3;text-shadow:0 0 24px #fff0b4}75%,86%{opacity:1;transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){.forest-health-demo .health-demo-full{animation:none}.heart-5 .health-demo-full{opacity:0}}
+
+.health-demo-empty{color:#345144;-webkit-text-stroke:1px #efd18b}

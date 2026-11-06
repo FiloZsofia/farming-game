@@ -1,0 +1,11 @@
+import {it,expect} from 'vitest';
+import {prepareMaterialConversationTest,type MaterialCheckpoint} from './material-conversation-test';
+import {snapshot,validSnapshot,decodeSnapshot} from './storage';
+import {createClock} from './clock';
+import {createGarden} from './gardening';
+import {merchantTopics,workshopPeopleHintPending} from './shop-conversation';
+import {inspectWorkshop} from './research';
+import {createForest,validForest,beginForestVisit} from './forest';
+import {forestHelpPending} from './forest-help';
+it('prepares all material checkpoints without changing the source farm and roundtrips valid saves',()=>{const s=snapshot({x:300,y:260},createClock(1),createGarden());s.farmName='Eredeti';s.economy.gold=452;const before=structuredClone(s);for(const point of ['workshop','annie','leo'] as MaterialCheckpoint[]){const n=prepareMaterialConversationTest(s,point);expect(validSnapshot(n)).toBe(true);expect(decodeSnapshot(n)).toEqual(n);expect(n.travel.noah).toBeUndefined();expect(n.travel.research.repaired).toBe(false);expect(s).toEqual(before);if(point==='workshop'){expect(n.travel.research.discovered).toBe(false);expect(workshopPeopleHintPending(inspectWorkshop(n.travel.research,'vat')!)).toBe(true);}else expect(merchantTopics(point==='annie'?'fishShop':'nursery',n.travel.research).map(t=>t.id)).toContain('material');}});
+it('remembers the forest health help through revisits while accepting older saves',()=>{const f=createForest();expect(forestHelpPending(f)).toBe(true);expect(validForest(f,1)).toBe(true);f.healthHelpSeen=true;expect(forestHelpPending(beginForestVisit(f))).toBe(false);expect(validForest(f,1)).toBe(true);expect(validForest({...f,healthHelpSeen:'yes'},1)).toBe(false);});
