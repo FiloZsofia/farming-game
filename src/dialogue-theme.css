@@ -110,3 +110,6 @@
 @media(max-width:600px){body:has(#game[data-art-study="true"]) #test-mode-banner{top:auto;bottom:116px;left:auto;right:12px;transform:none;max-width:195px;width:max-content;box-sizing:border-box;font-size:12px;padding:7px 10px;}}
 
 .art-study-picker{display:flex;flex-wrap:wrap;gap:10px;padding-bottom:18px;margin-bottom:18px;border-bottom:1px solid #70836580}.art-study-picker>button{margin:0}.art-study-picker>button:first-child{flex-basis:100%}
+
+.merchant-actions{display:flex;flex-direction:column;gap:10px;margin-top:18px}.merchant-actions>button{margin:0;width:100%;text-align:left}
+#app #dialogue #dialogue-close[hidden]{display:none}

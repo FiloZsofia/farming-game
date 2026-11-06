@@ -39,10 +39,10 @@ export class NoahTestController{
   this.host.show('Noah levele',noahLetter,'LEVÉL A LABORBÓL');const panel=this.panel();
   if(!this.state.letter)this.button(panel,'noah-take-package','Átveszem a küldeményt',()=>{if(this.state.letter)return;const state={...this.state,letter:true,concentrate:this.config.shipment};void this.commitState(this.host.read(),state,()=>{this.host.show('Kísérleti koncentrátum',`${this.config.shipment} adag koncentrátum érkezett. `,'NOAH KÜLDEMÉNYE');},{},'noah');});
  }
- openSimon(){
-  if(!this.state.letter){this.host.show('Simon','Jó újra látni! Ma is akad néhány régi darab, amivel elbíbelődhetek.','EGY KEDVES SZÓ');return;}
+ async openSimon(){
+  if(!this.state.letter){this.host.show('Simon','Jó újra látni! Ma is akad néhány régi darab, amivel elbíbelődhetek.','EGY KEDVES SZÓ');return false;}
   const show=()=>this.host.show('Simon',this.state.upgraded?'A fémhüvely tartja a bot végét. Jó szolgálatot fog tenni az ösvényen.':'Kötőanyag? A vörösfenyő gyantája eszembe jutott. Errefelé csak a patakon túl, a déli erdőben nő vörösfenyő. A törzsén aranyszínű cseppeket keress. Hogy a keverékedhez jó lesz-e, azt már neked kell kiderítened.\n\nOdalent mostanában veszélyesebb az ösvény. Meg tudom erősíteni a túrabotod végét, és új markolatot teszek rá. A fejlesztést megtalálod a kínálatomban.','EGY KEDVES SZÓ');
-  if(this.state.simonAsked)show();else void this.commitState(this.host.read(),{...this.state,simonAsked:true},show);
+  if(this.state.simonAsked){show();return true;}return await this.commitState(this.host.read(),{...this.state,simonAsked:true},show);
  }
  appendShop(panel:HTMLElement,refresh:()=>void){
   if(!this.state.simonAsked)return;

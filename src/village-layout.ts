@@ -104,4 +104,4 @@ export function relocateVillagePlayer(player:{x:number;y:number}){
  return {x:560,y:1100};
 }
 
-export function merchantNearby(shop:Shop,x:number,y:number){const yy=y-shopOrigins[shop];return Math.hypot(x-423,yy-235)<112&&(yy<230||x<337)&&yy<290;}
+export function merchantNearby(shop:Shop,x:number,y:number){const yy=y-shopOrigins[shop];const customer=x>=322&&x<=578&&yy>=291&&yy<=350;const side=Math.hypot(x-423,yy-235)<112&&(yy<230||x<337)&&yy<290;return customer||side;}

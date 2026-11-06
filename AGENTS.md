@@ -36,3 +36,5 @@
 
 - A játékvilágban látható szövegek (kérdőjel, három pont, gondolat, táblafelirat) nagyításkor is maradjanak élesek: Phaser-szövegnél legalább négyszeres textúrafelbontás, képernyőhöz rögzített címkénél valódi HTML/szöveg használatos. Talajátmenettel ne takard ki a korábban rajzolt lombkoronát; a talaj és a fák külön gyorsítótárazott rétegek legyenek.
 - Dekoráció elhelyezésekor a füves, festett ösvény nélküli átjárókat is hagyd szabadon, különösen az erdei pihenőpadtól a patakhídhoz vezető sávot. Ne csak a kirajzolt úthálózat alapján ellenőrizd a helyet.
+
+- Minden jelenlegi és új bolt a közös `shop-conversation.ts` beszélgetési menüt használja: belépéskor nincs automatikus vásárlóablak, a pult elől E/kattintás indít beszélgetést. A történeti témák külön, feltételes gombok, a Vásárlás külön művelet; a napi mondatok megmaradnak. Az új boltos nevét, találkozási jelzőjét és esetleges alkatrész-szerepét a közös nyilvántartásban add meg; ne kapja meg véletlenül más szereplő témáját.

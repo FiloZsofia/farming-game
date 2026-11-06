@@ -1070,3 +1070,10 @@ A felhasználó pontosítása alapján a teljes képi átfedést tiltó szabály
 ### Egyszeri áthelyezési segítség — 2026. november 3.
 
 Az első sikeresen elmentett madárodú-lehelyezés után egyszer megjelenik a közös, szereplő és felső címke nélküli segítségablak. Címe „Tárgyak áthelyezése”. Elfogadott szövege: „A madárodút később is áthelyezheted. Válaszd a Bontóvasat (4), majd kattints az odúra: visszakerül a Készletbe, ahonnan újra lehelyezheted.” A megjelenési jelző ugyanabban a mentésben rögzül, mint a lehelyezés; tiltott hely vagy sikertelen mentés nem fogyasztja el. Felvétel, újralerakás és újratöltés megőrzi a jelzőt. A mező opcionális, a régi farmok betölthetők, a formátum száma 18 marad.
+
+
+### Bolti beszélgetések és alkatrészek — 2026. november 6.
+
+A boltba belépés nem nyitja meg a vásárlóablakot. A pult vásárlói oldaláról E-vel, a szereplőre vagy a pultra kattintva a megszokott rövid köszöntés és a beszélgetési menü nyílik meg. Az elérhető történeti témák külön gombok; a Vásárlás külön nyitja meg a boltot. Innen és a történeti párbeszédből a Vissza a beszélgetési menüre vezet, annak Vissza gombja a játékba. Leo méhecskés beszámolója, az alkatrészek és Simon kísérleti beszélgetése csak a megfelelő téma kiválasztásával teljesülnek. A közös működés minden jelenlegi és jövőbeli boltra vonatkozik.
+
+Az alkatrészekhez tartozó elfogadott gombnevek: „Az üvegedényről kérdezek”, illetve „A szűrőhöz szükséges anyagról kérdezek”. A hiányzó alkatrészek első felismerésekor Sam gondolata: „Talán érdemes lenne másokat is megkérdeznem ezekről.” A megjelenési jelző ugyanabban a mentésben rögzül; sikertelen mentés nem fogyasztja el, újratöltés után nem ismétlődik. A régi mentésekben opcionális mező, a mentésformátum és a játék verziószáma nem változik.

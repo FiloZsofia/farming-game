@@ -2,6 +2,8 @@
 
 ## Változások a 0.2.0 óta — verzióemelés nélkül
 
+- 2026-11-06: a boltokba belépve nem nyílik meg automatikusan a vásárlás. Leo, Annie és Simon a pult elől E-vel vagy kattintással megszólítható; a beszélgetési témák és a Vásárlás külön választhatók. A hiányzó műhelyalkatrészekhez konkrét beszélgetésnevek és egyetlen, mentett Sam-gondolat tartozik.
+
 - 2026-11-03: az első sikeres madárodú-lehelyezés után egyszer megjelenik a „Tárgyak áthelyezése” segítség a Bontóvasas visszavételről. A megjelenés farmonként mentődik, újratöltés vagy áthelyezés után nem ismétlődik.
 
 - 2026-11-03: a madárodú az épületek előtti szabad földön a fal elé rajzolódik, így részben eltakarhatja azt. A ház mögötti tiltás és a szabad bejáratok védelme megmarad; a fal előtt mentett odú helyét újratöltéskor is megőrizzük.
