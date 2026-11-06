@@ -1,3 +1,4 @@
+import {worldText} from './world-text';
 import {forageReady} from './travel';
 import {drawPathNetwork} from './path-art';
 import {farmBounds} from './layout';
@@ -14,7 +15,7 @@ export function drawVillage(scene:Phaser.Scene){
  const oval=(x:number,y:number,w:number,h:number,c:number,a=1)=>{g.fillStyle(c,a).fillEllipse(x,y,w,h);};
  const line=(x:number,y:number,xx:number,yy:number,c:number,w=1,a=1)=>{g.lineStyle(w,c,a).lineBetween(x,y,xx,yy);};
  const poly=(p:number[],c:number,a=1)=>{g.fillStyle(c,a).fillPoints(Array.from({length:p.length/2},(_,i)=>new Phaser.Geom.Point(p[i*2],p[i*2+1])),true);};
- const label=(x:number,y:number,text:string,size=9)=>{const t=scene.add.text(x,y,text,{fontFamily:'Georgia, serif',fontSize:`${size}px`,color:'#fff1ce',backgroundColor:'#574f37',padding:{x:6,y:4},resolution:4}).setOrigin(.5).setDepth(5);labels.push(t);};
+ const label=(x:number,y:number,text:string,size=9)=>{const t=worldText(scene,x,y,text,{fontFamily:'Georgia, serif',fontSize:`${size}px`,color:'#fff1ce',backgroundColor:'#574f37',padding:{x:6,y:4},resolution:4}).setOrigin(.5).setDepth(5);labels.push(t);};
  rect(FOREST_LEFT,600,1200-FOREST_LEFT,WORLD_HEIGHT-600,0x759c48);rect(FOREST_LEFT,farmBounds.top,-400-FOREST_LEFT,600-farmBounds.top,0x759c48);
  // Layered hill shoulders: cool lower slopes and sunlit rounded crowns.
  for(const [x,y,w,h]of [[40,760,440,220],[110,965,470,280],[20,1160,450,210]]){
@@ -107,7 +108,7 @@ export function drawVillage(scene:Phaser.Scene){
   poly(arrow,0x604f35);poly(arrow.map((v,i)=>v+(i%2? -1:0)),0xa98a59);if(direction==='down'){line(left+3,top+4,left+3,top+48,0xcfb17b);line(left+width-3,top+4,left+width-3,top+48,0x735b3c);}else line(left+12,top+3,left+width-12,top+3,0xcfb17b);if(direction!=='down')line(left+12,top+19,left+width-12,top+19,0x735b3c);oval(postX,top+6,2,2,0x5c5b45);oval(postX,top+16,2,2,0x5c5b45);
   g.restore();
   const tx=left+width/2+(direction==='left'?3:direction==='right'?-3:0),ty=top+(direction==='down'?25:11),dx=tx-pivotX,dy=ty-pivotY;
-  const title=scene.add.text(pivotX+dx*Math.cos(tilt)-dy*Math.sin(tilt),pivotY+dx*Math.sin(tilt)+dy*Math.cos(tilt),text,{fontFamily:'Georgia,serif',fontSize:'9px',color:'#fff0c8',resolution:4}).setOrigin(.5).setRotation((direction==='down'?Math.PI/2:0)+tilt).setDepth(5);labels.push(title);
+  const title=worldText(scene,pivotX+dx*Math.cos(tilt)-dy*Math.sin(tilt),pivotY+dx*Math.sin(tilt)+dy*Math.cos(tilt),text,{fontFamily:'Georgia,serif',fontSize:'9px',color:'#fff0c8',resolution:4}).setOrigin(.5).setRotation((direction==='down'?Math.PI/2:0)+tilt).setDepth(5);labels.push(title);
  };
  sign(235,696,226,608,18,'Falu','down');sign(292,810,220,759,88,'Erdei ösvény','left');
 

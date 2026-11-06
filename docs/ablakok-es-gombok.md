@@ -39,3 +39,12 @@ Minden teszt és előnézet azonos `.developer-tool-section` szakaszt használ: 
 
 
 - A bolti beszélgetésmenü gombjai balra igazított, szövegszélességű gombok, egységes 10 px térközzel. Hosszú témák mobilon tördelhetők; ne nyújtsd minden gombot a teljes ablak szélességére.
+
+
+### Bolti választóablak és éles világfeliratok — 2026-11-06
+
+A beszélgetési témák a buborék alatt, külön sorokban szerepelnek. Az alsó, jobbra igazított gombsorban egymás mellett áll a Vissza és a Vásárlás, egyforma minimális szélességgel. Mobilon szükség esetén tördelhető. Ez váltja a korábbi, függőlegesen sorolt kicsi gombokat.
+
+A világfeliratok natív HTML-réteget használnak (`world-text.ts`). A réteg követi a kamerát, nagyítást, forgatást, szülőkonténert, láthatóságot és áttűnést, az interakciót a Phaser-tárgy őrzi. A pixeles táj renderelése változatlan. A gondolat saját krémszínű háttere a hárompontos jelzés fölött marad.
+
+Üvegedény vagy lenszövet átadásakor először a boltos eredeti mondata látható a portrés ablakban. A Vissza vagy Esc bezárása indítja a tárgyátadó animációt. Az alkatrész mentése megelőzi az átadási ablakot; hiba esetén nincs átadási mondat vagy animáció. Más ablakra váltás törli az elhalasztott animációt.

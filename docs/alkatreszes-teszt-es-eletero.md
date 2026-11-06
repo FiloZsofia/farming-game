@@ -49,3 +49,19 @@ Menü → Fejlesztői eszközök → **Életerő-segítség · animáció**. Bá
 [1 / 4 vizsgálat](concepts/workshop-inspection-goal-one-of-four.png) · [Célok vizsgálat közben](concepts/workshop-inspection-goals-tab-partial.png) · [Negyedik vizsgálat](concepts/workshop-fourth-inspection-repair-panel.png) · [Gondolat és anyaglista](concepts/workshop-four-parts-thought-and-materials.png) · [Célok sorrendje](concepts/workshop-goals-inspect-before-repair.png)
 
 [Kisebb Annie-gombok](concepts/merchant-compact-annie-desktop.png) · [Leo](concepts/merchant-compact-leo-desktop.png) · [Mobil](concepts/merchant-compact-leo-mobile.png)
+
+## Éles világfeliratok, alsó gombsor és átadási mondatok — 2026-11-06
+
+413 sikeres teszt és sikeres build. A böngészős ellenőrzés Cypress-bináris hiányában Chromium CDP-vel futott, külön profilon, memóriabeli farmon.
+
+- Annie témája külön sorban, Vissza és Vásárlás egymás mellett az alsó jobb oldalon; ugyanaz a gombsor Simon hétköznapi beszélgetésénél. A vásárlás és visszalépés működik. Mobilon 390 × 844 méreten is elfér.
+- Annie és Leo eredeti tárgyátadó mondata látszik az animáció előtt. Az animációt a Vissza vagy Esc bezárása indítja. Sikertelen mentés nem mutat átadást; másik ablakra váltás nem hagy hátra később elinduló animációt.
+- A gondolat valódi HTML-betűkkel jelenik meg; 1,8 és 2,35 nagyításnál, 1-es és 2-es pixelsűrűségnél, asztali és mobilképen ellenőrizve. A saját háttere a hárompontos jelzés fölött marad.
+- A kérdőjel/három pont, a táblák, a Zzzz és a lebegő életerő-felirat ugyanazt a közös világfelirat-útvonalat használja. A kamera követése, forgatott szülőkonténer, áttűnés, elrejtés és megszüntetés ellenőrizve. A hárompontos jelzés kattintása tovább működik.
+- A normál farm exportált tartalma a teszt előtt és után azonos.
+
+[Simon új gombsora](concepts/merchant-footer-simon-desktop.png) · [Annie](concepts/merchant-footer-annie-desktop.png) · [Mobil](concepts/merchant-footer-annie-mobile.png) · [Átadási mondat](concepts/annie-glass-handoff-speech.png) · [Animáció bezárás után](concepts/annie-glass-handoff-after-close.png) · [Leo mondata](concepts/leo-linen-handoff-speech.png)
+
+[Éles gondolat](concepts/native-thought-workshop-desktop.png) · [Nagyítva](concepts/native-thought-workshop-zoomed.png) · [Nagy pixelsűrűséggel](concepts/native-thought-workshop-retina.png) · [Mobil](concepts/native-thought-workshop-mobile.png)
+
+A normál játék és a kizárólagos látványtesztek hatóköre: [Mi működik a rendes játékban, és mi maradt teszt?](jatek-es-tesztmod.md).

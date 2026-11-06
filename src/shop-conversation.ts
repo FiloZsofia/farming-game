@@ -14,8 +14,8 @@ export function merchantTopics(shop:Shop,research:Research,noah?:NoahTestState){
 export function appendMerchantActions(panel:HTMLElement,topics:ReturnType<typeof merchantTopics>,talk:(id:'bee'|'material'|'binder')=>Promise<boolean>,buy:()=>void,back:()=>void){
  panel.replaceChildren();panel.classList.add('merchant-actions');panel.hidden=false;
  for(const topic of topics){const b=document.createElement('button');b.type='button';b.dataset.merchantTopic=topic.id;b.textContent=topic.label;b.onclick=async()=>{for(const el of Array.from(panel.querySelectorAll('button')))el.disabled=true;try{await talk(topic.id);}finally{for(const el of Array.from(panel.querySelectorAll('button')))el.disabled=false;}};panel.append(b);}
- const purchase=document.createElement('button');purchase.type='button';purchase.dataset.merchantPurchase='true';purchase.textContent='Vásárlás';purchase.onclick=buy;panel.append(purchase);
- const close=document.createElement('button');close.type='button';close.dataset.merchantBack='true';close.textContent='Vissza';close.onclick=back;panel.append(close);
+ const footer=document.createElement('div');footer.className='merchant-footer';const purchase=document.createElement('button');purchase.type='button';purchase.dataset.merchantPurchase='true';purchase.textContent='Vásárlás';purchase.onclick=buy;
+ const close=document.createElement('button');close.type='button';close.dataset.merchantBack='true';close.textContent='Vissza';close.onclick=back;footer.append(close,purchase);panel.append(footer);
 }
 
 export const WORKSHOP_PEOPLE_HINT='Talán érdemes lehet másokat is megkérdeznem az alkatrészekről.';

@@ -1,3 +1,4 @@
+import {worldText} from './world-text';
 import {showMaterialGift} from './material-gift';
 import {prepareMaterialConversationTest,type MaterialCheckpoint} from './material-conversation-test';
 import {FOREST_HELP_TITLE,FOREST_HELP_TEXT,forestHelpPending,appendForestHealthDemo} from './forest-help';
@@ -95,10 +96,12 @@ import { SaveStore, snapshot,type Snapshot } from './storage';
 import {createOrders,seedPrices,orderCost,quantityTotal,purchaseSeeds,deliverOrders, type Orders} from './orders';
 import { createEconomy, crops, emptyQuantities, salePrices, shippingValue, settleSales, transferProduce, type Economy } from './economy';
 const dialogue=document.querySelector<HTMLDialogElement>('#dialogue')!;
+let materialHandoffOnClose:(()=>void)|null=null;
 const menuPresentation=new MenuPresentation(dialogue);
 let workshopIsKnown=false;
 const story="Sam egy kutatólaborban dolgozott, ahol rovarokon élősködő gombákat vizsgáltak.\n\nAz utolsó hónapokban egy szokatlan minta érkezett a laborba. Az eredmények nem illettek ahhoz, amit addig tudtak. Sam még azelőtt eljött, hogy kiderült volna, mit találtak.\n\n„Szeretném megtudni, képes vagyok-e a saját kezemmel otthont teremteni ezen a helyen.”";
 function showDialogue(title:string,text:string,label='A BIRTOKON'){
+ if(materialHandoffOnClose){dialogue.removeEventListener('close',materialHandoffOnClose);materialHandoffOnClose=null;}
  if(['IRÁNYÍTÁS','A RÉGI MŰHELY','EGY KEDVES SZÓ'].includes(label))text=workshopText(text,workshopIsKnown);label=workshopText(label,workshopIsKnown);
  delete dialogue.dataset.window;
  if(['MAGKATALÓGUS','POSTALÁDA','ELADÓLÁDA','ESTI NAPLÓ','HIRDETŐTÁBLA','SIMON','LEO','ANNIE'].includes(label)||['Készlet','Tárolóláda','Nádkosár','Levél a laborba','A küldemény úton van',...Object.values(blueprintNames)].includes(title))dialogue.dataset.window='utility';
@@ -674,7 +677,7 @@ class Farm extends Phaser.Scene {
   if(this.transitioning||performance.now()<this.eatingUntil)return;
   const health=this.travel.forest?.health??5;if(health>=5)return;
   const next=consumeFood(this.currentSnapshot(),crop);if(!next)return;
-  await this.commitChest(next,()=>{if(this.forestCombat)this.forestCombat.health=next.travel.forest!.health!;dialogue.close();release();this.eatingUntil=performance.now()+1200;this.avatar.use(0,-40,'hand');const heart=this.add.text(this.actor.x,this.actor.y-60,'♥ +1',{fontFamily:'sans-serif',fontSize:'13px',resolution:4,color:'#edaf9c',stroke:'#354b35',strokeThickness:3}).setOrigin(.5).setDepth(180);this.tweens.add({targets:heart,y:heart.y-28,alpha:0,duration:1200,onComplete:()=>heart.destroy()});});
+  await this.commitChest(next,()=>{if(this.forestCombat)this.forestCombat.health=next.travel.forest!.health!;dialogue.close();release();this.eatingUntil=performance.now()+1200;this.avatar.use(0,-40,'hand');const heart=worldText(this,this.actor.x,this.actor.y-60,'♥ +1',{fontFamily:'sans-serif',fontSize:'13px',resolution:4,color:'#edaf9c',stroke:'#354b35',strokeThickness:3}).setOrigin(.5).setDepth(180);this.tweens.add({targets:heart,y:heart.y-28,alpha:0,duration:1200,onComplete:()=>heart.destroy()});});
  }
  private openCraftShop(message=''){
   showDialogue('Műhelybolt',message||'A lentieknek a tervrajzát vásárolhatod meg (a megerősített túrabot kivételével, mely egyből az eszköztáradba kerül).','SIMON');const panel=document.querySelector<HTMLElement>('#shop-panel')!;panel.replaceChildren();panel.hidden=false;
@@ -906,7 +909,7 @@ class Farm extends Phaser.Scene {
   surface.dataset.bedSleeping='true';this.actor.setVisible(false);
   const sleeper=new FarmerArt(this,false,this.artStudy?this.samStudyStyle:'original');sleeper.equip('none');sleeper.root.setPosition(193,HOME_ORIGIN+321).setDepth(100);
   const quilt=this.add.graphics().setDepth(102);quilt.fillStyle(0x7c9164).fillRoundedRect(151,HOME_ORIGIN+290,83,63,4);quilt.fillStyle(0xa3b07b).fillRoundedRect(151,HOME_ORIGIN+287,83,11,3);for(let y=305;y<350;y+=11)quilt.lineStyle(1,0x5b7552,.6).lineBetween(155,HOME_ORIGIN+y,230,HOME_ORIGIN+y);
-  const snooze=this.add.text(208,HOME_ORIGIN+249,'Zzzz',{fontFamily:'Georgia',fontSize:'14px',color:'#f5e9cd',stroke:'#3b4b35',strokeThickness:3,resolution:4}).setOrigin(.5,1).setDepth(163);
+  const snooze=worldText(this,208,HOME_ORIGIN+249,'Zzzz',{fontFamily:'Georgia',fontSize:'14px',color:'#f5e9cd',stroke:'#3b4b35',strokeThickness:3,resolution:4}).setOrigin(.5,1).setDepth(163);
   const breathe=this.tweens.add({targets:sleeper.root,y:HOME_ORIGIN+322,duration:800,yoyo:true,repeat:-1,ease:'Sine.easeInOut'});
   const drift=this.tweens.add({targets:snooze,y:HOME_ORIGIN+238,alpha:.4,duration:950,yoyo:true,repeat:-1,ease:'Sine.easeInOut'});
   try{
@@ -1279,7 +1282,7 @@ class Farm extends Phaser.Scene {
   let next:Research|null=null,text='';
   if(topic==='bee'&&shop==='nursery'&&this.travel.research.observation&&!this.travel.research.key){next=grantKey(this.travel.research);text='Örülök, hogy láttál egyet! De figyeljük tovább őket. A birtok előző gazdája is sokat foglalkozott a kert élővilágával. Rám bízta a melléképület kulcsát; most már nálad a helye. Talán találsz ott valamit, ami segít megérteni, min dolgozott.';}
   else if(topic==='material'&&shopkeepers[shop].material){next=supplyMaterial(this.travel.research,shopkeepers[shop].material!);text=shop==='nursery'?'A régi berendezéshez szűrő kell? Van egy darab tiszta lenszövetem. Vidd csak el — kíváncsi vagyok, mire jutsz vele!':'Egy ép üvegedényre van szükséged? Ezt szívesen neked adom. Jó látni, hogy a régi műhely ismét életre kel.';}
-  if(!next)return false;if(await this.commitResearch(next)){if(topic==='material'){dialogue.close();showMaterialGift(this,this.actor,shopkeepers[shop].material==='leo'?'linen':'glass');}else{showDialogue(shopkeepers[shop].name,text,'EGY KEDVES SZÓ');this.showSpeaker(shop);}return true;}return false;
+  if(!next)return false;if(await this.commitResearch(next)){showDialogue(shopkeepers[shop].name,text,'EGY KEDVES SZÓ');this.showSpeaker(shop);if(topic==='material'){dialogue.dataset.presentation='material-handoff';const material=shopkeepers[shop].material==='leo'?'linen':'glass';materialHandoffOnClose=()=>{materialHandoffOnClose=null;showMaterialGift(this,this.actor,material);};dialogue.addEventListener('close',materialHandoffOnClose,{once:true});}return true;}return false;
  }
  private async removeCobweb(id:string){
   if(!this.canInteract()||!inWorkshop(this.actor.y))return;const web=remainingWebs(this.travel.research).find(w=>w.id===id);if(!web)return;const next=clearCobweb(this.travel.research,id,this.actor,'hand');if(!next){this.notice('Ezt kézzel le tudom szedni.');return;}
@@ -1568,8 +1571,8 @@ class Farm extends Phaser.Scene {
   this.avatar=new FarmerArt(this);this.body=this.avatar.root;this.actor.add(this.body);
   this.wildlife=new Wildlife(this);this.pondLife=new PondLife(this);this.villageAmbience=new VillageAmbience(this);
   this.thoughtBack=this.add.graphics().setDepth(159);
-  this.thought=this.add.text(0,0,'',{fontFamily:'Georgia',fontSize:'10px',color:'#344939',padding:{x:5,y:3},wordWrap:{width:112},align:'center'}).setOrigin(.5,1).setDepth(160).setResolution(4).setVisible(false);
-  this.bubble=this.add.text(0,0,'', {fontFamily:'Georgia',fontSize:'20px',color:'#fff4cf',backgroundColor:'#293e30',padding:{x:9,y:4}}).setOrigin(.5,1).setDepth(101).setResolution(4).setInteractive({useHandCursor:true});
+  this.thought=worldText(this,0,0,'',{fontFamily:'Georgia',fontSize:'10px',color:'#344939',padding:{x:5,y:3},wordWrap:{width:112},align:'center'}).setOrigin(.5,1).setDepth(160).setResolution(4).setData('worldTextKind','thought').setVisible(false);
+  this.bubble=worldText(this,0,0,'', {fontFamily:'Georgia',fontSize:'20px',color:'#fff4cf',backgroundColor:'#293e30',padding:{x:9,y:4}}).setOrigin(.5,1).setDepth(101).setResolution(4).setInteractive({useHandCursor:true});
   const inspect=()=>{
     if(this.noahTest?.labActive)return;
     if(!this.ready||dialogue.open||this.transitioning||this.collapseRemaining>0)return;

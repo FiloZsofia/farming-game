@@ -1121,3 +1121,12 @@ Elfogadott sorrend: a berendezés felfedezése után „Vizsgáld meg a régi be
 A korábbi mentések vizsgálatai és alkatrészei megmaradnak. A már megjavított berendezés vizsgálati célja teljesített; a korábban egyszer már látott gondolat jelzőjét nem töröljük. A tesztmód Műhely-kezdőpontja a teljes vizsgálat előtti állapot, Annie és Leo kezdőpontján a négy rész már megvizsgált. A játék és a mentésformátum verziószáma nem változik.
 
 A bolti beszélgetésgombok balra igazítottak és a szövegük szélességét követik, egységes 10 px térközzel. Hosszú szövegnél mobilon tördelhetők; a teljes sor szélességét nem foglalják el kötelezően.
+
+
+### Bolti alsó gombsor, átadási párbeszéd és éles szöveg — 2026. november 6.
+
+A felhasználó jóváhagyta az alsó, jobbra igazított Vissza és Vásárlás gombsort; a történeti témák fölötte külön sorokban maradnak. A tárgyátadást ismét Annie/Leo eredeti mondata vezeti be. Csak az ablak bezárása után indul az üvegedény/lenszövet animációja, nem tér vissza automatikusan a bolti menü.
+
+Sam gondolata, a kérdőjelek/három pont, táblafeliratok, Zzzz és lebegő életerő-felirat közös natív szövegréteget kap. Ezeket a böngésző rajzolja éles betűként, a Phaser pozícióját, kameráját és interakcióit követve. A korábbi puszta négyszeres textúrafelbontás nem oldotta meg a pixeles vászon nagyításából eredő problémát.
+
+Mindezek a normál játékban is működnek; nem kizárólag a tesztindítók mögött. A tesztmód csak az előkészített helyzeteket biztosítja. Az alternatív farmgrafika és Sam új külseje/járása továbbra is csak látványteszt. A játék és a mentésformátum verziója nem változik. Az aktuális hatókör összefoglalója: `docs/jatek-es-tesztmod.md`.
