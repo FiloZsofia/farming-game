@@ -1091,3 +1091,10 @@ Az első erdei belépéskor egyszer jelenik meg az „Életerő az erdőben” s
 ### Életerő-segítség szövegpontosítása — 2026. november 6.
 
 Elfogadott cím: „Életerő az erdőben”. Teljes szöveg: „Az erdőben az ellenségek megsebezhetnek. Ha csökken az életerőd, nyisd meg a Készletet (Tab), válassz egy nálad lévő zöldséget vagy gyümölcsöt, majd kattints az Eszem gombra. Egy darab elfogyasztása egy szívet tölt vissza.”
+
+
+### Látványosabb életerő-animáció — 2026. november 6.
+
+Jóváhagyott módosítás: sérüléskor röviden megremegnek a szívek; az elvesző két szív egymás után vörösen felvillan és kiürül. Evéskor a játék saját almaikonjából öt aranyló fénypont indul a negyedik szívhez. A szív alulról feltöltődik, majd megdobban és rövid fényudvart kap. A nyolc másodperces bemutató ismétlődik, a tényleges életerőt nem módosítja. Csökkentett mozgásnál statikus négy teli szív, egy üres szív és alma látszik. A megadott segítségszöveg változatlan.
+
+A Fejlesztői eszközök „Életerő-segítség · animáció” gombja mentésmódosítás nélkül nyit előnézetet. Nem fogyasztja el és nem törli a normál játék egyszeri megjelenési jelzőjét.

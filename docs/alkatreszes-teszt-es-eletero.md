@@ -18,3 +18,12 @@ A teszt a `SaveStore.beginTest()` védett, memóriabeli mentését használja. A
 [Kezdőpont a műhelyben](concepts/material-test-workshop-start.png) · [Gondolat](concepts/material-test-once-thought.png) · [Annie](concepts/material-test-annie-topic.png) · [Leo](concepts/material-test-leo-topic.png) · [Simon és az öntöző](concepts/simon-stick-exception-irrigation.png)
 
 [Öt szív](concepts/forest-first-health-help.png) · [Sérülés](concepts/forest-health-help-damaged.png) · [Evés után](concepts/forest-health-help-healed.png) · [Mobil](concepts/forest-first-health-help-mobile.png)
+
+
+## Életerő-animáció előnézete
+
+Menü → Fejlesztői eszközök → **Életerő-segítség · animáció**. Bármikor újranézhető; nem változtatja meg a farm életerejét vagy a segítség egyszeri megjelenési jelzőjét.
+
+2026-11-06: Chromium CDP-vel ellenőrizve az egymás utáni sérülés, az alma és öt aranyló fénypont, az alulról feltöltés, a dobbanás és fényudvar, a 390 × 844 mobilnézet és a csökkentett mozgás statikus változata. A normál mentés változatlan maradt. Cypress-bináris továbbra sem állt rendelkezésre.
+
+[Alma és fénypontok](concepts/health-help-animated-motes.png) · [Feltöltődés](concepts/health-help-animated-filling.png) · [Gyógyulás](concepts/health-help-animated-healed.png) · [Mobil](concepts/health-help-animated-mobile.png)

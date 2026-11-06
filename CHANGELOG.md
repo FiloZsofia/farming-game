@@ -2,6 +2,8 @@
 
 ## Változások a 0.2.0 óta — verzióemelés nélkül
 
+- 2026-11-06: az életerő-segítség animációja megremegő, vörösen felvillanó szívekkel, almából induló aranyló fénypontokkal, alulról feltöltődő és megdobbanó szívvel mutatja a sérülést és evést. A Fejlesztői eszközökből újranézhető, a farm egyszeri segítségjelzőjének módosítása nélkül.
+
 - 2026-11-06: az életerő-segítség pontosítja, hogy a nálad lévő zöldséget vagy gyümölcsöt választhatod; a visszatöltés szövege „egy szív”.
 
 - 2026-11-06: Simon vásárlási szövege jelzi a megerősített túrabot kivételét. Az Öntözőrendszernél a bolt és a Tervrajzok is mutatja a 6 növényes hatókört. Új, memóriabeli alkatrészes beszélgetésteszt három kezdőponttal. Első erdei belépéskor egyszeri, mentett életerő-segítség jelenik meg öt animált szívvel: sérüléskor fogynak, evéssel egy visszatöltődik.
