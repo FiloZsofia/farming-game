@@ -18,7 +18,7 @@ Ezek a közös játékútvonalakon működnek; egyik sem kizárólag a fejleszt�
 
 ## Csak tesztmód
 
-- Az **Élő ágyás kertészeti próba**: vegyes ágyás, nedvesség, mulcs, szedés/virágoztatás és kézzel léptethető napok. Nem váltja le a normál kertészkedést. [Kipróbálás és hatókör](elo-agyas-teszt.md).
+- Az **Élő ágyás kertészeti próba**: vegyes ágyás, nedvesség, mulcs, szedés/virágoztatás és kézzel léptethető napok. Szabadon elhelyezhető egyetlen ágyás, három előre rakott keret nélkül, interakciós panellel és tesztmagos utánvetéssel. Nem váltja le a normál kertészkedést. A Magkatalógus-, jártasság- és komposztáló-integráció, az új zöldségek és a kerti utak további tervek. [Kipróbálás és hatókör](elo-agyas-teszt.md).
 - A Kidolgozott farm alternatív grafikája, új növényzettel és részletesebb formákkal.
 - Sam átdolgozott külseje, copfja, ruhája, arányai és könnyedebb járása.
 

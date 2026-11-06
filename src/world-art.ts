@@ -6,7 +6,7 @@ import {createGarden,type Garden} from './gardening';
 import {farmLayout as layout,farmBounds} from './layout';
 
 // Original procedural artwork. World anchors stay shared with interaction/collision.
-export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),garden:Garden=createGarden(),birdhouse:{x:number;y:number}|null=null,study=false){
+export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),garden:Garden=createGarden(),birdhouse:{x:number;y:number}|null=null,study=false,starterBeds=true){
  let g=scene.add.graphics();const ground=g;
  let seed=71;const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
  const rect=(x:number,y:number,w:number,h:number,c:number,a=1)=>{g.fillStyle(study?studyColor(c):c,a);g.fillRect(Math.round(x),Math.round(y),w,h);};
@@ -108,7 +108,7 @@ export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),g
  for(const [x,y]of [[570,443],[731,480],[620,540]]){oval(x+2,y+2,18,8,0x345e52);oval(x,y,16,7,0x7b9a64);line(x-5,y,x+4,y,0xa1b27e);oval(x+3,y-3,5,4,0xe2cfb1);}
  for(let i=0;i<17;i++){const x=557+i*6,y=358-Math.sin(i*.3)*5;line(x,y,x-2,y-17,0x4c6945);rect(x-3,y-21,2,7,0x735e3d);}
  const d=layout.dock;oval(d.x+34,d.y+27,76,17,0x2f5047,.35);rect(d.x,d.y,d.w,d.h,0x5f503c);for(let x=d.x+2;x<d.x+d.w;x+=8){rect(x,d.y+2,6,d.h-4,0xa18a61);line(x+2,d.y+5,x+2,d.y+d.h-6,0xc0ab7a);rect(x+2,d.y+4,1,1,0x4a4a3a);}for(const x of [d.x,d.x+d.w-5]){rect(x,d.y-5,5,11,0x735337);rect(x,d.y+d.h-6,5,11,0x735337);rect(x,d.y-5,5,2,0xc2aa78);}
- for(const b of layout.beds){
+ for(const b of starterBeds?layout.beds:[]){
   const width=b.w,height=b.h;
   oval(b.x+width/2,b.y+height+3,width+9,10,0x30412d,.24);
   rect(b.x,b.y+1,width,height,0x795b38);rect(b.x+3,b.y+2,width-6,height-6,0x846846);

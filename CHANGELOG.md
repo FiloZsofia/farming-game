@@ -2,6 +2,8 @@
 
 ## Változások a 0.2.0 óta — verzióemelés nélkül
 
+- 2026-11-06 — csak kertészeti teszt: szabadon mozgatható ágyáskijelölés, a három rögzített kezdőkeret nélkül. Fa jelölő, csak interakcióra megnyíló panel és visszatérő célkövető. A tesztmagokból az üres helyekre a társítás bármely megfelelő növénye újravethető; a vetés fogyasztja a készletet. A rendes játék kezdése, kertje és mentése változatlan.
+
 - 2026-11-06 — csak tesztmódban: új „Élő ágyás” kertészeti próba, egyben előkészíthető vegyes ágyással, három társítással, megmaradó nedvességgel, mulccsal, szedés vagy virágoztatás döntéssel, maggyűjtéssel és újrahajtással. Kézzel léptethető napok, külön esős nap; a normál farm és a rendes kertészkedési rendszer változatlan.
 
 - 2026-11-06: a bolti Vissza és Vásárlás közös alsó sorba került. Az alkatrészátadás eredeti mondata ismét megjelenik, az animáció az ablak bezárása után indul. Natív, éles világfeliratok váltják a pixeles vászonra rajzolt gondolatot, jelzéseket, táblákat, Zzzz-t és életerő-feliratot. Ezek a normál játék javításai; a látványkísérletek továbbra is csak tesztben élnek.

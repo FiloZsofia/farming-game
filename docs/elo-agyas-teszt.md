@@ -40,3 +40,17 @@ Az indítás előbb rögzíti az aktuális rendes haladást, majd `SaveStore.beg
 - A normál mentés és biztonsági másolat exportált tartalma a próba előtt, közben és a kilépés utáni visszatöltéskor azonos.
 
 [Kialakítás előtt](concepts/living-bed-test-before-preparation.png) · [Társítások](concepts/living-bed-test-planting-choices.png) · [Fiatal ágyás](concepts/living-bed-test-young-mixed-bed.png) · [Szedhető növény](concepts/living-bed-test-ready-to-pick.png) · [Virágok és látogatók](concepts/living-bed-test-flowers-and-visitors.png) · [Saját magok](concepts/living-bed-test-own-seeds.png) · [Száraz talaj](concepts/living-bed-test-dry-soil.png) · [Eső](concepts/living-bed-test-rain.png) · [Mobil](concepts/living-bed-test-mobile.png)
+
+## Következő próbaváltozat — 2026-11-06
+
+A három régi kezdőkeret már nincs jelen ebben a tesztben. A kijelölést szabadon mozgathatod a mutatóval; kattintás vagy az „Itt jelölöm ki az ágyást” gomb rögzíti. Érintőképernyőn előbb érintéssel válassz helyet, majd a gombbal erősítsd meg. Az érvénytelen helyet a kijelölés és az inaktív gomb jelzi. Az épületek, utak, víz és Sam helye védett.
+
+Ezután sétálj közel és nyomj E-t vagy kattints az ágyásra. Csak ekkor nyílik meg a gondozás. Vissza, Esc, távolodás vagy az ágyáson kívüli talajra kattintás bezárja; a próba aktuális célja ismét látszik. A föld előkészítése előtt másik hely is választható. A jelölő immár kis fa tábla.
+
+A próbában kezdetben fajonként 9 tesztmag áll rendelkezésre. A társítás beültetése már fogyasztja a szükséges magokat. Betakarítás után a keverék bármely tagja vethető az üres helyre, ha van mag; más faj nem, mag nélkül a választás inaktív. A saját gyűjtésű mag is használható. A rendes magrendelés és komposztáló nincs még bekötve ehhez az új modellhez; a társítások sem végleges kertészeti ajánlások.
+
+423 sikeres teszt / 63 fájl és sikeres build. Chromium CDP-vel külön, frissen létrehozott böngészőprofilban ellenőrizve: szabad elhelyezés a korábbi kezdőágyások helyén is, vízre lerakás elutasítása, panel csak interakcióra, aktuális cél elrejtése/visszatérése, fa jelölő, magfogyasztás, másik megfelelő faj utánvetése, nulla maggal tiltás, eltávolodás és mobilkamera visszaállása, másik tesztre váltás. A normál mentés és biztonsági másolata a próba és kilépés alatt változatlan.
+
+[Szabad helyválasztás](concepts/living-bed-v2-free-placement-start.png) · [Tiltott hely](concepts/living-bed-v2-invalid-placement.png) · [Fa jelölő](concepts/living-bed-v2-wood-marker.png) · [Utánvetés](concepts/living-bed-v2-replant-choice.png) · [Másik növény a helyén](concepts/living-bed-v2-replanted-herb.png) · [Bezárt panel és cél](concepts/living-bed-v2-closed-panel-goal.png) · [Mobil](concepts/living-bed-v2-mobile-inspection.png)
+
+A további ötletek és a még hiányzó integrációk pontos státusza: [Kertészkedési átállási terv](kerteszkedes-atallasi-terv.md).

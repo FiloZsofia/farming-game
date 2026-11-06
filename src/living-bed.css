@@ -5,3 +5,7 @@ body:has(#game[data-living-bed="true"]) :is(#toolbar,#work,#crop-hint){display:n
 
 #living-bed-panel{display:flex;flex-direction:column;overflow:hidden}.bed-content{min-height:0;overflow:auto;scrollbar-width:thin;scrollbar-color:#9d9568 #1e3527}#living-bed-panel header,.bed-time{flex-shrink:0}
 .bed-plant-picker select{width:145px;flex-shrink:0}.bed-plant-picker label{min-width:0}.bed-content{overflow-x:hidden}
+#living-bed-placement{position:fixed;bottom:104px;left:50%;transform:translateX(-50%);z-index:8}#living-bed-placement[hidden]{display:none}#living-bed-placement button{background:var(--button-surface);color:var(--button-ink);border:1px solid var(--button-border);font:14px var(--control-font);box-shadow:var(--window-shadow);min-height:44px}#living-bed-panel [data-bed-action="close"]{margin-left:auto}
+@media(max-width:700px){#living-bed-placement{bottom:155px;width:max-content;max-width:90vw}body:has(#game[data-living-bed="true"]):not(:has(#living-bed-panel:not([hidden]))) #controls{bottom:18px}body:has(#game[data-living-bed="true"]):not(:has(#living-bed-panel:not([hidden]))) #status{bottom:85px;right:12px;max-width:75vw}}
+#living-bed-placement{left:auto;right:20px;bottom:24px;transform:none;max-width:80vw}#living-bed-placement button:disabled{opacity:.55;cursor:default}body:has(#living-bed-placement:not([hidden])) #status{display:none}
+@media(max-width:700px){#living-bed-placement{left:auto;right:12px;bottom:24px;width:max-content;max-width:calc(100vw - 172px)}}

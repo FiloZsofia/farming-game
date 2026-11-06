@@ -48,3 +48,7 @@ A beszélgetési témák a buborék alatt, külön sorokban szerepelnek. Az als�
 A világfeliratok natív HTML-réteget használnak (`world-text.ts`). A réteg követi a kamerát, nagyítást, forgatást, szülőkonténert, láthatóságot és áttűnést, az interakciót a Phaser-tárgy őrzi. A pixeles táj renderelése változatlan. A gondolat saját krémszínű háttere a hárompontos jelzés fölött marad.
 
 Üvegedény vagy lenszövet átadásakor először a boltos eredeti mondata látható a portrés ablakban. A Vissza vagy Esc bezárása indítja a tárgyátadó animációt. Az alkatrész mentése megelőzi az átadási ablakot; hiba esetén nincs átadási mondat vagy animáció. Más ablakra váltás törli az elhalasztott animációt.
+
+### Élő ágyás gondozópanelje — csak teszt
+
+A panel közeli E/kattintásra jelenik meg. Vissza, Esc, eltávolodás és az ágyáson kívüli talajra kattintás zárja. A célkövetőt csak a nyitott panel idejére rejti el. Mobilon a nyitás fenntartott kameraterületet ad, bezáráskor visszatér a teljes nézet. A helyválasztási előnézethez külön, kis megerősítőgomb tartozik; ez nem a gondozóablak és nem takarhatja a célkövetőt vagy a mozgásgombokat.

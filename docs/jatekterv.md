@@ -1139,3 +1139,12 @@ A felhasználó jóváhagyott egy külön kipróbálható alapot a saját kerté
 A felhasználó a gyors, kézzel léptethető próbanapokat választotta. Külön Következő nap és Esős nap segíti az összehasonlítást. A próbához használt kezdeti számok nem végleges játékegyensúlyi döntések. A próbakosár csak az eredmény szemléltetése, nem új Készlet-kategória.
 
 A fejlesztői panel első egységes szakasza: „Kertészeti próba · Élő ágyás”. Ez kizárólag memóriabeli teszt, `SaveStore.beginTest()` védelemmel. A normál kertészkedés, a rendes farm és mentésformátuma változatlan; a rendszer játékba emelése külön döntés lesz. A részletes hatókör és kipróbálás: `docs/elo-agyas-teszt.md`.
+
+
+### Szabad kerttervezés és az üres ágyáshelyek — 2026. november 6.
+
+Az új rendszer tervezett kezdése szabad ágyáselhelyezés, nem három rögzített kis ágyás. Ennek próbájaként a kertészeti tesztben a három régi keret eltűnik, a körülkerített kijelölés szabadon mozgatható; épületre, vízre és ösvényre nem helyezhető. Az ágyás kis fa jelölőt kap. A panel csak közeli E/kattintás után nyílik; bezárásakor vagy eltávolodáskor a célkövető látható marad.
+
+A felhasználó pontosítása: betakarítás után az üres helyre a társítás bármely olyan növénye ültethető, amelyhez van magunk. A próbában ez már működik tesztmagkészlettel; a vetés fogyasztja, a maggyűjtés növeli ezt a készletet. Ez még nem a normál Magkatalógushoz bekötött gazdaság.
+
+A Magkatalógus és a posta megőrzése, a jártasságos társításfeloldás, a Komposztálóból származó mulcs, a három kezdő társítás kertészeti megalapozása és a régi mentések átállása további tervezési feladat. Uborka, paprika és paradicsom felvétele a tervezett növénykínálatba szintén kérés; játékmeneti számaik nincsenek véglegesítve. A kerek lépőkövekből álló, szabadon rajzolható utak egyelőre javaslatok, nem megvalósított funkciók. A részletes státusz és terv: `docs/kerteszkedes-atallasi-terv.md`.
