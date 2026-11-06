@@ -10,12 +10,12 @@ export const rewardFruits={strawberry:'Eper',honeyberry:'Mézbogyó',blueberry:'
 export type RewardFruit=keyof typeof rewardFruits;
 export type GardenSkill={birdhouseStored?:boolean;pendingSeeds?:Record<string,number>;chests?:ChestStorage;revision?:2;chestBlueprint?:boolean;xp:number;credited:string[];rewarded:boolean;levelThreeRewarded:boolean;fruits:Record<string,number>};
 export const createGardenSkill=():GardenSkill=>({revision:2,chestBlueprint:false,xp:0,credited:[],rewarded:false,levelThreeRewarded:false,fruits:{}});
-export function gainGardening(skill:GardenSkill,key:string){
+export function gainGardening(skill:GardenSkill,key:string,rewards=true){
  if(skill.credited.includes(key)||skill.xp>=CHEST_XP)return null;
  const next={...structuredClone(skill),xp:skill.xp+1,credited:[...skill.credited,key]};
- if(next.xp===FIRST_REWARD_XP&&!next.rewarded){next.rewarded=true;next.fruits={strawberry:4,honeyberry:4,blueberry:4};}
- if(next.xp===SECOND_REWARD_XP)next.levelThreeRewarded=true;
- if(next.xp===CHEST_XP)next.chestBlueprint=true;
+ if(rewards&&next.xp===FIRST_REWARD_XP&&!next.rewarded){next.rewarded=true;next.fruits={strawberry:4,honeyberry:4,blueberry:4};}
+ if(rewards&&next.xp===SECOND_REWARD_XP)next.levelThreeRewarded=true;
+ if(rewards&&next.xp===CHEST_XP)next.chestBlueprint=true;
  return next;
 }
 export function validGardenSkill(value:unknown):value is GardenSkill{

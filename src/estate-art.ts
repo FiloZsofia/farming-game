@@ -1,12 +1,15 @@
+import {orchardGrowth} from './orchard-growth';
 import {drawTreeBlossomGaps} from './pollination-art';
 import {drawRipeMarker} from './crop-art';
 import Phaser from 'phaser';
 import {reedReady,type Estate} from './estate';
 export function drawEstate(scene:Phaser.Scene,estate:Estate,day:number){
  const g=scene.add.graphics().setDepth(2);
- for(const t of estate.trees){const grown=day-t.planted>=15,s=grown?1:.45+Math.min(15,day-t.planted)/30,x=t.x,y=t.y;
+ for(const t of estate.trees){const growth=orchardGrowth(t.planted,day),grown=growth.mature,s=growth.scale,x=t.x,y=t.y;
   g.fillStyle(0x345737,.25).fillEllipse(x+7,y+5,61*s,22*s);g.lineStyle(7*s,0x785738).lineBetween(x,y,x,y-49*s);g.lineStyle(3*s,0x96714b).lineBetween(x-1,y,x-1,y-48*s);
-  for(const [dx,dy]of [[-13,-43],[12,-49],[0,-64]]){g.fillStyle(0x3d693f).fillEllipse(x+dx*s,y+dy*s,46*s,37*s);g.fillStyle(0x74964d).fillEllipse(x+(dx-4)*s,y+(dy-5)*s,35*s,26*s);}
+  if(growth.progress>=1/3){g.lineStyle(3*s,0x785738).lineBetween(x,y-25*s,x-13*s,y-43*s).lineBetween(x,y-32*s,x+12*s,y-49*s);}
+  const crown=growth.canopies===1?[[0,-49]]:growth.canopies===2?[[-10,-43],[9,-56]]:[[-13,-43],[12,-49],[0,-64]];
+  for(const [dx,dy]of crown){g.fillStyle(0x3d693f).fillEllipse(x+dx*s,y+dy*s,46*s,37*s);g.fillStyle(0x74964d).fillEllipse(x+(dx-4)*s,y+(dy-5)*s,35*s,26*s);}
   if(grown)drawTreeBlossomGaps(g,x,y,s,t.fruit>0,t.bloomState);
   if(t.fruit)for(let i=0;i<t.fruit;i++){const xx=x+Math.cos(i*2.4)*19,yy=y-48+Math.sin(i*2.4)*14;g.fillStyle(t.fruitDay!==undefined&&day-t.fruitDay>=2?(t.kind==='cherry'?0xa26b59:t.kind==='plum'?0x81738a:0xa99a6f):t.kind==='cherry'?0xb94f49:t.kind==='plum'?0x776187:t.kind==='apple'?0xcf9450:0xc1b566).fillEllipse(xx,yy,6,t.kind==='pear'?9:6);g.lineStyle(1,0x65583a).lineBetween(xx,yy-3,xx+1,yy-6);}
   if(t.fruit)drawRipeMarker(g,x+25*s,y-65*s);
@@ -39,6 +42,9 @@ export function drawEstate(scene:Phaser.Scene,estate:Estate,day:number){
  return g;
 }
 
-export function drawDuck(g:Phaser.GameObjects.Graphics,x:number,y:number,male:boolean,wing=0){
- g.fillStyle(0x334f43,.18).fillEllipse(x+2,y+4,24,7);g.fillStyle(male?0xb6b29b:0x9b8059).fillEllipse(x,y-2,23,13);g.fillStyle(male?0x647f77:0xc0a074).fillEllipse(x-2,y-4,15,8);g.fillStyle(male?0x426b51:0x92724d).fillCircle(x+9,y-10,5);g.fillStyle(0xe4c176).fillTriangle(x+13,y-11,x+20,y-9,x+13,y-7);g.fillStyle(0x273e32).fillCircle(x+10,y-11,1);if(male)g.lineStyle(1,0xe4dac0).lineBetween(x+6,y-6,x+12,y-6);g.fillStyle(0xf4e3b7).fillCircle(x+10.3,y-11.4,.35);g.lineStyle(.8,male?0x466b75:0x70563b).lineBetween(x-7,y-4,x+2,y-1);if(!male)for(let i=0;i<4;i++)g.lineStyle(.7,0x70563f).lineBetween(x-7+i*3,y-4,x-5+i*3,y-2);g.fillStyle(0x444e42).fillTriangle(x-10,y-4,x-17,y-6,x-12,y);if(wing)g.lineStyle(3,0x8d9b85).lineBetween(x,y-5,x-10,y-5-wing);
+export function drawDuck(g:Phaser.GameObjects.Graphics,x:number,y:number,male:boolean,wing=0,pose:{ground?:boolean;stride?:number;facing?:1|-1}={}){
+ g.save().translateCanvas(x,y).scaleCanvas(pose.facing??1,1);x=0;y=0;
+ if(pose.ground){g.fillStyle(0x334f43,.2).fillEllipse(1,10,25,6);for(const [i,hip]of [-4,4].entries()){const step=Math.sin((pose.stride??0)+i*Math.PI)*2.5,lift=Math.max(0,Math.sin((pose.stride??0)+i*Math.PI))*1.5,foot=hip+step;g.lineStyle(1.8,0xc9964e).lineBetween(hip,1,foot,8-lift);g.fillStyle(0xd8ab5d).fillTriangle(foot-2,8-lift,foot+5,9-lift,foot-2,10-lift);}}
+ else g.fillStyle(0x334f43,.18).fillEllipse(x+2,y+4,24,7);
+ g.fillStyle(male?0xb6b29b:0x9b8059).fillEllipse(x,y-2,23,13);g.fillStyle(male?0x647f77:0xc0a074).fillEllipse(x-2,y-4,15,8);g.fillStyle(male?0x426b51:0x92724d).fillCircle(x+9,y-10,5);g.fillStyle(0xe4c176).fillTriangle(x+13,y-11,x+20,y-9,x+13,y-7);g.fillStyle(0x273e32).fillCircle(x+10,y-11,1);if(male)g.lineStyle(1,0xe4dac0).lineBetween(x+6,y-6,x+12,y-6);g.fillStyle(0xf4e3b7).fillCircle(x+10.3,y-11.4,.35);g.lineStyle(.8,male?0x466b75:0x70563b).lineBetween(x-7,y-4,x+2,y-1);if(!male)for(let i=0;i<4;i++)g.lineStyle(.7,0x70563f).lineBetween(x-7+i*3,y-4,x-5+i*3,y-2);g.fillStyle(0x444e42).fillTriangle(x-10,y-4,x-17,y-6,x-12,y);if(wing)g.lineStyle(3,0x8d9b85).lineBetween(x,y-5,x-10,y-5-wing);g.restore();
 }

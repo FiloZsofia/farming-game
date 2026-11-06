@@ -2,6 +2,11 @@
 
 ## Változások a 0.2.0 óta — verzióemelés nélkül
 
+- 2026-11-06 — összefüggő kertészeti tesztbővítés: több szabad ágyás, közvetlen eszközsávos vetés/gondozás, öt jóváhagyott társítás, társításonként kibontott Magkatalógus és valódi átvételt igénylő rendelés; komposztálós mulcs, 20/40 pontos feloldások ünnepléssel, megfigyelési napló és egyszeri felismeréspontok, növényenként eltérő maggyűjtés. Bontóvassal mozgatható kézírásos jelölők, kövenként elszámolt szabad lépőkőutak, egy ágyáshoz kapcsolt öntöző; tesztbeli ládatervrajz Simonnál 160 goldért. A normál kertészeti rendszer és mentése még nem áll át.
+- 2026-11-06 — normál játék: szárazföldi kacsalábak, rövid tóparti séták és megállások; a Magkatalógus új, egyszerű címe. A kacsák tojás- és beköltözési szabályai változatlanok.
+
+- 2026-11-06 — gyümölcsfák: a csak Tavaszt tartalmazó változatban a 15 napos növekedés után évszakkorlát nélkül indulhatnak a meglévő terméskötődési ciklusok. A hozamok, az újratermési idő és a beporzók hatása megmarad; a későbbi termő évszakok dokumentálva maradnak. Látványosabb csemete–fiatal fa–termő fa fejlődés és a jelenlegi működést leíró faiskolai kínálat.
+
 - 2026-11-06 — csak kertészeti teszt: szabadon mozgatható ágyáskijelölés, a három rögzített kezdőkeret nélkül. Fa jelölő, csak interakcióra megnyíló panel és visszatérő célkövető. A tesztmagokból az üres helyekre a társítás bármely megfelelő növénye újravethető; a vetés fogyasztja a készletet. A rendes játék kezdése, kertje és mentése változatlan.
 
 - 2026-11-06 — csak tesztmódban: új „Élő ágyás” kertészeti próba, egyben előkészíthető vegyes ágyással, három társítással, megmaradó nedvességgel, mulccsal, szedés vagy virágoztatás döntéssel, maggyűjtéssel és újrahajtással. Kézzel léptethető napok, külön esős nap; a normál farm és a rendes kertészkedési rendszer változatlan.

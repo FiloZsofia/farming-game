@@ -11,11 +11,10 @@ export function validOrders(value:unknown):value is Orders{
  const orders=value as Orders;return validQuantities(orders.pending)&&validQuantities(orders.mailbox);
 }
 export function purchaseSeeds(economy:Economy,orders:Orders,seeds:Quantities,cart:Quantities):{economy:Economy;orders:Orders}|null{
- const cost=orderCost(cart);
- if(!Number.isSafeInteger(cost)||cost<=0||cost>economy.gold)return null;
- if(crops.some(c=>seeds[c]+orders.mailbox[c]+orders.pending[c]+cart[c]>999999))return null;
- const next=structuredClone(orders);for(const c of crops)next.pending[c]+=cart[c];
- return {economy:{...structuredClone(economy),gold:economy.gold-cost},orders:next};
+ if(!validQuantities(cart))return null;
+ const paid=purchaseSeedOrder(economy.gold,seeds,orders.pending,orders.mailbox,cart,seedPrices);
+ if(!paid)return null;
+ return {economy:{...structuredClone(economy),gold:paid.gold},orders:{pending:paid.pending,mailbox:{...orders.mailbox}}};
 }
 export function deliverOrders(orders:Orders):Orders{
  const mailbox=emptyQuantities();for(const c of crops){mailbox[c]=orders.mailbox[c]+orders.pending[c];if(mailbox[c]>999999)throw new Error('A postaláda megtelt.');}
@@ -25,4 +24,15 @@ export function collectPackage(garden:Garden,orders:Orders):{garden:Garden;order
  if(quantityTotal(orders.mailbox)===0||crops.some(c=>garden.seeds[c]+orders.mailbox[c]>999999))return null;
  const seeds={...garden.seeds};for(const c of crops)seeds[c]+=orders.mailbox[c];
  return {garden:{seeds,produce:{...garden.produce},plots:new Map([...garden.plots].map(([k,p])=>[k,{...p}]))},orders:{pending:{...orders.pending},mailbox:emptyQuantities()}};
+}
+
+// The experimental garden uses extra seed species without changing the save schema.
+// Both catalogues share the same validation and paid, next-day order operation.
+export function purchaseSeedOrder<K extends string>(gold:number,held:Record<K,number>,pending:Record<K,number>,mailbox:Record<K,number>,cart:Record<K,number>,prices:Record<K,number>){
+ const keys=Object.keys(prices) as K[];
+ if(Object.keys(cart).some(k=>!keys.includes(k as K)))return null;
+ if(keys.some(k=>![held[k],pending[k],mailbox[k],cart[k],prices[k]].every(n=>Number.isSafeInteger(n)&&n>=0)))return null;
+ const cost=keys.reduce((n,k)=>n+cart[k]*prices[k],0);
+ if(!Number.isSafeInteger(cost)||cost<=0||cost>gold||keys.some(k=>held[k]+pending[k]+mailbox[k]+cart[k]>999999))return null;
+ return {gold:gold-cost,pending:Object.fromEntries(keys.map(k=>[k,pending[k]+cart[k]])) as Record<K,number>};
 }

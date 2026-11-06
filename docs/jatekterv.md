@@ -1214,3 +1214,45 @@ A gyümölcsös társítás már az első jártassági szinten megjelenik, hogy 
 A hullott gyümölcs megmarad a Komposztáló alapanyagaként. Két külön jelenséget kell érthetően megjeleníteni: gyenge beporzás esetén kevesebb gyümölcs fejlődik; az elmaradó betakarítás miatt a már megérett gyümölcs később lehullik vagy túlérik. Fáknál „hullott gyümölcs”, epernél „túlérett gyümölcs” a megfelelő megnevezés. Ne legyen gyors, sürgető büntetés. Az időzítés, a mennyiségek és a közös vagy külön készletbeli kezelés még nincs véglegesítve; a meglévő játék 3 napos szabálya e döntéssel nem változik automatikusan.
 
 Simon a tárolóláda tervrajzát 160 goldért árulja majd; ez a felhasználó által megadott ár. A korábban megszerzett tervrajzok megmaradnak.
+
+
+### Gyümölcsfák az egyévszakos változatban — 2026. november 6.
+
+A felhasználó kérésére a jelenlegi, csak Tavaszt tartalmazó játékban minden gyümölcsfa az ültetéstől számított 15 teljes játéknap után kezdheti a terméskötődési ciklusait, a későbbre tervezett termő évszaktól függetlenül. Az 1. napon ültetett fa így a 16. napon éri el a termőkort. Ez a már meglévő, régen elültetett fákra is vonatkozik a következő napváltáskor; nem kell újraültetni őket. A növekedés külön öntözést továbbra sem igényel.
+
+| Fa | Megőrzött jövőbeli termőidőszak | Sikeres kötődés hozama | Új ciklus / újratermés időköze |
+| --- | --- | --- | --- |
+| Cseresznye | Nyár eleje | 3 | 3 nap |
+| Szilva | Nyár vége | 4 | 4 nap |
+| Alma | Ősz | 3 | 2 nap |
+| Körte | Ősz | 3 | 3 nap |
+
+A beporzók megfogyatkozásának meglévő hatása megmarad: a terméskötődés nem garantált, sikeres ciklusban a korábban elfogadott teljes hozam keletkezik. Az újratermés idejét a szedéstől, sikertelen kötődésnél az előző próbálkozástól számoljuk. Nincs elmulasztott évek utólagos, halmozott hozama. A meglévő túlérési és hullottgyümölcs-szabály most nem változik; annak későbbi hangolását külön egyeztetjük.
+
+A kódban a fák jövőbeli nyári/őszi évszakadatai megmaradnak, de az évszakos terméskorlátozás a jelenlegi változatban ki van kapcsolva. Az évszakok későbbi tényleges bevezetésekor ezt tudatosan kell visszakapcsolni; a belső napszám növekedése nem kapcsolja be magától. A faiskolai leírás a jelenlegi működést mutassa, ne a még nem elérhető Nyár/Ősz követelményt.
+
+A fa 15 nap alatt folyamatosan láthatóan nő: apró, egy lombcsomós csemetéből vastagodó, elágazó, több lombcsomós fa lesz, majd teljes méretű termő fa. A rajzi fejlődés a mentett ültetési dátumból következik, nem igényel új mentésmezőt, és nem indítja újra a régi fák növekedését. Ez a gyümölcsfajavítás a normál játékhoz készül; az új vegyes ágyások továbbra is külön tesztfejlesztés alatt állnak. Verziószám-emelés nincs külön jóváhagyás nélkül.
+
+
+Az új társítások próbához elfogadott kilenc helyes arányai: Epres méhlegelő = 6 eper + 2 körömvirág + 1 borágó; Esti teakert = 6 kamilla + 3 citromfű. A korábbi, még egyeztetendő arányokra vonatkozó megjegyzéseket ez pontosítja; a próba után hangolhatók.
+
+
+### Elfogadott megfigyelések, maggyűjtés és társításos Magkatalógus — 2026. november 6.
+
+- Sam a növények változásait megfigyelheti és későbbi állapotukkal összehasonlíthatja. Elsőként a vízhiány → öntözés → levelek helyreállása, valamint az eper virágzása → gyümölcs nélküli virágzás két folyamata készül a tesztbe. Csak ténylegesen korábban megfigyelt állapotból születhet felismerés; nem találunk ki megfigyelési dátumot vagy látott rovarlátogatást.
+- Egy új összefüggés felismerése egyszer 1 kertészkedési pontot ad, az egész teszt során, nem növényenként vagy kattintásonként. Az ismételt megtekintés nem termel pontot. A normál kertészeti munkák jutalma megmarad. A naplóban kis saját rajz, az előzmény és felismerés napja, illetve rövid szöveg őrzi a tapasztalatot; Sam éles gondolatbuborékja jelzi a megfigyelést.
+- Jóváhagyott próbaküszöbök: az első szint 20, a második 40 pont. Egy teljes társítás 9 növényének elültetése 9 pont; az előkészítés, tényleges gondozás, betakarítás és maggyűjtés további munkapontokat ad. Az első szinthez legalább egy teljes ágyás kilenc helyéről való betakarítás/maggyűjtés is kell. Pusztán sok ágyás beültetésével nem ugorhatjuk át ezt a feltételt. Ezek tesztértékek, nem végleges éles egyensúly.
+- Maggyűjtés: vadvirág, körömvirág, borágó, kamilla; továbbá retek, saláta, borsó és a kakukkfű, szurokfű, zsálya, citromfű adhat saját vetőmagot. A játékos a szokásos terményszedés helyett tovább hagyhatja a növényt; száraz magfej, a borsónál száraz hüvely jelzi a gyűjthetőséget. A Gyűjtés eszköz a magot azonnal a használható magkészlethez adja. A levélért szedett növények töve megmarad, a magot érlelt egynyári retek/saláta helye felszabadul.
+- Sárgarépáról most nincs maggyűjtés: jellemzően második éves virágzása nem fér a jelenlegi rendszerbe. Eperről szintén nincs saját maggyűjtés; későbbi indás szaporítása lehetőség, nem most megvalósított funkció. A maghozam és magérlelési idő végleges hangolása nyitott; a gyors próbában az eddigi 1 magos, 2 kézzel léptetett érlelési napos szemléltetés marad.
+- A Magkatalógus a feloldott társításokat sorolja fel nevükkel és növényeikkel. Egy társítás kibontásakor csak a hozzá tartozó magok darabszáma választható; az összes mennyiség kezdetben nulla, nincs automatikus rendelés. A kijelölt tételeket egy megerősített rendelés együtt, pontos összköltséggel fizeti ki; a már meglévő magot nem kell újra megvenni. Az ajándék és saját gyűjtésű magok is számítanak. A csomag továbbra is másnap érkezik és külön átveendő.
+- A normál játék Magkatalógus-ablakának címe is „Magkatalógus” legyen a korábbi „Mit ültessünk legközelebb?” helyett. A társításos szerkezet most az új kertészeti teszthez tartozik; a normál kertészkedés átállása későbbi külön lépés.
+- A szárazföldi kacsák lábakat és lépegető mozgást kapnak. A tó/fészek közelében rövid szakaszokon sétálnak, megállnak, irányt váltanak; a vízben a lábak nem látszanak. A kert tárgyait és növényeit kerüljék. A tojás, beköltözés, etetés nélküli gondozás és mentés szabályai ettől nem változnak. Ez a javítás a normál játék része is.
+
+
+### Társításra váró vetőmagok megőrzése — elfogadva, 2026. november 6.
+
+A mag birtoklása, megszerzése és megőrzése független a társítások meglététől és feloldásától. A játékos például gazszedéskor vagy ajándékként akkor is kaphat és a Készletben megőrizhet egy magot, ha még egyetlen elkészült társításhoz sem tartozik. Amikor később társítást vezetünk be hozzá, a már korábban megszerzett mag felhasználható lesz; nem kell újra megvásárolni vagy megszerezni.
+
+Sem az új rendszer bevezetése, sem egy társítás feloldása nem törölheti vagy szűrheti a korábban birtokolt magokat. A tárgy-/magnévjegyzék és a mentés teljes magkészletet kezeljen; ne a feloldott receptekből számolt fajlista legyen a Készlet vagy a migráció engedélyezőlistája. A társítás nélküli vagy még zárolt növény magja is látható és megőrizhető legyen a Készletben; a jelenlegi ágyásokba viszont csak az adott társítás megfelelő növénye vethető. Új külön Készlet-kategória ehhez sem szükséges.
+
+Jelenleg a normál játék tíz vetőmagfajtája közül a burgonya, hagyma, mézbogyó és áfonya nem szerepel az öt elfogadott társításban. A tervezett uborka, paprika és paradicsom társítása szintén későbbi feladat. Ezek nem törlendő vagy elvesző magok.

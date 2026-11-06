@@ -52,3 +52,6 @@ A világfeliratok natív HTML-réteget használnak (`world-text.ts`). A réteg k
 ### Élő ágyás gondozópanelje — csak teszt
 
 A panel közeli E/kattintásra jelenik meg. Vissza, Esc, eltávolodás és az ágyáson kívüli talajra kattintás zárja. A célkövetőt csak a nyitott panel idejére rejti el. Mobilon a nyitás fenntartott kameraterületet ad, bezáráskor visszatér a teljes nézet. A helyválasztási előnézethez külön, kis megerősítőgomb tartozik; ez nem a gondozóablak és nem takarhatja a célkövetőt vagy a mozgásgombokat.
+
+
+A bővített kertészeti próba ugyanazon panelben kezeli az ágyást, a társítás szerint kibontott Magkatalógust, postát, Készletet, Tervrajzokat és megfigyelési naplót. A közös ablak-/gombszínváltozókat használja. A panel alja a tényleges eszközsáv-magasságot követi; teteje a Menü alá kerül. Mobilon a mozgásgombok a nyitott panel fölött, a kamera a fenntartott játéktérben marad. Beviteli mezőben a nyilak mennyiséget módosítanak, nem Samet mozgatják. A napló saját SVG-vázlatokat és natív betűket használ. A feloldás a meglévő ünneplős ablakban jelenik meg, a kilépés Vissza a játékba.

@@ -4,6 +4,10 @@ Aktuális állapot: 2026-11-06. Játékverzió: 0.2.0; a legutóbbi javítások 
 
 ## A rendes játék része
 
+- A gyümölcsfák 15 nap után évszakkorlát nélkül kezdhetik a meglévő terméskötődési ciklusokat a csak Tavaszt tartalmazó változatban; látványosabb csemete–termő fa fejlődéssel. A tervezett nyári/őszi évszakok dokumentációja megmarad.
+- Kacsalábak és rövid, megállásokkal kísért tóparti séták; a tojás és beköltözés szabályai változatlanok.
+- A „Mit ültessünk legközelebb?” ablak új címe: Magkatalógus.
+
 - A teljes Noah-fejezet és a térkép (M), az erdőbe visszatérve újra megjelenő ellenfelek.
 - A boltok nem nyitják meg automatikusan a vásárlást. A pult elől E-vel vagy kattintással indul beszélgetés, a vásárlás külön választható.
 - A konkrét üvegedényes/lenszövetes témák, és az alsó Vissza–Vásárlás gombsor.
@@ -18,7 +22,7 @@ Ezek a közös játékútvonalakon működnek; egyik sem kizárólag a fejleszt�
 
 ## Csak tesztmód
 
-- Az **Élő ágyás kertészeti próba**: vegyes ágyás, nedvesség, mulcs, szedés/virágoztatás és kézzel léptethető napok. Szabadon elhelyezhető egyetlen ágyás, három előre rakott keret nélkül, interakciós panellel és tesztmagos utánvetéssel. Nem váltja le a normál kertészkedést. A Magkatalógus-, jártasság- és komposztáló-integráció, az új zöldségek és a kerti utak további tervek. [Kipróbálás és hatókör](elo-agyas-teszt.md).
+- Az **Élő ágyás kertészeti próba** teljes bővítése: több szabad ágyás; közvetlen eszközsávos műveletek; öt elfogadott társítás; csoportos Magkatalógus, posta és tényleges átvétel; komposztálós mulcs; 20/40 pontos feloldás ünnepléssel; megfigyelési napló egyszeri pontokkal; fajonkénti maggyűjtés; mozgatható kézírásos jelölők és lépőkövek; egy ágyásos öntöző; 160 goldos ládatervrajz a próba Simon-vásárlásában. Ez nem váltja le a normál kertészkedést és nem törli a régi növényeket. [Kipróbálás és hatókör](elo-agyas-teszt.md).
 - A Kidolgozott farm alternatív grafikája, új növényzettel és részletesebb formákkal.
 - Sam átdolgozott külseje, copfja, ruhája, arányai és könnyedebb járása.
 

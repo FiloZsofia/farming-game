@@ -1,56 +1,70 @@
 # Élő ágyás — kertészeti próba
 
-Állapot: 2026-11-06. Kizárólag fejlesztői teszt, nem váltja le a rendes játék kapálás–ültetés–öntözés rendszerét. A játék verziója 0.2.0 marad.
+2026-11-06. Ez az összefüggő bővítés csak memóriabeli teszt; a normál kertészkedést és a régi ültetéseket még nem cseréli le. Játékverzió: 0.2.0, mentésformátum: 18.
 
-## Megnyitás
+## Indítás és első ágyás
 
 1. Nyisd meg a játékot `?dev=1` paraméterrel, és folytasd a farmodat.
 2. Menü → Fejlesztői eszközök → **Kertészeti próba · Élő ágyás** → Teszt indítása.
-3. Sam a próbaágyás mellett áll. Sétálhatsz körülötte; E-vel vagy a növényre kattintva megfigyelheted.
-4. A felső TESZTMÓD gomb megnyitja az eszközpanelt. Az újraindítással másik társítást is kipróbálhatsz; a Kilépés a tesztmódból visszatölti a rendes farmot.
+3. Mozgasd a körülkerített kijelölést szabad földre, majd kattints vagy használd az „Itt jelölöm ki az ágyást” gombot. Mobilon előbb érintéssel válassz helyet, utána erősítsd meg a gombbal. Az utak, épületek, víz és meglévő tárgyak védettek.
+4. Sétálj közel, és nyomj E-t vagy válaszd a Megfigyelést és kattints az ágyásra. Készítsd elő a földjét, majd válassz társítást, ha minden mag megvan.
+5. Az Új ágyás gombbal további ágyásokat jelölhetsz ki. A még előkészítetlen keret másik helyre mozgatható, ha jelölő vagy öntöző nem tartozik hozzá.
 
-## Kipróbálható működés
+A próba külön készletet ad: 6 vadvirágmag, egy elhelyezhető Komposztáló, 40 gaz, 100 kő, 100 fa, 40 ócskavas, 4 fogaskerék, 4 rézcső és 3000 gold. Ez tesztkeret, nem új játékkezdési jutalom vagy végleges gazdasági egyensúly. Más magot rendelni vagy gyűjteni kell.
 
-- **Ágyás kialakítása:** egy egész területet készítesz elő, külön földkockák helyett.
-- **Növények összeválogatása:** Konyhakerti társítás, Virágos zöldséges vagy Illatos szegély. Együtt nőnek a zöldségek, a kakukkfű és a vadvirágok.
-- **Nedvességgondozás:** az öntözés az egész ágyást éri; a víz több napig megmarad. A mulcs lassítja a száradást, az eső feltölti a talaj nedvességét. Száraz földben a növekedés megáll, a levelek lekonyulnak; a próba nem pusztítja el a növényeket.
-- **Megfigyelés:** a talaj színe, a mulcs takarása, a levelek és a virágok látszanak a világban. Egyetlen növény kiválasztható kattintással vagy a kezelőpanel választójával. Nincs kötelező modális ablak.
-- **Szedés vagy továbbnevelés:** a szedhető növényt betakaríthatod vagy hagyhatod virágozni. A virágokhoz apró rovarok érkeznek, később magot gyűjthetsz. Ugyanarról a növényről nincs ismételt termés- vagy magfelvétel megfelelő új növekedés nélkül.
-- **Tartós növények:** a kakukkfű és a borsó töve szedés után megmarad, újra nő. Az egyszer betakarított retek/saláta helye üres marad.
+## Magkatalógus, posta és társítások
 
-A felhasználó a gyors, **kézzel léptethető napokat** választotta. A Következő nap és az Esős nap gombbal várakozás nélkül követhetők a változások. A normál napi óraketyegés a próba alatt megáll.
+A háznál lévő Magkatalógusra kattintva a feloldott társítások neve és növényei jelennek meg. Egy társítás kibontásakor fajonként választható a darabszám; kezdetben minden mennyiség nulla. Egy rendelés együtt fizeti ki a kijelölt magokat. Másnap a megszokott sárga zászló jelzi a csomagot; a postaládából külön át kell venni. Sem az úton lévő, sem az át nem vett mag nem vethető el.
 
-## A próba határai és kezdeti értékei
+| Feloldás | Társítás | Összetétel |
+| --- | --- | --- |
+| Kezdő | Virágos retekágyás | 6 vadvirág + 3 retek |
+| Kezdő | Korai veteményes | 3 borsó + 3 saláta + 3 sárgarépa |
+| Kezdő | Száraz fűszerszegély | 3 kakukkfű + 3 szurokfű + 3 zsálya |
+| 1. szint | Epres méhlegelő | 6 eper + 2 körömvirág + 1 borágó |
+| 2. szint | Esti teakert | 6 kamilla + 3 citromfű |
 
-Egy ágyás és három előre összeállított társítás szerepel, nem szabad ágyásépítő vagy végleges növénytársítási rendszer. A társítások összetétele és látványa eltér; terméshozam-bónusz vagy gazdasági egyensúly még nincs hozzájuk kialakítva. Az alap látvány és Sam a rendes játékból származik; az alternatív farmgrafika nem lép működésbe.
+A teljes társítás egy lépésben fogyasztja a fajonként szükséges magokat. Egy üres helyre az alsó sávban kiválasztott, társításba tartozó mag kattintással vethető. Az „Üres helyek utánvetése” az eredeti hiányzó fajokat egyszerre állítja vissza, csak ha minden szükséges mag megvan. Egy mag egy növényhez elég.
 
-A próbaértékek nem változtatnak a rendes növényeken: a nedvesség három fokozatot tárol, takaratlanul naponta, mulccsal kétnaponta fogy egy fokozat. A növekedés nedves napokon halad. A próbanövekedés retek/kakukkfű/vadvirág esetén három, salátánál kettő, borsónál hat nap; virágozni hagyás után két nedves nap vezet a maghoz. Ezek kipróbáláshoz választott, később egyeztetendő tesztértékek, nem végleges játékmeneti döntések.
+## Gondozás és kézi napok
 
-A szedett növények és magok a **Próbakosár** összesítőjében jelennek meg. Ez nem új Készlet-kategória és nem kerül át a normál farmra. A próba nem fogyasztja a rendes vetőmagot vagy mulcsot, nincs ára. A saját növényállapot az újraindításkor vagy kilépéskor elvész; a normál farm és biztonsági másolata megmarad.
+Az alsó sávban eszközt vagy vetőmagot választva közvetlenül az ágyásra kattinthatsz. Öntözés és mulcsozás az egész ágyást érinti, szedés és utánvetés a kiválasztott növényt. A közeli E a részletes panelt nyitja. Vissza, Esc, távolodás vagy a talajra kattintás bezárja; a célkövető visszatér. A Menü, az alsó sáv és a mobilos mozgásgombok szabadon maradnak.
 
-## Mentési védelem
+A Következő nap és Esős nap gombokkal gyorsítható a próba; a rendes napóra közben nem fut. A talaj több napig tartja a vizet, szárazon a növekedés megáll, a növények nem pusztulnak el. A levelek és talaj színe jelzik az állapotot. A gyors próba növekedési ideje és árai még nem végleges éles egyensúlyi értékek.
 
-Az indítás előbb rögzíti az aktuális rendes haladást, majd `SaveStore.beginTest()` módba vált. A próba tiszta, külön pillanatképet használ, a növények állapota csak a tesztvezérlő memóriájában él. Nincs új mentésmező vagy sémaváltás. Másik tesztre váltás eltávolítja az ágyást, a rovarokat és a panelt, és visszaállítja a szokásos kamerát/eszközsávot.
+A Komposztálót a Készletből helyezd le. A meglévő szabály szerint 10 gazból vagy túlérett gyümölcsből másnap 4 átvehető mulcs készül. A terméket külön vedd át; egy adag egy teljes ágyásra elég. Ingyenes mulcsozás nincs.
 
-## Ellenőrzés
+## Fejlődés, megfigyelés és vetőmag
 
-- 420 sikeres teszt / 63 fájl, sikeres build.
-- Egységtesztek: egész ágyás előkészítése, társítás egyszeri ültetése, nedvesség és növekedés, mulcs/eső, szedés/virágoztatás kizárása, egyszeri maggyűjtés, évelő újrahajtás, eredeti pillanatkép megőrzése, ösvények és stég szabadon hagyása.
-- Cypress-bináris nem állt rendelkezésre, ezért Chromium CDP-vel, izolált profilon ellenőrizve: teljes ültetési és gondozási folyamat, kézi időléptetés, rovarok, maggyűjtés, kiszáradás és eső, újrahajtás, távolságellenőrzés, tényleges billentyűs séta és ágyásütközés, nem modális E, 390 × 844 mobilkamera/panel, váltás a látványtesztre és az alkatrészes tesztre, kilépés.
-- A normál mentés és biztonsági másolat exportált tartalma a próba előtt, közben és a kilépés utáni visszatöltéskor azonos.
+Próbaküszöbök: 20 és 40 pont. Az első feloldáshoz legalább egy ágyás mind a kilenc helyéről való betakarítás/maggyűjtés is szükséges. A vetés növényenként számít; valódi gondozás, betakarítás és saját vetőmag is ad munkapontot. Felesleges újraöntözés nem ad pontot. Szintlépéskor a meglévő ünneplős ablak mutatja az új társítást.
 
-[Kialakítás előtt](concepts/living-bed-test-before-preparation.png) · [Társítások](concepts/living-bed-test-planting-choices.png) · [Fiatal ágyás](concepts/living-bed-test-young-mixed-bed.png) · [Szedhető növény](concepts/living-bed-test-ready-to-pick.png) · [Virágok és látogatók](concepts/living-bed-test-flowers-and-visitors.png) · [Saját magok](concepts/living-bed-test-own-seeds.png) · [Száraz talaj](concepts/living-bed-test-dry-soil.png) · [Eső](concepts/living-bed-test-rain.png) · [Mobil](concepts/living-bed-test-mobile.png)
+Sam Megfigyeléssel felismerhet két összefüggést:
 
-## Következő próbaváltozat — 2026-11-06
+- Száraz levelek megfigyelése → tényleges öntözés → egy későbbi napon a helyreállás megfigyelése.
+- Epervirágok megfigyelése → később sikertelen terméskötődés megfigyelése.
 
-A három régi kezdőkeret már nincs jelen ebben a tesztben. A kijelölést szabadon mozgathatod a mutatóval; kattintás vagy az „Itt jelölöm ki az ágyást” gomb rögzíti. Érintőképernyőn előbb érintéssel válassz helyet, majd a gombbal erősítsd meg. Az érvénytelen helyet a kijelölés és az inaktív gomb jelzi. Az épületek, utak, víz és Sam helye védett.
+Egy összefüggés egyszer 1 pontot ad, nem minden kattintás vagy növény után. A ház naplójánál és a teszt Készletének Kerti megfigyelések gombjánál visszaolvasható a felismerés, dátumokkal és saját kis rajzzal. A gondolatok a közös natív, éles szövegútvonalat használják.
 
-Ezután sétálj közel és nyomj E-t vagy kattints az ágyásra. Csak ekkor nyílik meg a gondozás. Vissza, Esc, távolodás vagy az ágyáson kívüli talajra kattintás bezárja; a próba aktuális célja ismét látszik. A föld előkészítése előtt másik hely is választható. A jelölő immár kis fa tábla.
+A virágok, fűszerek, retek és saláta magfejet, a borsó száraz hüvelyt nevelhet a terményszedés helyett. A Gyűjtés eszköz a kész magot közvetlenül a használható készletbe teszi. A gyors próba eddigi 2 érlelési napos / 1 magos szemléltetése maradt; ezek nem végleges maghozamok. Sárgarépáról és eperről most nincs saját maggyűjtés. Az eper későbbi indás szaporítása még terv.
 
-A próbában kezdetben fajonként 9 tesztmag áll rendelkezésre. A társítás beültetése már fogyasztja a szükséges magokat. Betakarítás után a keverék bármely tagja vethető az üres helyre, ha van mag; más faj nem, mag nélkül a választás inaktív. A saját gyűjtésű mag is használható. A rendes magrendelés és komposztáló nincs még bekötve ehhez az új modellhez; a társítások sem végleges kertészeti ajánlások.
+Az eper terméskötődése a meglévő stabil beporzási szabályt használja: három ciklusból egy sikeres. A növény egészséges marad és újra próbálkozik; az újratöltés nem sorsolja újra. A leszedetlen érett eper a meglévő 3 napos szabállyal túlérik, begyűjthető és komposztálható. A túlérés végleges időzítését még hangoljuk. A betakarított zöldség/gyümölcs a közös étkezési művelettel egy darabonként egy szívet pótolhat; túlérett gyümölcs nem ehető.
 
-423 sikeres teszt / 63 fájl és sikeres build. Chromium CDP-vel külön, frissen létrehozott böngészőprofilban ellenőrizve: szabad elhelyezés a korábbi kezdőágyások helyén is, vízre lerakás elutasítása, panel csak interakcióra, aktuális cél elrejtése/visszatérése, fa jelölő, magfogyasztás, másik megfelelő faj utánvetése, nulla maggal tiltás, eltávolodás és mobilkamera visszaállása, másik tesztre váltás. A normál mentés és biztonsági másolata a próba és kilépés alatt változatlan.
+## Jelölők, lépőkövek és berendezések
 
-[Szabad helyválasztás](concepts/living-bed-v2-free-placement-start.png) · [Tiltott hely](concepts/living-bed-v2-invalid-placement.png) · [Fa jelölő](concepts/living-bed-v2-wood-marker.png) · [Utánvetés](concepts/living-bed-v2-replant-choice.png) · [Másik növény a helyén](concepts/living-bed-v2-replanted-herb.png) · [Bezárt panel és cél](concepts/living-bed-v2-closed-panel-goal.png) · [Mobil](concepts/living-bed-v2-mobile-inspection.png)
+Minden ágyáshoz külön fa jelölő tartozik. A Készletből válaszd ki, majd ugyanannak az ágyásnak bármely szabad, közvetlen oldala mellé helyezd. A kézírásos tábla Bontóvassal külön visszavehető; az ágyás és növényei megmaradnak.
 
-A további ötletek és a még hiányzó integrációk pontos státusza: [Kertészkedési átállási terv](kerteszkedes-atallasi-terv.md).
+A Kőösvény eszközzel húzz egyenes vagy kanyargó vonalat, majd a teljes költség előnézete után erősítsd meg. Egy lépőkő egy követ fogyaszt. A kövek járhatók; ágyásra, vízbe, épületre vagy fontos meglévő útra nem tehetők. Bontóvassal egyenként visszajárnak.
+
+A teszt Készletében a Simon · Vásárlás gomb a próba bolti gyorselérése. A Tárolóláda tervrajza 160 gold; a berendezések a meglévő anyagköltségekkel készíthetők a Tervrajzokban. A normál Simon-boltba a láda a későbbi éles kertészeti átállással kerül. A meglévő tervrajzokat akkor is megőrizzük.
+
+Egy Öntözőrendszer egy teljes ágyáshoz kapcsolható. Elhelyezéskor a célágyás kiemelve látszik; a következő napoktól az utánvetett növényeket is öntözi. A próba bolti és tervrajzleírása már ezt mutatja. Bontóvassal visszavehető. A normál parcellás öntözőrendszer most még a régi működését őrzi.
+
+## Hatókör és ellenőrzés
+
+A normál kertészeti mentés migrációja, a társítás nélküli magok teljes új tárgynyilvántartása, további szintek és társítások, a végleges árak/idők és az indás szaporítás még további feladat. A jelenlegi rendes magok — köztük burgonya, hagyma, mézbogyó és áfonya — nem törlődtek. Az éles átállás meg kell őrizze az összes birtokolt magot akkor is, ha még nincs hozzá társítás.
+
+A normál játékba külön javításként kerül a 15 napos gyümölcsfák évszakkorlát nélküli termése, látványosabb növekedése, a szárazföldi kacsaláb és séta, valamint a Magkatalógus egyszerű címe. A nyári/őszi termőidőszakok terve dokumentálva marad.
+
+Cypress-bináris nincs az ellenőrző környezetben, ezért az end-to-end ellenőrzés izolált Chromium CDP-profilt használ, nem Playwrightot. A teljes rendelés/átvétel, gondozás, feloldás/ünneplés, megfigyelés, maggyűjtés, Bontóvasas visszavétel, utána végzett vásárlás/barkácsolás, öntöző-hozzárendelés, mobilos elrendezés, bevitel közbeni mozgásvédelem és tesztkilépés ellenőrzött. A normál mentés és biztonsági másolat exportja a próbák során változatlan maradt.
+
+[Katalógus](concepts/living-garden-v3-catalogue.png) · [Jelölő és eszközsáv](concepts/living-garden-v3-marker-and-toolbar.png) · [Mobil](concepts/living-garden-v3-mobile.png) · [Első feloldás](concepts/living-garden-v3-level-1.png) · [Második feloldás](concepts/living-garden-v3-level-2.png) · [Megfigyelési napló](concepts/living-garden-v3-two-observations.png) · [Öntöző](concepts/living-garden-v3-irrigation.png) · [Fanövekedés](concepts/orchard-growth-comparison.png) · [Kacsák](concepts/ducks-shore-legs-and-walking.png)

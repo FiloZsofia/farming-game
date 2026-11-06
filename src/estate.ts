@@ -1,5 +1,6 @@
 import {setsFruit,RIPE_FRUIT_DAYS,type PollinationContext} from './pollination';
 import {calendarDay} from './clock';
+import {TREE_GROWTH_DAYS} from './orchard-growth';
 import {farmLayout,farmBounds} from './layout';
 import {pondRadius} from './pond-shape';
 export const seasons=['Tavasz','Nyár','Ősz','Tél'] as const;
@@ -8,6 +9,10 @@ export const seasonDay=(day:number)=>(day-1)%15+1;
 export const treeKinds=['cherry','plum','apple','pear'] as const;
 export type TreeKind=typeof treeKinds[number];
 export const trees:Record<TreeKind,{name:string;price:number;yield:number;repeat:number;sale:number;season:number}>={cherry:{name:'Cseresznye',price:300,yield:3,repeat:3,sale:18,season:1},plum:{name:'Szilva',price:270,yield:4,repeat:4,sale:16,season:1},apple:{name:'Alma',price:250,yield:3,repeat:2,sale:16,season:2},pear:{name:'Körte',price:250,yield:3,repeat:3,sale:16,season:2}};
+// Seasonal metadata is retained for the future calendar. The current release is
+// spring-only, so mature trees must not wait for an unavailable summer or autumn.
+export const ORCHARD_SEASONS_ENABLED=false;
+export function treeInSeason(kind:TreeKind,day:number,farmName?:string|null){return !ORCHARD_SEASONS_ENABLED||seasonIndex(calendarDay(day,farmName))===trees[kind].season;}
 export const goods=['cherry','plum','apple','pear','lily','reed','duckNest','goldfish','carp'] as const;
 export type Good=typeof goods[number];
 export const extras=['cherry','plum','apple','pear','roe6','roe8','roe10','duckEgg','thyme','plantain','nettle','basket'] as const;
@@ -54,7 +59,7 @@ export function advanceEstate(estate:Estate,day:number,random=Math.random,farmNa
  for(const t of next.trees){const spec=trees[t.kind];
   if(ecology&&t.bloomState==='fallen'&&day-t.last>1)delete t.bloomState;
   if(ecology&&t.fruit>0){t.fruitDay??=day;if(day-t.fruitDay>=RIPE_FRUIT_DAYS){t.fruit=0;t.last=day;t.bloomState='fallen';delete t.fruitDay;continue;}}
-  if(day-t.planted>=15&&seasonIndex(calendarDay(day,farmName))===spec.season&&t.fruit===0&&(t.last===0||day-t.last>=spec.repeat)){
+  if(day-t.planted>=TREE_GROWTH_DAYS&&treeInSeason(t.kind,day,farmName)&&t.fruit===0&&(t.last===0||day-t.last>=spec.repeat)){
    const success=!ecology||setsFruit(ecology.seed,`tree:${t.kind}:${t.x},${t.y}`,t.bloomCycle??0);
    if(ecology)t.bloomCycle=(t.bloomCycle??0)+1;
    if(success){t.fruit=spec.yield;if(ecology)t.fruitDay=day;delete t.bloomState;}

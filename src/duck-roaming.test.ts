@@ -1,0 +1,6 @@
+import {it,expect} from 'vitest';
+import {duckPose} from './duck-roaming';
+import {waterAt} from './estate';
+it('walks and pauses on dry shoreline near the nest, with stable poses for both birds',()=>{const nest={x:490,y:430};for(const index of [0,1]){const poses=Array.from({length:60},(_,t)=>duckPose(nest,t,index));expect(poses.some(p=>p.walking)).toBe(true);expect(poses.some(p=>!p.walking)).toBe(true);for(const p of poses){expect(p.ground).toBe(true);expect(waterAt(p.x,p.y)).toBe(false);expect(Math.hypot(p.x-nest.x,p.y-nest.y)).toBeLessThan(72);}expect(duckPose(nest,2,index)).toEqual(duckPose(nest,2,index));}});
+it('hides legs in water and rests near the nest at night',()=>{for(const index of [0,1]){const swim=duckPose({x:490,y:430},120,index),rest=duckPose({x:490,y:430},400,index);expect(swim.ground).toBe(false);expect(swim.walking).toBe(false);expect(rest.phase).toBe('resting');expect(rest.walking).toBe(false);expect(rest.ground).toBe(true);}});
+it('stays at a safe anchor when nearby garden objects block the walking circuit',()=>{const nest={x:490,y:430},blocked=(p:{x:number;y:number})=>p.y>435;for(let t=0;t<55;t++){const p=duckPose(nest,t,0,blocked);expect(blocked(p)).toBe(false);expect(waterAt(p.x,p.y)).toBe(false);}});
