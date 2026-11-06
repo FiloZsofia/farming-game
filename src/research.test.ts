@@ -30,7 +30,7 @@ it('relocates an old saved player covered by the enlarged workshop without chang
 
 it('keeps possessions when the expanded house covers a legacy player, and rejects a position inside the old wall',()=>{const data=snapshot({x:120,y:150},createClock(10),createGarden());expect(decodeSnapshot(data)?.player).toEqual({x:120,y:280});data.player={x:200,y:150};expect(decodeSnapshot(data)).toBeNull();});
 
-it('does not duplicate a gifted repair material after it is stored in a chest',()=>{const r={...createResearch(),discovered:true};const supplied=supplyMaterial(r,'annie')!;supplied.materials.glass=0;expect(supplyMaterial(supplied,'annie')).toBeNull();});
+it('does not duplicate a gifted repair material after it is stored in a chest',()=>{const r=examined();const supplied=supplyMaterial(r,'annie')!;supplied.materials.glass=0;expect(supplyMaterial(supplied,'annie')).toBeNull();});
 
 describe('bringing the old microscope to the workbench',()=>{
  it('keeps the microscope absent until delivery is saved after a new repair',()=>{
@@ -63,3 +63,5 @@ it('keeps existing four-day flowers and their completed story readable after the
 
 it('makes the bee observable as soon as all flowers bloom, including previously waiting saves',()=>{const {r}=flowering();r.flowers.forEach(f=>f.growth=3);for(const pending of [null,10]){r.beeDay=pending;expect(beeAvailable(r,9,10)).toBe(true);expect(beeAvailable(r,9,360)).toBe(false);const observed=observeBee(r,9,10,beeAnchorForTest(r),9)!;expect(observed.beeDay).toBe(9);expect(validResearch(observed,9)).toBe(true);}r.flowers[0].growth=2;expect(beeAvailable(r,9,10)).toBe(false);});
 function beeAnchorForTest(r:ReturnType<typeof createResearch>){return{x:r.flowers[0].x+12,y:r.flowers[0].y+12};}
+
+it('does not offer repair gifts until all four parts have been inspected',()=>{const r=examined();r.examined=['vat','pipes','filter'];expect(supplyMaterial(r,'annie')).toBeNull();expect(supplyMaterial(r,'leo')).toBeNull();r.examined.push('coil');expect(supplyMaterial(r,'annie')?.materials.glass).toBe(1);});

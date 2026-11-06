@@ -107,7 +107,7 @@
 @media(max-width:600px){body:has(#game[data-art-study="true"]) #test-mode-banner{top:auto;bottom:116px;left:auto;right:12px;transform:none;max-width:195px;width:max-content;box-sizing:border-box;font-size:12px;padding:7px 10px;}}
 
 
-.merchant-actions{display:flex;flex-direction:column;gap:10px;margin-top:18px}.merchant-actions>button{margin:0;width:100%;text-align:left}
+.merchant-actions{display:flex;flex-direction:column;align-items:flex-start;gap:10px;margin-top:18px}#dialogue .merchant-actions>button{margin:0;width:auto;max-width:100%;padding:10px 16px;white-space:normal;text-align:left;line-height:1.4}
 #app #dialogue #dialogue-close[hidden]{display:none}
 /* One shared cycle keeps damage, food particles and recovery in sequence. */
 .forest-health-demo{--health-gap:clamp(6px,2vw,18px);--health-step:calc(.9em + var(--health-gap));--health-rise:calc(.6em + 31px);position:relative;display:flex;justify-content:center;gap:var(--health-gap);padding:22px 0 82px;color:#efd18b;font-size:clamp(38px,8vw,64px);filter:drop-shadow(0 3px 5px #071b15)}

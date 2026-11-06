@@ -36,3 +36,6 @@ A mozgatható tárgyak felvétele Bontóvassal, a `placed-items.ts` közös útv
 ### Fejlesztői eszközök
 
 Minden teszt és előnézet azonos `.developer-tool-section` szakaszt használ: cím, szükség esetén leírás és kezdőpontválasztó, majd az indítógomb. A szakaszok között egyetlen közös elválasztóvonal és azonos térköz van. A látványteszt is ezt követi. A teszt neve a címben, a művelet a gombon szerepel („Teszt indítása” / „Előnézet”).
+
+
+- A bolti beszélgetésmenü gombjai balra igazított, szövegszélességű gombok, egységes 10 px térközzel. Hosszú témák mobilon tördelhetők; ne nyújtsd minden gombot a teljes ablak szélességére.

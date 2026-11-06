@@ -32,8 +32,11 @@ export const beeAnchor=(r:Research)=>r.flowers[0]?{x:r.flowers[0].x+TILE/2,y:r.f
 export function observeBee(r:Research,day:number,elapsed:number,player:{x:number;y:number},displayDay:number){const p=beeAnchor(r);if(!p||!beeAvailable(r,day,elapsed)||Math.hypot(p.x-player.x,p.y-player.y)>55)return null;const next=structuredClone(r);next.beeDay=Math.min(next.beeDay??day,day);next.observation={day,seasonDay:displayDay,plant:'Tavaszi vadvirágkeverék'};return next;}
 export function grantKey(r:Research){if(!r.observation||r.key)return null;return {...structuredClone(r),key:true};}
 export function collectSalvage(r:Research,id:string,player:{x:number;y:number},day=1){const site=salvageSites.find(s=>s.id===id);if(!site||r.picked.includes(id)||Math.hypot(site.x-player.x,site.y-player.y)>52)return null;const next=structuredClone(r);next.picked.push(id);next.salvageDays={...next.salvageDays,[id]:day};next.materials[site.kind]+=site.kind==='scrap'?2:1;return next;}
-export function supplyMaterial(r:Research,who:'annie'|'leo'){if(!r.discovered||r.repaired||r.supplied?.includes(who))return null;const key=who==='annie'?'glass':'linen';if(r.materials[key]>0)return null;const next=structuredClone(r);next.supplied=[...r.supplied??[],who];next.materials[key]++;return next;}
-export function repairMachine(r:Research,materials:{wood:number;stone:number}){if(!r.discovered||!workshopLit(r)||!['vat','pipes','filter','coil'].every(id=>r.examined.includes(id))||r.repaired||Object.entries(repairNeeds).some(([k,n])=>(k==='wood'||k==='stone'?materials[k]:r.materials[k as ResearchMaterial])<n))return null;const next=structuredClone(r);for(const k of researchMaterials)next.materials[k]-=repairNeeds[k];next.repaired=true;next.microscopeDelivered=false;return {research:next,wood:materials.wood-repairNeeds.wood,stone:materials.stone-repairNeeds.stone};}
+export const machineParts=['vat','pipes','filter','coil'] as const;
+export const examinedMachineParts=(r:Research)=>machineParts.filter(id=>r.examined.includes(id)).length;
+export const machineInspected=(r:Research)=>r.repaired||examinedMachineParts(r)===machineParts.length;
+export function supplyMaterial(r:Research,who:'annie'|'leo'){if(!r.discovered||!machineInspected(r)||r.repaired||r.supplied?.includes(who))return null;const key=who==='annie'?'glass':'linen';if(r.materials[key]>0)return null;const next=structuredClone(r);next.supplied=[...r.supplied??[],who];next.materials[key]++;return next;}
+export function repairMachine(r:Research,materials:{wood:number;stone:number}){if(!r.discovered||!workshopLit(r)||!machineInspected(r)||r.repaired||Object.entries(repairNeeds).some(([k,n])=>(k==='wood'||k==='stone'?materials[k]:r.materials[k as ResearchMaterial])<n))return null;const next=structuredClone(r);for(const k of researchMaterials)next.materials[k]-=repairNeeds[k];next.repaired=true;next.microscopeDelivered=false;return {research:next,wood:materials.wood-repairNeeds.wood,stone:materials.stone-repairNeeds.stone};}
 
 
 export const workshopObjects=[
@@ -49,7 +52,7 @@ export const workshopObjects=[
 export function inspectWorkshop(r:Research,id:string){
  const object=workshopObjects.find(o=>o.id===id);if(!object||!r.key||!['shutter','entrance-shutter'].includes(id)&&!workshopLit(r))return null;
  const next=structuredClone(r);if(id==='shutter')next.shutter=true;else if(id==='entrance-shutter')next.entranceShutter=true;else if(!next.examined.includes(id))next.examined.push(id);
- if(['vat','pipes','filter','coil'].includes(id))next.discovered=true;
+ if((machineParts as readonly string[]).includes(id))next.discovered=true;
  return next;
 }
 

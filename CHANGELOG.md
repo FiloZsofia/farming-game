@@ -2,6 +2,8 @@
 
 ## Változások a 0.2.0 óta — verzióemelés nélkül
 
+- 2026-11-06: új „Vizsgáld meg a régi berendezést” cél, 1 / 4 – 4 / 4 haladással, a Célok fülön a felfedezés és a javítás között. A javítás, az anyaglista, az alkatrészes bolti témák és Sam egyszeri gondolata csak a negyedik vizsgálat után jelennek meg. A bolti beszélgetésgombok kisebbek és a feliratukhoz igazodnak. A régi mentések haladása és alkatrészei megmaradnak.
+
 - 2026-11-06: Sam egyszeri gondolatának pontosított szövege: „Talán érdemes lehet másokat is megkérdeznem az alkatrészekről.”
 
 - 2026-11-06: egységes szakaszok, elválasztók, térközök és indítógombok a Fejlesztői eszközökben. Az üvegedény és a lenszövet átvétele után bezárul a beszélgetés, és Sam fölött rövid tárgyátadó animáció jelenik meg; sikertelen mentés nem indít átadást.

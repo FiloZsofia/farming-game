@@ -57,7 +57,7 @@ import {weatherOnDay,weatherNames,randomWeatherSeed,waterFromRain} from './weath
 import {questEntries} from './quest-log';
 import {DuckLife} from './duck-life';
 import {drawResearch,drawWorkshop} from './research-art';
-import {FLOWER_DAYS,WORKSHOP_ORIGIN,inWorkshop,salvageSites,researchMaterials,researchNames,repairNeeds,workshopObjects,inspectWorkshop,entranceShutterOpen,workshopLit,remainingWebs,clearCobweb,microscopeReady,workshopEntered,workshopText,shouldDeliverMicroscope,startResearch,plantFlower,flowerAt,advanceResearch,beeAvailable,beeAnchor,observeBee,grantKey,collectSalvage,supplyMaterial,repairMachine,type Research} from './research';
+import {FLOWER_DAYS,WORKSHOP_ORIGIN,inWorkshop,salvageSites,researchMaterials,researchNames,repairNeeds,machineParts,machineInspected,examinedMachineParts,workshopObjects,inspectWorkshop,entranceShutterOpen,workshopLit,remainingWebs,clearCobweb,microscopeReady,workshopEntered,workshopText,shouldDeliverMicroscope,startResearch,plantFlower,flowerAt,advanceResearch,beeAvailable,beeAnchor,observeBee,grantKey,collectSalvage,supplyMaterial,repairMachine,type Research} from './research';
 import {PondLife} from './pond-life';
 import {drawEstate,drawDuck} from './estate-art';
 import {goods,treeKinds,trees,goodNames,goodPrices,extraNames,extraPrices,extras,extraValue,emptyExtras,hasDuckNest,goodReachable,buyGood,placeGood,collectEstate,canCollectEstate,advanceEstate,cutReed,seasons,seasonIndex,seasonDay,type Good,type Extra,type Estate} from './estate';
@@ -1220,10 +1220,10 @@ class Farm extends Phaser.Scene {
   el.hidden=this.choosingFarm||dialogue.open||!this.ready||!active.length;
   const lines=active.map(q=>`• ${q.title}${q.detail?'\n'+q.detail:''}`);
   const materials:string[]=[];
-  if(r.discovered&&!r.repaired)for(const [k,n]of Object.entries(repairNeeds)){const held=k==='wood'?this.clearing.wood:k==='stone'?this.clearing.stone:r.materials[k as keyof Research['materials']];materials.push(`• ${k==='wood'?'Fa':k==='stone'?'Kő':researchNames[k as keyof Research['materials']]}: ${Math.min(held,n)} / ${n}`);}
+  if(r.discovered&&machineInspected(r)&&!r.repaired)for(const [k,n]of Object.entries(repairNeeds)){const held=k==='wood'?this.clearing.wood:k==='stone'?this.clearing.stone:r.materials[k as keyof Research['materials']];materials.push(`• ${k==='wood'?'Fa':k==='stone'?'Kő':researchNames[k as keyof Research['materials']]}: ${Math.min(held,n)} / ${n}`);}
   if(materials.length)lines.push(materials.join('\n'));
   const text=lines.join('\n\n');if(el.dataset.content!==text){el.dataset.content=text;el.replaceChildren();for(const q of active){const line=document.createElement('p');line.className='hud-quest';const bullet=document.createElement('span');bullet.className='quest-bullet';bullet.textContent='•';bullet.setAttribute('aria-hidden','true');line.append(bullet,document.createTextNode(`${q.title}${q.detail?'\n'+q.detail:''}`));el.append(line);}if(materials.length){const list=document.createElement('ul');list.className='quest-material-list';for(const item of materials){const row=document.createElement('li');row.textContent=item.slice(2);list.append(row);}el.append(list);}}
-  const game=document.querySelector<HTMLElement>('#game')!;game.dataset.researchStage=r.repaired?'repaired':r.discovered?'repair':r.key?'workshop':r.observation?'report':r.gifted?'flowers':'waiting';game.dataset.calendarDay=String(calendarDay(this.clock.day,this.farmName));game.dataset.microscopeReady=String(microscopeReady(r));game.dataset.shutter=String(r.shutter);game.dataset.entranceShutter=String(entranceShutterOpen(r));game.dataset.clearedWebs=String(r.clearedWebs?.length??0);
+  const game=document.querySelector<HTMLElement>('#game')!;game.dataset.researchStage=r.repaired?'repaired':r.discovered?(machineInspected(r)?'repair':'inspect'):r.key?'workshop':r.observation?'report':r.gifted?'flowers':'waiting';game.dataset.calendarDay=String(calendarDay(this.clock.day,this.farmName));game.dataset.microscopeReady=String(microscopeReady(r));game.dataset.shutter=String(r.shutter);game.dataset.entranceShutter=String(entranceShutterOpen(r));game.dataset.clearedWebs=String(r.clearedWebs?.length??0);
  }
  private async commitResearch(research:Research,wood=this.clearing.wood,stone=this.clearing.stone){
   if(this.transitioning)return false;this.transitioning=true;this.saveRevision++;const travel=structuredClone(this.travel);travel.research=research;const clearing={...this.clearing,wood,stone};
@@ -1289,7 +1289,7 @@ class Farm extends Phaser.Scene {
   if(this.noahTest&&id==='vat'){this.noahTest.openMachine();return;}
   if(!this.canInteract()||!inWorkshop(this.actor.y))return;const object=workshopObjects.find(o=>o.id===id);if(!object||Math.hypot(this.actor.x-object.x,this.actor.y-object.y)>78)return;const next=inspectWorkshop(this.travel.research,id);if(!next)return;
   const peopleHint=workshopPeopleHintPending(next);if(peopleHint)next.materialHelpSeen=true;
-  if(await this.commitResearch(next)){if(peopleHint){this.thought.setText(WORKSHOP_PEOPLE_HINT);this.thoughtRemaining=8;}showDialogue(object.name,['shutter','entrance-shutter'].includes(id)?object.text:this.travel.research.repaired&&['vat','pipes','filter','coil'].includes(id)?'A helyreállított kivonatkészítő egyik része. Talán az erdőben találok valami hasznosat, amivel elkezdhetem a kísérletezést.':object.text,'A RÉGI MŰHELY');if(id==='vat'&&!next.repaired)this.openRepairPanel();}
+  if(await this.commitResearch(next)){if(peopleHint){this.thought.setText(WORKSHOP_PEOPLE_HINT);this.thoughtRemaining=8;}showDialogue(object.name,['shutter','entrance-shutter'].includes(id)?object.text:this.travel.research.repaired&&['vat','pipes','filter','coil'].includes(id)?'A helyreállított kivonatkészítő egyik része. Talán az erdőben találok valami hasznosat, amivel elkezdhetem a kísérletezést.':object.text,'A RÉGI MŰHELY');if(!next.repaired&&machineInspected(next)&&(machineParts as readonly string[]).includes(id))this.openRepairPanel();}
  }
  private syncNoahState(){if(this.noahTest)this.travel.noah=this.noahTest.exportState();}
  private ensureNoahChapter(){
@@ -1393,9 +1393,10 @@ class Farm extends Phaser.Scene {
   for(let i=0;i<24;i++){const petal=document.createElement('i');petal.style.setProperty('--left',`${i*37%100}%`);petal.style.setProperty('--delay',`${-i*.43}s`);petal.style.setProperty('--duration',`${5+i%5}s`);petals.append(petal);}dialogue.append(petals);
  }
  private openRepairPanel(){
+  if(!machineInspected(this.travel.research))return;
   const panel=document.querySelector<HTMLElement>('#research-panel')!;panel.hidden=false;panel.replaceChildren();
   for(const [k,n]of Object.entries(repairNeeds)){const line=document.createElement('p');line.textContent=`${k==='wood'?'Fa':k==='stone'?'Kő':researchNames[k as keyof Research['materials']]}: ${k==='wood'?this.clearing.wood:k==='stone'?this.clearing.stone:this.travel.research.materials[k as keyof Research['materials']]} / ${n}`;panel.append(line);}
-  const inspected=document.createElement('p');inspected.className='inspected-parts';inspected.textContent=`Megvizsgált géprészek: ${['vat','pipes','filter','coil'].filter(id=>this.travel.research.examined.includes(id)).length} / 4`;panel.append(inspected);
+  const inspected=document.createElement('p');inspected.className='inspected-parts';inspected.textContent=`Megvizsgált géprészek: ${examinedMachineParts(this.travel.research)} / 4`;panel.append(inspected);
   const warning=document.createElement('p');warning.id='repair-warning';warning.setAttribute('role','alert');warning.hidden=true;panel.append(warning);
   const button=document.createElement('button');button.type='button';button.id='repair-machine';button.textContent='Megjavítom a berendezést';button.onclick=async()=>{if(this.transitioning||!inWorkshop(this.actor.y)||panel.hidden)return;const fixed=repairMachine(this.travel.research,this.clearing);if(!fixed){warning.hidden=false;warning.textContent=Object.entries(repairNeeds).some(([k,n])=>(k==='wood'?this.clearing.wood:k==='stone'?this.clearing.stone:this.travel.research.materials[k as keyof Research['materials']])<n)?'Nincs nálad elég nyersanyag.':'Még nem vizsgáltad meg a berendezés minden részét.';return;}button.disabled=true;if(await this.commitResearch(fixed.research,fixed.wood,fixed.stone)){showDialogue('Növényi kivonatkészítő berendezés',MACHINE_REVEAL,'A MŰHELY ÚJRA ÉLETRE KEL');this.showMachinePetals();this.redrawForest();}else button.disabled=false;};panel.append(button);
  }

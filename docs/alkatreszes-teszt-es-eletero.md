@@ -2,7 +2,7 @@
 
 A játék címének végére írd: `?dev=1`, majd folytasd a farmodat. Menü → Fejlesztői eszközök → Műhelyalkatrészek · beszélgetésteszt.
 
-- **Műhely · az egyszeri gondolat előtt**: E-vel vizsgáld meg a tartályt, majd Vissza. Sam jóváhagyott gondolata megjelenik; újabb vizsgálatkor nem ismétlődik.
+- **Műhely · az egyszeri gondolat előtt**: Vizsgáld meg a tartályt, a csöveket, a szűrőházat és a hűtőspirált. A haladás 1 / 4-től követhető; a negyedik rész után megjelenik a javítás és az anyaglista, az ablak bezárásakor Sam gondolata. Újabb vizsgálatkor nem ismétlődik.
 - **Annie** vagy **Leo**: E-vel nyílik a beszélgetés a megfelelő konkrét alkatrészes gombbal.
 - A felső TESZTMÓD gombbal újra megnyitható az eszközpanel és más kezdőpont választható. A Kilépés a tesztmódból visszatölti a normál farmot.
 
@@ -34,3 +34,18 @@ Menü → Fejlesztői eszközök → **Életerő-segítség · animáció**. Bá
 410 teszt és a build sikeres. Chromium CDP-vel, izolált profilban és memóriateszten ellenőrizve: öt egységes szakasz, sorrend és elválasztók, asztali és 390 × 844 mobilnézet, aktív látványteszt saját szakaszában maradó összehasonlító gombjai. Az üvegedény és a lenszövet sikeres átvétele bezárja a párbeszédet; az animáció megjelenik, követi a kamerát és két másodperc után eltűnik. Nincs ismételt ajándék. Szimulált mentési hibánál nincs animáció vagy tárgy; helyreállított mentés után újrapróbálható. A normál farm exportja a memóriateszt előtt és után azonos. Cypress-bináris helyett Chromium CDP futott.
 
 [Panel](concepts/developer-tools-unified-desktop-bottom.png) · [Mobil](concepts/developer-tools-unified-mobile-bottom.png) · [Aktív látványteszt](concepts/developer-tools-unified-art-active.png) · [Üvegedény](concepts/annie-glass-gift-animation.png) · [Lenszövet](concepts/leo-linen-gift-animation.png)
+
+## A négy vizsgálat és a Célok sorrendje — 2026-11-06
+
+413 teszt / 62 fájl, sikeres build. A Cypress-forgatókönyv új elvárása szerint az első tartályvizsgálat még nem mutat anyaglistát vagy javítógombot, a HUD és a Célok 1 / 4 vizsgálatot jelez. Cypress-bináris helyett az alábbi böngészős ellenőrzés Chromium CDP-vel, izolált profilban, memóriabeli tesztfarmon futott.
+
+- Az első három vizsgálatnál nincs javítási cél, anyaglista vagy gondolat. A negyedik után megjelenik a javítópanel, az ablak bezárásakor az anyaglistás cél és Sam új gondolata.
+- A Célok fül sorrendje: melléképület felfedezése → berendezés megvizsgálása (teljesítve, 4 / 4) → javítás (folyamatban).
+- Szimulált mentési hibánál a negyedik vizsgálat és a gondolat jelzője nem mentődik el tévesen; újrapróbálás sikeres. További vizsgálat nem ismétli a gondolatot.
+- Régi részleges mentés 2 / 4 vizsgálata, már átvett üvegedénye és korábbi segítségjelzője megmarad. A már javított berendezések vizsgálati célja teljesített.
+- A kisebb beszélgetésgombok asztali és 390 × 844 mobilnézetben is elférnek. A tárgyátadó animáció tovább működik.
+- A normál farm exportja a teszt előtt és után azonos.
+
+[1 / 4 vizsgálat](concepts/workshop-inspection-goal-one-of-four.png) · [Célok vizsgálat közben](concepts/workshop-inspection-goals-tab-partial.png) · [Negyedik vizsgálat](concepts/workshop-fourth-inspection-repair-panel.png) · [Gondolat és anyaglista](concepts/workshop-four-parts-thought-and-materials.png) · [Célok sorrendje](concepts/workshop-goals-inspect-before-repair.png)
+
+[Kisebb Annie-gombok](concepts/merchant-compact-annie-desktop.png) · [Leo](concepts/merchant-compact-leo-desktop.png) · [Mobil](concepts/merchant-compact-leo-mobile.png)

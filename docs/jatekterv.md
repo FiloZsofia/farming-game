@@ -1112,3 +1112,12 @@ A beszélgetésgombok szélességéről és az egyszeri gondolat időzítésér�
 ### Alkatrészes gondolat pontosított szövege — 2026. november 6.
 
 A gondolat új, elfogadott szövege: „Talán érdemes lehet másokat is megkérdeznem az alkatrészekről.” A megjelenés időzítése további egyeztetés tárgya; ebben a módosításban nem változik a cél vagy a négy géprész vizsgálatának feltétele.
+
+
+### Vizsgálat a javítás előtt, kisebb beszélgetésgombok — 2026. november 6.
+
+Elfogadott sorrend: a berendezés felfedezése után „Vizsgáld meg a régi berendezést” cél jelenik meg, a megvizsgált géprészek 1 / 4 – 4 / 4 számával. Csak a tartály, a csőhálózat, a szűrőház és a hűtőspirál számít, sorrendjük tetszőleges. A Célok fülön a melléképület felfedezése után, a javítás előtt szerepel, teljesítés után megőrizzük. A negyedik vizsgálat után jelenik meg a „Javítsd meg a régi berendezést” cél, az anyaglista és a javítási lehetőség. Sam jóváhagyott gondolata az ablak bezárásakor látszik, egyszer. Az üvegedényes/lenszövetes bolti témák is ettől kezdve érhetők el.
+
+A korábbi mentések vizsgálatai és alkatrészei megmaradnak. A már megjavított berendezés vizsgálati célja teljesített; a korábban egyszer már látott gondolat jelzőjét nem töröljük. A tesztmód Műhely-kezdőpontja a teljes vizsgálat előtti állapot, Annie és Leo kezdőpontján a négy rész már megvizsgált. A játék és a mentésformátum verziószáma nem változik.
+
+A bolti beszélgetésgombok balra igazítottak és a szövegük szélességét követik, egységes 10 px térközzel. Hosszú szövegnél mobilon tördelhetők; a teljes sor szélességét nem foglalják el kötelezően.

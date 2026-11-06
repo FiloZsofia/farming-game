@@ -1,4 +1,4 @@
-import {grantKey,supplyMaterial,type Research} from './research';
+import {grantKey,supplyMaterial,machineInspected,type Research} from './research';
 import type {Shop} from './village-layout';
 import type {NoahTestState} from './noah-story';
 export const shopkeepers:Record<Shop,{name:string;met:'metLeo'|'metAnnie'|'metSimon';material?:'leo'|'annie'}>={nursery:{name:'Leo',met:'metLeo',material:'leo'},fishShop:{name:'Annie',met:'metAnnie',material:'annie'},craftShop:{name:'Simon',met:'metSimon'}};
@@ -19,4 +19,4 @@ export function appendMerchantActions(panel:HTMLElement,topics:ReturnType<typeof
 }
 
 export const WORKSHOP_PEOPLE_HINT='Talán érdemes lehet másokat is megkérdeznem az alkatrészekről.';
-export const workshopPeopleHintPending=(r:Research)=>r.discovered&&!r.repaired&&!r.materialHelpSeen&&(r.materials.glass<1||r.materials.linen<1);
+export const workshopPeopleHintPending=(r:Research)=>r.discovered&&machineInspected(r)&&!r.repaired&&!r.materialHelpSeen&&(r.materials.glass<1||r.materials.linen<1);
