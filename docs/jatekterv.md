@@ -1086,3 +1086,8 @@ Simon Vásárlás utáni szövege: „A lentieknek a tervrajzát vásárolhatod 
 A Fejlesztői eszközökben a „Műhelyalkatrészek · beszélgetésteszt” három kezdőpontja a Műhely (egyszeri gondolat előtt), Annie és Leo. Mindig memóriabeli másolat, a rendes farm megmarad.
 
 Az első erdei belépéskor egyszer jelenik meg az „Életerő az erdőben” segítség. Elmagyarázza a sérülést és a Készletben elérhető Eszem gombot: egy zöldség vagy gyümölcs 1 szívet tölt vissza. A felhasználó külön kérésére öt nagy animált szív szemlélteti a sérülést (5-ről 3-ra), majd az evést (3-ról 4-re). A csökkentett mozgás beállítást tiszteletben tartja. A megjelenés sikeres mentéskor rögzül, ismételt erdei látogatáskor nem jelenik meg újra. Az ellenfelek visszatérése megmarad. A jelző opcionális; a régi mentések, a játék és a mentésformátum verziószáma változatlan.
+
+
+### Életerő-segítség szövegpontosítása — 2026. november 6.
+
+Elfogadott cím: „Életerő az erdőben”. Teljes szöveg: „Az erdőben az ellenségek megsebezhetnek. Ha csökken az életerőd, nyisd meg a Készletet (Tab), válassz egy nálad lévő zöldséget vagy gyümölcsöt, majd kattints az Eszem gombra. Egy darab elfogyasztása egy szívet tölt vissza.”

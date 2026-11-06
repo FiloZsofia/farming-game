@@ -1,6 +1,6 @@
 import type {Forest} from './forest';
 export const FOREST_HELP_TITLE='Életerő az erdőben';
-export const FOREST_HELP_TEXT='Az erdőben az ellenségek megsebezhetnek. Ha csökken az életerőd, nyisd meg a Készletet (Tab), válassz egy zöldséget vagy gyümölcsöt, majd kattints az Eszem gombra. Egy darab elfogyasztása 1 szívet tölt vissza.';
+export const FOREST_HELP_TEXT='Az erdőben az ellenségek megsebezhetnek. Ha csökken az életerőd, nyisd meg a Készletet (Tab), válassz egy nálad lévő zöldséget vagy gyümölcsöt, majd kattints az Eszem gombra. Egy darab elfogyasztása egy szívet tölt vissza.';
 export const forestHelpPending=(f:Forest)=>!f.healthHelpSeen;
 export function appendForestHealthDemo(panel:HTMLElement){
  const demo=document.createElement('div');demo.className='forest-health-demo';demo.setAttribute('role','img');demo.setAttribute('aria-label','Öt szívből kettő kiürül sérüléskor, majd evéssel egy szív visszatöltődik.');
