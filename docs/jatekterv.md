@@ -1107,3 +1107,8 @@ A Fejlesztői eszközök egységes, elválasztóvonalas szakaszokat használ. So
 Az üvegedény/lenszövet témájának kiválasztásakor a sikeres mentés után bezárul a beszélgetés, és Sam fölött két másodperces tárgyátadó animáció jelenik meg a meglévő tárgyikonnal és +1 névjelzéssel. A kamera és a karakter mozgását követi, utána megszűnik. Sikertelen mentésnél nincs tárgy vagy animáció, a választás újrapróbálható. A méhecskés beszámoló párbeszéde és Simon történeti beszélgetése változatlan.
 
 A beszélgetésgombok szélességéről és az egyszeri gondolat időzítéséről a felhasználó véleményt kért; ezek ebben a módosításban változatlanok. A szűrőházhoz kötött gondolat egyelőre javaslat.
+
+
+### Alkatrészes gondolat pontosított szövege — 2026. november 6.
+
+A gondolat új, elfogadott szövege: „Talán érdemes lehet másokat is megkérdeznem az alkatrészekről.” A megjelenés időzítése további egyeztetés tárgya; ebben a módosításban nem változik a cél vagy a négy géprész vizsgálatának feltétele.

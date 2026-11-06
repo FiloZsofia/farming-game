@@ -2,6 +2,8 @@
 
 ## Változások a 0.2.0 óta — verzióemelés nélkül
 
+- 2026-11-06: Sam egyszeri gondolatának pontosított szövege: „Talán érdemes lehet másokat is megkérdeznem az alkatrészekről.”
+
 - 2026-11-06: egységes szakaszok, elválasztók, térközök és indítógombok a Fejlesztői eszközökben. Az üvegedény és a lenszövet átvétele után bezárul a beszélgetés, és Sam fölött rövid tárgyátadó animáció jelenik meg; sikertelen mentés nem indít átadást.
 
 - 2026-11-06: az életerő-segítség animációja megremegő, vörösen felvillanó szívekkel, almából induló aranyló fénypontokkal, alulról feltöltődő és megdobbanó szívvel mutatja a sérülést és evést. A Fejlesztői eszközökből újranézhető, a farm egyszeri segítségjelzőjének módosítása nélkül.

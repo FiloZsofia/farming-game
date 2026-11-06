@@ -18,5 +18,5 @@ export function appendMerchantActions(panel:HTMLElement,topics:ReturnType<typeof
  const close=document.createElement('button');close.type='button';close.dataset.merchantBack='true';close.textContent='Vissza';close.onclick=back;panel.append(close);
 }
 
-export const WORKSHOP_PEOPLE_HINT='Talán érdemes lenne másokat is megkérdeznem ezekről.';
+export const WORKSHOP_PEOPLE_HINT='Talán érdemes lehet másokat is megkérdeznem az alkatrészekről.';
 export const workshopPeopleHintPending=(r:Research)=>r.discovered&&!r.repaired&&!r.materialHelpSeen&&(r.materials.glass<1||r.materials.linen<1);
