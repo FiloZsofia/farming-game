@@ -2,6 +2,9 @@
 
 ## Változások a 0.2.0 óta — verzióemelés nélkül
 
+- 2026-11-08 — Mara tesztje: valóban látható fülkebelső ülésekkel, fejtámlával, műszerfallal, kormánnyal, rádióval és visszapillantóval; kilengő levél-illatosító és visszafogott hippis kárpit/matricák. A belső rajz az ablaknyílásokban marad, a túloldali üveg nem látszik át a tetőn.
+- 2026-11-08 — kertészeti teszt: újranyitáskor a Magkatalógus minden társítása csukott, rendelésen belül a nyitott rész megmaradhat. Világosabb, törtfehér ágyásjelölő-felirat.
+
 - 2026-11-08 — Mara tesztje: keskenyebb arc és finomabb fonat a sprite-on/portrén, áttetsző pickupablakok mögött látható vezető. Az átadó balra került, a kapuig teljes kerítésszakaszok férnek el, a rakodási útvonal követi az új helyet. Az éles kosár-/ikra-/kacsatojás-eladás kötelező bekötése dokumentálva; ezek még nem kerülnek a teszt készletébe.
 
 - 2026-11-08 — kertészeti teszt: a felhasználó döntése szerint 50 munkapont kell szintenként (50/100 összpont), betakarítási kapu nélkül. A Jártasságok fül külön csoportban mutatja az alaptársításokat és az elért szintek jutalmait. Az Ágyásjelölő deszkája és kétsoros szövege közös középpontot/dőlést használ; a felirat a belső szövegmezőben középre igazított. Az éles jártasságjelző eredeti animációjának későbbi megtartása dokumentálva, bal oldali elhelyezéssel.

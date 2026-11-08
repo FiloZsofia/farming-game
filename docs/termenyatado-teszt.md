@@ -53,3 +53,14 @@ Képek: [átadó és kerítés](concepts/market-trial-v3-stocked-stand.png), [Ma
 A fonott kosár (Nádkosár, `basket`), minden meglévő ikraadag (`roe6`, `roe8`, `roe10`) és a vadkacsatojás (`duckEgg`) is eladható legyen Marán keresztül. A teljes meglévő eladási nyilvántartásra kell építeni, az aktuális árakkal és állományok megőrzésével; a teszt `marketProducts` zöldség-gyümölcs listája nem az éles kínálat végleges forrása. A felhasználó kérésére ezeket most nem adjuk a próbakészlethez.
 
 Ellenőrzés: 465 teszt / 70 fájl és sikeres build; izolált Chromium CDP-ben a vezető láthatósága, Mara új rajzai, teljes kerítésszakasz és postaládától való távolság, E-interakció, feltöltés, rakodás, beszélgetés, Ismerősök, fordulás, balra távozás, egyszeri fizetés, második nap, mobil és tesztkilépés. A rendes mentés és backup változatlan. Cypress-bináris nem elérhető, Playwright nem készült.
+
+
+## Kidolgozott fülkebelső, apró személyes részletek
+
+A pickup belseje saját rajzréteg (`market-cab-interior.ts`): két meleg színű ülés fejtámlával és varrással, szövött kárpitcsíkok, műszerfal, rádió, kormány és visszapillantó. A tükörről fa gyöngyös, levél alakú illatosító lóg, menet közben finoman kileng, megálláskor megnyugszik. A külön ablakmaszk a tető, oszlop és karosszéria előtt eltakarja a belső rajz azon részeit, amelyek nem látszódhatnak. A nyitott ajtó a belső tér előtt marad, az üvege is áttetsző. A túloldali, tető mögött lévő ablaküveg nem rajzolódik a tetőre.
+
+A felhasználó által kért enyhén hippis hangulatot a kárpit, a levél/gyöngyök, egy kopott virágmatrica az ajtón és kis békejel a plató oldalán adja. Ezek eredeti, kódból rajzolt díszek; nem változtatnak az árakon vagy a fuvar működésén. Mara későbbi boltja még csak terv, a kínálat nem eldöntött.
+
+Ellenőrzés: 465 teszt / 70 fájl, sikeres build. Izolált Chromium CDP-ben oldalnézeti vezetés, nyitott ajtó és üres ülés rakodáskor, fordulás közbeni szembenézet, közeli képek a fülkéről, napi egyszeri fizetés, beszélgetés, második nap, mobil és kilépés. A normál mentés és backup változatlan; Cypress-bináris hiányában CDP készült, Playwright nélkül.
+
+Képek: [oldalnézeti fülke](concepts/market-trial-v4-cabin-side-closeup.png), [szemből, illatosítóval](concepts/market-trial-v4-cabin-front-closeup.png), [nyitott ajtó](concepts/market-trial-v4-cabin-open-closeup.png), [teljes autó](concepts/market-trial-v4-driver-visible.png).

@@ -1374,3 +1374,18 @@ A felhasználó kérése alapján Mara arca keskenyebb, finomabb állú és von�
 A terményátadó balra kerül annyival, hogy az épület és a kapu között teljes kerítésszakasz elférjen, és az átadó távolabb legyen a postaládától. Mara rakodási útja a szabad nyíláson haladjon, a kerítést ne keresztezze. Ez továbbra is külön memóriabeli teszt.
 
 **Éles átálláskor kötelező:** az új áruszállítás őrizze meg az összes ma eladható termék eladhatóságát. A felhasználó külön kiemelte a **fonott kosarat (a játékban Nádkosár), az ikrát és a kacsatojást**. A tesztbe ezeket most nem kell felvenni. A meglévő `estate.extras` és eladási nyilvántartásokból történjen a bekötés; ne csak a teszt zöldség-gyümölcs listájából. Jelenlegi azonosítók/árak: `basket` 40 gold; `duckEgg` 13 gold; `roe6`/`roe8`/`roe10` 6/8/10 gold. Az eltérő értékű ikraadagok elszámolása ne vesszen el. A végleges bekötésnél készlet, átadóba rakás/visszavétel, világban látható áru, rakodás, egyszeri bevétel és régi eladásra váró készletek megőrzése is ellenőrizendő. Ezek nem új árak és nem új próbakészlet-jutalmak.
+
+
+### Mara pickupja: látható fülkebelső és enyhén hippis részletek – november 8.
+
+A felhasználó kérése alapján az ablakokon át nemcsak Mara alakja, hanem a fülke belseje is látszik: két kárpitozott ülés fejtámlával, műszerfal, rádió, kormány, belső burkolatok és visszapillantó. A visszapillantóról kis levél alakú illatosító lóg, fa gyöngyökkel; menet közben finoman kileng. A belső részek a járművel együtt fordulnak, a tető/oszlopok/ajtók eltakarását az ablaknyílásokhoz kötött rajzolás biztosítja. Az üveg a belső tér előtt külön áttetsző réteg.
+
+Mara autója lehet kicsit hippis. Ezt visszafogott földszínekkel, szövött csíkos üléskárpittal, kis kopott virágmatricával és a plató oldalán békejellel próbáljuk ki. Az eredeti munkás-pickup forma, rakodási működés és árak megmaradnak. A részletek kódból rajzolt eredeti grafikák, külső asset nélkül.
+
+### Magkatalógus és jelölőtábla – újabb november 8-i pontosítás
+
+A társításos Magkatalógus minden új megnyitásakor **összes társításával csukva indul**. Nem őrzi meg az utoljára lenyitott társítást. Az ugyanabban a megnyitott ablakban végzett rendelés megtarthatja a kiválasztott részt; bezárás és újranyitás után ismét mind csukott. A jelölőtábla felirata világosabb, törtfehér színt kap a kontrasztért, az igazítás és a kézírásos betű megőrzésével.
+
+### Későbbi Mara-bolt – irány és nyitott termékötletek
+
+A felhasználó terve szerint később Marától vásárolni is lehet. A konkrét kínálat még nincs elfogadva. Felmerült kézműves, a kertet személyessé tevő portéka: szélcsengő/szélforgó, kézzel festett kaspó, kerámia madáritató, kerti lámpás, mintás textília. Ezek ötletek, nem működő funkciók és nem jóváhagyott árak/receptek. Egy későbbi Mara-bolt is a közös beszélgetési menüt és külön Vásárlás lehetőséget használja majd.

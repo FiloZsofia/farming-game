@@ -47,3 +47,6 @@ A kertészeti teszt jártasságjelzője ideiglenes. Amikor az új kertészkedés
 
 
 Mara legújabb arc-/fonat-/üvegezésjavítása és az átadó balra helyezése továbbra is tesztmód. Éles áruszállításkor a fonott kosár/Nádkosár, ikraadagok és kacsatojás eladását is be kell kötni a teljes meglévő eladási nyilvántartás alapján. A felhasználó kérésére ezek még nem kerülnek a teszt készletébe.
+
+
+A pickup kidolgozott fülkebelseje és hippis apró részletei, a mindig csukott társításlistával megnyíló Magkatalógus, valamint a világosabb jelölőfelirat továbbra is a megfelelő tesztmódok részei. Mara későbbi bolti kínálata még nyitott ötlet; új vásárlási funkció nem került be.

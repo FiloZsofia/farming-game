@@ -153,3 +153,10 @@ Az éles átálláskor a normál játék eredeti függőleges jártasságjelzőj
 Ellenőrzés: 465 teszt / 70 fájl, sikeres build. Izolált Chromium CDP-ben 49→50 és 99→100 pont, jutalomcsoportok és rejtett későbbi jutalmak, az öt táblafelirat több nagyításon, mobilos elrendezés, tesztkilépés, a rendes mentés és backup változatlansága. Cypress-bináris hiányában CDP történt, Playwright nélkül.
 
 Képek: [középre rendezett táblák](concepts/garden-centered-marker-names.png), [jutalmak szintenként](concepts/garden-skill-rewards-by-level.png), [első szint](concepts/garden-skill-rewards-first.png), [mobil](concepts/garden-skill-rewards-mobile.png).
+
+
+### Magkatalógus és világosabb táblafelirat
+
+A társításos Magkatalógus új megnyitásakor minden lenyitható társítás csukott. A leválasztott régi nézetek későn érkező toggle eseménye sem nyithat vissza korábbi részt. Az ablakon belüli rendelés megtartja a kiválasztott társítást; bezárás és újranyitás ismét csukott listát ad. A táblák kézírásos, középre igazított felirata világosabb törtfehér (`#fff8e8`) lett.
+
+Izolált Chromium CDP-ben ellenőrizve a kézi lenyitás → bezárás → újranyitás, a valódi magrendelés utáni újranyitás, az összes társítás csukottsága és a világosabb betűszín, továbbá a korábbi felirat-/szintjutalom-ellenőrzések és a mentésvédelem. Kép: [csukott katalógus](concepts/garden-catalogue-all-collapsed.png).

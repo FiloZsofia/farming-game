@@ -1,3 +1,4 @@
+import {paintCabInterior} from './market-cab-interior';
 import Phaser from 'phaser';
 import {itemIcon} from './item-icons';
 import {marketProducts,type MarketCrate} from './market-trial';
@@ -68,13 +69,13 @@ export class MarketStandArt{
 type Vertex={x:number;y:number;z:number};
 type Face={vertices:Vertex[];color:number;edge?:number;alpha?:number};
 export class MarketTruckArt{
- readonly root:Phaser.GameObjects.Container;private g:Phaser.GameObjects.Graphics;private front:Phaser.GameObjects.Graphics;private driver:Phaser.GameObjects.Graphics;private glass:Phaser.GameObjects.Graphics;private cargo:Phaser.GameObjects.Container;private crates:readonly MarketCrate[]=[];
- constructor(private scene:Phaser.Scene){this.root=scene.add.container(-700,695).setDepth(70);this.g=scene.add.graphics();this.cargo=scene.add.container(0,0);this.front=scene.add.graphics();this.driver=scene.add.graphics();this.glass=scene.add.graphics();this.root.add([this.g,this.cargo,this.front,this.driver,this.glass]);this.paint(false,0);}
- paint(door:boolean,wheel:number,heading=0){
-  const g=this.g,c=Math.cos(heading),s=Math.sin(heading),faces:Face[]=[],frontFaces:Face[]=[],driverFaces:Face[]=[],glassFaces:Face[]=[];let cab=false;
+ readonly root:Phaser.GameObjects.Container;private g:Phaser.GameObjects.Graphics;private front:Phaser.GameObjects.Graphics;private interior:Phaser.GameObjects.Graphics;private windowMask:Phaser.GameObjects.Graphics;private doorArt:Phaser.GameObjects.Graphics;private sway=0;private driver:Phaser.GameObjects.Graphics;private glass:Phaser.GameObjects.Graphics;private cargo:Phaser.GameObjects.Container;private crates:readonly MarketCrate[]=[];
+ constructor(private scene:Phaser.Scene){this.root=scene.add.container(-700,695).setDepth(70);this.g=scene.add.graphics();this.cargo=scene.add.container(0,0);this.front=scene.add.graphics();this.interior=scene.add.graphics();this.doorArt=scene.add.graphics();this.windowMask=scene.add.graphics().setVisible(false);this.driver=scene.add.graphics();this.glass=scene.add.graphics();this.root.add([this.g,this.cargo,this.front,this.interior,this.driver,this.doorArt,this.glass]);const mask=this.windowMask.createGeometryMask();this.interior.setMask(mask);this.driver.setMask(mask);this.root.once('destroy',()=>{this.windowMask.destroy();mask.destroy();});this.paint(false,0);}
+ paint(door:boolean,wheel:number,heading=0,moving=false,time=0){
+  const g=this.g,c=Math.cos(heading),s=Math.sin(heading),faces:Face[]=[],frontFaces:Face[]=[],driverFaces:Face[]=[],glassFaces:Face[]=[],doorFaces:Face[]=[];let cab=false,doorLayer=false;
   const project=(v:Vertex)=>({x:v.x*c-v.y*s,y:(v.x*s+v.y*c)*.48-v.z});
-  const face=(vertices:Vertex[],color:number,edge?:number)=>(cab?frontFaces:faces).push({vertices,color,edge});
-  const quad=(coords:number[][],color:number,edge?:number)=>face(coords.map(([x,y,z])=>({x,y,z})),color,edge);
+  const face=(vertices:Vertex[],color:number,edge?:number,alpha=1)=>(doorLayer?doorFaces:cab?frontFaces:faces).push({vertices,color,edge,alpha});
+  const quad=(coords:number[][],color:number,edge?:number,alpha=1)=>face(coords.map(([x,y,z])=>({x,y,z})),color,edge,alpha);
   const box=(x0:number,x1:number,y0:number,y1:number,z0:number,z1:number,top:number,near:number,end:number)=>{
    quad([[x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1]],top);
    const y=c>=0?y1:y0,x=s>=0?x1:x0;
@@ -82,7 +83,7 @@ export class MarketTruckArt{
    quad([[x,y0,z0],[x,y1,z0],[x,y1,z1],[x,y0,z1]],end);
   };
   const disc=(x:number,y:number,z:number,r:number,color:number)=>face(Array.from({length:20},(_,i)=>({x:x+Math.cos(i*Math.PI/10)*r,y,z:z+Math.sin(i*Math.PI/10)*r})),color);
-  g.clear();this.front.clear();this.driver.clear();this.glass.clear();g.fillStyle(0x26362d,.25).fillEllipse(0,5,Math.abs(c)*270+Math.abs(s)*96,Math.abs(s)*108+Math.abs(c)*43);
+  g.clear();this.front.clear();this.driver.clear();this.doorArt.clear();this.glass.clear();this.windowMask.clear().setPosition(this.root.x,this.root.y);g.fillStyle(0x26362d,.25).fillEllipse(0,5,Math.abs(c)*270+Math.abs(s)*96,Math.abs(s)*108+Math.abs(c)*43);
   box(-126,120,-30,30,18,29,0x4c5b4d,0x33463e,0x34453e);
   for(const x of [-82,80])for(const side of [-1,1]){
    const y=side*36;for(let i=0;i<20;i++){const a=i*Math.PI/10,b=(i+1)*Math.PI/10;quad([[x+Math.cos(a)*17,y-5,17+Math.sin(a)*17],[x+Math.cos(b)*17,y-5,17+Math.sin(b)*17],[x+Math.cos(b)*17,y+5,17+Math.sin(b)*17],[x+Math.cos(a)*17,y+5,17+Math.sin(a)*17]],i%2?0x303a33:0x394239);}disc(x,y+side*5,17,17,0x2e3832);disc(x,y+side*5.3,17,11,0x626b60);disc(x,y+side*5.6,17,7,0xb6b99f);disc(x,y+side*5.8,17,3,0x536157);
@@ -106,10 +107,12 @@ export class MarketTruckArt{
   box(14,66,-37,37,90,94,0xd4c6a0,0xb7ae8b,0xada785);
   for(const y of [-30,30])box(18,62,y,y+1,94,94.3,0xb5ab87,0xb5ab87,0xb5ab87);
   for(const y of [-35,35]){
-   quad([[22,y,66],[74,y,66],[61,y,85],[23,y,85]],0x344e45,0xc0c7a6);
-   glassFaces.push({vertices:[[26,y,69],[68,y,69],[58,y,82],[26,y,82]].map(([x,y,z])=>({x,y,z})),color:0x99b8aa,alpha:.22});
-   glassFaces.push({vertices:[[28,y,71],[30,y,71],[30,y,81],[28,y,81]].map(([x,y,z])=>({x,y,z})),color:0xd3dbc0,alpha:.4});
-   box(24,69,y-1,y+1,32,64,0x7d9882,0x718d79,0x647f6c);
+   quad([[21,y,62],[79,y,62],[63,y,88],[21,y,88]],0x344e45,0xc0c7a6);
+   if(y===side&&!(door&&y>0)){
+   glassFaces.push({vertices:[[24,y,65],[74,y,65],[61,y,85],[24,y,85]].map(([x,y,z])=>({x,y,z})),color:0x99b8aa,alpha:.22});
+   glassFaces.push({vertices:[[26,y,67],[28,y,67],[28,y,84],[26,y,84]].map(([x,y,z])=>({x,y,z})),color:0xd3dbc0,alpha:.4});
+   }
+   box(24,69,y-1,y+1,32,61,0x7d9882,0x718d79,0x647f6c);
    box(58,66,y-1.3,y+1.3,59,61,0xc7cbb0,0xb5bda2,0xa0ae91);
    box(69,76,y*1.2-2,y*1.2+2,65,71,0x43594d,0x344e43,0x384f43);
   }
@@ -123,7 +126,7 @@ export class MarketTruckArt{
    driverShape([[-4.5,81],[-3,84],[2,84],[4.8,81],[4.1,75],[1,72],[-2,73],[-4.5,77]],0x654b33);
    driverShape([[-3.5,80],[3,81],[3.5,77],[1.5,74],[-1,74],[-3.5,77]],0xe8bb92);
    driverShape([[-3.5,81],[-2,83],[2.5,82.5],[3.8,81],[-1,80]],0x80603e);
-   driverShape([[.8,78.5],[1.7,78.5],[1.7,77.3],[.8,77.3]],0x344338);
+   for(const u of frontView?[-1.8,1.2]:[.8])driverShape([[u,78.5],[u+.9,78.5],[u+.9,77.3],[u,77.3]],0x344338);
    driverShape([[-.5,75.6],[1,75.3],[2,76],[-.5,76]],0xa76855);
    for(let i=0;i<5;i++){const u=-4.6+i*.1,z=76-i*1.5;driverShape([[u-1,z],[u,z+1],[u+1,z],[u,z-1]],i%2?0x745234:0x93704a);}
    driverShape([[-4.6,68.5],[-2.7,68.5],[-2.7,67.5],[-4.6,67.5]],0xc4a565);
@@ -137,13 +140,28 @@ export class MarketTruckArt{
   box(-129,-124,-36,36,23,27,0xb1b49a,0x879681,0x96a08a);
   for(const y of [-30,24])box(-128,-126,y,y+6,33,39,0x925947,0x9c5947,0xbd7251);
   if(door){
+   doorLayer=true;
    // A hinged door swings toward the viewer, with its own open window frame.
    quad([[70,35,32],[25,65,32],[25,65,64],[70,35,64]],0x77947e,0xa9b99b);
-   quad([[70,35,64],[25,65,64],[25,65,83],[59,42,83]],0xabc0aa,0xd0d3b0);
-   quad([[65,38,67],[29,62,67],[29,62,79],[57,43,79]],0x5c7c6b);
+   quad([[70,35,64],[25,65,64],[25,65,83],[59,42,83]],0xabc0aa,0xd0d3b0,.2);
   }
+  // Apertures reveal the cabin, while the roof, pillars and doors stay solid.
+  const apertures=[[[24,side,65],[74,side,65],[61,side,85],[24,side,85]],[[67,-29,86],[67,29,86],[79,29,64],[79,-29,64]]];
+  if(door)apertures.push([[24,35,33],[69,35,33],[69,35,64],[61,35,85],[24,35,85]]);
+  for(const pane of apertures)this.windowMask.fillStyle(0xffffff).fillPoints(pane.map(([x,y,z])=>project({x,y,z})),true);
+  this.sway+=((moving?Math.sin(time*3.5)*1.1:0)-this.sway)*.08;
+  paintCabInterior(this.interior,heading,project,this.sway);
   const depth=(f:Face)=>f.vertices.reduce((n,v)=>n+v.x*s+v.y*c+v.z*.48,0)/f.vertices.length;
-  for(const [target,list]of [[g,faces],[this.front,frontFaces],[this.driver,driverFaces],[this.glass,glassFaces]] as const){if(target!==this.driver)list.sort((a,b)=>depth(a)-depth(b));for(const f of list){const points=f.vertices.map(project);target.fillStyle(f.color,f.alpha??1).fillPoints(points,true);if(f.edge)target.lineStyle(.8,f.edge,.85).strokePoints(points,true);}}
+  for(const [target,list]of [[g,faces],[this.front,frontFaces],[this.driver,driverFaces],[this.doorArt,doorFaces],[this.glass,glassFaces]] as const){if(target!==this.driver)list.sort((a,b)=>depth(a)-depth(b));for(const f of list){const points=f.vertices.map(project);target.fillStyle(f.color,f.alpha??1).fillPoints(points,true);if(f.edge)target.lineStyle(.8,f.edge,.85).strokePoints(points,true);}}
+  // Sun-faded, hand-painted details stay attached to the moving door and bed.
+  if(Math.abs(c)>.15){
+   const y=c>=0?36.4:-36.4,decal=this.doorArt;
+   const point=(x:number,z:number)=>project({x,y:door&&c>=0?65-(x-25)*30/45:y,z});
+   for(let i=0;i<6;i++){const a=i*Math.PI/3,cx=43+Math.cos(a)*3,cz=47+Math.sin(a)*3;const petal=Array.from({length:10},(_,j)=>point(cx+Math.cos(j*Math.PI/5)*1.9,cz+Math.sin(j*Math.PI/5)*1.9));decal.fillStyle(i%2?0xd6c797:0xe6d8ad,.85).fillPoints(petal,true);}
+   decal.fillStyle(0xc49a58).fillPoints(Array.from({length:12},(_,i)=>point(43+Math.cos(i*Math.PI/6)*1.8,47+Math.sin(i*Math.PI/6)*1.8)),true);
+   const peace=(dx:number,dz:number)=>project({x:-99+dx,y,z:45+dz}),ring=Array.from({length:25},(_,i)=>peace(Math.cos(i*Math.PI/12)*4,Math.sin(i*Math.PI/12)*4));
+   decal.lineStyle(.7,0xd8cca6,.8).strokePoints(ring,false);for(const [a,b]of [[[0,4],[0,-4]],[[0,0],[-2.8,-2.8]],[[0,0],[2.8,-2.8]]]){const p=peace(a[0],a[1]),q=peace(b[0],b[1]);decal.lineBetween(p.x,p.y,q.x,q.y);}
+  }
   this.crates.forEach((_,i)=>{const p=project({x:-100+i%3*40,y:-21+Math.floor(i/3)*21,z:63});for(let j=0;j<3;j++)(this.cargo.list[i*3+j] as Phaser.GameObjects.Image).setPosition(p.x+(j-1)*9*c,p.y+(j-1)*9*s*.48);});
  }
  setCargo(crates:readonly MarketCrate[]){this.crates=[...crates];this.cargo.removeAll(true);for(const crate of crates)for(let j=0;j<3;j++)this.cargo.add(this.scene.add.image(0,0,`market-product-${crate.product}`).setDisplaySize(15,15));}
