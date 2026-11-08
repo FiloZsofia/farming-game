@@ -1354,3 +1354,23 @@ A későbbi kertészeti átálláskor a játékosokat felugró ismertető fogadj
 A felhasználó kérésére a terményátadó nagyobb, részletesebb faépítményt és megdöntött ládákat kap. A terményeket nagyobb méretben, jobban elkülönülve mutatjuk. A csíkos vászonárnyékolón felismerhető redők, varrások, hullámos szegély, kötélrögzítések és fa tartók jelennek meg.
 
 A pickup nagyobb és részletesebb: kerekek, fények, hűtőrács, tükrök, üvegezés, nyíló ajtó, fülke, plató és látható rakomány. A próba útja csak balra folytatódik. A jobb oldali átmenő út megszűnik, a kapu rövid kanyarulattal csatlakozik a fordulóöbölhöz. Mara balról érkezik, rakodás és beszállás után látható íven megfordul, majd balra távozik ugyanazon az úton. A kifizetés továbbra is az áru átvételéhez kötött, egyszer történik. Ezek továbbra is csak a külön terményátadó-teszt módosításai.
+
+
+### Kertészkedés: lassabb fejlődés, táblafelirat és jutalmak – elfogadva november 8.
+
+A felhasználó a 40 pontos javaslat helyett **50 munkapontot választott minden szinthez**. A teszt első feloldása így 50, a második 100 összpont. Ez felülírja a korábbi 20/40 küszöböt. Teljes betakarítás vagy maggyűjtési ciklus továbbra sem feltétel; a valódi műveletek és az egyszeri felismerések pontozása megmarad.
+
+Az Ágyásjelölő deszkája és felirata közös középpontot, dőlésszöget és belső szövegterületet használ. A felirat kétsoros, mindkét irányban középre rendezett, az eddigi deszkaméreten belül. Nem újabb méretnövelés rejti el a pozicionálási hibát.
+
+A Jártasságok fül az elért jutalmakat időrendi csoportokba rendezi: **Alaptársítások** (három induló társítás), **1. szint jutalma** (Epres méhlegelő), **2. szint jutalma** (Esti teakert). A még el nem ért szint jutalma nem látható.
+
+A teszt egyszerűbb jártasságjelzője jelenleg elfogadható. **Éles átálláskor a normál játék meglévő jártasságjelző animációjának megjelenése marad meg**, bal oldali elhelyezéssel. A függőleges feltöltődés, a kiemelt számláló, +pont-jelzés, mozgások és időzítés megtartandók; nem a teszt ideiglenes vízszintes jelzőjét kell átvenni.
+
+
+### Mara finomítása és az éles áruszállítás kötelező köre – november 8.
+
+A felhasználó kérése alapján Mara arca keskenyebb, finomabb állú és vonású lesz, a fonata valódi összefonódó, lefelé keskenyedő tincsekből áll. A sprite és az Ismerősök/beszélgetés portréja ugyanazt az irányt követi. A pickupban ülő Mara legyen látható az oldalablakon és szélvédőn át; az üvegek áttetszők legyenek.
+
+A terményátadó balra kerül annyival, hogy az épület és a kapu között teljes kerítésszakasz elférjen, és az átadó távolabb legyen a postaládától. Mara rakodási útja a szabad nyíláson haladjon, a kerítést ne keresztezze. Ez továbbra is külön memóriabeli teszt.
+
+**Éles átálláskor kötelező:** az új áruszállítás őrizze meg az összes ma eladható termék eladhatóságát. A felhasználó külön kiemelte a **fonott kosarat (a játékban Nádkosár), az ikrát és a kacsatojást**. A tesztbe ezeket most nem kell felvenni. A meglévő `estate.extras` és eladási nyilvántartásokból történjen a bekötés; ne csak a teszt zöldség-gyümölcs listájából. Jelenlegi azonosítók/árak: `basket` 40 gold; `duckEgg` 13 gold; `roe6`/`roe8`/`roe10` 6/8/10 gold. Az eltérő értékű ikraadagok elszámolása ne vesszen el. A végleges bekötésnél készlet, átadóba rakás/visszavétel, világban látható áru, rakodás, egyszeri bevétel és régi eladásra váró készletek megőrzése is ellenőrizendő. Ezek nem új árak és nem új próbakészlet-jutalmak.

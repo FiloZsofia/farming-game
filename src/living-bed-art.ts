@@ -1,9 +1,19 @@
+import {bedMarkerLayout,bedMarkerCenter} from './bed-marker-layout';
 import {paintLivingPlant} from './living-plant-art';
 import Phaser from 'phaser';
 import {livingFlowers,type LivingBed} from './living-bed';
 import {livingBedArea,livingPlantPoint,type LivingBedArea} from './living-bed-layout';
 export {livingBedArea,livingPlantPoint} from './living-bed-layout';
-export function paintMarker(g:Phaser.GameObjects.Graphics,b:LivingBedArea){const x=b.x,y=b.y+b.h;g.fillStyle(0x705137).fillRect(x+31,y+3,4,24);g.fillStyle(0x906b42).fillPoints([{x:x+2,y:y-10},{x:x+66,y:y-14},{x:x+68,y:y+18},{x:x+3,y:y+22}],true);g.lineStyle(1,0xc4a069).lineBetween(x+7,y-7,x+61,y-11);g.lineStyle(1,0x775236).lineBetween(x+8,y+18,x+57,y+14);g.fillStyle(0xd2b67d).fillCircle(x+9,y+6,1).fillCircle(x+61,y+2,1);}
+export function paintMarker(g:Phaser.GameObjects.Graphics,b:LivingBedArea){paintBedMarker(g,{x:b.x+35,y:b.y+b.h+17});}
+export function paintBedMarker(g:Phaser.GameObjects.Graphics,anchor:{x:number;y:number}){
+ const {x,y}=bedMarkerCenter(anchor),{width,height,angle}=bedMarkerLayout,c=Math.cos(angle),s=Math.sin(angle);
+ const point=(dx:number,dy:number)=>({x:x+dx*c-dy*s,y:y+dx*s+dy*c});
+ g.fillStyle(0x705137).fillRect(x-2,y-1,4,24);
+ g.fillStyle(0x906b42).fillPoints([point(-width/2,-height/2),point(width/2,-height/2),point(width/2,height/2),point(-width/2,height/2)],true);
+ const a=point(-28,-13),z=point(27,-13);g.lineStyle(1,0xc4a069).lineBetween(a.x,a.y,z.x,z.y);
+ const e=point(-27,13),f=point(25,13);g.lineStyle(1,0x775236).lineBetween(e.x,e.y,f.x,f.y);
+ for(const dx of [-29,29]){const p=point(dx,0);g.fillStyle(0xd2b67d).fillCircle(p.x,p.y,1);}
+}
 
 export function paintLivingBed(g:Phaser.GameObjects.Graphics,s:LivingBed,selected:number,area:LivingBedArea=livingBedArea,valid=true,placing=false,marker=true){
  const {x,y,w,h}=area;g.clear();g.fillStyle(0x304734,.18).fillEllipse(x+w/2,y+h/2+7,w+22,h+14);

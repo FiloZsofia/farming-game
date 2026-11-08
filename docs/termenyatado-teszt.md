@@ -38,3 +38,18 @@ Az átmenő jobb oldali út helyett **csak balra vezető út és fordulóöböl*
 Ellenőrzés: 465 teszt / 70 fájl és sikeres build. A két új útvonalteszt a folyamatos irányváltást, a csatlakozó induló/végpontokat és a jobb oldali átmenő út hiányát ellenőrzi. Izolált Chromium CDP-próba: kilenc láda feltöltése, E-interakció, Mara és Ismerősök, rakodás, fordulás köztes állása, balra távozás, egyszeri fizetés, második nap, mobilos nézet, kilépés, normál mentés/backup változatlansága. Cypress-bináris továbbra sem érhető el; Playwrightot nem használtunk.
 
 Új képek: [feltöltött nagy átadó](concepts/market-trial-v2-stocked-stand.png), [pickup és rakodás](concepts/market-trial-v2-mara-loading.png), [fordulás](concepts/market-trial-v2-turn-middle.png), [balra távozás](concepts/market-trial-v2-depart-left.png), [mobil](concepts/market-trial-v2-mobile.png).
+
+
+## Arc, fonat, üvegezés és kerítés – további november 8-i finomítás
+
+Mara keskenyebb arcot, finomabb állat, kisebb arcvonásokat és lefelé keskenyedő, összefonódó tincsekből álló fonatot kapott a sprite-on és portrén is. Vezetéskor külön ülő alak látható az oldalablakon és a szélvédőn át; az üveg külön, részben áttetsző réteg a szereplő előtt, vékony tükröződési csíkkal. Rakodáskor a vezetőülés üres, Mara kint mozog.
+
+Az átadó 65 világponttal balra került. A kapuig teljes kerítésszakaszok férnek el, a postaládától is távolabb van. A beszélgetési/lerakási elérhetőség, ütközés és Mara gyalogos útja az új helyet követi. A vezetés, fordulás, egyszeri fizetés és a normál mentés védelme megmarad.
+
+Képek: [átadó és kerítés](concepts/market-trial-v3-stocked-stand.png), [Mara új portréja](concepts/market-trial-v3-mara-conversation.png), [vezető az ablak mögött](concepts/market-trial-v3-driver-visible.png), [Mara rakodás közben](concepts/market-trial-v3-mara-loading.png).
+
+### Az éles átálláskor még kötelező, most nincs a tesztben
+
+A fonott kosár (Nádkosár, `basket`), minden meglévő ikraadag (`roe6`, `roe8`, `roe10`) és a vadkacsatojás (`duckEgg`) is eladható legyen Marán keresztül. A teljes meglévő eladási nyilvántartásra kell építeni, az aktuális árakkal és állományok megőrzésével; a teszt `marketProducts` zöldség-gyümölcs listája nem az éles kínálat végleges forrása. A felhasználó kérésére ezeket most nem adjuk a próbakészlethez.
+
+Ellenőrzés: 465 teszt / 70 fájl és sikeres build; izolált Chromium CDP-ben a vezető láthatósága, Mara új rajzai, teljes kerítésszakasz és postaládától való távolság, E-interakció, feltöltés, rakodás, beszélgetés, Ismerősök, fordulás, balra távozás, egyszeri fizetés, második nap, mobil és tesztkilépés. A rendes mentés és backup változatlan. Cypress-bináris nem elérhető, Playwright nem készült.

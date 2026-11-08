@@ -1,13 +1,15 @@
 import Phaser from 'phaser';
 import {itemIcon} from './item-icons';
 import {marketProducts,type MarketCrate} from './market-trial';
-export const marketStand={left:-170,right:98,top:469,bottom:598};
+export const marketStandOffset=-65;
+export const marketStand={left:-170+marketStandOffset,right:98+marketStandOffset,top:469,bottom:598};
+export const marketFenceGap={from:-190+marketStandOffset,to:128+marketStandOffset};
 export const marketCratePoint=(i:number)=>({x:-125+(i%3)*83,y:486+Math.floor(i/3)*36});
 export async function loadMarketIcons(scene:Phaser.Scene){await Promise.all(marketProducts.map(async kind=>{const key=`market-product-${kind}`;if(scene.textures.exists(key))return;const svg=itemIcon(kind);svg.setAttribute('width','72');svg.setAttribute('height','72');const source='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(svg)),img=new Image();await new Promise<void>((resolve,reject)=>{img.onload=()=>resolve();img.onerror=()=>reject(new Error('A terményikon nem tölthető be.'));img.src=source;});scene.textures.addImage(key,img);}));}
 export class MarketStandArt{
  readonly root:Phaser.GameObjects.Container;private contents:Phaser.GameObjects.Container;
  constructor(private scene:Phaser.Scene){
-  this.root=scene.add.container(0,0).setDepth(50);const g=scene.add.graphics();this.root.add(g);
+  this.root=scene.add.container(marketStandOffset,0).setDepth(50);const g=scene.add.graphics();this.root.add(g);
   g.fillStyle(0x293d2d,.24).fillEllipse(-26,595,320,73);
   // Weathered planked counter, raised tiers, substantial posts and diagonal braces.
   g.fillStyle(0x503c2c).fillRoundedRect(-174,482,276,115,4);
@@ -64,12 +66,12 @@ export class MarketStandArt{
 }
 
 type Vertex={x:number;y:number;z:number};
-type Face={vertices:Vertex[];color:number;edge?:number};
+type Face={vertices:Vertex[];color:number;edge?:number;alpha?:number};
 export class MarketTruckArt{
- readonly root:Phaser.GameObjects.Container;private g:Phaser.GameObjects.Graphics;private front:Phaser.GameObjects.Graphics;private cargo:Phaser.GameObjects.Container;private crates:readonly MarketCrate[]=[];
- constructor(private scene:Phaser.Scene){this.root=scene.add.container(-700,695).setDepth(70);this.g=scene.add.graphics();this.cargo=scene.add.container(0,0);this.front=scene.add.graphics();this.root.add([this.g,this.cargo,this.front]);this.paint(false,0);}
+ readonly root:Phaser.GameObjects.Container;private g:Phaser.GameObjects.Graphics;private front:Phaser.GameObjects.Graphics;private driver:Phaser.GameObjects.Graphics;private glass:Phaser.GameObjects.Graphics;private cargo:Phaser.GameObjects.Container;private crates:readonly MarketCrate[]=[];
+ constructor(private scene:Phaser.Scene){this.root=scene.add.container(-700,695).setDepth(70);this.g=scene.add.graphics();this.cargo=scene.add.container(0,0);this.front=scene.add.graphics();this.driver=scene.add.graphics();this.glass=scene.add.graphics();this.root.add([this.g,this.cargo,this.front,this.driver,this.glass]);this.paint(false,0);}
  paint(door:boolean,wheel:number,heading=0){
-  const g=this.g,c=Math.cos(heading),s=Math.sin(heading),faces:Face[]=[],frontFaces:Face[]=[];let cab=false;
+  const g=this.g,c=Math.cos(heading),s=Math.sin(heading),faces:Face[]=[],frontFaces:Face[]=[],driverFaces:Face[]=[],glassFaces:Face[]=[];let cab=false;
   const project=(v:Vertex)=>({x:v.x*c-v.y*s,y:(v.x*s+v.y*c)*.48-v.z});
   const face=(vertices:Vertex[],color:number,edge?:number)=>(cab?frontFaces:faces).push({vertices,color,edge});
   const quad=(coords:number[][],color:number,edge?:number)=>face(coords.map(([x,y,z])=>({x,y,z})),color,edge);
@@ -80,7 +82,7 @@ export class MarketTruckArt{
    quad([[x,y0,z0],[x,y1,z0],[x,y1,z1],[x,y0,z1]],end);
   };
   const disc=(x:number,y:number,z:number,r:number,color:number)=>face(Array.from({length:20},(_,i)=>({x:x+Math.cos(i*Math.PI/10)*r,y,z:z+Math.sin(i*Math.PI/10)*r})),color);
-  g.clear();this.front.clear();g.fillStyle(0x26362d,.25).fillEllipse(0,5,Math.abs(c)*270+Math.abs(s)*96,Math.abs(s)*108+Math.abs(c)*43);
+  g.clear();this.front.clear();this.driver.clear();this.glass.clear();g.fillStyle(0x26362d,.25).fillEllipse(0,5,Math.abs(c)*270+Math.abs(s)*96,Math.abs(s)*108+Math.abs(c)*43);
   box(-126,120,-30,30,18,29,0x4c5b4d,0x33463e,0x34453e);
   for(const x of [-82,80])for(const side of [-1,1]){
    const y=side*36;for(let i=0;i<20;i++){const a=i*Math.PI/10,b=(i+1)*Math.PI/10;quad([[x+Math.cos(a)*17,y-5,17+Math.sin(a)*17],[x+Math.cos(b)*17,y-5,17+Math.sin(b)*17],[x+Math.cos(b)*17,y+5,17+Math.sin(b)*17],[x+Math.cos(a)*17,y+5,17+Math.sin(a)*17]],i%2?0x303a33:0x394239);}disc(x,y+side*5,17,17,0x2e3832);disc(x,y+side*5.3,17,11,0x626b60);disc(x,y+side*5.6,17,7,0xb6b99f);disc(x,y+side*5.8,17,3,0x536157);
@@ -99,20 +101,34 @@ export class MarketTruckArt{
   for(const y of [-34,34])quad([[10,y,29],[82,y,29],[82,y,59],[64,y,91],[16,y,91],[10,y,66]],y*side>0?0x75917e:0x678574,0x506b5d);
   quad([[10,-34,66],[10,34,66],[16,34,91],[16,-34,91]],0x577665);
   quad([[64,-34,91],[64,34,91],[82,34,59],[82,-34,59]],0x3e594e);
-  quad([[67,-29,86],[67,29,86],[79,29,64],[79,-29,64]],0x9ebfb3);
-  quad([[68,-27,85],[68,-22,85],[78,-22,66],[78,-27,66]],0xd9ddbf);
+  glassFaces.push({vertices:[[67,-29,86],[67,29,86],[79,29,64],[79,-29,64]].map(([x,y,z])=>({x,y,z})),color:0x9ebfb3,alpha:.27});
+  glassFaces.push({vertices:[[68,-27,85],[68,-24,85],[78,-24,66],[78,-27,66]].map(([x,y,z])=>({x,y,z})),color:0xe4e8cd,alpha:.45});
   box(14,66,-37,37,90,94,0xd4c6a0,0xb7ae8b,0xada785);
   for(const y of [-30,30])box(18,62,y,y+1,94,94.3,0xb5ab87,0xb5ab87,0xb5ab87);
   for(const y of [-35,35]){
    quad([[22,y,66],[74,y,66],[61,y,85],[23,y,85]],0x344e45,0xc0c7a6);
-   quad([[26,y,69],[68,y,69],[58,y,82],[26,y,82]],0x99b8aa);
-   quad([[29,y,71],[33,y,71],[33,y,81],[29,y,81]],0xd3dbc0);
+   glassFaces.push({vertices:[[26,y,69],[68,y,69],[58,y,82],[26,y,82]].map(([x,y,z])=>({x,y,z})),color:0x99b8aa,alpha:.22});
+   glassFaces.push({vertices:[[28,y,71],[30,y,71],[30,y,81],[28,y,81]].map(([x,y,z])=>({x,y,z})),color:0xd3dbc0,alpha:.4});
    box(24,69,y-1,y+1,32,64,0x7d9882,0x718d79,0x647f6c);
    box(58,66,y-1.3,y+1.3,59,61,0xc7cbb0,0xb5bda2,0xa0ae91);
    box(69,76,y*1.2-2,y*1.2+2,65,71,0x43594d,0x344e43,0x384f43);
   }
-  // Mara's silhouette is visible behind the glass while she drives.
-  if(!door){disc(45,side*1.015,75,5,0x6b4b31);disc(47,side*1.02,74,3.8,0xd8b689);quad([[39,side*1.025,67],[53,side*1.025,67],[50,side*1.025,72],[43,side*1.025,72]],0x405e50);}
+  // A seated Mara is drawn behind translucent panes, in the visible window plane.
+  if(!door){
+   const frontView=Math.abs(s)>.55;
+   const driverPoint=(u:number,z:number):Vertex=>frontView?{x:82-(z-59)*18/32,y:14+u,z}:{x:46+u,y:side,z};
+   const driverShape=(points:number[][],color:number)=>driverFaces.push({vertices:points.map(([u,z])=>driverPoint(u,z)),color});
+   driverShape([[-8,67],[9,67],[7,72],[2,74],[-4,73]],0x41675f);
+   driverShape([[-3,72],[1,70],[4,72],[2,74],[-1,74]],0xd9cba9);
+   driverShape([[-4.5,81],[-3,84],[2,84],[4.8,81],[4.1,75],[1,72],[-2,73],[-4.5,77]],0x654b33);
+   driverShape([[-3.5,80],[3,81],[3.5,77],[1.5,74],[-1,74],[-3.5,77]],0xe8bb92);
+   driverShape([[-3.5,81],[-2,83],[2.5,82.5],[3.8,81],[-1,80]],0x80603e);
+   driverShape([[.8,78.5],[1.7,78.5],[1.7,77.3],[.8,77.3]],0x344338);
+   driverShape([[-.5,75.6],[1,75.3],[2,76],[-.5,76]],0xa76855);
+   for(let i=0;i<5;i++){const u=-4.6+i*.1,z=76-i*1.5;driverShape([[u-1,z],[u,z+1],[u+1,z],[u,z-1]],i%2?0x745234:0x93704a);}
+   driverShape([[-4.6,68.5],[-2.7,68.5],[-2.7,67.5],[-4.6,67.5]],0xc4a565);
+   driverShape([[5,70],[9.5,69.5],[10,71],[6,72]],0xd3ad83);
+  }
   box(82,120,-33,33,30,57,0x92a38a,0x698571,0x587666);box(85,116,-29,29,57,59,0xa8b194,0x7e947c,0x7c927b);box(86,115,-.5,.5,59,59.4,0xc1c5a4,0xc1c5a4,0xc1c5a4);
   box(120,122,-24,24,37,48,0x485a4c,0x3d5044,0x35483e);
   for(const z of [39,42,45])box(122,123,-21,21,z,z+1,0xb9bca1,0x9da98c,0xaeb79b);
@@ -127,7 +143,7 @@ export class MarketTruckArt{
    quad([[65,38,67],[29,62,67],[29,62,79],[57,43,79]],0x5c7c6b);
   }
   const depth=(f:Face)=>f.vertices.reduce((n,v)=>n+v.x*s+v.y*c+v.z*.48,0)/f.vertices.length;
-  for(const [target,list]of [[g,faces],[this.front,frontFaces]] as const){list.sort((a,b)=>depth(a)-depth(b));for(const f of list){const points=f.vertices.map(project);target.fillStyle(f.color).fillPoints(points,true);if(f.edge)target.lineStyle(.8,f.edge,.85).strokePoints(points,true);}}
+  for(const [target,list]of [[g,faces],[this.front,frontFaces],[this.driver,driverFaces],[this.glass,glassFaces]] as const){if(target!==this.driver)list.sort((a,b)=>depth(a)-depth(b));for(const f of list){const points=f.vertices.map(project);target.fillStyle(f.color,f.alpha??1).fillPoints(points,true);if(f.edge)target.lineStyle(.8,f.edge,.85).strokePoints(points,true);}}
   this.crates.forEach((_,i)=>{const p=project({x:-100+i%3*40,y:-21+Math.floor(i/3)*21,z:63});for(let j=0;j<3;j++)(this.cargo.list[i*3+j] as Phaser.GameObjects.Image).setPosition(p.x+(j-1)*9*c,p.y+(j-1)*9*s*.48);});
  }
  setCargo(crates:readonly MarketCrate[]){this.crates=[...crates];this.cargo.removeAll(true);for(const crate of crates)for(let j=0;j<3;j++)this.cargo.add(this.scene.add.image(0,0,`market-product-${crate.product}`).setDisplaySize(15,15));}

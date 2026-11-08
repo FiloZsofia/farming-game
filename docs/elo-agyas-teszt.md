@@ -40,7 +40,7 @@ A Komposztálót a Készletből helyezd le. A meglévő szabály szerint 10 gazb
 
 ## Fejlődés, megfigyelés és vetőmag
 
-Próbaküszöbök: 20 és 40 összesített munkapont, tehát mindkét szinthez újabb 20 pont kell. Teljes betakarítás vagy maggyűjtési ciklus egyikhez sem feltétel. A vetés növényenként számít; valódi gondozás, betakarítás és saját vetőmag is ad munkapontot. Felesleges újraöntözés nem ad pontot. Szintlépéskor a meglévő ünneplős ablak mutatja az új társítást.
+Próbaküszöbök: 50 és 100 összesített munkapont, tehát mindkét szinthez újabb 50 pont kell. Teljes betakarítás vagy maggyűjtési ciklus egyikhez sem feltétel. A vetés növényenként számít; valódi gondozás, betakarítás és saját vetőmag is ad munkapontot. Felesleges újraöntözés nem ad pontot. Szintlépéskor a meglévő ünneplős ablak mutatja az új társítást.
 
 Sam Megfigyeléssel felismerhet két összefüggést:
 
@@ -138,3 +138,18 @@ A próba indulásakor a „Megújult a kerted!” ablak mutatja a későbbi kiad
 Aktív kertészeti próba alatt az oldal újratöltése **friss, memóriabeli próbát indít**, és ismét megmutatja az ablakot. A próba addigi eredménye nem mentődik el. A jelző csak az adott böngészőfül munkamenetére és farmazonosítójára vonatkozik, fejlesztői módban működik. Kilépés a tesztből vagy másik teszt indítása törli. A rendes farmot és biztonsági másolatát újratöltéskor sem írja felül. A fejlesztői ablakban külön Frissítésismertető · Előnézet gombbal is megnyitható.
 
 Ellenőrzés: 463 teszt / 69 fájl, sikeres build. Izolált Chromium CDP-ben ellenőrizve a mulcs készletbe kerülése, gain-hang/jelzés, 20+20 pontos feloldás teljes ciklus nélkül, reggeli világos–permet–sötét talaj, hosszú táblafelirat, szűk úthely, anyag-visszaadás, növénygaléria, ismertető újratöltése és kilépése, valamint a rendes mentés és backup változatlansága. Cypress-bináris nem elérhető; nem Playwright készült.
+
+
+## Újabb november 8-i pontosítás: 50 pont szintenként
+
+A korábbi 20/40 pontos próbát az új döntés felülírja: **50 pont az első, 100 összpont a második szint**. Teljes betakarítás továbbra sem feltétel. Egy előkészített, kilenc növénnyel beültetett, meglocsolt és teljesen begyűjtött ágyás összesen 20 pontja önmagában már nem old fel új társítást. A magérlelési döntés és a felismerés továbbra is pontot ér.
+
+A Jártasságok fül három külön, időrendi csoportot mutat: Alaptársítások, 1. szint jutalma, 2. szint jutalma. Csak az elért szintek csoportjai jelennek meg. A három kezdő társítás nem szintjutalomként szerepel.
+
+A táblák felirata a deszka közös geometriai közepére került, azonos dőléssel, rögzített 52×24 belső szövegmezővel, középre zárt két sorral és kézírásos betűvel. A deszka a meglévő 68×36 elhelyezési kereten belül marad. Mind az öt név tényleges böngészős betűhatára ellenőrzött 1×, 1,5×, 2,25× és 3× kameranagyításban, továbbá mobilos nézetben.
+
+Az éles átálláskor a normál játék eredeti függőleges jártasságjelzőjének teljes megjelenése és animációja marad, bal oldalra helyezve. A teszt jelenlegi egyszerűbb jelzője ideiglenes. A normál játék jelzőjét ez a javítás nem módosítja.
+
+Ellenőrzés: 465 teszt / 70 fájl, sikeres build. Izolált Chromium CDP-ben 49→50 és 99→100 pont, jutalomcsoportok és rejtett későbbi jutalmak, az öt táblafelirat több nagyításon, mobilos elrendezés, tesztkilépés, a rendes mentés és backup változatlansága. Cypress-bináris hiányában CDP történt, Playwright nélkül.
+
+Képek: [középre rendezett táblák](concepts/garden-centered-marker-names.png), [jutalmak szintenként](concepts/garden-skill-rewards-by-level.png), [első szint](concepts/garden-skill-rewards-first.png), [mobil](concepts/garden-skill-rewards-mobile.png).

@@ -13,11 +13,12 @@ export type GardenPoint={x:number;y:number};
 export type GardenObservation={id:'water-recovery'|'fruit-set';title:string;text:string;day:number;earlierDay:number;bedId:number};
 export type TrialBed={id:number;area:LivingBedArea;state:LivingBed;marker:GardenPoint|null;irrigation:GardenPoint|null;completed:number[];watered:boolean};
 export const trialSeedPrices:Record<BedKind,number>={radish:5,lettuce:5,pea:15,thyme:5,wildflower:5,oregano:5,sage:5,tomato:15,pepper:15,cucumber:15,strawberry:20,carrot:10,calendula:5,borage:5,chamomile:5,lemonBalm:5};
+export const TRIAL_GARDEN_LEVEL_POINTS=50;
 export class LivingGarden{
  snapshot:Snapshot;seeds=emptyBedSeeds();pending=emptyBedSeeds();mailbox=emptyBedSeeds();basket=emptyBedSeeds();beds:TrialBed[]=[];paths:GardenPathPiece[]=[];packedMarkers:number[]=[];nextId=1;completedCycles=0;weather:'sunny'|'rain'='sunny';observations:GardenObservation[]=[];observationMemory=new Map<number,{dryDay?:number;waterDay?:number;blossoms:Record<number,{day:number;cycle:number}>}>();
  constructor(snapshot:Snapshot){this.snapshot=structuredClone(snapshot);this.snapshot.skill=createGardenSkill();this.snapshot.travel.crafting??=createCrafting();}
- get level(){return this.snapshot.skill.xp>=40?2:this.snapshot.skill.xp>=20?1:0;}
- get progress(){const level=this.level;return {level,current:level>=2?20:this.snapshot.skill.xp-level*20,required:20};}
+ get level(){return this.snapshot.skill.xp>=2*TRIAL_GARDEN_LEVEL_POINTS?2:this.snapshot.skill.xp>=TRIAL_GARDEN_LEVEL_POINTS?1:0;}
+ get progress(){const level=this.level;return {level,current:level>=2?TRIAL_GARDEN_LEVEL_POINTS:this.snapshot.skill.xp-level*TRIAL_GARDEN_LEVEL_POINTS,required:TRIAL_GARDEN_LEVEL_POINTS};}
  availableSeeds(){return [...new Set(Object.values(bedMixes).filter(m=>m.level<=this.level).flatMap(m=>m.plants))];}
  addBed(area:LivingBedArea={...livingBedArea}){const bed:TrialBed={id:this.nextId++,area:{...area},state:createLivingBed(this.snapshot.clock.day),marker:null,irrigation:null,completed:[],watered:false};bed.state.seedStock=this.seeds;bed.state.weather=this.weather;this.beds.push(bed);return bed;}
  sync(bed:TrialBed){bed.state.seedStock=this.seeds;return bed.state;}

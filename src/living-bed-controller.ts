@@ -1,3 +1,4 @@
+import {bedMarkerLayout,bedMarkerCenter,bedMarkerLines} from './bed-marker-layout';
 import {pathFootprint,polygonsOverlap,rectanglePolygon,roundedBedPolygon} from './garden-path-footprint';
 import {extendGardenPath,makeGardenPath,pathMaterials,pathSupplies,gardenPathCost,type PathMaterial} from './garden-path';
 import {paintGardenPaths,gardenPathIcon} from './garden-path-art';
@@ -11,7 +12,7 @@ import Phaser from 'phaser';
 import {worldText} from './world-text';
 import {livingBedArea as defaultArea,livingPlantPoint,type LivingBedArea} from './living-bed-layout';
 import {bedAreaAt,livingBedFits,gardenDecorationFits,nearBedSide,bedMarkerFits} from './living-bed-placement';
-import {paintLivingBed,paintBedVisitors,paintMarker} from './living-bed-art';
+import {paintLivingBed,paintBedVisitors,paintBedMarker} from './living-bed-art';
 import {prepareLivingBed,plantLivingBed,waterLivingBed,mulchLivingBed,flowerLivingPlant,harvestLivingPlant,collectLivingSeeds,replantLivingSpot,refillLivingBed,bedKinds,bedMixes,bedPlantStage,bedSeedMethod,livingFlowers,emptyBedSeeds,recommendedBedCounts,recommendedComposition,composeLivingBed,type LivingBed,type BedMix,type BedKind} from './living-bed';
 import {LivingGarden,trialSeedPrices,type TrialBed,type GardenPoint} from './living-garden';
 import {placedItemAt,pickPlacedItem,type RuntimePlacedItems,type PlacedItem} from './placed-items';
@@ -138,8 +139,8 @@ export class LivingBedController{
   if(!this.placing&&['marker','irrigation','composter','chest'].includes(this.tool)){const marker=this.tool==='marker',valid=this.canPlaceItem(this.point);this.preview.lineStyle(1,valid?0xe6d8a3:0xc17a69).strokeEllipse(this.point.x,this.point.y,marker?68:32,marker?36:25);if(this.tool==='irrigation'){const target=this.committed().find(b=>nearBedSide(this.point,b.area)&&!b.irrigation);if(target)this.preview.lineStyle(2,0xa7d7d0,.9).strokeRoundedRect(target.area.x-4,target.area.y-4,target.area.w+8,target.area.h+8,12);}}
  }
  private paint(){
-  for(const b of this.garden.beds){let art=this.bedsArt.get(b.id);if(!art){art=this.scene.add.graphics().setDepth(1);this.bedsArt.set(b.id,art);}paintLivingBed(art,this.paintState(b),b===this.active?this.selected:-1,b.area,b===this.active&&this.placing?this.fits():true,b===this.active&&this.placing,false);let sign=this.signs.get(b.id);if(!sign){sign=worldText(this.scene,0,0,'Vegyes ágyás',{fontFamily:'Kerti Ceruza',fontSize:'11px',color:'#f2dfb5'}).setOrigin(.5).setRotation(-.055).setDepth(6);this.signs.set(b.id,sign);}sign.setVisible(!!b.marker);if(b.marker)sign.setPosition(b.marker.x,b.marker.y-8).setText(b.state.mix?bedMixes[b.state.mix].name.replace(' ','\n'):'').setFontSize(8);}
-  this.decorations.clear();for(const b of this.committed()){if(b.marker)paintMarker(this.decorations,{x:b.marker.x-35,y:b.marker.y-17,w:0,h:0});if(b.irrigation){const p=b.irrigation;this.decorations.fillStyle(0x547e77).fillRect(p.x-4,p.y-15,8,19);this.decorations.fillStyle(0xa7c8b7).fillEllipse(p.x,p.y-16,18,6);}}
+  for(const b of this.garden.beds){let art=this.bedsArt.get(b.id);if(!art){art=this.scene.add.graphics().setDepth(1);this.bedsArt.set(b.id,art);}paintLivingBed(art,this.paintState(b),b===this.active?this.selected:-1,b.area,b===this.active&&this.placing?this.fits():true,b===this.active&&this.placing,false);let sign=this.signs.get(b.id);if(!sign){sign=worldText(this.scene,0,0,'',{fontFamily:'Kerti Ceruza',fontSize:`${bedMarkerLayout.fontSize}px`,color:'#f2dfb5',align:'center',fixedWidth:bedMarkerLayout.textWidth,fixedHeight:bedMarkerLayout.textHeight}).setOrigin(.5).setRotation(bedMarkerLayout.angle).setData('worldTextKind','bed-marker').setDepth(6);this.signs.set(b.id,sign);}sign.setVisible(!!b.marker);if(b.marker){const center=bedMarkerCenter(b.marker);sign.setPosition(center.x,center.y).setText(b.state.mix?bedMarkerLines(bedMixes[b.state.mix].name):'');}}
+  this.decorations.clear();for(const b of this.committed()){if(b.marker)paintBedMarker(this.decorations,b.marker);if(b.irrigation){const p=b.irrigation;this.decorations.fillStyle(0x547e77).fillRect(p.x-4,p.y-15,8,19);this.decorations.fillStyle(0xa7c8b7).fillEllipse(p.x,p.y-16,18,6);}}
   for(const pile of this.garden.snapshot.travel.fallenFruit??[]){for(let i=0;i<Math.min(6,pile.count);i++)this.decorations.fillStyle(i%2?0x9a6951:0xb17a5b).fillEllipse(pile.x+(i%3-1)*5,pile.y+Math.floor(i/3)*3,5,3);}
   this.pathsArt.clear();paintGardenPaths(this.pathsArt,this.garden.paths,undefined,[],farmLayout.paths);
   for(const m of this.garden.snapshot.travel.crafting?.machines??[]){this.decorations.fillStyle(0x795c3b).fillRoundedRect(m.x-17,m.y-25,34,30,3);for(let y=0;y<3;y++)this.decorations.lineStyle(2,0xaf925d).lineBetween(m.x-16,m.y-22+y*10,m.x+16,m.y-22+y*10);if(m.ready)this.decorations.fillStyle(0xc8ad64).fillCircle(m.x+14,m.y-26,4);}
@@ -179,7 +180,15 @@ export class LivingBedController{
   if(this.mode==='notebook'){if(!this.garden.observations.length)this.text(content,'Még nincs feljegyzett felismerés.');for(const note of this.garden.observations){const card=document.createElement('article');card.className='garden-observation';card.dataset.observation=note.id;const title=document.createElement('h3');title.textContent=note.title;card.append(observationSketch(note.id),title);this.text(card,`${note.earlierDay}. nap → ${note.day}. nap`);this.text(card,note.text);content.append(card);}}
   if(this.mode==='inventory')this.renderInventory(content);
   if(this.mode==='plans'||this.mode==='simon')this.renderPlans(content,this.mode==='simon');
-  if(this.mode==='skills'){const p=this.garden.progress,card=document.createElement('article');card.className='skill-card';const heading=document.createElement('h3');heading.textContent=`Kertészkedés · ${p.level}. szint`;card.append(heading);const bar=document.createElement('progress');bar.max=p.required;bar.value=p.current;bar.setAttribute('aria-label','Kertészkedési jártasság');card.append(bar);this.text(card,p.level>=2?'A 2. szint elérve':`${p.current} / ${p.required} pont a következő szintig`);for(const mix of Object.values(bedMixes)){if(mix.level>p.level)continue;const name=document.createElement('strong');name.textContent=mix.name;card.append(name);this.text(card,mix.members.map(k=>bedKinds[k].name).join(' · '));}content.append(card);}
+  if(this.mode==='skills'){
+   const p=this.garden.progress,card=document.createElement('article');card.className='skill-card';const heading=document.createElement('h3');heading.textContent=`Kertészkedés · ${p.level}. szint`;card.append(heading);
+   const bar=document.createElement('progress');bar.max=p.required;bar.value=p.current;bar.setAttribute('aria-label','Kertészkedési jártasság');card.append(bar);this.text(card,p.level>=2?'A 2. szint elérve':`${p.current} / ${p.required} pont a következő szintig`);
+   for(let level=0;level<=p.level;level++){
+    const group=document.createElement('section');group.className='garden-skill-rewards';group.dataset.gardenSkillLevel=String(level);const title=document.createElement('h4');title.textContent=level===0?'Alaptársítások':`${level}. szint jutalma`;group.append(title);
+    for(const mix of Object.values(bedMixes).filter(m=>m.level===level)){const name=document.createElement('strong');name.textContent=mix.name;group.append(name);this.text(group,mix.members.map(k=>bedKinds[k].name).join(' · '));}card.append(group);
+   }
+   content.append(card);
+  }
 
   if(this.mode==='goals'){const goals=this.host.goals();if(!goals.length)this.text(content,'Jelenleg nincs történeti cél.');for(const goal of goals){const entry=document.createElement('article');entry.className='quest-card';this.text(entry,`${goal.done?'✓ ':''}${goal.title}`);if(goal.detail)this.text(entry,goal.detail);content.append(entry);}}
   if(this.mode==='people'){for(const [known,name]of [[this.garden.snapshot.travel.metAnnie,'Annie'],[this.garden.snapshot.travel.metLeo,'Leo'],[this.garden.snapshot.travel.metSimon,'Simon']] as const)if(known){const card=document.createElement('article');card.className='person-card';this.text(card,name);content.append(card);}}

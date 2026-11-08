@@ -2,6 +2,10 @@
 
 ## Változások a 0.2.0 óta — verzióemelés nélkül
 
+- 2026-11-08 — Mara tesztje: keskenyebb arc és finomabb fonat a sprite-on/portrén, áttetsző pickupablakok mögött látható vezető. Az átadó balra került, a kapuig teljes kerítésszakaszok férnek el, a rakodási útvonal követi az új helyet. Az éles kosár-/ikra-/kacsatojás-eladás kötelező bekötése dokumentálva; ezek még nem kerülnek a teszt készletébe.
+
+- 2026-11-08 — kertészeti teszt: a felhasználó döntése szerint 50 munkapont kell szintenként (50/100 összpont), betakarítási kapu nélkül. A Jártasságok fül külön csoportban mutatja az alaptársításokat és az elért szintek jutalmait. Az Ágyásjelölő deszkája és kétsoros szövege közös középpontot/dőlést használ; a felirat a belső szövegmezőben középre igazított. Az éles jártasságjelző eredeti animációjának későbbi megtartása dokumentálva, bal oldali elhelyezéssel.
+
 - 2026-11-08 — Mara tesztjének látványfrissítése: nagyobb, kidolgozottabb terményátadó, ládák és látható termények; varrott, redőzött vászontető. Nagyobb, térben forduló pickup részletes fülkével, platóval, ajtóval, kerekekkel és rakománnyal. A jobb oldali átmenő út helyett balra vezető út és fordulóöböl; rakodás után Mara megfordul és balra távozik. A normál eladás nem változik.
 
 - 2026-11-08 — külön Terményátadó · Mara fuvarja teszt: kilenc láda, látható termények, teherautó és rakodó/megszólítható sofőr, próbabeli Ismerősök, kézi fuvar/napléptetés és egyszeri fizetés. A normál eladás nem változik.

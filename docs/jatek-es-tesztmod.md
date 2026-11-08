@@ -5,7 +5,7 @@ Aktuális állapot: 2026-11-08. Játékverzió: 0.2.0; a legutóbbi javítások 
 ## Legújabb tesztek
 
 - **Terményátadó · Mara fuvarja:** külön teszt, kilenc láda, többféle készlet, kézi fuvar és napléptetés, megszólítható Mara és próbabeli Ismerősök-bejegyzés. A rendes eladóláda nem változott. [Útmutató](termenyatado-teszt.md).
-- **Kertészeti próba:** 20/40 pont alapú szintek, teljes betakarítási feltétel nélkül; mulcs és tárgyjelzések, javított növények, táblák, öntözés és úthelyfoglalás. [Útmutató](elo-agyas-teszt.md).
+- **Kertészeti próba:** 50/100 pont alapú szintek, teljes betakarítási feltétel nélkül; mulcs és tárgyjelzések, javított növények, táblák, öntözés és úthelyfoglalás. [Útmutató](elo-agyas-teszt.md).
 - **Frissítésismertető:** csak az új kertészkedés jövőbeli kiadási üzenetének előnézete. Aktív kertészeti teszt újratöltésekor friss próba és ismertető indul; a rendes készletkompenzáció még nincs végrehajtva. [Szöveg](kert-frissites-ismerteto.md).
 
 ## A rendes játék része
@@ -41,3 +41,9 @@ Ezek normál játékba emelésére még nincs jóváhagyás. A látványtesztben
 ## Mit csinálnak a fejlesztői tesztindítók?
 
 Az alkatrészes, mikroszkópos és Noah-kezdőpontok előkészített, memóriabeli másolatot indítanak a rendes játék mechanikáinak gyors kipróbálásához. Az életerő-előnézet csak megnyitja a közös segítséget. A normál farm és biztonsági másolata a teszt műveleteitől nem változik; kilépéskor a normál farm töltődik vissza.
+
+
+A kertészeti teszt jártasságjelzője ideiglenes. Amikor az új kertészkedés bekerül a normál játékba, az eredeti jelző arculata és animációja megmarad, bal oldali elhelyezéssel. A teszt Jártasságok füle külön választja a három alaptársítást és az elért szintek jutalmait.
+
+
+Mara legújabb arc-/fonat-/üvegezésjavítása és az átadó balra helyezése továbbra is tesztmód. Éles áruszállításkor a fonott kosár/Nádkosár, ikraadagok és kacsatojás eladását is be kell kötni a teljes meglévő eladási nyilvántartás alapján. A felhasználó kérésére ezek még nem kerülnek a teszt készletébe.

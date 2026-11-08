@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import {MarketTrial,marketProducts,marketName,marketPrice,type MarketCrate} from './market-trial';
 import {marketRoads,marketLoadingRoute,marketParking,marketTurn,marketDeparture} from './market-trial-route';
-import {MarketStandArt,MarketTruckArt,loadMarketIcons,marketStand} from './market-trial-art';
+import {MarketStandArt,MarketTruckArt,loadMarketIcons,marketStand,marketFenceGap} from './market-trial-art';
 import {MaraArt,maraPortrait} from './mara-art';
 import {FarmerArt} from './character';
 import {drawFarm} from './world-art';
@@ -31,13 +31,13 @@ export class MarketTrialScene extends Phaser.Scene{
   const source=prepareArtStudy(this.host.source),surface=document.querySelector<HTMLElement>('#game')!;source.farmName=this.host.source.farmName;
   surface.dataset.marketTrial='true';this.events.once('shutdown',()=>this.cleanup());
   try{await loadMarketIcons(this);if(this.disposed)return;
-   drawFarm(this,source.clearing,undefined,null,false,false,{from:-190,to:128});const road=this.add.graphics().setDepth(1);road.fillStyle(0x7f9b55).fillRect(-600,600,1800,440);drawPathNetwork(road,[...farmLayout.paths,...marketRoads]);
+   drawFarm(this,source.clearing,undefined,null,false,false,marketFenceGap);const road=this.add.graphics().setDepth(1);road.fillStyle(0x7f9b55).fillRect(-600,600,1800,440);drawPathNetwork(road,[...farmLayout.paths,...marketRoads]);
    this.stand=new MarketStandArt(this);this.stand.update(this.model.crates);this.truck=new MarketTruckArt(this);this.truck.root.setVisible(false);this.mara=new MaraArt(this);this.mara.root.setDepth(130).setVisible(false);this.carry=this.add.image(0,0,'market-product-apple').setDisplaySize(19,19).setDepth(135).setVisible(false);
-   this.actor=this.add.container(135,450).setDepth(120);this.avatar=new FarmerArt(this);this.avatar.equip('hand');this.actor.add(this.avatar.root);this.bubble=worldText(this,0,0,'…',{fontFamily:'Georgia',fontSize:'17px',color:'#f3e5b8',stroke:'#3c4e37',strokeThickness:2}).setOrigin(.5,1).setDepth(160).setVisible(false);
+   this.actor=this.add.container(70,450).setDepth(120);this.avatar=new FarmerArt(this);this.avatar.equip('hand');this.actor.add(this.avatar.root);this.bubble=worldText(this,0,0,'…',{fontFamily:'Georgia',fontSize:'17px',color:'#f3e5b8',stroke:'#3c4e37',strokeThickness:2}).setOrigin(.5,1).setDepth(160).setVisible(false);
    this.modal=new LivingGardenWindow((title,label)=>this.host.show(title,'',label),()=>{this.panelMode='';this.target=null;this.movement.clear();this.held.clear();});
    this.controls=document.createElement('div');this.controls.id='market-trial-controls';this.controls.append(this.button('Készlet · Tab',()=>this.openInventory('items'),'market-inventory'),this.button('Fuvar indítása',()=>this.dispatch(),'market-dispatch'),this.button('Következő nap',()=>this.nextDay(),'market-next-day'));document.querySelector('#app')!.append(this.controls);
    window.addEventListener('keydown',this.onKey,true);window.addEventListener('keyup',this.onKeyUp,true);window.addEventListener('click',this.onClick,true);window.addEventListener('pointerdown',this.onControlDown,true);window.addEventListener('pointerup',this.onControlUp,true);window.addEventListener('pointercancel',this.onControlUp,true);window.addEventListener('blur',this.release);document.addEventListener('visibilitychange',this.release);
-   this.input.on('pointerdown',(p:Phaser.Input.Pointer)=>{if(this.dialog.open)return;const point=this.cameras.main.getWorldPoint(p.x,p.y);if(this.mara.root.visible&&Math.hypot(point.x-this.mara.root.x,point.y-this.mara.root.y+20)<30&&this.nearMara())this.talk();else if(point.x>=-190&&point.x<=128&&point.y>=395&&point.y<=600){if(this.nearStand())this.openStand();}else this.target=point;});
+   this.input.on('pointerdown',(p:Phaser.Input.Pointer)=>{if(this.dialog.open)return;const point=this.cameras.main.getWorldPoint(p.x,p.y);if(this.mara.root.visible&&Math.hypot(point.x-this.mara.root.x,point.y-this.mara.root.y+20)<30&&this.nearMara())this.talk();else if(point.x>=marketStand.left-20&&point.x<=marketStand.right+25&&point.y>=395&&point.y<=600){if(this.nearStand())this.openStand();}else this.target=point;});
    this.scale.on('resize',this.fit,this);this.fit();this.ready=true;this.hud();
   }catch(error){this.host.show('A próba nem indult el.',error instanceof Error?error.message:'Próbáld újra.','');const panel=document.querySelector<HTMLElement>('#research-panel')!;panel.hidden=false;panel.replaceChildren(this.button('Kilépés a tesztmódból',()=>this.exit(),'market-exit'));}
  }
