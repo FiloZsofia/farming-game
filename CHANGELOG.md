@@ -1,5 +1,16 @@
 # Változások
 
+## 0.3.0 — 2026-11-08
+
+- Az új kertészkedés a rendes játék része: szabad ágyáselhelyezés, kilenc helyes társítások, ajánlott arányok szabad összeállítással, egész ágyás öntözése és mulcsozása, utánvetés, megfigyelések és maggyűjtés. A növények legfeljebb négy gondozott nap alatt fejlődnek ki.
+- Kertészkedési szintenként 50 munkapont; a három alaptársítás után Epres méhlegelő, majd Esti teakert nyílik meg. A szintünneplés megmarad; az eredeti függőleges jártasságjelző balra került.
+- Társításos, megnyitáskor csukott Magkatalógus, valódi készlet és másnapi magposta. A megszokott Készlet és Postaláda megjelenése megmarad. Az első küldetés az ágyás kialakításán keresztül vezet Leo hat vadvirágmagjának elültetéséhez.
+- Áthelyezhető, kétsoros Ágyásjelölő; társítás választásáig üres. Öntözőrendszerenként egy teljes ágyás reggeli locsolása, vízpermettel és talajszínváltással. A Komposztáló mulcsa a Készletben marad; egy adag egy ágyásra elég.
+- Ösvénykártya a Tervrajzok között: kő, fa és a meglévő megjelenésű földút, egérrel alakítható vonal, visszafelé javítás és Bontóvassal anyag-visszatérítés. A Tárolóláda tervrajzát Simon 160 goldért árulja.
+- A régi eladóláda helyett kétoldalas déli terményátadó, kilenc látható árus ládával. Mara naponta 2:00-kor érkezik, kiszáll, rakodik, majd balra távozik. A bevétel egyszer jár, újratöltés és korai lefekvés esetén is. Minden korábbi termény, a Nádkosár, az eltérő értékű ikrák és a kacsatojás továbbra is eladható.
+- Biztonságos átállás a 19-es mentésformátumra: a korábbi ültetésekből visszajárnak a magok és az érett termések; az eladóládában váró áru visszakerül a Készletbe. A folyamatban lévő vadvirágültetés magként jár vissza. Meglévő készlet, rendelés, történet és megszerzett jártasság megmarad; a régi öntözők elcsomagolva várják az új helyüket. Egyszeri frissítésismertető fogadja a korábbi farmokat.
+- Új játék: 3 retek-, 3 borsó-, 3 saláta- és 3 sárgarépamag, Leo külön adott hat vadvirágmagjával. Az elkülönített tesztmódok továbbra sem módosítják a mentett farmot.
+
 ## Változások a 0.2.0 óta — verzióemelés nélkül
 
 - 2026-11-08 — Mara tesztje: valóban látható fülkebelső ülésekkel, fejtámlával, műszerfallal, kormánnyal, rádióval és visszapillantóval; kilengő levél-illatosító és visszafogott hippis kárpit/matricák. A belső rajz az ablaknyílásokban marad, a túloldali üveg nem látszik át a tetőn.

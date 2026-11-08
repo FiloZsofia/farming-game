@@ -5,7 +5,8 @@ export type QuestEntry={id:string;title:string;detail:string;done:boolean};
 export function questEntries(r:Research,garden:Garden,_day:number,_elapsed:number,forest?:Forest):QuestEntry[]{
  const entries:QuestEntry[]=[];
  if(!r.gifted)return entries;
- entries.push({id:'plant-flowers',title:'Ültess el 6 tasak vadvirágmagot',detail:`Elültetve: ${r.flowers.length} / 6.`,done:r.flowers.length===6});
+ if(r.inBeds)entries.push({id:'prepare-bed',title:'Alakíts ki egy ágyást',detail:'',done:!!r.bedPrepared||r.flowers.length>0});
+ entries.push({id:'plant-flowers',title:r.inBeds?'Ültess el 6 vadvirágmagot':'Ültess el 6 tasak vadvirágmagot',detail:`Elültetve: ${r.flowers.length} / 6.`,done:r.flowers.length===6});
  if(r.flowers.length===6){
   const progress=Math.min(...r.flowers.map(f=>Math.min(FLOWER_DAYS,f.growth+(garden.plots.get(tileKey(f))?.watered?1:0))));
   const bloomed=r.flowers.every(f=>f.growth>=FLOWER_DAYS);

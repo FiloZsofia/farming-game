@@ -1,14 +1,14 @@
 import {setsFruit,RIPE_FRUIT_DAYS,type PollinationContext} from './pollination';
-// Experimental rules only. No production crop rules or save schema are changed.
+// Shared bed rules used by the farm and the isolated gardening trial.
 export type BedKind='radish'|'lettuce'|'pea'|'thyme'|'wildflower'|'oregano'|'sage'|'tomato'|'pepper'|'cucumber'|'strawberry'|'carrot'|'calendula'|'borage'|'chamomile'|'lemonBalm';
 export type BedMix='kitchen'|'pollinator'|'herbs'|'strawberry'|'tea';
-export type BedPlant={kind:BedKind;growth:number;flowering:boolean;flowerDays:number;removed:boolean;seedTaken:boolean;cycle?:number;fruitSet?:boolean;ripeDays?:number;aftermath?:'empty'|'overripe'};
+export type BedPlant={questFlower?:boolean;kind:BedKind;growth:number;flowering:boolean;flowerDays:number;removed:boolean;seedTaken:boolean;cycle?:number;fruitSet?:boolean;ripeDays?:number;aftermath?:'empty'|'overripe'};
 export type LivingBed={day:number;prepared:boolean;mix:BedMix|null;moisture:number;mulched:boolean;evaporation:number;weather:'sunny'|'rain';plants:BedPlant[];basket:Partial<Record<BedKind,number>>;seeds:number;seedStock:Record<BedKind,number>;unwateredDays?:number;layout?:BedKind[]};
 export const bedKinds:Record<BedKind,{name:string;days:number;perennial:boolean}>={
- radish:{name:'Retek',days:3,perennial:false},lettuce:{name:'Saláta',days:2,perennial:false},pea:{name:'Borsó',days:6,perennial:true},thyme:{name:'Kakukkfű',days:3,perennial:true},wildflower:{name:'Vadvirág',days:3,perennial:true},
- oregano:{name:'Szurokfű',days:3,perennial:true},sage:{name:'Zsálya',days:3,perennial:true},tomato:{name:'Paradicsom',days:6,perennial:true},pepper:{name:'Paprika',days:6,perennial:true},cucumber:{name:'Uborka',days:6,perennial:true},strawberry:{name:'Eper',days:6,perennial:true},carrot:{name:'Sárgarépa',days:6,perennial:false},calendula:{name:'Körömvirág',days:3,perennial:true},borage:{name:'Borágó',days:3,perennial:true},chamomile:{name:'Kamilla',days:3,perennial:true},lemonBalm:{name:'Citromfű',days:3,perennial:true}
+ radish:{name:'Retek',days:3,perennial:false},lettuce:{name:'Saláta',days:2,perennial:false},pea:{name:'Borsó',days:4,perennial:true},thyme:{name:'Kakukkfű',days:3,perennial:true},wildflower:{name:'Vadvirág',days:3,perennial:true},
+ oregano:{name:'Szurokfű',days:3,perennial:true},sage:{name:'Zsálya',days:3,perennial:true},tomato:{name:'Paradicsom',days:4,perennial:true},pepper:{name:'Paprika',days:4,perennial:true},cucumber:{name:'Uborka',days:4,perennial:true},strawberry:{name:'Eper',days:4,perennial:true},carrot:{name:'Sárgarépa',days:4,perennial:false},calendula:{name:'Körömvirág',days:3,perennial:true},borage:{name:'Borágó',days:3,perennial:true},chamomile:{name:'Kamilla',days:3,perennial:true},lemonBalm:{name:'Citromfű',days:3,perennial:true}
 };
-// Trial growth times reuse the existing fast herb/pea timings, not production balance.
+// Growth is two to four tended days, as agreed for the first public bed release.
 export const bedMixes:Record<BedMix,{name:string;detail:string;level:number;members:BedKind[];plants:BedKind[]}>={
  kitchen:{name:'Korai veteményes',detail:'A magas borsó mögött alacsony levelek és gyökérzöldségek.',level:0,members:['pea','lettuce','carrot'],plants:['carrot','lettuce','pea','carrot','lettuce','pea','carrot','lettuce','pea']},
  pollinator:{name:'Virágos retekágyás',detail:'Virágzó szegély, korán felszabaduló retekhelyek.',level:0,members:['wildflower','radish'],plants:['wildflower','wildflower','wildflower','radish','radish','radish','wildflower','wildflower','wildflower']},

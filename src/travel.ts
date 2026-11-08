@@ -1,3 +1,4 @@
+import type {Homestead} from './homestead-state';
 import type {NoahTestState} from './noah-story';
 import {validNoahChapter} from './noah-validation';
 import {validStoryEvents,type StoryEvent} from './story-archive';
@@ -9,7 +10,7 @@ import {createResearch,validResearch,type Research} from './research';
 import {createEstate,validEstate,type Estate} from './estate';
 import {validMorningSale,type MorningSale} from './morning-report';
 import {villageLayout} from './village-layout';
-export type Travel={noah?:NoahTestState;storyEvents?:StoryEvent[];fallenFruit?:{x:number;y:number;count:number}[];pollinationObservation?:{day:number};metSimon?:boolean;crafting?:Crafting;storyEndSeen?:boolean;forest?:Forest;homeVisited?:boolean;weatherSeed?:number;research:Research;estate:Estate;picked:Record<string,number>;morning:string|null;metAnnie:boolean;metLeo:boolean;sale:MorningSale|null};
+export type Travel={homestead?:Homestead;noah?:NoahTestState;storyEvents?:StoryEvent[];fallenFruit?:{x:number;y:number;count:number}[];pollinationObservation?:{day:number};metSimon?:boolean;crafting?:Crafting;storyEndSeen?:boolean;forest?:Forest;homeVisited?:boolean;weatherSeed?:number;research:Research;estate:Estate;picked:Record<string,number>;morning:string|null;metAnnie:boolean;metLeo:boolean;sale:MorningSale|null};
 export const createTravel=():Travel=>({storyEvents:[],research:createResearch(),estate:createEstate(),picked:{},morning:null,metAnnie:false,metLeo:false,sale:null});
 export function validTravel(value:unknown,day:number,legacy=false):value is Travel{
  if(!value||typeof value!=='object'||!validStoryEvents((value as Travel).storyEvents,day))return false;const picked=(value as Travel).picked;

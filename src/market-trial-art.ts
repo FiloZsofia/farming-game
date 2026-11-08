@@ -1,20 +1,20 @@
 import {paintCabInterior} from './market-cab-interior';
 import Phaser from 'phaser';
+import {farmProducts,farmProductIcon,type FarmProduct} from './farm-products';
 import {itemIcon} from './item-icons';
-import {marketProducts,type MarketCrate} from './market-trial';
-export const marketStandOffset=-65;
-export const marketStand={left:-170+marketStandOffset,right:98+marketStandOffset,top:469,bottom:598};
-export const marketFenceGap={from:-190+marketStandOffset,to:128+marketStandOffset};
+import {marketProducts} from './market-trial';
+export {marketStandOffset,marketStand,marketFenceGap} from './market-site';
+import {marketStandOffset} from './market-site';
 export const marketCratePoint=(i:number)=>({x:-125+(i%3)*83,y:486+Math.floor(i/3)*36});
-export async function loadMarketIcons(scene:Phaser.Scene){await Promise.all(marketProducts.map(async kind=>{const key=`market-product-${kind}`;if(scene.textures.exists(key))return;const svg=itemIcon(kind);svg.setAttribute('width','72');svg.setAttribute('height','72');const source='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(svg)),img=new Image();await new Promise<void>((resolve,reject)=>{img.onload=()=>resolve();img.onerror=()=>reject(new Error('A terményikon nem tölthető be.'));img.src=source;});scene.textures.addImage(key,img);}));}
+export async function loadMarketIcons(scene:Phaser.Scene,production=false){await Promise.all((production?farmProducts:marketProducts).map(async kind=>{const key=`market-product-${kind}`;if(scene.textures.exists(key))return;const svg=itemIcon(production?farmProductIcon(kind as FarmProduct):kind as Parameters<typeof itemIcon>[0]);svg.setAttribute('width','72');svg.setAttribute('height','72');const source='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(svg)),img=new Image();await new Promise<void>((resolve,reject)=>{img.onload=()=>resolve();img.onerror=()=>reject(new Error('A terményikon nem tölthető be.'));img.src=source;});scene.textures.addImage(key,img);}));}
 export class MarketStandArt{
  readonly root:Phaser.GameObjects.Container;private contents:Phaser.GameObjects.Container;
- constructor(private scene:Phaser.Scene){
+ constructor(private scene:Phaser.Scene,private twoSided=false){
   this.root=scene.add.container(marketStandOffset,0).setDepth(50);const g=scene.add.graphics();this.root.add(g);
   g.fillStyle(0x293d2d,.24).fillEllipse(-26,595,320,73);
   // Weathered planked counter, raised tiers, substantial posts and diagonal braces.
-  g.fillStyle(0x503c2c).fillRoundedRect(-174,482,276,115,4);
-  for(let i=0;i<18;i++){const x=-171+i*15;g.fillStyle(i%3===0?0x8c6b44:i%2?0x765735:0x80613e).fillRect(x,485,14,107);g.lineStyle(1,0xb08b58,.35).lineBetween(x+3,490,x+3,583);g.lineStyle(1,0x4e392a,.6).lineBetween(x+11,510,x+11,576);}
+  if(!twoSided)g.fillStyle(0x503c2c).fillRoundedRect(-174,482,276,115,4);
+  for(let i=0;i<(twoSided?0:18);i++){const x=-171+i*15;g.fillStyle(i%3===0?0x8c6b44:i%2?0x765735:0x80613e).fillRect(x,485,14,107);g.lineStyle(1,0xb08b58,.35).lineBetween(x+3,490,x+3,583);g.lineStyle(1,0x4e392a,.6).lineBetween(x+11,510,x+11,576);}
   g.fillStyle(0xb4925c).fillRect(-176,587,280,7);g.fillStyle(0x4b3a2c).fillRect(-171,594,269,5);
   for(const x of [-174,96]){
    g.fillStyle(0x513e2c).fillRect(x,405,9,196);g.fillStyle(0x9d7c4a).fillRect(x,405,5,192);g.fillStyle(0xc3a16b).fillRect(x+1,411,1,176);
@@ -37,6 +37,7 @@ export class MarketStandArt{
   roof.lineStyle(3,0x536349).lineBetween(-182,415,117,400);roof.lineStyle(1,0xe2d2a6,.7).lineBetween(-182,414,117,399);
   // Tie ropes visibly fasten the fabric to the wooden uprights.
   for(const [x,y]of [[-172,454],[99,441]]){roof.lineStyle(1.2,0xd6c398).lineBetween(x,y,x+3,y+17);roof.strokeEllipse(x+2,y+11,6,4);}
+  if(twoSided){g.fillStyle(0x5f472f).fillRect(-176,466,280,4);g.fillStyle(0xb99b67).fillPoints([{x:-178,y:461},{x:103,y:461},{x:106,y:466},{x:-178,y:466}],true);g.lineStyle(1,0xd3b780).lineBetween(-175,462,101,462);}
   this.contents=scene.add.container(0,0);this.root.add(this.contents);
   // Each crate layers its fruit behind the front rim, not over the slats.
   for(let i=0;i<9;i++)this.drawCrate(i);
@@ -49,7 +50,7 @@ export class MarketStandArt{
   g.lineStyle(3,0xc4a06a).lineBetween(p.x-37,p.y-15,p.x+35,p.y-21);
   g.lineStyle(3,0xa47b49).lineBetween(p.x-37,p.y-15,p.x-35,p.y+18);g.lineBetween(p.x+35,p.y-21,p.x+39,p.y+12);
  }
- update(crates:readonly (MarketCrate|null)[]){
+ update(crates:readonly ({product:string;count:number}|null)[]){
   // Keep the frames; replace only produce and their foreground rims.
   this.root.getAll().filter(child=>child.name==='market-produce').forEach(child=>child.destroy());
   const layer=this.scene.add.container(0,0).setName('market-produce');this.root.add(layer);
@@ -69,7 +70,7 @@ export class MarketStandArt{
 type Vertex={x:number;y:number;z:number};
 type Face={vertices:Vertex[];color:number;edge?:number;alpha?:number};
 export class MarketTruckArt{
- readonly root:Phaser.GameObjects.Container;private g:Phaser.GameObjects.Graphics;private front:Phaser.GameObjects.Graphics;private interior:Phaser.GameObjects.Graphics;private windowMask:Phaser.GameObjects.Graphics;private doorArt:Phaser.GameObjects.Graphics;private sway=0;private driver:Phaser.GameObjects.Graphics;private glass:Phaser.GameObjects.Graphics;private cargo:Phaser.GameObjects.Container;private crates:readonly MarketCrate[]=[];
+ readonly root:Phaser.GameObjects.Container;private g:Phaser.GameObjects.Graphics;private front:Phaser.GameObjects.Graphics;private interior:Phaser.GameObjects.Graphics;private windowMask:Phaser.GameObjects.Graphics;private doorArt:Phaser.GameObjects.Graphics;private sway=0;private driver:Phaser.GameObjects.Graphics;private glass:Phaser.GameObjects.Graphics;private cargo:Phaser.GameObjects.Container;private crates:readonly {product:string;count:number}[]=[];
  constructor(private scene:Phaser.Scene){this.root=scene.add.container(-700,695).setDepth(70);this.g=scene.add.graphics();this.cargo=scene.add.container(0,0);this.front=scene.add.graphics();this.interior=scene.add.graphics();this.doorArt=scene.add.graphics();this.windowMask=scene.add.graphics().setVisible(false);this.driver=scene.add.graphics();this.glass=scene.add.graphics();this.root.add([this.g,this.cargo,this.front,this.interior,this.driver,this.doorArt,this.glass]);const mask=this.windowMask.createGeometryMask();this.interior.setMask(mask);this.driver.setMask(mask);this.root.once('destroy',()=>{this.windowMask.destroy();mask.destroy();});this.paint(false,0);}
  paint(door:boolean,wheel:number,heading=0,moving=false,time=0){
   const g=this.g,c=Math.cos(heading),s=Math.sin(heading),faces:Face[]=[],frontFaces:Face[]=[],driverFaces:Face[]=[],glassFaces:Face[]=[],doorFaces:Face[]=[];let cab=false,doorLayer=false;
@@ -164,6 +165,6 @@ export class MarketTruckArt{
   }
   this.crates.forEach((_,i)=>{const p=project({x:-100+i%3*40,y:-21+Math.floor(i/3)*21,z:63});for(let j=0;j<3;j++)(this.cargo.list[i*3+j] as Phaser.GameObjects.Image).setPosition(p.x+(j-1)*9*c,p.y+(j-1)*9*s*.48);});
  }
- setCargo(crates:readonly MarketCrate[]){this.crates=[...crates];this.cargo.removeAll(true);for(const crate of crates)for(let j=0;j<3;j++)this.cargo.add(this.scene.add.image(0,0,`market-product-${crate.product}`).setDisplaySize(15,15));}
+ setCargo(crates:readonly {product:string;count:number}[]){this.crates=[...crates];this.cargo.removeAll(true);for(const crate of crates)for(let j=0;j<3;j++)this.cargo.add(this.scene.add.image(0,0,`market-product-${crate.product}`).setDisplaySize(15,15));}
  destroy(){this.root.destroy(true);}
 }

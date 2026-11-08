@@ -32,4 +32,4 @@ export function consumeReed(s:Snapshot,amount:number){if(s.travel.crafting)s.tra
 export function packMachine(s:Snapshot,index:number){const machine=s.travel.crafting?.machines[index];if(!machine||machine.started!==null||machine.ready)return null;const n=structuredClone(s);if(machine.kind==='basket'){if(n.travel.estate.produce.basket>=999999)return null;n.travel.estate.produce.basket++;}else{if(n.travel.crafting!.items[machine.kind]>=999999)return null;n.travel.crafting!.items[machine.kind]++;}n.travel.crafting!.machines.splice(index,1);return n;}
 export function cutCarriedReed(s:Snapshot){if(!s.travel.estate.goods.reed||(s.travel.crafting?.items.reed??0)>=999999)return null;const n=structuredClone(s);n.travel.crafting??=createCrafting();n.travel.estate.goods.reed--;n.travel.crafting.items.reed++;return n;}
 
-export const IRRIGATION_DESCRIPTION='Egy sorban legfeljebb 6 növényt öntöz meg: a két oldalán 3–3 mezőt.';
+export const IRRIGATION_DESCRIPTION='Egy teljes ágyást öntöz meg minden reggel.';

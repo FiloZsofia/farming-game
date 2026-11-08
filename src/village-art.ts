@@ -1,3 +1,4 @@
+import {marketRoads} from './market-trial-route';
 import {worldText} from './world-text';
 import {forageReady} from './travel';
 import {drawPathNetwork} from './path-art';
@@ -26,7 +27,7 @@ export function drawVillage(scene:Phaser.Scene){
  for(let i=0;i<9200;i++){const x=FOREST_LEFT+random()*(1200-FOREST_LEFT),y=600+random()*(WORLD_HEIGHT-600);rect(x,y,1+random()*2,1,[0x4f783f,0x9bb669,0xb1bf72][i%3],.6);}
  // Northern woodland backdrop continues beyond the farm's left edge, instead of blank green.
  for(let i=0;i<4700;i++){const x=FOREST_LEFT+random()*(-400-FOREST_LEFT),y=farmBounds.top+random()*(600-farmBounds.top);rect(x,y,1+random()*2,1,[0x4f783f,0x9bb669,0xb1bf72][i%3],.6);}
- paintForest(g,random,()=>drawPathNetwork(g,villagePaths),canopy);
+ paintForest(g,random,()=>drawPathNetwork(g,[...villagePaths,...marketRoads]),canopy,woodlandTreeClear);
  oval(479,1089,374,240,0x83915d);oval(476,1080,360,230,0xc3b697);
  for(let y=977;y<1183;y+=10)for(let x=298+(y%20?0:8);x<655;x+=17){if(((x-476)/176)**2+((y-1080)/109)**2>1)continue;rect(x,y,14,7,(x+y)%3?0xcabb9a:0xaeaa8e);line(x+2,y+1,x+12,y+1,0xdfcdae);}
  // A shallow stone fountain and a few pots give the square a quiet centre.

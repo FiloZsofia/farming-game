@@ -1,3 +1,4 @@
+import {validHomestead} from './homestead-state';
 import {birdhouseVisible} from './birdhouse-placement';
 import {southBlocked,inNoahSouth} from './south-forest-terrain';
 import {pollinationDependent,RIPE_FRUIT_DAYS} from './pollination';
@@ -20,16 +21,16 @@ import {createGardenSkill,migrateGardenSkill,validGardenSkill,gardeningLevel,rew
 import {blocked} from './movement';
 import { farmLayout,farmBounds } from './layout';
 export const DB_NAME='erdoszeli-birtok';
-export type Snapshot={version:18;travel:Travel;skill:GardenSkill;story:FarmStory;clearing:Clearing;farmName:string|null;farmerName:string|null;orders:Orders;economy:Economy;produce:Garden['produce'];player:{x:number;y:number};clock:Clock;seeds:Garden['seeds'];plots:[string,Plot][]};
+export type Snapshot={version:18|19;travel:Travel;skill:GardenSkill;story:FarmStory;clearing:Clearing;farmName:string|null;farmerName:string|null;orders:Orders;economy:Economy;produce:Garden['produce'];player:{x:number;y:number};clock:Clock;seeds:Garden['seeds'];plots:[string,Plot][]};
 export function snapshot(player:{x:number;y:number},clock:Clock,garden:Garden,economy:Economy=createEconomy(),orders:Orders=createOrders(),farmName:string|null=null,clearing:Clearing=createClearing(),story:FarmStory=createStory(),skill:GardenSkill=createGardenSkill(),farmerName:string|null=null,travel:Travel=createTravel()):Snapshot{
- return structuredClone({version:18,travel,skill,story,clearing,farmName,farmerName,orders,economy,produce:garden.produce,player:{x:player.x,y:player.y},clock,seeds:garden.seeds,plots:[...garden.plots]});
+ return structuredClone({version:travel.homestead?19:18,travel,skill,story,clearing,farmName,farmerName,orders,economy,produce:garden.produce,player:{x:player.x,y:player.y},clock,seeds:garden.seeds,plots:[...garden.plots]});
 }
 const finite=(n:unknown):n is number=>typeof n==='number'&&Number.isFinite(n);
 export function validSnapshot(value:unknown):value is Snapshot{return validSnapshotRecord(value,false);}
 function validSnapshotRecord(value:unknown,legacy=false):value is Snapshot{
  if(!value||typeof value!=='object')return false;
  const v=value as Snapshot;
- if(v.version!==(legacy?17:18)||!validTravel(v.travel,v.clock?.day,legacy)||!validGardenSkill(v.skill)||!validStory(v.story)||!validClearing(v.clearing)||!v.player||!finite(v.player.x)||!finite(v.player.y)||(v.travel.noah?.upgraded&&inNoahSouth(v.player.x,v.player.y)?southBlocked(v.player.x,v.player.y,v.travel.noah):worldBlocked(v.player.x,v.player.y)))return false;
+ if(v.version!==(legacy?17:v.travel?.homestead?19:18)||v.travel?.homestead!==undefined&&!validHomestead(v.travel.homestead,v.clock?.day)||!validTravel(v.travel,v.clock?.day,legacy)||!validGardenSkill(v.skill)||!validStory(v.story)||!validClearing(v.clearing)||!v.player||!finite(v.player.x)||!finite(v.player.y)||(v.travel.noah?.upgraded&&inNoahSouth(v.player.x,v.player.y)?southBlocked(v.player.x,v.player.y,v.travel.noah):worldBlocked(v.player.x,v.player.y)))return false;
  if(!validEconomy(v.economy)||v.economy.lastSale&&v.economy.lastSale.day>=v.clock?.day)return false;
  if(!validOrders(v.orders)||crops.some(k=>{const c=k as keyof Garden['seeds'];return !v.seeds||!Number.isSafeInteger(v.seeds[c])||v.seeds[c]+v.orders.pending[c]+v.orders.mailbox[c]>999999;}))return false;
  if(v.farmName!==null&&(typeof v.farmName!=='string'||normalizeFarmName(v.farmName)!==v.farmName))return false;
@@ -59,11 +60,12 @@ function validSnapshotRecord(value:unknown,legacy=false):value is Snapshot{
   if(!Number.isSafeInteger(plot.growth)||plot.growth<0||plot.growth>1000||typeof plot.regrowing!=='boolean'||(plot.regrowing&&!['pea','strawberry','honeyberry','blueberry'].includes(plot.crop??''))||(!plot.crop&&plot.growth!==0))return false;
  }
  const storedBirdhouses=(v.skill.chests?.placed??[]).reduce((sum,c)=>sum+(c.items['special:birdhouse']??0),0);if(storedBirdhouses!==(v.skill.birdhouseStored?1:0)||v.skill.birdhouseStored&&(!v.story.giftReceived||v.story.birdhouse!==null))return false;
- if(v.travel.research.flowers.some(f=>!v.plots.some(([key,p])=>key===tileKey(f)&&p.crop===null)))return false;
+ if(!v.travel.homestead&&v.travel.research.flowers.some(f=>!v.plots.some(([key,p])=>key===tileKey(f)&&p.crop===null)))return false;
  return true;
 }
 // Migrate known formats without discarding the original backup until a v18 write succeeds.
 export function decodeSnapshot(value:unknown):Snapshot|null{
+ if(value&&typeof value==='object'&&'version' in value&&value.version===19){if(!validSnapshot(value))return null;return structuredClone(value);}
  if(value&&typeof value==='object'&&'version' in value&&Number(value.version)>=1&&Number(value.version)<=18){const v=value as Snapshot;const accounts=[v.travel?.estate?.produce,v.travel?.estate?.shipping,v.travel?.estate?.roe,v.travel?.sale?.extras,v.economy?.lastSale?.extras];if(accounts.some(c=>c&&typeof c==='object'&&!Array.isArray(c)&&c.basket===undefined)){const n=structuredClone(v);for(const c of [n.travel?.estate?.produce,n.travel?.estate?.shipping,n.travel?.estate?.roe,n.travel?.sale?.extras,n.economy?.lastSale?.extras])if(c&&typeof c==='object'&&!Array.isArray(c)&&c.basket===undefined)c.basket=0;return decodeSnapshot(n);}}
 
 
@@ -144,7 +146,7 @@ function validCatalogue(value:unknown):value is FarmCatalogue{
 function summary(id:string,data:Snapshot):FarmSummary{return {id,name:data.farmName??'Névtelen farm',farmerName:data.farmerName,day:data.clock.day,gold:data.economy.gold,level:gardeningLevel(data.skill),updatedAt:Date.now()};}
 function decodePair(active:unknown,backup:unknown){
  const decoded=decodeSnapshot(active);if(decoded)return {data:decoded,recovered:false,raw:active};
- if(active&&typeof active==='object'&&'version' in active&&(!Number.isInteger(active.version)||Number(active.version)<1||Number(active.version)>18))throw new Error('Ez a mentés másik játékverzióhoz tartozik. Megőriztem, nem írtam felül.');
+ if(active&&typeof active==='object'&&'version' in active&&(!Number.isInteger(active.version)||Number(active.version)<1||Number(active.version)>19))throw new Error('Ez a mentés másik játékverzióhoz tartozik. Megőriztem, nem írtam felül.');
  const previous=decodeSnapshot(backup);if(previous)return {data:previous,recovered:true,raw:backup};
  throw new Error('A mentés nem olvasható. Megőriztem az eredetit; nem indítok rá új játékot.');
 }

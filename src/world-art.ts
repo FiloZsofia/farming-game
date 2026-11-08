@@ -6,7 +6,7 @@ import {createGarden,type Garden} from './gardening';
 import {farmLayout as layout,farmBounds} from './layout';
 
 // Original procedural artwork. World anchors stay shared with interaction/collision.
-export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),garden:Garden=createGarden(),birdhouse:{x:number;y:number}|null=null,study=false,starterBeds=true,fenceGap?:{from:number;to:number}){
+export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),garden:Garden=createGarden(),birdhouse:{x:number;y:number}|null=null,study=false,starterBeds=true,fenceGap?:{from:number;to:number},shipping=true){
  let g=scene.add.graphics();const ground=g;
  let seed=71;const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
  const rect=(x:number,y:number,w:number,h:number,c:number,a=1)=>{g.fillStyle(study?studyColor(c):c,a);g.fillRect(Math.round(x),Math.round(y),w,h);};
@@ -66,7 +66,7 @@ export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),g
  poly([j.x+11,j.y+5,j.x+13,j.y+5,j.x+14,j.y+12,j.x+12,j.y+11,j.x+11,j.y+12],0xad5a4a);
  line(j.x+21,j.y+2,j.x+24,j.y+6,0x374d4c,1.5);rect(j.x+20,j.y+1,2,2,0xe8d2a2);
  // Shipping crate: open dark interior, thick rim, separate front/side boards and ironwork.
- const box=layout.shipping,x=box.x,y=box.y;
+ if(shipping){const box=layout.shipping,x=box.x,y=box.y;
  oval(x+18,y+25,41,11,0x273c32,.3);
  poly([x,y+5,x+25,y+2,x+32,y+8,x+32,y+23,x+7,y+27,x,y+21],0x4a382a);
  poly([x+25,y+5,x+32,y+9,x+32,y+23,x+25,y+20],0x745133);
@@ -80,6 +80,7 @@ export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),g
  line(x+28,y+13,x+30,y+14,0x302c24,2);
  rect(x+9,y+13,11,8,0xf0dfb0);line(x+10,y+20,x+18,y+20,0xbda16d);
  oval(x+14,y+17,5,4,0xba6054);line(x+14,y+15,x+12,y+12,0x527346,1.5);line(x+14,y+15,x+17,y+12,0x527346,1.5);
+ }
  // Seed catalogue: an upright green illustrated cover, cream page edges and wooden stand.
  const c=layout.catalog;
  oval(c.x+9,c.y+14,30,6,0x283c2e,.25);

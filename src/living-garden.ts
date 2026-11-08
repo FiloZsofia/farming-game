@@ -1,8 +1,10 @@
+import {weatherOnDay} from './weather';
+import {extraBedKinds,sharedBedCrops,savedBedCopy,type SavedGarden} from './homestead-state';
 import type {GardenPathPiece} from './garden-path';
 import {addFruitFall,pickFallenFruit} from './fallen-fruit';
 import {consumeFood,isFood} from './food';
 import type {Crop} from './gardening';
-// Disposable garden session. Never serialize these fields into a production save.
+// Shared garden model. Trial budgets and real persisted inventories remain separate.
 import type {Snapshot} from './storage';
 import {createCrafting,compostAction,advanceCrafting} from './crafting';
 import {gainGardening,createGardenSkill} from './gardening-skill';
@@ -15,18 +17,23 @@ export type TrialBed={id:number;area:LivingBedArea;state:LivingBed;marker:Garden
 export const trialSeedPrices:Record<BedKind,number>={radish:5,lettuce:5,pea:15,thyme:5,wildflower:5,oregano:5,sage:5,tomato:15,pepper:15,cucumber:15,strawberry:20,carrot:10,calendula:5,borage:5,chamomile:5,lemonBalm:5};
 export const TRIAL_GARDEN_LEVEL_POINTS=50;
 export class LivingGarden{
+ private persistent=false;private saved:SavedGarden|null=null;
  snapshot:Snapshot;seeds=emptyBedSeeds();pending=emptyBedSeeds();mailbox=emptyBedSeeds();basket=emptyBedSeeds();beds:TrialBed[]=[];paths:GardenPathPiece[]=[];packedMarkers:number[]=[];nextId=1;completedCycles=0;weather:'sunny'|'rain'='sunny';observations:GardenObservation[]=[];observationMemory=new Map<number,{dryDay?:number;waterDay?:number;blossoms:Record<number,{day:number;cycle:number}>}>();
- constructor(snapshot:Snapshot){this.snapshot=structuredClone(snapshot);this.snapshot.skill=createGardenSkill();this.snapshot.travel.crafting??=createCrafting();}
- get level(){return this.snapshot.skill.xp>=2*TRIAL_GARDEN_LEVEL_POINTS?2:this.snapshot.skill.xp>=TRIAL_GARDEN_LEVEL_POINTS?1:0;}
- get progress(){const level=this.level;return {level,current:level>=2?TRIAL_GARDEN_LEVEL_POINTS:this.snapshot.skill.xp-level*TRIAL_GARDEN_LEVEL_POINTS,required:TRIAL_GARDEN_LEVEL_POINTS};}
+ constructor(snapshot:Snapshot,persistent=false){this.snapshot=structuredClone(snapshot);this.persistent=persistent;if(persistent)this.readPersistent(snapshot);else this.snapshot.skill=createGardenSkill();this.snapshot.travel.crafting??=createCrafting();}
+ get xp(){return this.persistent?this.saved!.points:this.snapshot.skill.xp;}
+ get level(){return Math.max(this.persistent?this.saved!.levelFloor:0,this.xp>=2*TRIAL_GARDEN_LEVEL_POINTS?2:this.xp>=TRIAL_GARDEN_LEVEL_POINTS?1:0);}
+ get progress(){const level=this.level;return {level,current:level>=2?TRIAL_GARDEN_LEVEL_POINTS:this.xp-level*TRIAL_GARDEN_LEVEL_POINTS,required:TRIAL_GARDEN_LEVEL_POINTS};}
  availableSeeds(){return [...new Set(Object.values(bedMixes).filter(m=>m.level<=this.level).flatMap(m=>m.plants))];}
  addBed(area:LivingBedArea={...livingBedArea}){const bed:TrialBed={id:this.nextId++,area:{...area},state:createLivingBed(this.snapshot.clock.day),marker:null,irrigation:null,completed:[],watered:false};bed.state.seedStock=this.seeds;bed.state.weather=this.weather;this.beds.push(bed);return bed;}
  sync(bed:TrialBed){bed.state.seedStock=this.seeds;return bed.state;}
- credit(keys:string[]){for(const key of keys)this.snapshot.skill=gainGardening(this.snapshot.skill,key,false)??this.snapshot.skill;}
+ credit(keys:string[]){for(const key of keys)if(this.persistent){if(!this.saved!.credited.includes(key)){this.saved!.credited.push(key);this.saved!.points++;}}else this.snapshot.skill=gainGardening(this.snapshot.skill,key,false)??this.snapshot.skill;}
  accept(bed:TrialBed,next:LivingBed,action:string,index=0){
   const old=bed.state;this.seeds={...next.seedStock};
   for(const kind of Object.keys(bedKinds) as BedKind[]){const count=Math.max(0,(next.basket[kind]??0)-(old.basket[kind]??0));this.basket[kind]+=count;if(isFood(kind)&&kind in this.snapshot.produce)this.snapshot.produce[kind as Crop]+=count;}
   bed.state=next;
+  if(this.persistent&&action==='plant'){const r=this.snapshot.travel.research;for(const [i,p]of next.plants.entries())if(p.kind==='wildflower'&&r.gifted&&r.seeds>0){p.questFlower=true;r.seeds--;r.flowers.push({...livingPlantPoint(i,bed.area),growth:0});}}
+  if(this.persistent&&weatherOnDay(this.snapshot.travel.weatherSeed??0,this.snapshot.clock.day)==='rain'&&bed.state.prepared){bed.state=waterLivingBed(bed.state)??bed.state;bed.watered=true;}
+  this.syncQuestFlowers();
   const stamp=`trial:${bed.id}:${next.day}:${action}`;
   if(action==='plant')this.credit(next.plants.map((_,i)=>`${stamp}:${i}`));
   else if(action==='refill')this.credit(old.plants.flatMap((p,i)=>p.removed&&!next.plants[i].removed?[`${stamp}:${i}`]:[]));
@@ -42,7 +49,11 @@ export class LivingGarden{
  nextDay(weather:'sunny'|'rain'){
   this.snapshot.clock.day++;this.weather=weather;this.snapshot.travel.crafting=advanceCrafting(this.snapshot.travel.crafting,this.snapshot.clock.day);
   for(const k of Object.keys(this.pending) as BedKind[]){this.mailbox[k]+=this.pending[k];this.pending[k]=0;}
+  this.growBeds(weather);
+ }
+ private growBeds(weather:'sunny'|'rain'){
   for(const bed of this.beds){if(weather==='rain'&&bed.state.mix)bed.watered=true;if(bed.irrigation){bed.state=waterLivingBed(bed.state)??bed.state;bed.watered=true;}bed.state=advanceLivingBed(this.sync(bed),weather,{seed:this.snapshot.travel.weatherSeed??0},`bed:${bed.area.x},${bed.area.y}`);if(bed.irrigation)bed.state=waterLivingBed(bed.state)??bed.state;for(const [i,p]of bed.state.plants.entries())if(p.aftermath==='overripe'){const point=livingPlantPoint(i,bed.area);addFruitFall(this.snapshot.travel,point.x,point.y,1);}}
+  this.syncQuestFlowers();
  }
  compost(index:number,input:'weed'|'fallenFruit'='weed'){const next=compostAction(this.snapshot,index,input);if(!next)return false;this.snapshot=next;return true;}
  collectOverripe(index:number,actor:GardenPoint){const pile=this.snapshot.travel.fallenFruit?.[index];if(!pile||Math.hypot(pile.x-actor.x,pile.y-actor.y)>48)return false;const next=pickFallenFruit(this.snapshot,index);if(!next)return false;this.snapshot=next;return true;}
@@ -58,6 +69,26 @@ export class LivingGarden{
   }
   if(discovery){text=discovery.text;if(this.observations.some(o=>o.id===discovery!.id))discovery=null;else{this.observations.push(discovery);this.credit([`observation:${discovery.id}`]);}}
   return {text,discovery};
+ }
+ readPersistent(snapshot:Snapshot){
+  const data=snapshot.travel.homestead?.garden;if(!data)throw Error('Hiányzó kertállapot.');this.snapshot=structuredClone(snapshot);this.saved=structuredClone(data);this.seeds=emptyBedSeeds();this.basket=emptyBedSeeds();this.pending=emptyBedSeeds();this.mailbox=emptyBedSeeds();
+  for(const k of sharedBedCrops){this.seeds[k]=snapshot.seeds[k];this.basket[k]=snapshot.produce[k];this.pending[k]=snapshot.orders.pending[k];this.mailbox[k]=snapshot.orders.mailbox[k];}
+  for(const k of extraBedKinds){this.seeds[k]=data.extraSeeds[k]??0;this.basket[k]=data.extraProduce[k]??0;this.pending[k]=data.pending[k]??0;this.mailbox[k]=data.mailbox[k]??0;}
+  this.beds=structuredClone(data.beds);this.paths=structuredClone(data.paths);this.packedMarkers=[...data.packedMarkers];this.nextId=data.nextId;this.completedCycles=data.completedCycles;this.observations=structuredClone(data.observations);this.observationMemory=new Map(Object.entries(data.memory).map(([k,v])=>[Number(k),structuredClone(v)]));this.weather=this.beds[0]?.state.weather??'sunny';
+ }
+ exportPersistent(pathCredits=this.saved!.pathCredits):SavedGarden{
+  return{...structuredClone(this.saved!),beds:this.beds.map(savedBedCopy),paths:structuredClone(this.paths),pathCredits:{...pathCredits},packedMarkers:[...this.packedMarkers],nextId:this.nextId,completedCycles:this.completedCycles,observations:structuredClone(this.observations),memory:structuredClone(Object.fromEntries(this.observationMemory)),extraSeeds:Object.fromEntries(extraBedKinds.map(k=>[k,this.seeds[k]])),extraProduce:Object.fromEntries(extraBedKinds.map(k=>[k,this.basket[k]])),pending:Object.fromEntries(extraBedKinds.map(k=>[k,this.pending[k]])),mailbox:Object.fromEntries(extraBedKinds.map(k=>[k,this.mailbox[k]]))};
+ }
+ writePersistent(pathCredits=this.saved!.pathCredits):Snapshot{
+  const next=structuredClone(this.snapshot);next.travel.homestead!.garden=this.exportPersistent(pathCredits);for(const k of sharedBedCrops){next.seeds[k]=this.seeds[k];next.produce[k]=this.basket[k];next.orders.pending[k]=this.pending[k];next.orders.mailbox[k]=this.mailbox[k];}return next;
+ }
+ advanceMorning(weather:'sunny'|'rain'){
+  this.weather=weather;for(const k of extraBedKinds){this.mailbox[k]+=this.pending[k];this.pending[k]=0;}this.growBeds(weather);
+ }
+ private syncQuestFlowers(){
+  if(!this.persistent)return;const r=this.snapshot.travel.research;if(!r.inBeds||!r.gifted||r.observation)return;
+  for(const bed of this.beds)for(const [i,p]of bed.state.plants.entries())if(p.questFlower){const point=livingPlantPoint(i,bed.area),f=r.flowers.find(f=>f.x===point.x&&f.y===point.y);if(f)f.growth=Math.max(f.growth,Math.min(3,p.growth));}
+  if(r.flowers.length===6&&r.flowers.every(f=>f.growth>=3))r.beeDay??=this.snapshot.clock.day;
  }
  get mulch(){return this.snapshot.travel.crafting?.items.mulch??0;}
  useMulch(){if(!this.mulch)return false;this.snapshot.travel.crafting!.items.mulch--;return true;}

@@ -1,3 +1,5 @@
+import {extraBedKinds} from './homestead-state';
+import type {BedKind} from './living-bed';
 import {craftItems,createCrafting} from './crafting';
 import {farmBounds} from './layout';
 import type {Snapshot} from './storage';
@@ -7,7 +9,7 @@ import {researchMaterials} from './research';
 export type Chest={x:number;y:number;items:Record<string,number>};
 export type ChestStorage={packed:number;placed:Chest[]};
 export const emptyChests=():ChestStorage=>({packed:0,placed:[]});
-export const chestKeys=[...craftItems.map(k=>`craft:${k}`),...crops.map(k=>`seed:${k}`),...crops.map(k=>`crop:${k}`),...goods.map(k=>`good:${k}`),...extras.map(k=>`extra:${k}`),...researchMaterials.map(k=>`research:${k}`),'material:wood','material:stone','material:weed','special:birdhouse'];
+export const chestKeys=[...extraBedKinds.flatMap(k=>[`bedSeed:${k}`,`bedCrop:${k}`]),...craftItems.map(k=>`craft:${k}`),...crops.map(k=>`seed:${k}`),...crops.map(k=>`crop:${k}`),...goods.map(k=>`good:${k}`),...extras.map(k=>`extra:${k}`),...researchMaterials.map(k=>`research:${k}`),'material:wood','material:stone','material:weed','special:birdhouse'];
 export const occupiedSlots=(items:Record<string,number>)=>Object.values(items).reduce((sum,n)=>sum+Math.ceil(n/99),0);
 export function validChests(v:unknown):v is ChestStorage{
  if(!v||typeof v!=='object')return false;const s=v as ChestStorage;
@@ -15,11 +17,11 @@ export function validChests(v:unknown):v is ChestStorage{
 }
 export function inventoryCounts(s:Snapshot):Record<string,number>{return Object.fromEntries(chestKeys.map(k=>[k,itemAccount(s,k).value]));}
 function itemAccount(s:Snapshot,key:string){
- const [group,id]=key.split(':');if(group==='craft')return {value:s.travel.crafting?.items[id as typeof craftItems[number]]??0,set:(n:number)=>{s.travel.crafting??=createCrafting();s.travel.crafting.items[id as typeof craftItems[number]]=n;}};if(group==='special')return {value:s.story.giftReceived&&!s.story.birdhouse&&!s.skill.birdhouseStored?1:0,set:(n:number)=>{s.skill.birdhouseStored=n===0;}};const account:Record<string,number>=group==='seed'?s.seeds:group==='crop'?s.produce:group==='good'?s.travel.estate.goods:group==='extra'?s.travel.estate.produce:group==='research'?s.travel.research.materials:group==='material'?s.clearing as unknown as Record<string,number>:s.travel.research as unknown as Record<string,number>;
+ const [group,id]=key.split(':');if(group==='bedSeed'||group==='bedCrop'){const counts=s.travel.homestead?.garden[group==='bedSeed'?'extraSeeds':'extraProduce'];return{value:counts?.[id as BedKind]??0,set:(n:number)=>{if(counts)counts[id as BedKind]=n;}};}if(group==='craft')return {value:s.travel.crafting?.items[id as typeof craftItems[number]]??0,set:(n:number)=>{s.travel.crafting??=createCrafting();s.travel.crafting.items[id as typeof craftItems[number]]=n;}};if(group==='special')return {value:s.story.giftReceived&&!s.story.birdhouse&&!s.skill.birdhouseStored?1:0,set:(n:number)=>{s.skill.birdhouseStored=n===0;}};const account:Record<string,number>=group==='seed'?s.seeds:group==='crop'?s.produce:group==='good'?s.travel.estate.goods:group==='extra'?s.travel.estate.produce:group==='research'?s.travel.research.materials:group==='material'?s.clearing as unknown as Record<string,number>:s.travel.research as unknown as Record<string,number>;
  return {value:account[id],set:(n:number)=>{account[id]=n;}};
 }
 export function craftChest(s:Snapshot):Snapshot|null{
- if(!s.skill.chestBlueprint||s.clearing.wood<20||s.travel.research.materials.scrap<5)return null;
+ if(!s.skill.chestBlueprint&&!s.travel.homestead?.garden.chestBlueprint||s.clearing.wood<20||s.travel.research.materials.scrap<5)return null;
  const next=structuredClone(s);next.skill.chests??=emptyChests();if(next.skill.chests.packed>=999)return null;
  next.clearing.wood-=20;next.travel.research.materials.scrap-=5;next.skill.chests.packed++;return next;
 }
@@ -39,7 +41,8 @@ export function backpackStacks(s:Snapshot){const stacks:{key:string;count:number
 export function collectAvailableMail(s:Snapshot):{state:Snapshot;taken:number;remaining:number}|null{
  const next=structuredClone(s),limit=Math.max(16,backpackSlots(s));let taken=0;
  for(const crop of crops){const available=next.orders.mailbox[crop];if(!available)continue;const existing=next.seeds[crop],free=Math.max(0,limit-backpackSlots(next)),capacity=(Math.ceil(existing/99)+free)*99-existing,amount=Math.min(available,capacity,999999-existing);if(amount<=0)continue;next.seeds[crop]+=amount;next.orders.mailbox[crop]-=amount;taken+=amount;}
- return taken?{state:next,taken,remaining:Object.values(next.orders.mailbox).reduce((a,b)=>a+b,0)}:null;
+ const g=next.travel.homestead?.garden;if(g)for(const k of extraBedKinds){const available=g.mailbox[k]??0,existing=g.extraSeeds[k]??0,free=Math.max(0,limit-backpackSlots(next)),capacity=(Math.ceil(existing/99)+free)*99-existing,amount=Math.min(available,capacity,999999-existing);if(amount>0){g.extraSeeds[k]=existing+amount;g.mailbox[k]=available-amount;taken+=amount;}}
+ return taken?{state:next,taken,remaining:Object.values(next.orders.mailbox).reduce((a,b)=>a+b,0)+Object.values(g?.mailbox??{}).reduce((a,b)=>a+(b??0),0)}:null;
 }
 
 export function packEmptyChest(s:Snapshot,index:number){const chest=s.skill.chests?.placed[index];if(!chest||occupiedSlots(chest.items)>0||(s.skill.chests?.packed??0)>=999)return null;const next=structuredClone(s);next.skill.chests!.placed.splice(index,1);next.skill.chests!.packed++;return next;}

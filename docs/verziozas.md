@@ -29,4 +29,6 @@ Nem minden apró commit kap új számot. A main ágra feltöltött változtatás
 
 ## Nem ugyanaz, mint a mentés verziója
 
-A farmmentés technikai formátumának száma a `storage.ts` feladata. Jelenleg 18; ennek semmi köze a játék 0.2.0 jelöléséhez. Pusztán a játékverzió emelése miatt ne módosítsd és ne migráld a mentéseket. Korábbi bevétel, készlet, kert vagy történeti haladás nem változik meg a számozástól.
+A farmmentés technikai formátumának száma a `storage.ts` feladata. A 0.3.0 kertészeti átálláskor 19-re nőtt; a korábbi 18-as formátum betöltése támogatott. Ez a technikai szám független a játék 0.3.0 jelölésétől. Pusztán a játékverzió emelése miatt ne módosítsd és ne migráld a mentéseket. Korábbi bevétel, készlet, kert vagy történeti haladás nem változik meg a számozástól.
+
+2026. november 8-án a felhasználó kifejezetten jóváhagyta az új kertészkedés és Mara áruszállításának normál játékba emelését **0.3.0** verzióval.
