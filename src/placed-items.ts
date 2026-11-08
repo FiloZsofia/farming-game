@@ -1,7 +1,7 @@
 import type {Snapshot} from './storage';
 import {packMachine,blueprintNames} from './crafting';
 import {packEmptyChest,canCarryChange} from './chests';
-export type PlacedItem={kind:'machine'|'chest'|'birdhouse'|'bedMarker'|'steppingStone'|'bedIrrigation';index:number;x:number;y:number;name:string};
+export type PlacedItem={kind:'machine'|'chest'|'birdhouse'|'bedMarker'|'steppingStone'|'gardenPath'|'bedIrrigation';index:number;x:number;y:number;name:string};
 export type RuntimePlacedItems={items:PlacedItem[];pickup:(item:PlacedItem)=>Snapshot|null};
 // All movable furniture uses this registry, independently of how it is inspected.
 export function placedItemAt(s:Snapshot,p:{x:number;y:number},runtime?:RuntimePlacedItems):PlacedItem|undefined{
@@ -12,7 +12,7 @@ export function placedItemAt(s:Snapshot,p:{x:number;y:number},runtime?:RuntimePl
 export function pickPlacedItem(s:Snapshot,t:PlacedItem,runtime?:RuntimePlacedItems):{state:Snapshot}|{error:string}{
  const current=placedItemAt(s,t,runtime);if(!current||current.kind!==t.kind||current.index!==t.index)return {error:'Ez a tárgy már nincs itt.'};
  if(Math.hypot(s.player.x-t.x,s.player.y-t.y)>48)return {error:'Sétálj közelebb.'};
- if(['bedMarker','steppingStone','bedIrrigation'].includes(t.kind)){const state=runtime?.pickup(t);return state?{state}:{error:'A tárgy nem vehető vissza.'};}
+ if(['bedMarker','steppingStone','gardenPath','bedIrrigation'].includes(t.kind)){const state=runtime?.pickup(t);return state?{state}:{error:'A tárgy nem vehető vissza.'};}
  let next:Snapshot|null;
  if(t.kind==='machine'){
   const m=s.travel.crafting!.machines[t.index];if(m.started!==null)return {error:'A gép még dolgozik.'};if(m.ready)return {error:'Előbb vedd át az elkészült terméket.'};next=packMachine(s,t.index);

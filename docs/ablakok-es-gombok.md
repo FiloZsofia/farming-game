@@ -55,3 +55,10 @@ A panel közeli E/kattintásra jelenik meg. Tovább, Esc, eltávolodás és az �
 
 
 A kertészeti próba kizárólag az ágyás gondozását kezeli jobb oldali panelben; a Készlet eredeti lapjai, Magkatalógus, posta, Tervrajzok és megfigyelési napló a közös normál ablakban jelennek meg. Az eredeti öt eszközt csak gondozáskor egészíti ki a társítás magválasztója. Új ágyás külön bal oldali + gombbal indul. A panel alja a tényleges eszközsáv-magasságot követi; teteje a Menü alá kerül. Mobilon a mozgásgombok és a kamera a fenntartott játéktérben maradnak. Beviteli mezőben a nyilak mennyiséget módosítanak, nem Samet mozgatják. A napló saját SVG-vázlatokat és natív betűket használ. A feloldás a meglévő ünneplős ablakban jelenik meg, teljes ablakon hulló szirmokkal, a kilépés Tovább. Minden társításarány ajánlottként, a kilenc hely szabad felosztásának jelzésével jelenjen meg.
+
+
+### Tanulási segítség és önálló ösvényépítés — 2026-11-08, csak kertészeti próba
+
+Az ágyáskezelő saját ÁGYÁSKEZELŐ feliratot kap. A benne lévő Tanulási segítség világos, külön címezett jegyzet, kérdőjeles nyitó/záró gombbal, témaválasztóval és Értem gombbal. Nem veszi át a küldetéskövető tartalmát vagy cél-/teljesítésjelölését. Új témát egyszer mutat automatikusan; később visszaolvasható. A rendes követő történeti tartalma megmarad, gondozáskor átmenetileg rejtve.
+
+Az ösvény a Tervrajzokban egyetlen kártya, Burkolat választóval. A rajzoló kis megerősítőpanelje önálló építési felület, nem ágyáskezelés vagy küldetés. Előre mutatja a teljes költséget; külön megerősítés, utolsóelem-visszavonás, rajztörlés és Befejezem gomb tartozik hozzá. Mobilon sem fedheti a Menüt vagy az eszközsávot.

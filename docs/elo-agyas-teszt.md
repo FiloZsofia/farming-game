@@ -55,7 +55,11 @@ Az eper terméskötődése a meglévő stabil beporzási szabályt használja: h
 
 Minden ágyáshoz külön fa jelölő tartozik, amely kijelölés után automatikusan kézbe kerül. Ugyanannak az ágyásnak bármely szabad, közvetlen oldala mellé helyezd. A kézírásos tábla Bontóvassal külön visszavehető és ismét lehelyezhető; az ágyás és növényei megmaradnak.
 
-A kőösvény kikerült ebből a tesztből. Az önálló, később a Tervrajzokhoz kerülő kő-, fa- és földút, valamint a visszafelé javítható rajzolás terve a [játékmeneti tervben](jatekterv.md) szerepel; még nincs megvalósítva.
+Az önálló ösvényépítés most a **Készlet → Tervrajzok → Ösvény** egyetlen kártyáján érhető el. A Burkolat választóval kő-, fa- vagy földutat választhatsz, majd az Ösvény rajzolása gombbal kezdheted a szabad vonalhúzást. Nincs ösvénygomb az ágyáskezelőben vagy az eszközsávban.
+
+A próba költsége: 1 kő → 5 lépőkő; 1 fa → 5 járódeszka; 1 kő → 10 rövid földútszakasz. A rajz teljes költsége előre látszik, anyag csak a Lerakom megerősítéskor fogy. A megmaradt előkészített elemek felhasználhatók a következő rajzhoz. Bontóvassal elemenként visszabontható; az elemek újrahasználhatók, teljes adag esetén az alapanyag visszakerül. Az eredeti alapösvény megjelenése változatlan.
+
+Húzz visszafelé a korábbi vonalhoz a végének törléséhez, piros állapotból is. Felengedés után is folytatható a rajz; az Utolsó elem visszavonása és Rajz törlése gomb is segít. Befejezem vagy Esc kilép, a meg nem erősített terv anyagot nem fogyaszt.
 
 A teszt Készletében a Simon · Vásárlás gomb a próba bolti gyorselérése. A Tárolóláda tervrajza 160 gold; a berendezések a meglévő anyagköltségekkel készíthetők a Tervrajzokban. A normál Simon-boltba a láda a későbbi éles kertészeti átállással kerül. A meglévő tervrajzokat akkor is megőrizzük.
 
@@ -77,3 +81,14 @@ Cypress-bináris nincs az ellenőrző környezetben, ezért az end-to-end ellen�
 450 egységteszt és a build mellett izolált Chromium CDP-próba ellenőrizte a rendelés–posta–szabad beültetés folyamatot, a szüret/utánvetés utáni listákat, az öntöző tervrajzának megvételét–elkészítését–lehelyezését, az ünneplést, a mobilos elrendezést, az öt eszközt és az időszakos vetőmagválasztót. A normál mentés és biztonsági másolata exportja teszt közben és kilépés után változatlan maradt.
 
 Friss képek: [Magkatalógus](concepts/garden-refined-catalogue.png) · [Ágyás és eszközök](concepts/garden-refined-bed-and-tools.png) · [Készlet](concepts/garden-refined-inventory.png) · [Elkészült öntöző](concepts/garden-refined-irrigation-inventory.png) · [Ünneplés](concepts/garden-refined-celebration.png) · [Mobilos ágyás](concepts/garden-refined-mobile-bed.png) · [Mobilos Készlet](concepts/garden-refined-mobile-inventory.png).
+
+
+### Tanulási segítség és küldetések
+
+A jobb oldali **ÁGYÁSKEZELŐ** külön feliratot kapott. Benne a világos **Tanulási segítség** jegyzet új témánál egyszer automatikusan kinyílik. Értem után összecsukódik; a ? gombbal bármikor újranyitható, a témaválasztóval visszaolvasható a helyválasztás, jelölő, vetés, gondozás, maggyűjtés, utánvetés és mulcs útmutatása. A látott témák tesztfutáson belül maradnak meg; új teszt indításakor újra bemutathatók.
+
+A küldetéskövető és a Célok fül a valódi történeti célokat mutatja, kertészeti tippek nem írják felül. A gondozópanel nyitása csak átmenetileg rejti a követőt; bezáráskor a történeti cél és haladása változatlanul visszatér. A külön kertészeti próbában alapból nincs aktív történeti cél, ezért ott a követő nem látszik. A normál kertészeti átállás és a segítségek farmonkénti megőrzése későbbi feladat.
+
+A legutóbbi ellenőrzés: 454 teszt / 67 fájl és sikeres build; izolált Chromium CDP-ben a segítség egyszerisége és újranyitása, valódi történeti cél megtartása, mobilos elrendezés, mindhárom ösvény, piros rajz visszajavítása, költség és Bontóvasas anyagvisszaadás, valamint a normál mentés/backup változatlansága is ellenőrzött. Cypress-bináris hiányában CDP készült, Playwright nélkül.
+
+Képek: [Külön segítség](concepts/garden-learning-bed.png) · [Visszatérő történeti cél](concepts/garden-learning-quest-restored.png) · [Ösvény kártya](concepts/garden-path-blueprint-dirt.png) · [Három burkolat és csomópont](concepts/garden-path-detail-and-junction.png) · [Mobilos ösvényépítés](concepts/garden-path-mobile.png).

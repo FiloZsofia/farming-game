@@ -2,6 +2,9 @@
 
 ## Változások a 0.2.0 óta — verzióemelés nélkül
 
+- 2026-11-08 — kertészeti teszt: a küldetéskövető és a Célok fül kizárólag a tényleges történeti céloké marad. Külön Tanulási segítség világos jegyzettel, témánként egyszeri automatikus bemutatással, Értem és ? gombbal, visszaolvasható témákkal; saját ÁGYÁSKEZELŐ felirat.
+- 2026-11-08 — kertészeti teszt: önálló Ösvény kártya a Tervrajzokban, kő/fa/föld burkolattal. Visszafelé javítható szabad rajz, piros előnézetből is; költség csak megerősítéskor, adagmaradékok megőrzése és Bontóvasas visszabontás. 1 kőből 5 lépőkő vagy 10 rövid földútszakasz, 1 fából 5 járódeszka. Szabálytalan, lapos kövek; a meglévő alapösvény megjelenése változatlan. A normál játék kertje és mentése nem áll át.
+
 - 2026-11-08 — kertészeti teszt: szabad kilenc helyes társításösszeállítás, mindenütt ajánlottként jelölt arányok; eredeti Készlet/Magkatalógus-ablakok, teljes társításnevű gondozópanel, szüret után tisztuló növénylista. Öt alapeszköz, csak ágyáskezeléskor megjelenő vetőmagválasztó, külön bal oldali újágyás-gomb; automatikusan kézbe kerülő jelölő. Egyértelmű tervrajz–elkészítés–Készlet útvonal az öntözőhöz. Kétsoros feloldási szöveg és teljes ablakon hulló szirmok. Az ösvényépítés kikerült az ágyástesztből, önálló későbbi funkcióként dokumentálva.
 - 2026-11-08 — rendes játék és teszt: az általános ablakzáró gomb neve Tovább. A Beállítások és a mentett farmok valódi visszalépése Vissza marad; a konkrét navigáció célnevet kap.
 

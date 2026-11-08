@@ -1279,3 +1279,30 @@ Az ösvényépítés az ágyáskezeléstől függetlenül, a **Tervrajzok** köz
 - Az egérrel húzott vonal egyenes vagy hullámos is lehet. Visszafelé húzva a rajzolt vonal vége visszabontható. A piros, érvénytelen előnézetből is vissza lehessen térni érvényes állapotba az egész újrakezdése nélkül.
 - Rajzolás közben csak előnézet és költségjelzés legyen; anyagot a megerősített, érvényes elhelyezés fogyasszon. A kőre korábban elfogadott kiindulás: egy lerakott lépőkő egy követ fogyaszt, Bontóvassal kövenként visszavehető. A fa- és földút költsége, feloldása és pontos elszámolási egysége még egyeztetendő.
 - A meglévő épületek, víz, ágyások és átjárók védelme megmarad. Az összefüggő útfelületek csomópontjai belső varrat nélkül rajzolódjanak a közös rajzolási szabály szerint.
+
+
+### Küldetéskövető, ágyáskezelő és tanulási segítség — elfogadva, 2026. november 8.
+
+A küldetéskövető kizárólag a történeti célok helye marad. Nem írjuk felül az ágyás gondozási utasításaival; a Célok fülön sem szerepelnek küldetésként ezek az általános kertészeti tippek. Az ágyáskezelő interakcióra nyílik, saját ÁGYÁSKEZELŐ felirattal és a társítás teljes nevével. Nyitásakor a küldetéskövető átmenetileg elbújhat, bezáráskor a tényleges történeti cél tér vissza, változatlan haladással.
+
+A Tanulási segítség ettől elkülönülő világos jegyzet. Új műveleti helyzetben egyszer automatikusan kinyílik; az Értem gomb összecsukja. Később a ? gombbal megnyitható, és témaválasztóval a többi kertészeti útmutatás is visszaolvasható. Témái: helyválasztás, jelölő, előkészítés, társítás/vetés, gondozás/megfigyelés, termés vagy mag, utánvetés, mulcs. Nem használ küldetésjelölő pontokat, teljesítési számlálót vagy történeti jutalmat.
+
+A megvalósítás most a memóriabeli kertészeti próbához tartozik. Az egyszer látott témák a tesztfutáson belül őrződnek meg; teszt újraindításakor újra kipróbálhatók. A normál játék későbbi kertészeti átállásakor a már látott témákat farmonként kell megőrizni, a küldetések haladásától külön. A próbában alapból nincs aktív történeti küldetés; a küldetéskövető ilyenkor üresen nem jelenik meg. Tényleges cél esetén a rendes közös követő működik, nem kitalált tesztküldetés.
+
+### Ösvények a Tervrajzokban — megvalósított próba, 2026. november 8.
+
+A korábbi, kizárólag jövőbeli tervet rögzítő ösvényszakaszt az alábbi állapot pontosítja. A felhasználó kérésére az önálló ösvényépítés bekerül a kertészeti teszt Tervrajzok fülére: **egyetlen Ösvény kártya**, azon belül Kőösvény / Faösvény / Földút választóval. Nem kap külön helyet az ágyáskezelőben vagy az öt alapeszköz között.
+
+| Burkolat | Jóváhagyott próbaköltség |
+| --- | --- |
+| Kőösvény | 1 kő → 5 lépőkő |
+| Faösvény | 1 fa → 5 járódeszka |
+| Földút | 1 kő → 10 rövid útszakasz |
+
+Ezek felülírják a korábbi egy kő / egy lépőkő próbaértéket. A teljes rajz anyagigénye előre látszik, és csak érvényes megerősítéskor fogy. A megkezdett adag maradék útelemei később felhasználhatók; nem fizetjük ki őket újra. Az azonos burkolatra rácsatlakozás nem számítja új elemnek a már lefedett helyet. Bontóvassal elemenként visszabontható: a felszedett elemek újra felhasználhatók, egy teljes adagnyi mennyiség pedig visszaadja az alapanyagot. Így teljes visszabontáskor sem vész el a kifizetett anyag.
+
+A szabad, hullámos vonal visszafelé húzva javítható, piros előnézetből és a rajzhossz korlátjánál is. Egérfelengedés után is folytatható/javítható, külön utolsóelem-visszavonás és rajztörlés is elérhető. A Befejezem vagy Esc kilép az építésből, a meg nem erősített rajz anyagfogyasztás nélkül elvész. Az épületek, ágyások, víz és a meglévő alaputak védettek.
+
+A kőút változó méretű, szabálytalan, lapos kövekből áll, a faút enyhén eltérő járódeszkákból. A földút a meglévő út palettáját és textúráját követi, összefüggő, belső varrat nélküli csomópontokkal. A **meglévő alapösvény kinézetén nem változtatunk**. A homok mint új alapanyag felmerült, de a felhasználó az olcsó, könnyen beszerezhető kő mellett maradt; homok nem kerül be.
+
+Egyelőre csak tesztmód: a normál kertészkedés és mentés nem áll át, játékverzió 0.2.0, mentésverzió 18 marad.

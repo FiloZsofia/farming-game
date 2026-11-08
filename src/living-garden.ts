@@ -1,3 +1,4 @@
+import type {GardenPathPiece} from './garden-path';
 import {addFruitFall,pickFallenFruit} from './fallen-fruit';
 import {consumeFood,isFood} from './food';
 import type {Crop} from './gardening';
@@ -13,7 +14,7 @@ export type GardenObservation={id:'water-recovery'|'fruit-set';title:string;text
 export type TrialBed={id:number;area:LivingBedArea;state:LivingBed;marker:GardenPoint|null;irrigation:GardenPoint|null;completed:number[];watered:boolean};
 export const trialSeedPrices:Record<BedKind,number>={radish:5,lettuce:5,pea:15,thyme:5,wildflower:5,oregano:5,sage:5,tomato:15,pepper:15,cucumber:15,strawberry:20,carrot:10,calendula:5,borage:5,chamomile:5,lemonBalm:5};
 export class LivingGarden{
- snapshot:Snapshot;seeds=emptyBedSeeds();pending=emptyBedSeeds();mailbox=emptyBedSeeds();basket=emptyBedSeeds();beds:TrialBed[]=[];stones:GardenPoint[]=[];packedMarkers:number[]=[];nextId=1;completedCycles=0;weather:'sunny'|'rain'='sunny';observations:GardenObservation[]=[];observationMemory=new Map<number,{dryDay?:number;waterDay?:number;blossoms:Record<number,{day:number;cycle:number}>}>();
+ snapshot:Snapshot;seeds=emptyBedSeeds();pending=emptyBedSeeds();mailbox=emptyBedSeeds();basket=emptyBedSeeds();beds:TrialBed[]=[];paths:GardenPathPiece[]=[];packedMarkers:number[]=[];nextId=1;completedCycles=0;weather:'sunny'|'rain'='sunny';observations:GardenObservation[]=[];observationMemory=new Map<number,{dryDay?:number;waterDay?:number;blossoms:Record<number,{day:number;cycle:number}>}>();
  constructor(snapshot:Snapshot){this.snapshot=structuredClone(snapshot);this.snapshot.skill=createGardenSkill();this.snapshot.travel.crafting??=createCrafting();}
  get level(){return !this.completedCycles?0:this.snapshot.skill.xp>=40?2:this.snapshot.skill.xp>=20?1:0;}
  availableSeeds(){return [...new Set(Object.values(bedMixes).filter(m=>m.level<=this.level).flatMap(m=>m.plants))];}

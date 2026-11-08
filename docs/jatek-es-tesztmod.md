@@ -25,7 +25,7 @@ Ezek a közös játékútvonalakon működnek; egyik sem kizárólag a fejleszt�
 ## Csak tesztmód
 
 - Az **Élő ágyás kertészeti próba** teljes bővítése: több szabad ágyás; közvetlen eszközsávos műveletek; öt elfogadott társítás; csoportos Magkatalógus, posta és tényleges átvétel; komposztálós mulcs; 20/40 pontos feloldás ünnepléssel; megfigyelési napló egyszeri pontokkal; fajonkénti maggyűjtés; automatikusan kézbe kerülő, mozgatható kézírásos jelölők; egy ágyásos öntöző; 160 goldos ládatervrajz a próba Simon-vásárlásában. Ez nem váltja le a normál kertészkedést és nem törli a régi növényeket. [Kipróbálás és hatókör](elo-agyas-teszt.md).
-- A kertészeti tesztben szabad, kilenc helyes összeállítás és ajánlott arányok; a megszokott Készlet/Magkatalógus eredeti ablaka; öt alapeszköz, csak gondozáskor látható vetőmagválasztó, külön bal oldali +. Az ösvényépítés most nem érhető el: később önálló Tervrajzok-funkcióként készül.
+- A kertészeti tesztben szabad, kilenc helyes összeállítás és ajánlott arányok; a megszokott Készlet/Magkatalógus eredeti ablaka; öt alapeszköz, csak gondozáskor látható vetőmagválasztó, külön bal oldali +. Külön Tanulási segítség egyszeri bemutatással és ? gombos visszaolvasással; a küldetéskövető a történeti céloké marad. Önálló ösvényépítés a Tervrajzok egyetlen Ösvény kártyájáról, három választható burkolattal és visszafelé javítható rajzzal.
 - A Kidolgozott farm alternatív grafikája, új növényzettel és részletesebb formákkal.
 - Sam átdolgozott külseje, copfja, ruhája, arányai és könnyedebb járása.
 
