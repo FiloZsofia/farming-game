@@ -5,9 +5,13 @@ import {createHomestead} from './homestead-state';
 import {isRipe,type Crop} from './gardening';
 import {crops} from './economy';
 import {extras} from './estate';
-import {gardeningLevel} from './gardening-skill';
 export function enableHomestead(source:Snapshot,fresh=false):Snapshot{
- if(source.travel.homestead)return structuredClone(source);
+ if(source.travel.homestead){
+  const next=structuredClone(source),g=next.travel.homestead!.garden;
+  // This reset applies once, including farms already upgraded to 0.3.0.
+  if(g.progressionVersion!==1){g.points=0;g.credited=[];g.levelFloor=0;g.rewardedLevel=0;g.progressionVersion=1;}
+  return next;
+ }
  const next=structuredClone(source),h=createHomestead(next.clock.day);next.travel.homestead=h;next.version=19;
  const add=(account:'seed'|'crop'|'extra',kind:string,amount:number)=>{if(!amount)return;const counts=(account==='seed'?next.seeds:account==='crop'?next.produce:next.travel.estate.produce) as Record<string,number>,limit=account==='seed'?999999-next.orders.pending[kind as Crop]-next.orders.mailbox[kind as Crop]:999999,take=Math.min(amount,limit-counts[kind]);counts[kind]+=take;if(amount>take)h.refunds.push({account,kind,count:amount-take});};
  for(const [,p]of next.plots){if(p.crop){add('seed',p.crop,1);if(isRipe(p))add('crop',p.crop,1);}}
@@ -16,7 +20,7 @@ export function enableHomestead(source:Snapshot,fresh=false):Snapshot{
  for(const k of extras){add('extra',k,next.travel.estate.shipping[k]);next.travel.estate.shipping[k]=0;}
  const r=next.travel.research;if(r.gifted){h.garden.extraSeeds.wildflower=r.seeds+r.flowers.length;if(!r.observation){r.seeds=6;r.flowers=[];r.beeDay=null;}}
  r.inBeds=true;
- const floor=gardeningLevel(next.skill);h.garden.chestBlueprint=!!next.skill.chestBlueprint;h.garden.levelFloor=floor;h.garden.points=Math.max(next.skill.xp,floor*50);h.garden.credited=Array.from({length:h.garden.points},(_,i)=>`legacy:${i}`);h.garden.rewardedLevel=Math.max(Math.min(2,Math.floor(h.garden.points/50)),floor);
+ h.garden.chestBlueprint=!!next.skill.chestBlueprint;
  // Existing sprinklers are packed rather than silently left watering removed plots.
  if(next.travel.crafting){const machines=next.travel.crafting.machines.filter(m=>m.kind==='irrigation');if(machines.length){const total=next.travel.crafting.items.irrigation+machines.length;if(total>999999)throw Error('Az öntözők nem férnek el veszteség nélkül. A régi mentés megmaradt.');next.travel.crafting.items.irrigation=total;next.travel.crafting.machines=next.travel.crafting.machines.filter(m=>m.kind!=='irrigation');}}
  const occupied=()=>[...next.travel.estate.trees,...next.travel.crafting?.machines??[],...next.skill.chests?.placed??[],...(next.story.birdhouse?[next.story.birdhouse]:[])];

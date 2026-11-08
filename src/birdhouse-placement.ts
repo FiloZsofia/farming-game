@@ -1,5 +1,5 @@
 import {farmBounds,farmLayout} from './layout';
-import {junkSites,junkPoint} from './junk-sites';
+import {junkSites,junkPoint,junkVisualScale,junkScale} from './junk-sites';
 import type {Snapshot} from './storage';
 type Point={x:number;y:number};
 export type VisualBox={x:number;y:number;w:number;h:number};
@@ -24,7 +24,7 @@ export function birdhouseVisible(p:Point,s:World){
  if(entrances.some(b=>foot.x<b.x+b.w+2&&foot.x+foot.w>b.x-2&&foot.y<b.y+b.h+2&&foot.y+foot.h>b.y-2))return false;
  const boxes:VisualBox[]=[{x:f.journal.x-5,y:f.journal.y-3,w:31,h:25},{x:f.catalog.x-5,y:f.catalog.y-6,w:31,h:27},{x:f.mailbox.x,y:f.mailbox.y,w:f.mailbox.w,h:f.mailbox.h+20}];
  boxes.push(...s.travel.estate.trees.map(treeArtwork),...(s.travel.crafting?.machines??[]).map(machineArtwork),...(s.skill.chests?.placed??[]).map(chestArtwork));
- for(const site of junkSites){const q=junkPoint(s.clearing,site.id);boxes.push({x:q.x-103,y:q.y-88,w:206,h:126});}
+ for(const site of junkSites){const q=junkPoint(s.clearing,site.id),r=junkVisualScale(site.id)/junkScale;boxes.push({x:q.x-103*r,y:q.y-88*r,w:206*r,h:126*r});}
  for(const q of s.travel.estate.pond)boxes.push({x:q.x-32,y:q.y-(q.kind==='reed'?65:28),w:64,h:q.kind==='reed'?70:44});
  return !boxes.some(box=>birdhouseOverlaps(p,box));
 }

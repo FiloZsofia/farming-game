@@ -65,7 +65,7 @@ function validSnapshotRecord(value:unknown,legacy=false):value is Snapshot{
 }
 // Migrate known formats without discarding the original backup until a v18 write succeeds.
 export function decodeSnapshot(value:unknown):Snapshot|null{
- if(value&&typeof value==='object'&&'version' in value&&value.version===19){if(!validSnapshot(value))return null;return structuredClone(value);}
+ if(value&&typeof value==='object'&&'version' in value&&value.version===19){const next=structuredClone(value) as Snapshot;if(next.player&&Number.isFinite(next.player.x)&&Number.isFinite(next.player.y)&&next.player.y>=600&&next.player.y<1400)next.player=relocateVillagePlayer(next.player);return validSnapshot(next)?next:null;}
  if(value&&typeof value==='object'&&'version' in value&&Number(value.version)>=1&&Number(value.version)<=18){const v=value as Snapshot;const accounts=[v.travel?.estate?.produce,v.travel?.estate?.shipping,v.travel?.estate?.roe,v.travel?.sale?.extras,v.economy?.lastSale?.extras];if(accounts.some(c=>c&&typeof c==='object'&&!Array.isArray(c)&&c.basket===undefined)){const n=structuredClone(v);for(const c of [n.travel?.estate?.produce,n.travel?.estate?.shipping,n.travel?.estate?.roe,n.travel?.sale?.extras,n.economy?.lastSale?.extras])if(c&&typeof c==='object'&&!Array.isArray(c)&&c.basket===undefined)c.basket=0;return decodeSnapshot(n);}}
 
 

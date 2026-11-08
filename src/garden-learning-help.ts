@@ -11,15 +11,16 @@ export const gardenHelpTopics={
 } as const;
 export type GardenHelpTopic=keyof typeof gardenHelpTopics;
 
-// Help is opt-in in every context; opening or changing a bed never expands it.
+// The first bed opens guidance by default; later beds keep it opt-in.
 export class GardenLearningHelp{
  readonly element=document.createElement('section');
- private context:GardenHelpTopic|null=null;
+ private context:string|null=null;
  private selected:GardenHelpTopic='placement';
  private expanded=false;
  constructor(private changed:()=>void){this.element.id='garden-learning-help';this.element.setAttribute('aria-label','Segítség');}
- show(parent:HTMLElement,topic:GardenHelpTopic){
-  if(this.context!==topic){this.context=topic;this.selected=topic;this.expanded=false;}
+ show(parent:HTMLElement,topic:GardenHelpTopic,bedId?:number,openByDefault=false){
+  const context=`${bedId??''}:${topic}`;
+  if(this.context!==context){this.context=context;this.selected=topic;this.expanded=openByDefault;}
   parent.append(this.element);this.render();
  }
  private render(){
@@ -30,6 +31,6 @@ export class GardenLearningHelp{
   const text=document.createElement('p');text.textContent=gardenHelpTopics[this.selected].text;
   const dismiss=document.createElement('button');dismiss.type='button';dismiss.textContent='Értem';dismiss.onclick=()=>{this.expanded=false;this.render();this.element.querySelector<HTMLButtonElement>('.garden-help-toggle')!.focus();this.changed();};content.append(select,text,dismiss);this.element.append(content);
  }
- collapse(){this.expanded=false;this.render();}
+ collapse(){this.context=null;this.expanded=false;this.render();}
  destroy(){this.element.remove();}
 }

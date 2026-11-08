@@ -1,7 +1,7 @@
-import {marketRoads} from './market-trial-route';
+import {marketRoads,marketRoadContains} from './market-trial-route';
 import {noticeBoardBlocked} from './village-notice';
 import {natureSites,natureTreeClear} from './nature-resources';
-import {forestBlocked,forestPlants} from './forest';
+import {FOREST_LEFT,forestBlocked,forestPlants} from './forest';
 import {farmLayout} from './layout';
 import {inHome,homeBlocked} from './home';
 import {inWorkshop,WORKSHOP_ORIGIN} from './research';
@@ -15,7 +15,7 @@ export const villageLayout={
  square:{x:475,y:1080,rx:181,ry:115},
  nurserySaplings:[{x:518,y:958},{x:542,y:958},{x:646,y:958},{x:670,y:958}],
  benches:[{id:'west',angle:-2.35},{id:'east',angle:-.55}],
- bushes:[{id:'fern',x:100,y:736},{id:'birch',x:238,y:821},{id:'moss',x:70,y:980},{id:'brook',x:191,y:1090}],
+ bushes:[{id:'fern',x:200,y:752},{id:'birch',x:238,y:821},{id:'moss',x:70,y:980},{id:'brook',x:191,y:1090}],
  trees:[{x:44,y:670,kind:0},{x:103,y:650,kind:1},{x:254,y:685,kind:2},{x:53,y:799,kind:2},{x:169,y:777,kind:0},{x:286,y:769,kind:1},{x:51,y:889,kind:1},{x:278,y:934,kind:0},{x:146,y:1000,kind:2},{x:40,y:1059,kind:0},{x:311,y:1120,kind:1},{x:100,y:1165,kind:2},{x:250,y:1184,kind:0}],
 } as const;
 // Drawing and canopy clearance use the same full routes.
@@ -50,10 +50,18 @@ for(let row=0;row<7;row++)for(let column=0;column<10;column++){
  const t={x:-365+column*47+(row%2)*16,y:835+row*55,kind:(row+column)%3};
  if(woodlandTreeClear(t.x,t.y,1,t.kind)&&natureSites.every(p=>Math.hypot(p.x-t.x,p.y-t.y)>35)&&forestPlants.every(p=>Math.hypot(p.x-t.x,p.y-t.y)>42)&&villageLayout.bushes.every(p=>Math.hypot(p.x-t.x,p.y-t.y)>38)&&[...villageTrees,...forestTrees].every(p=>Math.hypot(p.x-t.x,p.y-t.y)>34))forestTrees.push(t);
 }
+// Restore a dense woodland shoulder along both sides of the narrow delivery road.
+export const marketRoadsideTrees:{x:number;y:number;kind:number}[]=[];
+for(let row=0;row<4;row++)for(let column=0;column<17;column++){
+ const t={x:FOREST_LEFT+28+column*48+(row%2)*22,y:[626,674,899,941][row]+(column%3-1)*5,kind:(row+column)%3};
+ if(t.x> -280||!woodlandTreeClear(t.x,t.y,1,t.kind)||natureSites.some(p=>Math.hypot(p.x-t.x,p.y-t.y)<38)||forestPlants.some(p=>Math.hypot(p.x-t.x,p.y-t.y)<42)||[...villageTrees,...forestTrees].some(p=>Math.hypot(p.x-t.x,p.y-t.y)<34))continue;
+ forestTrees.push(t);marketRoadsideTrees.push(t);
+}
 const buildings:Box[]=[villageLayout.nursery,villageLayout.fishShop,villageLayout.craftShop];
 export function villageBlocked(x:number,y:number){
  if(noticeBoardBlocked(x,y))return true;
  if(forestTrees.some(t=>Math.hypot((x-t.x)/12,(y-t.y)/9)<1))return true;
+ if(x>=FOREST_LEFT+24&&x<22&&marketRoadContains(x,y,-8))return false;
  if(x<22&&y>=695&&y<=1340)return forestBlocked(x,y);
  if(x<22||x>WORLD_WIDTH-22||y<600||y>WORLD_HEIGHT-26)return true;
  if(buildings.some(b=>x+7>b.x&&x-7<b.x+b.w&&y+3>b.y&&y-4<b.y+b.h))return true;

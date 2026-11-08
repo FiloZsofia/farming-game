@@ -1,9 +1,9 @@
 import Phaser from 'phaser';
 import type {Clearing} from './cleanup';
-import {junkSites,junkPoint,junkProgress,junkScale,junkWorkPoint} from './junk-sites';
+import {junkSites,junkPoint,junkProgress,junkVisualScale,junkWorkPoint} from './junk-sites';
 export function drawJunkSites(scene:Phaser.Scene,clearing:Clearing,day:number){
  const root=scene.add.container(0,0).setDepth(.7),indicators=scene.add.graphics().setDepth(175);root.once('destroy',()=>indicators.destroy());const markers:{x:number;y:number;hits:number}[]=[];root.setData('indicators',indicators);root.setData('markers',markers);
- for(const site of junkSites){const p=junkPoint(clearing,site.id),progress=junkProgress(clearing,site.id,day),g=scene.add.graphics();root.add(g);g.save().translateCanvas(p.x,p.y).scaleCanvas(junkScale,junkScale).translateCanvas(-p.x,-p.y);
+ for(const site of junkSites){const p=junkPoint(clearing,site.id),progress=junkProgress(clearing,site.id,day),g=scene.add.graphics(),scale=junkVisualScale(site.id);root.add(g);g.save().translateCanvas(p.x,p.y).scaleCanvas(scale,scale).translateCanvas(-p.x,-p.y);
   const rect=(x:number,y:number,w:number,h:number,c:number)=>g.fillStyle(c).fillRoundedRect(p.x+x,p.y+y,w,h,1.5),oval=(x:number,y:number,w:number,h:number,c:number,a=1)=>g.fillStyle(c,a).fillEllipse(p.x+x,p.y+y,w,h),line=(x:number,y:number,xx:number,yy:number,c:number,w=1)=>g.lineStyle(w,c).lineBetween(p.x+x,p.y+y,p.x+xx,p.y+yy),poly=(a:number[],c:number)=>g.fillStyle(c).fillPoints(Array.from({length:a.length/2},(_,i)=>({x:p.x+a[i*2],y:p.y+a[i*2+1]})),true);
   const wheel=(x:number,y:number,r:number)=>{oval(x+2,y+3,r*2+3,r+8,0x273c31,.3);oval(x,y,r*2,r*2,0x3b4037);oval(x,y,r*1.45,r*1.45,0x595c4b);oval(x,y,r*.85,r*.85,0xb09b6b);for(let i=0;i<5;i++){const a=i*Math.PI*.4;line(x,y,x+Math.cos(a)*r*.55,y+Math.sin(a)*r*.55,0x777b69,1.5);}oval(x,y,4,4,0xd0ba86);};
   oval(3,20,149,36,0x263c2f,.3);oval(-9,20,111,20,0x6d7348,.35);
@@ -24,7 +24,7 @@ export function drawJunkSites(scene:Phaser.Scene,clearing:Clearing,day:number){
   }
   // Loose boards, fittings and brick ballast are removed part by part; the ruin remains.
   for(let part=0;part<6;part++){if(part<4&&part<progress.part)continue;const offsets=[[-34,6],[0,8],[32,8],[-30,-12],[3,-10],[35,-10]], [x,y]=offsets[part];if(part===2||part===5){for(let i=0;i<4;i++){const xx=x+(i%2)*10-7,yy=y+Math.floor(i/2)*5;poly([xx-5,yy-3,xx+5,yy-2,xx+6,yy+3,xx-5,yy+3],i%2?0xb09d7b:0x9d8768);line(xx-4,yy-2,xx+3,yy-1,0xd5c4a0);}}else{for(let i=0;i<2;i++){line(x-15,y+i*4,x+13,y-3+i*4,0x987044,4);line(x-13,y-1+i*4,x+11,y-4+i*4,0xd0a66e);oval(x-8,y+i*4,1.5,1.5,0x525a49);}rect(x+7,y-1,7,4,0x7f8a78);line(x+6,y,x+11,y-4,0xb8b495,2);}}
-  if(progress.part<4){const target=junkWorkPoint(clearing,site.id,day),x=(target.x-p.x)/junkScale,y=(target.y-p.y)/junkScale;g.lineStyle(1.3,0xf3d88b,.8).strokeRoundedRect(p.x+x-20,p.y+y-9,40,20,4);g.fillStyle(0xf1d78b,.09).fillRoundedRect(p.x+x-20,p.y+y-9,40,20,4);markers.push({x:target.x,y:target.y,hits:progress.hits});}g.restore();
+  if(progress.part<4){const target=junkWorkPoint(clearing,site.id,day),x=(target.x-p.x)/scale,y=(target.y-p.y)/scale;g.lineStyle(1.3,0xf3d88b,.8).strokeRoundedRect(p.x+x-20,p.y+y-9,40,20,4);g.fillStyle(0xf1d78b,.09).fillRoundedRect(p.x+x-20,p.y+y-9,40,20,4);markers.push({x:target.x,y:target.y,hits:progress.hits});}g.restore();
  }
  return root;
 }

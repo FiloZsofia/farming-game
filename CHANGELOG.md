@@ -1,5 +1,15 @@
 # Változások
 
+## Javítások a 0.3.0 után — verzióemelés nélkül
+
+- Az autóroncs feljebb, az átadótól távolabb került, nagyobb megjelenéssel és hozzá igazodó helyfoglalással; a korábbi bontási állapot megmarad.
+
+- Mara keskenyebb útja a pálya bal széléig ér, az autó a látható pályán kívül érkezik/távozik. Sűrűbb erdősáv mindkét oldalon, kisebb fordulóhely, az áfonyabokor az út melletti füves részre került. A visszaállított törzsekre eső mentett helyről biztonságosan szabad helyre kerül a játékos.
+
+- A legelső ágyás Segítség része alapból nyitott a kezdő lépések megkönnyítésére. A további ágyásoknál a kérdőjellel nyitható.
+
+- A felhasználó kérésére minden farm egyszer 0 pontról kezdi újra az új Kertészkedés jártasságot, a már 0.3.0-ra átállított mentések is. Az Epres méhlegelő és az Esti teakert ismét 50/100 ponttal szerezhető meg. Meglévő ágyások és készlet megmaradnak, későbbi betöltés nem nullázza újra a fejlődést.
+
 ## 0.3.0 — 2026-11-08
 
 - Az új kertészkedés a rendes játék része: szabad ágyáselhelyezés, kilenc helyes társítások, ajánlott arányok szabad összeállítással, egész ágyás öntözése és mulcsozása, utánvetés, megfigyelések és maggyűjtés. A növények legfeljebb négy gondozott nap alatt fejlődnek ki.

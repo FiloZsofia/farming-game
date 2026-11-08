@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import {MarketTrial,marketProducts,marketName,marketPrice,type MarketCrate} from './market-trial';
-import {marketRoads,marketLoadingRoute,marketParking,marketTurn,marketDeparture} from './market-trial-route';
+import {marketRoads,marketLoadingRoute,marketParking,marketDoor,marketArrival,marketTurn,marketDeparture} from './market-trial-route';
 import {MarketStandArt,MarketTruckArt,loadMarketIcons,marketStand,marketFenceGap} from './market-trial-art';
 import {MaraArt,maraPortrait} from './mara-art';
 import {FarmerArt} from './character';
@@ -71,16 +71,16 @@ export class MarketTrialScene extends Phaser.Scene{
  private talk(topic='hello'){
   this.release();this.model.metMara=true;this.panelMode='talk';this.host.show('Mara',topic==='work'?'Ezt az utat már félálomban is ismerem. De a rakományt ébren számolom meg. Mindig.':topic==='cargo'?'Dobozonként egyféle termény. Mire visszaérek a kocsihoz, legyen eldöntve, mit küldesz — a találgatást nem kilóra fizetik.':this.model.sentToday?'Minden a platón. A következő szüretet azért még ne ott neveld.':'Mara vagyok. Én viszem tovább, amit összekészítesz. Szép termést szeretek látni — a doboz meg legalább ne legyen nehezebb nálam.','');this.dialog.dataset.speaker='mara';const speaker=document.querySelector<HTMLElement>('#speaker')!;speaker.hidden=false;document.querySelector('#speaker-name')!.textContent='Mara';document.querySelector('#speaker-portrait')!.replaceChildren(maraPortrait());const panel=document.querySelector<HTMLElement>('#research-panel')!;panel.hidden=false;panel.replaceChildren(this.button('A fuvarról kérdezek',()=>this.talk('cargo')),this.button('A munkájáról kérdezek',()=>this.talk('work')));
  }
- dispatch(){if(!this.ready||this.flow!=='idle'&&this.flow!=='done'||!this.model.dispatch())return;this.flow='arriving';this.elapsed=0;this.cargo=[];this.carried=null;this.truck.setCargo([]);this.truckHeading=0;this.wheelTravel=0;this.truck.root.setPosition(-700,marketParking.y).setVisible(true);this.hud();}
+ dispatch(){if(!this.ready||this.flow!=='idle'&&this.flow!=='done'||!this.model.dispatch())return;this.flow='arriving';this.elapsed=0;this.cargo=[];this.carried=null;this.truck.setCargo([]);this.truckHeading=0;this.wheelTravel=0;this.truck.root.setPosition(marketArrival(0).x,marketParking.y).setVisible(true);this.hud();}
  nextDay(){if(this.flow!=='idle'&&this.flow!=='done'||!this.model.nextDay())return;this.flow='idle';this.truck.root.setVisible(false);this.mara.root.setVisible(false);this.hud();}
  advanceFlow(seconds:number){while(seconds>0){const dt=Math.min(seconds,.05);this.stepFlow(dt);seconds-=dt;}}
  private stepFlow(dt:number){if(this.flow==='idle'||this.flow==='done')return;this.elapsed+=dt;const durations:Record<Exclude<Flow,'idle'|'done'>,number>={arriving:4,exit:.7,toStand:2.7,take:.8,toTruck:2.4,put:.7,return:2.4,board:.7,turn:3.8,depart:4},t=Math.min(1,this.elapsed/durations[this.flow]);
   if(['arriving','turn','depart'].includes(this.flow))this.wheelTravel+=dt*5;
-  if(this.flow==='arriving')this.truck.root.setPosition(-700+680*t,marketParking.y);
-  if(this.flow==='exit'){this.mara.root.setVisible(true).setPosition(38,714);}
-  if(this.flow==='toStand'||this.flow==='return'){const p=along(this.flow==='toStand'?[{x:38,y:714},...route.slice(1)]:route,t);this.mara.root.setPosition(p.x,p.y);}
+  if(this.flow==='arriving'){const p=marketArrival(t);this.truck.root.setPosition(p.x,p.y);}
+  if(this.flow==='exit'){this.mara.root.setVisible(true).setPosition(marketDoor.x,marketDoor.y);}
+  if(this.flow==='toStand'||this.flow==='return'){const p=along(this.flow==='toStand'?[marketDoor,...route.slice(1)]:route,t);this.mara.root.setPosition(p.x,p.y);}
   if(this.flow==='toTruck'){const p=along([...route].reverse(),t);this.mara.root.setPosition(p.x,p.y);}
-  if(this.flow==='board')this.mara.root.setPosition(-50+88*t,714);
+  if(this.flow==='board')this.mara.root.setPosition(-50+88*t,marketDoor.y);
   if(this.flow==='turn'||this.flow==='depart'){const p=this.flow==='turn'?marketTurn(t):marketDeparture(t);this.truck.root.setPosition(p.x,p.y);this.truckHeading=p.heading;}
   if(t<1)return;const go=(next:Flow)=>{this.flow=next;this.elapsed=0;};
   if(this.flow==='arriving')go('exit');else if(this.flow==='exit')go('toStand');else if(this.flow==='toStand'||this.flow==='return')go('take');else if(this.flow==='take'){this.carried=this.model.loadNext();this.stand.update(this.model.crates);go('toTruck');}else if(this.flow==='toTruck')go('put');else if(this.flow==='put'){if(this.carried){this.cargo.push(this.carried);this.truck.setCargo(this.cargo);this.carried=null;}if(this.model.manifest&&this.model.loaded<this.model.manifest.length)go('return');else{const receipt=this.model.finishPickup();if(receipt){this.noticeSeconds=6;document.querySelector('#feedback')!.textContent=`Mara átvette az árut · +${receipt.total} gold`;document.querySelector('#feedback')!.classList.add('notice');}go('board');}}else if(this.flow==='board'){this.mara.root.setVisible(false);go('turn');}else if(this.flow==='turn')go('depart');else if(this.flow==='depart'){this.truck.root.setVisible(false);go('done');}this.hud();

@@ -1,3 +1,4 @@
+import {marketRoadContains} from './market-trial-route';
 import {natureSites,natureReady} from './nature-resources';
 import {drawWoodlandTree} from './woodland-tree';
 import Phaser from 'phaser';
@@ -23,7 +24,7 @@ export function paintForest(g:Phaser.GameObjects.Graphics,random:()=>number,pain
   for(const x of [center-25,center,center+25]){
    for(let y=725;y<top+1;y+=48)tree(x+(y%3)*3,y,Math.abs(Math.round(x+y))%3,.9);
    for(let y=bottom+99;y<1380;y+=47)tree(x+(y%3)*3,y,Math.abs(Math.round(x+y))%3,.9);
-   for(let y=715;y<1340;y+=26)if(y<top-5||y>bottom+5){g.lineStyle(2,0x456b3c).lineBetween(x-12,y+7,x+8,y-3).lineBetween(x-4,y+9,x-9,y-8);g.fillStyle(0x6d8a49).fillEllipse(x-10,y,18,8).fillEllipse(x+4,y+4,20,7);}
+   for(let y=715;y<1340;y+=26)if((y<top-5||y>bottom+5)&&!marketRoadContains(x,y,20)){g.lineStyle(2,0x456b3c).lineBetween(x-12,y+7,x+8,y-3).lineBetween(x-4,y+9,x-9,y-8);g.fillStyle(0x6d8a49).fillEllipse(x-10,y,18,8).fillEllipse(x+4,y+4,20,7);}
   }
  }
  for(const [x,y]of [[-300,826],[-487,850],[-740,1130],[-1010,950]]){oval(x,y,40,22,0x737d6c);oval(x-5,y-5,27,12,0xa1aa8a);oval(x+7,y+5,23,9,0x50734a);}
