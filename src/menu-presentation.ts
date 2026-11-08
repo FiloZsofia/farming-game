@@ -1,7 +1,7 @@
 import {GAME_VERSION} from './version';
 import {bugReportLink} from './bug-report';
 const menuLogo=new URL('./assets/silent-pollen-logo.webp',import.meta.url).href;
-// Menu-only decoration and sound; no game or save state lives here.
+// Menu decoration and optional interface sounds; no game or save state lives here.
 export class MenuPresentation{
  private observer:MutationObserver;private context:AudioContext|null=null;private noise:AudioBuffer|null=null;private sound=true;
  private scene:HTMLElement;private brand:HTMLElement;
@@ -33,7 +33,7 @@ export class MenuPresentation{
   const toggle=document.querySelector<HTMLButtonElement>('#menu-sound-toggle')!;
   const label=()=>{toggle.textContent=`Menühangok: ${this.sound?'be':'ki'}`;toggle.setAttribute('aria-pressed',String(this.sound));};label();
   toggle.addEventListener('click',()=>{this.sound=!this.sound;try{localStorage.setItem('silent-pollen-menu-sound',this.sound?'on':'off');}catch{}label();});
-  document.addEventListener('click',this.click,true);document.addEventListener('visibilitychange',this.visibility);
+  document.addEventListener('click',this.click,true);document.addEventListener('visibilitychange',this.visibility);document.addEventListener('item-gift',this.gift);
   this.observer=new MutationObserver(()=>this.refresh());this.observer.observe(this.dialog,{attributes:true,subtree:true,attributeFilter:['open','hidden']});this.refresh();
  }
  home(){this.dialog.dataset.menuSection='home';}
@@ -45,6 +45,16 @@ export class MenuPresentation{
  }
  private click=(event:MouseEvent)=>{const button=event.target instanceof Element?event.target.closest<HTMLButtonElement>('button'):null;if(button&&!button.disabled&&(this.dialog.dataset.menu||button.id==='menu'))void this.woodClick();};
  private visibility=()=>{this.dialog.dataset.menuPaused=String(document.hidden);if(document.hidden)void this.context?.suspend();};
+ private gift=()=>{void this.itemChime();};
+ private async itemChime(){
+  if(!this.sound||document.hidden||typeof AudioContext==='undefined')return;
+  try{
+   this.context??=new AudioContext();const ctx=this.context;if(ctx.state!=='running')await ctx.resume();if(!this.sound||ctx.state!=='running'||document.hidden)return;
+   for(const [offset,frequency,volume]of [[0,1046.5,.035],[.09,1318.5,.025]]){
+    const tone=ctx.createOscillator(),gain=ctx.createGain(),start=ctx.currentTime+offset;tone.type='sine';tone.frequency.value=frequency;gain.gain.setValueAtTime(.0001,start);gain.gain.exponentialRampToValueAtTime(volume,start+.009);gain.gain.exponentialRampToValueAtTime(.0001,start+.48);tone.connect(gain);gain.connect(ctx.destination);tone.start(start);tone.stop(start+.5);tone.onended=()=>{tone.disconnect();gain.disconnect();};
+   }
+  }catch{/* Optional handoff audio must never interrupt the saved item or its animation. */}
+ }
  private async woodClick(){
   if(!this.sound||document.hidden||typeof AudioContext==='undefined')return;
   try{
@@ -54,5 +64,5 @@ export class MenuPresentation{
    const t=ctx.currentTime;gain.gain.setValueAtTime(.19,t);gain.gain.exponentialRampToValueAtTime(.0001,t+.065);source.connect(filter);filter.connect(gain);gain.connect(ctx.destination);source.start(t);source.onended=()=>{source.disconnect();filter.disconnect();gain.disconnect();};
   }catch{/* Silent fallback on devices where optional UI audio is unavailable. */}
  }
- destroy(){this.observer.disconnect();document.removeEventListener('click',this.click,true);document.removeEventListener('visibilitychange',this.visibility);void this.context?.close();this.scene.remove();this.brand.remove();this.dialog.querySelector('.menu-credits')?.remove();}
+ destroy(){this.observer.disconnect();document.removeEventListener('click',this.click,true);document.removeEventListener('visibilitychange',this.visibility);document.removeEventListener('item-gift',this.gift);void this.context?.close();this.scene.remove();this.brand.remove();this.dialog.querySelector('.menu-credits')?.remove();}
 }

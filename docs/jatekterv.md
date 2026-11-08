@@ -1450,3 +1450,17 @@ A postaláda részleges átvételnél egyértelműen jelzi: „A rendelt magokna
 A bokor teljes látható lombja az ösvényen/úton kívül legyen, kis füves hézaggal, takarás nélkül. Fa, épület, tábla vagy más tárgy nem fedheti el; legalább egy oldalról megközelíthető legyen. Út és növényzet módosításakor az összes szedhető bokrot ellenőrizzük, nem csak az éppen mozgatottat. A `birch` gyűjtési azonosítójú, Falu tábla melletti bokor a (238, 821) helyről a füves (95, 845) pontra kerül; a korábbi szedési előzménye megmarad. A közös faelhelyezés fenntartja a bokrok takarásmentes helyét.
 
 Az átadó útjának jobbra, a pálya széléig továbbvezetése egyelőre megbeszélés alatt álló ötlet. Nincs jóváhagyva megvalósításra; a jelenlegi útvonal és Mara fordulása ebben a javításban nem változik.
+
+### Jóváhagyott átmenő autóút, első ágyás jelzése és napló
+
+A korábbi fordulóöblöt megszüntetjük. Az út egyenletes, 64 egységnyi szélességgel végighalad a pályán balról jobbra; az autó csak a pályán kívül tűnik el. Mara az átadó előtt, a füves rakodóhelyen parkol (−130, 665), onnan rakodik. Utána visszasorol a földútra és jobbra távozik. A farmkapu T-elágazása (170, 740) és a falu felé vezető külön T-leágazás (300, 740) el van tolva egymástól, az erdei ág lejjebb marad. A Falu jelzőtábla az új déli leágazás mellé kerül; oszlopa és deszkája az autóúton kívül marad.
+
+Az út és a lehúzódás által érintett, korábban meglévő fák saját fajtájukkal és méretükkel közeli helyen megmaradnak. A közös nyilvántartás 14 meglévő fát őriz meg, azok áthelyezésével, amelyek útban voltak; a fiatal és procedurális növényzet is kerüli az utat, a rakodóhelyet és a szedhető bokrokat. A játékos mentett helyének korábbi biztonságos áthelyezése továbbra is működik, ha új törzs takarná el.
+
+A jármű Sam előtt lassít, biztonságos rést hagyva megáll, és csak felszabaduló úton folytatja a mozgást. A kocsin gyalog sem lehet átsétálni. A rendes játék és az elkülönített Mara-próba ugyanazt a járműgeometriát, nyomvonalat és gyalogosvédelmet használja. A beszélgetés és az egyszeri fuvar-elszámolás megmarad.
+
+Leo kezdő ablakának bezárása után a + gombot a Naplóéhoz hasonló arany pulzáló kör emeli ki, amíg az első ágyás helyének kijelölése el nem kezdődik. Csak még nem teljesített ágyáscélnál látszik; ablak alatt rejtett, csökkentett mozgásnál statikus. A jelzés nem módosítja az ajánlott társításokat vagy a játékos szabadságát.
+
+Az Esti napló minden bejegyzése azonos formát kap: félkövér fejléc (típus, dátum, tárgy), új sorban normál törzsszöveg. Az első faliméh-megfigyelés is ezt követi, a meglévő szöveg tartalma megmarad.
+
+Minden közös tárgyátadási animáció indulásakor halk, két hangból álló csilingelés szól. Ugyanazt a hangbeállítást használja, mint a Menühangok: kikapcsolva vagy háttérbe tett oldalon nincs hang. A szintetizált saját hanghoz nem kell külső hangfájl; hangengedély/hiba esetén az átadás változatlanul működik.

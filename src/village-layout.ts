@@ -1,5 +1,5 @@
 import {quadraticPath} from './path-curves';
-import {marketRoads,marketRoadContains} from './market-trial-route';
+import {marketRoads,marketRoadContains,marketTreeManeuverClear} from './market-trial-route';
 import {noticeBoardBlocked} from './village-notice';
 import {natureSites,natureTreeClear} from './nature-resources';
 import {FOREST_LEFT,forestBlocked,forestPlants} from './forest';
@@ -21,12 +21,13 @@ export const villageLayout={
 } as const;
 // Drawing and canopy clearance use the same full routes.
 export const villagePaths=[
- {width:32,points:[farmLayout.paths[0].points[0],...quadraticPath([170,740],[170,795],[245,850]),[300,889],[393,955],[476,1030],[493,1320],[493,WORLD_HEIGHT-6]]},
+ {width:32,points:[farmLayout.paths[0].points[0],[170,740]]},
  {width:17,points:[...quadraticPath([300,889],[210,870],[150,900]),...quadraticPath([150,900],[120,910],[107,930]).slice(1),[211,1040],[356,1080]]},
  {width:28,points:[[474,1016],[586,978],[591,940]]},
  {width:25,points:[[606,1097],[660,1100],[708,1100]]},
  {width:23,points:[[493,1320],[493,1364],[660,1364],[660,1341]]},
  {width:20,points:[[107,930],[40,930],[-120,938],[-270,1000],[-450,995],[-570,962],[-660,978],[-780,984],[-940,1010]]},
+ {width:32,points:[...quadraticPath([300,740],[255,815],[300,889]),[393,955],[476,1030],[493,1320],[493,WORLD_HEIGHT-6]]},
 ];
 // The whole harvestable crown stays off paving, with a clear margin around its leaves.
 export const forageBushBounds=(b:{x:number;y:number})=>({left:b.x-20,right:b.x+20,top:b.y-22,bottom:b.y+8});
@@ -37,18 +38,26 @@ export function forageBushOffPaths(b:{x:number;y:number}){
 export function woodlandTreeCoversBush(x:number,y:number,scale=1){return villageLayout.bushes.some(b=>{const box=forageBushBounds(b);return x+42*scale>box.left-5&&x-42*scale<box.right+5&&y+7*scale>box.top-5&&y-105*scale<box.bottom+5;});}
 // Match the crown silhouette, leaving room under/along its tapered edges.
 export function woodlandTreeClear(x:number,y:number,scale=1,kind=0){
- const building=villageLayout.craftShop;if(x+42*scale>building.x-12&&x-42*scale<building.x+building.w+12&&y+12*scale>building.y-40&&y-110*scale<building.y+building.h+12)return false;
- if(!natureTreeClear(x,y,scale)||woodlandTreeCoversBush(x,y,scale))return false;
+ if([villageLayout.craftShop,villageLayout.nursery,villageLayout.fishShop].some(building=>x+42*scale>building.x-12&&x-42*scale<building.x+building.w+12&&y+12*scale>building.y-40&&y-110*scale<building.y+building.h+12))return false;
+ if(!natureTreeClear(x,y,scale)||woodlandTreeCoversBush(x,y,scale)||!marketTreeManeuverClear(x,y,scale))return false;
  const crowns=kind===2?Array.from({length:4},(_,i)=>({x:0,y:-90+i*19+22,rx:15+i*8,ry:24})):[{x:-18,y:-48,rx:22.5,ry:19.5},{x:12,y:-56,rx:25.5,ry:23.5},{x:-3,y:-76,rx:24.5,ry:19.5},{x:0,y:-38,rx:28,ry:16}];
  return [...villagePaths,...marketRoads].every(path=>path.points.slice(1).every((b,i)=>{const a=path.points[i],steps=Math.max(1,Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/3)),margin=path.width/2+4;for(let j=0;j<=steps;j++){const xx=a[0]+(b[0]-a[0])*j/steps,yy=a[1]+(b[1]-a[1])*j/steps;if(Math.hypot(xx-Math.max(x-5*scale,Math.min(x+6*scale,xx)),yy-Math.max(y-44*scale,Math.min(y+7*scale,yy)))<margin)return false;if(crowns.some(c=>((xx-x-c.x*scale)/(c.rx*scale+margin))**2+((yy-y-c.y*scale)/(c.ry*scale+margin))**2<1))return false;}return true;}));
 }
 export type WoodlandTree={x:number;y:number;kind:number;scale?:number};
-export const villageTrees:WoodlandTree[]=villageLayout.trees.filter(t=>woodlandTreeClear(t.x,t.y,1,t.kind));
+// Preserve the actual trees affected by the new eastern road and the grass pull-off.
+export const marketTreeOrigins:WoodlandTree[]=[{x:286,y:769,kind:1},{x:246,y:739,kind:1},{x:302,y:736,kind:2},{x:327,y:776,kind:0},{x:252,y:797,kind:2},{x:280,y:821,kind:1},{x:315,y:813,kind:2},{x:306,y:858,kind:0},{x:341,y:858,kind:1},{x:410,y:750,kind:0,scale:.9},{x:746,y:766,kind:1,scale:.9},{x:-398,y:679,kind:0},{x:-350,y:669,kind:1},{x:-302,y:674,kind:2}];
+export const villageTrees:WoodlandTree[]=villageLayout.trees.filter(t=>!marketTreeOrigins.some(o=>o.x===t.x&&o.y===t.y)).filter(t=>woodlandTreeClear(t.x,t.y,1,t.kind));
 // Reposition crowded trees beside the paths instead of removing the woodland.
 const candidates=Array.from({length:72},(_,i)=>({x:28+i%8*37+(i%3)*6,y:675+Math.floor(i/8)*61,kind:i%3}));
 export const forestTrees:WoodlandTree[]=[];
+export const relocatedMarketTrees:{from:WoodlandTree;to:WoodlandTree}[]=[];
+for(const origin of marketTreeOrigins){
+ const offsets=[[0,0],...Array.from({length:28},(_,i)=>{const d=(i+1)*8;return [[0,-d],[0,d],[-d,0],[d,0],[-d,-d],[d,-d],[-d,d],[d,d]];}).flat()];
+ const point=offsets.map(([dx,dy])=>({...origin,x:origin.x+dx,y:origin.y+dy})).find(t=>t.y>=610&&t.y<=1030&&(origin.x<0?t.x<0:t.x>=200)&&woodlandTreeClear(t.x,t.y,t.scale??1,t.kind)&&[...villageTrees,...forestTrees].every(p=>Math.hypot(p.x-t.x,p.y-t.y)>=34));
+ if(!point)throw Error('A fa nem maradhat ki az új út miatt.');forestTrees.push(point);relocatedMarketTrees.push({from:origin,to:point});
+}
 for(const original of candidates){
- const offsets=[[0,0],...Array.from({length:8},(_,i)=>{const d=(i+1)*8;return [[-d,0],[d,0],[0,-d],[0,d],[-d,-d],[d,-d],[-d,d],[d,d]];}).flat()];
+ const offsets=[[0,0],...Array.from({length:16},(_,i)=>{const d=(i+1)*8;return [[-d,0],[d,0],[0,-d],[0,d],[-d,-d],[d,-d],[-d,d],[d,d]];}).flat()];
  for(const [dx,dy]of offsets){const t={...original,x:original.x+dx,y:original.y+dy};if(t.x<10||t.x>390||t.y<635||t.y>1235||!woodlandTreeClear(t.x,t.y,1,t.kind)||villageLayout.bushes.some(b=>Math.hypot(t.x-b.x,t.y-b.y)<38)||[...villageTrees,...forestTrees].some(b=>Math.hypot(t.x-b.x,t.y-b.y)<34))continue;
  // Keep the village sign and the square's furniture readable.
  if(t.x>175&&t.x<285&&t.y>620&&t.y<735||t.x>260&&t.y>1010)continue;

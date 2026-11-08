@@ -43,3 +43,6 @@ body:has(#game[data-homestead=true]) :is(#feedback,#status){bottom:calc(var(--ga
 @media(max-width:700px){body:has(#game[data-homestead=true]) #gardening-skill{left:84px;top:130px;bottom:auto;z-index:10;}}
 
 body:has(#game[data-homestead=true]) #feedback{display:block;bottom:var(--garden-feedback-bottom,calc(var(--garden-panel-bottom,110px) + 8px));z-index:10;}
+
+#living-garden-add-bed.first-bed-hint{overflow:visible}#living-garden-add-bed.first-bed-hint::before{content:"";position:absolute;inset:-9px;border:3px solid #ffdf8e;border-radius:50%;pointer-events:none;box-shadow:0 0 0 6px #efc36a25,0 0 14px #ffda8170;animation:first-bed-pulse 3.14s ease-in-out infinite}#living-garden-add-bed.first-bed-hint::after{content:"";position:absolute;inset:-16px;border:2px solid #efc36a;border-radius:50%;pointer-events:none;animation:first-bed-pulse 3.14s ease-in-out infinite;opacity:.3}@keyframes first-bed-pulse{0%,100%{transform:scale(.94);opacity:.35}50%{transform:scale(1.1);opacity:.95}}@media(prefers-reduced-motion:reduce){#living-garden-add-bed.first-bed-hint::before,#living-garden-add-bed.first-bed-hint::after{animation:none;opacity:.7}}
+@media(max-width:700px){#living-garden-add-bed.first-bed-hint::before{inset:-5px}#living-garden-add-bed.first-bed-hint::after{inset:-8px}}

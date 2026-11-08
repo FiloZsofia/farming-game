@@ -467,8 +467,9 @@ class Farm extends Phaser.Scene {
   if(journalHelpPending(this.story,this.clock.day)){this.openJournalHelp();return;}
   showDialogue('Mára elég volt?','A kert holnap is megvár. Lezárom a naplót, és reggelig pihenek.','ESTI NAPLÓ');
   const observation=this.travel.research.observation,note=this.travel.pollinationObservation,panel=document.querySelector<HTMLElement>('#research-panel')!;panel.replaceChildren();
-  if(observation){const p=document.createElement('p');p.textContent=`Első megfigyelés · Tavasz ${observation.seasonDay}. napja — Szarvas faliméh (Osmia cornuta). Egy példány a vadvirágoknál. Ez jó jel, de egyetlen megfigyelésből még nem tudom, miért lettek kevesebben.`;panel.append(p);}
-  if(note){const p=document.createElement('p');p.dataset.pollinationNote='true';const title=document.createElement('strong');title.textContent=`Kerti megfigyelés · ${note.day}. nap — ${POLLINATION_OBSERVATION_TITLE}`;p.append(title,document.createElement('br'),document.createTextNode(POLLINATION_OBSERVATION_TEXT));panel.append(p);}
+  const addEntry=(heading:string,text:string)=>{const p=document.createElement('p'),title=document.createElement('strong');p.className='journal-entry';title.textContent=heading;p.append(title,document.createElement('br'),document.createTextNode(text));panel.append(p);return p;};
+  if(observation)addEntry(`Első megfigyelés · Tavasz ${observation.seasonDay}. napja — Szarvas faliméh (Osmia cornuta)`,'Egy példány a vadvirágoknál. Ez jó jel, de egyetlen megfigyelésből még nem tudom, miért lettek kevesebben.');
+  if(note)addEntry(`Kerti megfigyelés · ${note.day}. nap — ${POLLINATION_OBSERVATION_TITLE}`,POLLINATION_OBSERVATION_TEXT).dataset.pollinationNote='true';
   panel.hidden=!observation&&!note;
   document.querySelector<HTMLButtonElement>('#sleep')!.hidden=false;
   document.querySelector<HTMLButtonElement>('#export-save')!.hidden=false;

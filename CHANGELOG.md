@@ -2,6 +2,11 @@
 
 ## Javítások a 0.3.0 után — verzióemelés nélkül
 
+- Mara autója az átadó melletti füves részre húzódik le, majd visszatér az útra és jobbra távozik. Megszűnt a fordulóöböl; az autóút mindkét pályaszélig folyamatos. Az útban álló meglévő fák közeli helyeken megmaradtak. Sam előtt a kocsi lassít és megáll, a járművön gyalog sem lehet áthaladni.
+- Leo kezdő ablakának bezárása után pulzáló arany kör mutatja az első ágyás kijelölésének + gombját.
+- Az Esti napló valamennyi bejegyzése félkövér fejlécet és külön normál törzsszöveget kap.
+- A tárgyátadási animációk finom csilingelést kapnak, a Menühangok beállítását követve.
+
 - A Falu tábla melletti másik szedhető bokor is füves, út melletti helyre került. Minden szedhető bokor teljes lombját útmentes és takarásmentes terület védi; a fák elhelyezése is figyelembe veszi őket. A szedési előzmények megmaradnak.
 
 - Részleges csomagátvételkor a postaláda jelzi, hogy a helyhiány miatt bent maradt magok megvárják a játékost. Ha egyetlen mag sem fér el, ugyanez az ablak magyarázza az inaktív átvételi gombot.
