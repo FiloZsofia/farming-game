@@ -1084,13 +1084,13 @@ class Farm extends Phaser.Scene {
    const card=document.createElement('span');card.className='mail-seed-card';card.dataset.mailCrop=crop;
    const label=document.createElement('span');label.textContent=`${cropNames[crop]} · ${this.materialName(crop)}: ${this.orders.mailbox[crop]} db`;card.append(seedIcon(crop),label);content.append(card);
   }for(const k of extraBedKinds){const n=extraMail[k]??0;if(!n)continue;const card=document.createElement('span');card.className='mail-seed-card';card.append(seedIcon(k),document.createTextNode(`${bedKinds[k].name} · mag: ${n} db`));content.append(card);}}else content.textContent=quantityTotal(this.orders.pending)+Object.values(this.travel.homestead?.garden.pending??{}).reduce((a,b)=>a+(b??0),0)>0?'A rendelésed úton van, holnap reggel érkezik.':'Most nincs csomag a postaládában.';
-  const collect=document.querySelector<HTMLButtonElement>('#collect-package')!;collect.hidden=count===0;collect.disabled=this.transitioning||!collectAvailableMail(this.currentSnapshot());
+  const collect=document.querySelector<HTMLButtonElement>('#collect-package')!;collect.hidden=count===0;const available=collectAvailableMail(this.currentSnapshot());collect.disabled=this.transitioning||!available;if(count&&!available&&!document.querySelector('#dialogue-text')!.textContent)document.querySelector('#dialogue-text')!.textContent='Most nincs elég hely a Készletedben. A magok a postaládában maradnak, amíg vissza nem jössz értük.';
   document.querySelector<HTMLElement>('#mailbox-panel')!.hidden=false;
  }
  private async collectMail(){
   if(!this.ready||this.transitioning||document.querySelector<HTMLElement>('#mailbox-panel')!.hidden)return;
   const collected=collectAvailableMail(this.currentSnapshot());if(!collected){this.notice('A hátizsák tele van. A magok a postaládában maradtak.');return;}
-  await this.commitChest(collected.state,()=>{if(collected.remaining){showDialogue('Ami elfért, átvettem.','','POSTALÁDA');this.renderMailbox();}else{dialogue.close();release();this.notice('A csomag a Készletbe került.');}});
+  await this.commitChest(collected.state,()=>{if(collected.remaining){showDialogue('Nézzük a postát.','A rendelt magoknak csak egy részét tudtad átvenni, mert nincs elég hely a Készletedben. A többi a postaládában marad, amíg vissza nem jössz érte.','POSTALÁDA');this.renderMailbox();}else{dialogue.close();release();this.notice('A csomag a Készletbe került.');}});
  }
 
  private renderShipping(){

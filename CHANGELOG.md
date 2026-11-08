@@ -2,6 +2,8 @@
 
 ## Javítások a 0.3.0 után — verzióemelés nélkül
 
+- Részleges csomagátvételkor a postaláda jelzi, hogy a helyhiány miatt bent maradt magok megvárják a játékost. Ha egyetlen mag sem fér el, ugyanez az ablak magyarázza az inaktív átvételi gombot.
+
 - Az új ágyások faliméh-küldetése a mai öntözést azonnal kijelzi, az öntözés utáni ültetésnél is. Napváltáskor nem duplázódik a számláló.
 - A kezdőmagok bemutatása jelzi, hogy Leo vadvirágmagjaival együtt két kezdő társítás alakítható ki két ágyásban.
 - A műhelykulcs átvételi animációt kap az átadó mondat bezárása után, Leo alapbeszélgetése nem nyílik vissza. A kezdő ajándékok is a közös tárgyátadó animációt használják.
