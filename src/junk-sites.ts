@@ -10,7 +10,7 @@ export type JunkProgress={part:number;hits:number;completedDay?:number;cycle?:nu
 export type JunkStorage={vehicleLayout?:1;junk?:Partial<Record<JunkId,JunkProgress>>;junkPositions?:Partial<Record<JunkId,{x:number;y:number}>>};
 export const junkRenewDays=3;
 export const junkScale=1.18;
-export const junkVisualScale=(id:JunkId)=>id==='vehicle'?1.6:junkScale;
+export const junkVisualScale=(_id:JunkId)=>1.6;
 export const junkPlacementRadius=(id:JunkId)=>95*junkVisualScale(id)/junkScale;
 export const junkParts=[{x:-34,y:6,stone:false},{x:0,y:8,stone:false},{x:32,y:8,stone:true},{x:-30,y:-12,stone:false}] as const;
 export function junkProgress(c:Clearing,id:JunkId,day:number):JunkProgress{

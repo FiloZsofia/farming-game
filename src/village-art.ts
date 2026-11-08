@@ -1,4 +1,5 @@
 import {marketRoads,marketRoadContains} from './market-trial-route';
+import {marketStand} from './market-site';
 import {worldText} from './world-text';
 import {forageReady} from './travel';
 import {drawPathNetwork} from './path-art';
@@ -10,7 +11,7 @@ import Phaser from 'phaser';
 import {villageLayout as layout,villagePaths,woodlandTreeClear,villageTrees,forestTrees,WORLD_HEIGHT,WORLD_WIDTH,benchPose,benchPoint,type BenchPose,shopNames} from './village-layout';
 // Original procedural scenery, sharing coordinates with the walkable village.
 export function drawVillage(scene:Phaser.Scene){
- const canopy=scene.add.graphics(),g=scene.add.graphics().setDepth(-.5),labels:Phaser.GameObjects.Text[]=[];
+ const foregroundTrees=scene.add.graphics().setDepth(60),canopy=scene.add.graphics(),g=scene.add.graphics().setDepth(-.5),labels:Phaser.GameObjects.Text[]=[];
  let seed=193;const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
  const rect=(x:number,y:number,w:number,h:number,c:number,a=1)=>{g.fillStyle(c,a).fillRect(x,y,w,h);};
  const oval=(x:number,y:number,w:number,h:number,c:number,a=1)=>{g.fillStyle(c,a).fillEllipse(x,y,w,h);};
@@ -91,13 +92,13 @@ export function drawVillage(scene:Phaser.Scene){
  // A second village lantern frames the southern edge of the square.
  rect(518,1192,4,40,0x615940);rect(512,1185,17,18,0xd9c994);rect(510,1183,21,3,0x5b6550);poly([509,1183,520,1173,532,1183],0x566650);
  // Diverse forest silhouettes: broad oak, silver birch and fir.
- const tree=(x:number,y:number,kind:number,s=1)=>{if(woodlandTreeClear(x,y,s,kind))drawWoodlandTree(g,random,x,y,kind,s);};
+ const tree=(x:number,y:number,kind:number,s=1)=>{if(woodlandTreeClear(x,y,s,kind)){const inFront=y>=marketStand.bottom&&y-150*s<marketStand.bottom&&x+70*s>marketStand.left&&x-70*s<marketStand.right;drawWoodlandTree(inFront?foregroundTrees:g,random,x,y,kind,s);}};
  for(let row=0;row<17;row++)for(let column=0;column<9;column++){const x=FOREST_LEFT+25+column*77+(row%2)*24,y=farmBounds.top+50+row*65;if(x< -445)tree(x,y,(row+column)%3,.85+(column%3)*.08);}
 
  // Backdrop foliage frames the route without filling its walking spaces.
  for(let i=0;i<18;i++){tree(18+random()*750,700+Math.floor(i/9)*660,i%3,.65);}
  for(let i=0;i<25;i++)tree(-170+(i%4)*47,695+Math.floor(i/4)*83,i%3,.85+(i%3)*.08);
- for(const t of [...villageTrees,...forestTrees].sort((a,b)=>a.y-b.y))tree(t.x,t.y,t.kind);
+ for(const t of [...villageTrees,...forestTrees].sort((a,b)=>a.y-b.y))tree(t.x,t.y,t.kind,t.scale??1);
  for(const[x,y,k]of [[410,750,0],[746,766,1],[762,1178,0],[738,1337,2],[559,1372,1],[273,1375,0]])tree(x,y,k,.9);
  // Ferns, fallen leaves and meadow flowers along the shaded fork.
  for(let i=0;i<70;i++){const x=45+random()*240,y=660+random()*520;if(marketRoadContains(x,y,8))continue;for(let j=0;j<4;j++)line(x,y,x+(j-1.5)*4,y-5-random()*8,0x63894e);if(i%3===0)oval(x,y,4,2,0xc6b77c,.7);}
@@ -111,7 +112,7 @@ export function drawVillage(scene:Phaser.Scene){
   const tx=left+width/2+(direction==='left'?3:direction==='right'?-3:0),ty=top+(direction==='down'?25:11),dx=tx-pivotX,dy=ty-pivotY;
   const title=worldText(scene,pivotX+dx*Math.cos(tilt)-dy*Math.sin(tilt),pivotY+dx*Math.sin(tilt)+dy*Math.cos(tilt),text,{fontFamily:'Georgia,serif',fontSize:'9px',color:'#fff0c8',resolution:4}).setOrigin(.5).setRotation((direction==='down'?Math.PI/2:0)+tilt).setDepth(5);labels.push(title);
  };
- sign(235,696,226,608,18,'Falu','down');sign(292,810,220,759,88,'Erdei ösvény','left');
+ sign(235,816,226,728,18,'Falu','down');sign(310,958,238,907,88,'Erdei ösvény','left');
 
  rect(416,930,4,42,0x615940);rect(409,925,18,18,0xd9c994);rect(408,924,20,3,0x5b6550);poly([406,924,418,913,430,924],0x566650);
  // This scenery is static too; keep tree canopies and paving out of the per-frame geometry pass.

@@ -2,6 +2,13 @@
 
 ## Javítások a 0.3.0 után — verzióemelés nélkül
 
+- Mara bevétele a jobb felső sarokban külön +gold jelzést kap, az egyenleg ezután animálva számol fel az elmentett összegre. A korai alvás közben lezárt fuvar bevétele a reggeli jelenetek után jelenik meg.
+- Mara a közös boltos beszélgetőablakot használja, egyelőre inaktív Vásárlás gombbal. Lassabban sétál, a közel érkező játékosnak röviden megáll.
+- Egyszerű T-elágazás vezet az átadóhoz, lejjebb külön íves erdei leágazás; a farmkapunál közös, varrat nélküli útcsatlakozás. Az átadó alatti erdősáv is sűrűbb, az előtte álló fák takarják az épület szélét.
+- Mindhárom roncs a nagyobb autóroncs léptékét használja, az ütközések és munkapontok is követik a méretet.
+- A Gaz került a készletbe és a többi gyűjtési visszajelzés a valódi eszközsávmagassághoz igazodik, mobilon is. Az eredeti bal oldali Kertészkedés-animációt már nem rejti el a tesztmód stílusa.
+- A Nádkosár ikon füle teljesen látható; teljes csomagátvétel után bezár a postaláda, nincs újabb üres ablak; tárgylehelyezéskor csak egy előnézet látszik.
+
 - Az autóroncs feljebb, az átadótól távolabb került, nagyobb megjelenéssel és hozzá igazodó helyfoglalással; a korábbi bontási állapot megmarad.
 
 - Mara keskenyebb útja a pálya bal széléig ér, az autó a látható pályán kívül érkezik/távozik. Sűrűbb erdősáv mindkét oldalon, kisebb fordulóhely, az áfonyabokor az út melletti füves részre került. A visszaállított törzsekre eső mentett helyről biztonságosan szabad helyre kerül a játékos.

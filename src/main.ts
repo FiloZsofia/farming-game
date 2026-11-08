@@ -190,6 +190,7 @@ class Farm extends Phaser.Scene {
  private morningPlaying=false;
  private morningStage='none';
  private shownGold:number|null=null;
+ private marketIncome:{amount:number;from:number;start:number}|null=null;
  private keys!:Record<string,Phaser.Input.Keyboard.Key>;
  private avatar!:FarmerArt;
  private stickUpgradeFlashPending=false;
@@ -480,6 +481,7 @@ class Farm extends Phaser.Scene {
   finally{this.transitioning=false;this.lastTick=performance.now();}
  }
  private async finishDay(forced:boolean){
+  let marketRevenue=0;
   if(this.transitioning||!this.ready)return;
   if(this.livingBedStudy){if(!this.store.testMode)return;this.livingBedStudy.advanceDay(this.livingBedStudy.state.weather);this.clock.elapsed=0;if(dialogue.open)dialogue.close();release();return;}
   this.syncNoahState();
@@ -508,7 +510,7 @@ class Farm extends Phaser.Scene {
    const nextClearing=regrowDebris(robbery?.clearing??this.clearing,nextClock.day,nextGarden,this.story.birdhouse,Math.random,[...this.skill.chests?.placed??[],...nextTravel.crafting?.machines??[],...junkSites.map(s=>junkPoint(this.clearing,s.id)),...nextTravel.estate.trees,...nextTravel.estate.pond,...(nextTravel.homestead?.garden.beds.flatMap(b=>Array.from({length:24},(_,i)=>({x:b.area.x+(i%6)*32,y:b.area.y+Math.floor(i/6)*30})))??[]),...salvageSites.filter(s=>!nextTravel.research.picked.includes(s.id))]);
    const nextStory=rememberPlantingGuide(rememberPlantingGuide(this.story,this.travel.research,this.garden),nextTravel.research,nextGarden);
    let morningSnapshot=snapshot(START,nextClock,nextGarden,nextEconomy,nextOrders,this.farmName,nextClearing,nextStory,this.skill,this.farmerName,nextTravel);
-   if(nextTravel.homestead){const outgoing=this.currentSnapshot();outgoing.economy=structuredClone(carriedEconomy);const collection=settleStandCollection(outgoing);if(collection){morningSnapshot.economy=collection.state.economy;morningSnapshot.travel.homestead!.stand=collection.state.travel.homestead!.stand;}const model=new LivingGarden(morningSnapshot,true);model.advanceMorning(weatherOnDay(this.travel.weatherSeed??0,nextClock.day)==='rain'?'rain':'sunny');morningSnapshot=model.writePersistent(nextTravel.homestead.garden.pathCredits);Object.assign(nextTravel,morningSnapshot.travel);nextGarden.seeds=morningSnapshot.seeds;nextGarden.produce=morningSnapshot.produce;Object.assign(nextOrders,morningSnapshot.orders);nextEconomy=morningSnapshot.economy;}
+   if(nextTravel.homestead){const outgoing=this.currentSnapshot();outgoing.economy=structuredClone(carriedEconomy);const collection=settleStandCollection(outgoing);if(collection){marketRevenue=collection.receipt.total;morningSnapshot.economy=collection.state.economy;morningSnapshot.travel.homestead!.stand=collection.state.travel.homestead!.stand;}const model=new LivingGarden(morningSnapshot,true);model.advanceMorning(weatherOnDay(this.travel.weatherSeed??0,nextClock.day)==='rain'?'rain':'sunny');morningSnapshot=model.writePersistent(nextTravel.homestead.garden.pathCredits);Object.assign(nextTravel,morningSnapshot.travel);nextGarden.seeds=morningSnapshot.seeds;nextGarden.produce=morningSnapshot.produce;Object.assign(nextOrders,morningSnapshot.orders);nextEconomy=morningSnapshot.economy;}
    await this.saveChecked(morningSnapshot);
    this.story=nextStory;this.adoptTravel(nextTravel);if(this.forestCombat)this.forestCombat.health=5;this.thoughtRemaining=0;this.thought?.setVisible(false);this.thoughtBack?.clear();this.clearing=nextClearing;this.clock=nextClock;this.garden=nextGarden;this.redrawScenery();this.economy=nextEconomy;this.orders=nextOrders;this.actor.setPosition(START.x,START.y);this.actor.setAngle(0);this.body.setY(0);this.jumpRemaining=0;this.jumpCooldown=0;this.collapseRemaining=0;this.bubble.setVisible(false);this.nearby='';document.querySelector('#status')!.textContent='';this.shadow.setScale(1);this.drawGarden();this.aimAhead();
    this.warningAnimation?.cancel();this.warningAnimation=null;document.querySelector<HTMLElement>('#night-warning')!.hidden=true;
@@ -523,7 +525,7 @@ class Farm extends Phaser.Scene {
    showDialogue('Még nem sikerült menteni.','A következő napot nem kezdtem el. Próbáld újra a napzárást; a kert és a magok változatlanok.','MENTÉSI HIBA');
   document.querySelector<HTMLButtonElement>('#sleep')!.hidden=false;
   }finally{this.transitioning=false;this.lastTick=performance.now();}
-  if(nextDayReady){this.gardenController?.refresh(this.currentSnapshot());this.gardenController?.morningSpray();this.farmMarket?.refresh();void this.presentMorning();}
+  if(nextDayReady){this.gardenController?.refresh(this.currentSnapshot());this.gardenController?.morningSpray();this.farmMarket?.refresh();void this.presentMorning().then(()=>{if(marketRevenue>0)this.showMarketIncome(marketRevenue);});}
  }
 
  private showPreviewEnd(){
@@ -1088,7 +1090,7 @@ class Farm extends Phaser.Scene {
  private async collectMail(){
   if(!this.ready||this.transitioning||document.querySelector<HTMLElement>('#mailbox-panel')!.hidden)return;
   const collected=collectAvailableMail(this.currentSnapshot());if(!collected){this.notice('A hátizsák tele van. A magok a postaládában maradtak.');return;}
-  await this.commitChest(collected.state,()=>{showDialogue(collected.remaining?'Ami elfért, átvettem.':'A csomag átvéve.','','POSTALÁDA');this.renderMailbox();});
+  await this.commitChest(collected.state,()=>{if(collected.remaining){showDialogue('Ami elfért, átvettem.','','POSTALÁDA');this.renderMailbox();}else{dialogue.close();release();this.notice('A csomag a Készletbe került.');}});
  }
 
  private renderShipping(){
@@ -1346,6 +1348,16 @@ class Farm extends Phaser.Scene {
  private gardenController:LivingBedController|null=null;
  private farmMarket:FarmMarketController|null=null;
  private homesteadSpace(x:number,y:number,r:number){if(!this.travel.homestead)return true;return !overlapsMarket({x,y},r,r)&&this.travel.homestead.garden.beds.every(b=>Math.hypot(Math.max(b.area.x-x,0,x-b.area.x-b.area.w),Math.max(b.area.y-y,0,y-b.area.y-b.area.h))>r)&&this.travel.homestead.garden.paths.every(p=>Math.hypot(p.x-x,p.y-y)>r+10);}
+ private showMarketIncome(amount:number){
+  if(amount<=0)return;this.marketIncome={amount,from:this.economy.gold-amount,start:performance.now()};
+  let label=document.querySelector<HTMLElement>('#market-income');if(!label){label=document.createElement('span');label.id='market-income';label.setAttribute('role','status');document.querySelector('.gold-line')!.append(label);}label.textContent=`+${amount} gold`;label.hidden=false;
+  for(const animation of label.getAnimations())animation.cancel();label.animate(matchMedia('(prefers-reduced-motion: reduce)').matches?[{opacity:0},{opacity:1}]:[{opacity:0,transform:'translateY(10px) scale(.8)'},{opacity:1,transform:'translateY(0) scale(1.12)',offset:.6},{opacity:1,transform:'scale(1)'}],{duration:450,easing:'ease-out'});
+ }
+ private incomeBalance(){
+  const income=this.marketIncome;if(!income)return this.economy.gold;const elapsed=performance.now()-income.start,reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(elapsed>=2800){this.marketIncome=null;document.querySelector<HTMLElement>('#market-income')!.hidden=true;return this.economy.gold;}
+  const progress=reduced?1:Math.max(0,Math.min(1,(elapsed-650)/1100));return income.from+Math.round(income.amount*(1-(1-progress)**3))+(this.economy.gold-income.from-income.amount);
+ }
  private initHomestead(){
   if(!this.travel.homestead||this.store.testMode||this.gardenController)return;this.scenery?.destroy();this.scenery=null;this.redrawScenery();
   document.querySelector<HTMLElement>('#game')!.dataset.homestead='true';
@@ -1353,7 +1365,7 @@ class Farm extends Phaser.Scene {
   this.gardenController=new LivingBedController(this,{production:true,commit:next=>this.commitChest(next,()=>{}),progress:(xp,previous,level,current,required)=>this.showGardening(previous,{xp,level,current,required}),actor:()=>this.actor,ready:()=>active()&&this.canInteract()&&this.actor.y<600&&this.actor.y>=-360,uiReady:()=>active()&&!this.avatar.isWorking(),day:this.clock.day,snapshot:()=>this.currentSnapshot(),gain:(kind,count,p,label,seed)=>this.harvestPop(kind,p.x,p.y,count,label,seed),goals:()=>questEntries(this.travel.research,this.garden,this.clock.day,this.clock.elapsed,this.travel.forest),rest:()=>void this.finishDay(false),equip:tool=>this.avatar.equip(tool==='harvest'?'none':tool),showWindow:(title,label)=>showDialogue(title,'',label),thought:text=>{this.thought.setText(text);this.thoughtRemaining=8;},celebrate:(level,mix)=>this.queueGardenReward(level,mix),work:(p,tool)=>this.avatar.use(p.x-this.actor.x,p.y-this.actor.y,tool),panelChanged:()=>this.fitCamera(),advanceDay:()=>{}});
   if(this.clock.elapsed<3)this.gardenController.morningSpray();
   for(let level=this.travel.homestead.garden.rewardedLevel+1;level<=Math.min(2,this.gardenController.garden.level);level++){const id=(Object.keys(bedMixes) as BedMix[]).find(id=>bedMixes[id].level===level);if(id)this.queueGardenReward(level,{...bedMixes[id],composition:recommendedComposition(id)});}
-  this.farmMarket=new FarmMarketController(this,{actor:()=>this.actor,snapshot:()=>this.currentSnapshot(),state:()=>this.travel.homestead!.stand,clock:()=>this.clock,commit:next=>this.commitChest(next,()=>{}),playing:()=>active()&&!dialogue.open&&!this.avatar.isWorking(),uiReady:()=>active(),show:(title,text,label)=>showDialogue(title,text,label??''),notice:text=>this.notice(text)});
+  this.farmMarket=new FarmMarketController(this,{actor:()=>this.actor,snapshot:()=>this.currentSnapshot(),state:()=>this.travel.homestead!.stand,clock:()=>this.clock,commit:next=>this.commitChest(next,()=>{}),playing:()=>active()&&!dialogue.open&&!this.avatar.isWorking(),uiReady:()=>active(),show:(title,text,label)=>showDialogue(title,text,label??''),notice:text=>this.notice(text),income:amount=>this.showMarketIncome(amount)});
  }
  private queueGardenReward(level:number,mix:{name:string;detail:string;composition:string}){
   const present=()=>{if(this.store.testMode||!this.gardenController)return;if(this.choosingFarm||dialogue.open||this.transitioning||this.avatar.isWorking()){this.time.delayedCall(150,present);return;}this.showGardeningCelebration(level,mix);dialogue.addEventListener('close',()=>{const next=this.currentSnapshot();if(!next.travel.homestead)return;next.travel.homestead.garden.rewardedLevel=Math.max(level,next.travel.homestead.garden.rewardedLevel);void this.commitChest(next,()=>{});},{once:true});};this.time.delayedCall(150,present);
@@ -1769,7 +1781,7 @@ class Farm extends Phaser.Scene {
   this.homeArt?.setVisible(inHome(this.actor.y));this.workshopArt?.setVisible(inWorkshop(this.actor.y));
   if(performance.now()>this.skillUntil)document.querySelector<HTMLElement>('#gardening-skill')!.hidden=true;
   const now=performance.now();const seconds=Math.max(0,(now-this.lastTick)/1000);this.lastTick=now;
-  document.querySelector('#gold')!.textContent=String(this.livingBedStudy?.garden.snapshot.economy.gold??this.shownGold??this.economy.gold);
+  document.querySelector('#gold')!.textContent=String(this.livingBedStudy?.garden.snapshot.economy.gold??this.shownGold??this.incomeBalance());
   document.querySelector('#day-number')!.textContent=`${this.clock.day}.`;document.querySelector('#season-name')!.textContent=seasons[seasonIndex(calendarDay(this.clock.day,this.farmName))];
   document.querySelector('#clock-label')!.textContent=clockLabel(this.clock);
   document.querySelector<HTMLElement>('#night-shade')!.style.opacity=String(nightOpacity(this.clock));
@@ -1834,7 +1846,7 @@ class Farm extends Phaser.Scene {
   if(dx||dy){this.direction={x:dx,y:dy};this.aimAhead();}
   if(!this.target)this.aimAhead();
   this.selection.clear();
-  if(this.target){
+  if(this.target&&!this.gardenController?.ownsPreview){
     const debris=debrisAt(this.clearing,this.garden,this.target.x+TILE/2,this.target.y+TILE/2);
     const valid=this.placing?goodReachable(this.placing,this.actor,this.target.x+TILE/2,this.target.y+TILE/2)&&Boolean(placeGood(this.travel.estate,this.placing,this.target.x+TILE/2,this.target.y+TILE/2,this.clock.day,this.estateLand(this.target.x+TILE/2,this.target.y+TILE/2),this.farmName)):this.tool==='birdhouse'?this.canPlaceBirdhouse(this.target.x+TILE/2,this.target.y+TILE/2):debris?Math.hypot(this.actor.x-debris.x,this.actor.y-debris.y)<=44:cultivable(this.target)&&reachable(this.target,this.actor);
     const plot=this.garden.plots.get(`${this.target.x},${this.target.y}`);
@@ -1843,7 +1855,7 @@ class Farm extends Phaser.Scene {
     this.selection.lineStyle(1,valid?0xf1df9e:0xd69077,1).strokeRect(this.target.x,this.target.y,TILE,TILE);
     this.selection.fillStyle(valid?0xf1df9e:0xd69077,.12).fillRect(this.target.x,this.target.y,TILE,TILE);
   }
-  if(this.tool==='chest'&&this.target){const p={x:this.target.x+TILE/2,y:this.target.y+TILE/2},valid=this.canPlaceChest(p);this.selection.clear().lineStyle(2,valid?0xe7d28b:0xc97660).strokeRoundedRect(p.x-17,p.y-20,34,27,3);}
+  if(this.tool==='chest'&&this.target&&!this.gardenController?.ownsPreview){const p={x:this.target.x+TILE/2,y:this.target.y+TILE/2},valid=this.canPlaceChest(p);this.selection.clear().lineStyle(2,valid?0xe7d28b:0xc97660).strokeRoundedRect(p.x-17,p.y-20,34,27,3);}
   if(this.tool!=='chest'&&(outsideFarm(next.y)||inWorkshop(next.y)||inHome(next.y))){this.selection.clear();document.querySelector('#crop-hint')!.textContent='';}
   if(this.time.now>this.feedbackUntil){const feedback=document.querySelector<HTMLElement>('#feedback')!;feedback.textContent=inHome(next.y)?'Otthon':inWorkshop(next.y)?'Lépj közel a tárgyakhoz · E / F / buborék':insideShop?'Kijárat az ajtónál · E / koppintás':outsideFarm(next.y)?'Északra: a farm · Space: ugrás · Shift: futás':'Kattints közeli földre · F: művelet · Space: ugrás · Shift: futás';delete feedback.dataset.result;feedback.classList.remove('notice');}
 

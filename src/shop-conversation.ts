@@ -11,10 +11,10 @@ export function merchantTopics(shop:Shop,research:Research,noah?:NoahTestState){
  return topics;
 }
 // The same action layout is used by every current and future shop conversation.
-export function appendMerchantActions(panel:HTMLElement,topics:ReturnType<typeof merchantTopics>,talk:(id:'bee'|'material'|'binder')=>Promise<boolean>,buy:()=>void,back:()=>void){
+export function appendMerchantActions<Id extends string>(panel:HTMLElement,topics:readonly {id:Id;label:string}[],talk:(id:Id)=>Promise<boolean>,buy:()=>void,back:()=>void,purchaseEnabled=true){
  panel.replaceChildren();panel.classList.add('merchant-actions');panel.hidden=false;
- for(const topic of topics){const b=document.createElement('button');b.type='button';b.dataset.merchantTopic=topic.id;b.textContent=topic.label;b.onclick=async()=>{for(const el of Array.from(panel.querySelectorAll('button')))el.disabled=true;try{await talk(topic.id);}finally{for(const el of Array.from(panel.querySelectorAll('button')))el.disabled=false;}};panel.append(b);}
- const footer=document.createElement('div');footer.className='merchant-footer';const purchase=document.createElement('button');purchase.type='button';purchase.dataset.merchantPurchase='true';purchase.textContent='Vásárlás';purchase.onclick=buy;
+ for(const topic of topics){const b=document.createElement('button');b.type='button';b.dataset.merchantTopic=topic.id;b.textContent=topic.label;b.onclick=async()=>{const buttons=Array.from(panel.querySelectorAll('button')).map(el=>({el,disabled:el.disabled}));for(const {el}of buttons)el.disabled=true;try{await talk(topic.id);}finally{for(const {el,disabled}of buttons)if(el.isConnected)el.disabled=disabled;}};panel.append(b);}
+ const footer=document.createElement('div');footer.className='merchant-footer';const purchase=document.createElement('button');purchase.type='button';purchase.dataset.merchantPurchase='true';purchase.textContent='Vásárlás';purchase.disabled=!purchaseEnabled;purchase.onclick=buy;
  const close=document.createElement('button');close.type='button';close.dataset.merchantBack='true';close.textContent='Tovább';close.onclick=back;footer.append(close,purchase);panel.append(footer);
 }
 

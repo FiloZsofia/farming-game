@@ -1,0 +1,1 @@
+export function quadraticPath(start:readonly number[],control:readonly number[],end:readonly number[],steps=12):number[][]{return Array.from({length:steps+1},(_,i)=>{const t=i/steps,u=1-t;return[u*u*start[0]+2*u*t*control[0]+t*t*end[0],u*u*start[1]+2*u*t*control[1]+t*t*end[1]];});}

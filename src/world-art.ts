@@ -1,3 +1,4 @@
+import {drawPathNetwork} from './path-art';
 import {studyColor,drawStudyGrass,drawStudyTree,drawStudyBorders} from './art-study-art';
 import Phaser from 'phaser';
 import {pondRadius} from './pond-shape';
@@ -42,8 +43,7 @@ export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),g
  for(let i=0;i<480;i++)oval(left+random()*width,top+random()*height,35+random()*70,15+random()*35,i%2?0x5b873c:0x9eb45c,.13);
  for(let i=0;i<12500;i++){const x=left+random()*width,y=top+random()*height;rect(x,y,1+random()*2,1,[0x658b3f,0xb0bf71,0x82a851][i%3],.55);if(i%10===0)tuft(x,y,.35);}
  }
- const pathStroke=(width:number,color:number)=>{for(const p of layout.paths){g.lineStyle(p.width+width,study?studyColor(color):color);g.beginPath();p.points.forEach(([x,y],i)=>i?g.lineTo(x,y):g.moveTo(x,y));g.strokePath();for(const [x,y]of p.points)oval(x,y,p.width+width,p.width+width,color);}};
- pathStroke(5,0x738354);pathStroke(1,0xa5936c);pathStroke(-3,0xc1ae85);
+ drawPathNetwork(g,layout.paths,study?studyColor:undefined);
  // Texture follows the paths rather than spilling over their edges.
  for(const p of layout.paths)for(let i=1;i<p.points.length;i++){const [ax,ay]=p.points[i-1],[bx,by]=p.points[i],length=Math.hypot(bx-ax,by-ay);for(let j=0;j<length;j+=3){const t=j/length,offset=(random()-.5)*(p.width-7);rect(ax+(bx-ax)*t-(by-ay)/length*offset,ay+(by-ay)*t+(bx-ax)/length*offset,2,1,j%2?0x9f916e:0xd6c29a,.7);}}
  // Boundary trees leave the usable centre and paths open.

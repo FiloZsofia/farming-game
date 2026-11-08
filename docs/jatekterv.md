@@ -1421,3 +1421,14 @@ Mara útja keskenyebb, a pálya teljes bal oldali szélességén folyamatosan l�
 Az autóroncs alaphelye az átadó fölötti régi helyről feljebb, nagyjából `(-190,220)` pontra kerül, a felhasználó Sam által megmutatott helyéhez. A rajzi léptéke 1,18-ról 1,6-ra nő; a többi roncs mérete változatlan. A bontási célpontok, fizikai helyfoglalás és tárgyelhelyezési védelem ugyanebből a léptékből számolódik. A már mentett roncs helye egyszer átáll, foglalt célterület esetén közeli szabad helyre; állapota, bontási részei, jutalmai és újragyűjtési ideje megmaradnak.
 
 A szállítóút felületén nem maradnak az erdő korábbi átjárószűkítő indái vagy fűcsomói. A játékos is végigsétálhat a látható úton a pályahatárig; az útsávon kívül az erdő korábbi szűk átjárói és ütközései megmaradnak. A helyi fordulóhely csak annyira széles, hogy a nagy pickup megforduló talajlenyomata elférjen.
+
+
+### 0.3.0 utáni pontosítások — átadó és visszajelzések
+
+- Jóváhagyott úthálózat: egyszerű T az átadóhoz, alatta külön, lágy ívű erdei leágazás. A kapu mindkét oldalán közös középvonal és rétegsorrend, nincs külön körvonalas zárósapka.
+- Az átadó előtti fa ténylegesen az épület előtt rajzolódjon. A szűk, átadóút és erdei ösvény közötti zöld sávban kisebb fák is sűrítik az erdőt.
+- Mindhárom roncs 1,6-os rajzolási léptékű, a helyfoglalás és bontási munkapontok egyezzenek vele. Ez felülírja a másik két roncs korábbi változatlan méretét.
+- Mara a közös boltos menüt kapja, inaktív Vásárlás gombbal; gyaloglása 55 világegység/másodperc. Közel érkező játékosnak látogatásonként röviden megáll, beszélgetés közben a fuvar szünetel.
+- Az elmentett fuvarbevétel külön +összeg gold jelzést kap a jobb felső sarokban; utána a meglévő egyenleg számol fel az új összegre. Csökkentett mozgásnál nincs számolási/ugráló mozgás. Az éjszakai fuvar a reggeli jelenetek után jelzi bevételét.
+- A gyűjtési értesítések az eszközsáv mért magassága fölé kerülnek, mobilon a nyitott ágyáspanelt is figyelembe véve. Az eredeti jártasságjelző megjelenését csak a tesztmód rejtheti el.
+- Teljes postai csomagátvételkor bezár az ablak, részleges átvételnél a maradék látható. Ágyásjelölő és más új tárgyak lehelyezését csak a saját, egyetlen előnézet mutatja.

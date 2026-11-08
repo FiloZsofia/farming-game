@@ -1,3 +1,4 @@
+import {quadraticPath} from './path-curves';
 import {marketRoads,marketRoadContains} from './market-trial-route';
 import {noticeBoardBlocked} from './village-notice';
 import {natureSites,natureTreeClear} from './nature-resources';
@@ -15,13 +16,13 @@ export const villageLayout={
  square:{x:475,y:1080,rx:181,ry:115},
  nurserySaplings:[{x:518,y:958},{x:542,y:958},{x:646,y:958},{x:670,y:958}],
  benches:[{id:'west',angle:-2.35},{id:'east',angle:-.55}],
- bushes:[{id:'fern',x:200,y:752},{id:'birch',x:238,y:821},{id:'moss',x:70,y:980},{id:'brook',x:191,y:1090}],
+ bushes:[{id:'fern',x:230,y:760},{id:'birch',x:238,y:821},{id:'moss',x:70,y:980},{id:'brook',x:191,y:1090}],
  trees:[{x:44,y:670,kind:0},{x:103,y:650,kind:1},{x:254,y:685,kind:2},{x:53,y:799,kind:2},{x:169,y:777,kind:0},{x:286,y:769,kind:1},{x:51,y:889,kind:1},{x:278,y:934,kind:0},{x:146,y:1000,kind:2},{x:40,y:1059,kind:0},{x:311,y:1120,kind:1},{x:100,y:1165,kind:2},{x:250,y:1184,kind:0}],
 } as const;
 // Drawing and canopy clearance use the same full routes.
 export const villagePaths=[
- {width:32,points:[[170,600],[174,672],[305,784],[393,909],[476,1030],[493,1320],[493,WORLD_HEIGHT-6]]},
- {width:17,points:[[278,760],[150,813],[107,930],[211,1040],[356,1080]]},
+ {width:32,points:[farmLayout.paths[0].points[0],...quadraticPath([170,740],[170,795],[245,850]),[300,889],[393,955],[476,1030],[493,1320],[493,WORLD_HEIGHT-6]]},
+ {width:17,points:[...quadraticPath([300,889],[210,870],[150,900]),...quadraticPath([150,900],[120,910],[107,930]).slice(1),[211,1040],[356,1080]]},
  {width:28,points:[[474,1016],[586,978],[591,940]]},
  {width:25,points:[[606,1097],[660,1100],[708,1100]]},
  {width:23,points:[[493,1320],[493,1364],[660,1364],[660,1341]]},
@@ -34,10 +35,11 @@ export function woodlandTreeClear(x:number,y:number,scale=1,kind=0){
  const crowns=kind===2?Array.from({length:4},(_,i)=>({x:0,y:-90+i*19+22,rx:15+i*8,ry:24})):[{x:-18,y:-48,rx:22.5,ry:19.5},{x:12,y:-56,rx:25.5,ry:23.5},{x:-3,y:-76,rx:24.5,ry:19.5},{x:0,y:-38,rx:28,ry:16}];
  return [...villagePaths,...marketRoads].every(path=>path.points.slice(1).every((b,i)=>{const a=path.points[i],steps=Math.max(1,Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/3)),margin=path.width/2+4;for(let j=0;j<=steps;j++){const xx=a[0]+(b[0]-a[0])*j/steps,yy=a[1]+(b[1]-a[1])*j/steps;if(Math.hypot(xx-Math.max(x-5*scale,Math.min(x+6*scale,xx)),yy-Math.max(y-44*scale,Math.min(y+7*scale,yy)))<margin)return false;if(crowns.some(c=>((xx-x-c.x*scale)/(c.rx*scale+margin))**2+((yy-y-c.y*scale)/(c.ry*scale+margin))**2<1))return false;}return true;}));
 }
-export const villageTrees=villageLayout.trees.filter(t=>woodlandTreeClear(t.x,t.y,1,t.kind));
+export type WoodlandTree={x:number;y:number;kind:number;scale?:number};
+export const villageTrees:WoodlandTree[]=villageLayout.trees.filter(t=>woodlandTreeClear(t.x,t.y,1,t.kind));
 // Reposition crowded trees beside the paths instead of removing the woodland.
 const candidates=Array.from({length:72},(_,i)=>({x:28+i%8*37+(i%3)*6,y:675+Math.floor(i/8)*61,kind:i%3}));
-export const forestTrees:{x:number;y:number;kind:number}[]=[];
+export const forestTrees:WoodlandTree[]=[];
 for(const original of candidates){
  const offsets=[[0,0],...Array.from({length:8},(_,i)=>{const d=(i+1)*8;return [[-d,0],[d,0],[0,-d],[0,d],[-d,-d],[d,-d],[-d,d],[d,d]];}).flat()];
  for(const [dx,dy]of offsets){const t={...original,x:original.x+dx,y:original.y+dy};if(t.x<10||t.x>390||t.y<635||t.y>1235||!woodlandTreeClear(t.x,t.y,1,t.kind)||villageLayout.bushes.some(b=>Math.hypot(t.x-b.x,t.y-b.y)<38)||[...villageTrees,...forestTrees].some(b=>Math.hypot(t.x-b.x,t.y-b.y)<34))continue;
@@ -51,11 +53,18 @@ for(let row=0;row<7;row++)for(let column=0;column<10;column++){
  if(woodlandTreeClear(t.x,t.y,1,t.kind)&&natureSites.every(p=>Math.hypot(p.x-t.x,p.y-t.y)>35)&&forestPlants.every(p=>Math.hypot(p.x-t.x,p.y-t.y)>42)&&villageLayout.bushes.every(p=>Math.hypot(p.x-t.x,p.y-t.y)>38)&&[...villageTrees,...forestTrees].every(p=>Math.hypot(p.x-t.x,p.y-t.y)>34))forestTrees.push(t);
 }
 // Restore a dense woodland shoulder along both sides of the narrow delivery road.
-export const marketRoadsideTrees:{x:number;y:number;kind:number}[]=[];
+export const marketRoadsideTrees:WoodlandTree[]=[];
 for(let row=0;row<4;row++)for(let column=0;column<17;column++){
  const t={x:FOREST_LEFT+28+column*48+(row%2)*22,y:[626,674,899,941][row]+(column%3-1)*5,kind:(row+column)%3};
  if(t.x> -280||!woodlandTreeClear(t.x,t.y,1,t.kind)||natureSites.some(p=>Math.hypot(p.x-t.x,p.y-t.y)<38)||forestPlants.some(p=>Math.hypot(p.x-t.x,p.y-t.y)<42)||[...villageTrees,...forestTrees].some(p=>Math.hypot(p.x-t.x,p.y-t.y)<34))continue;
  forestTrees.push(t);marketRoadsideTrees.push(t);
+}
+// Younger trees fill the narrow pocket below the pickup bay without covering either path.
+export const marketPocketTrees:WoodlandTree[]=[];
+for(let row=0;row<2;row++)for(let column=0;column<9;column++){
+ const t={x:-250+column*43+row*16,y:887+row*25+(column%3)*3,kind:(row+column)%3,scale:.68+((row+column)%3)*.06};
+ if(!woodlandTreeClear(t.x,t.y,t.scale,t.kind)||natureSites.some(p=>Math.hypot(p.x-t.x,p.y-t.y)<38)||forestPlants.some(p=>Math.hypot(p.x-t.x,p.y-t.y)<40)||villageLayout.bushes.some(p=>Math.hypot(p.x-t.x,p.y-t.y)<38)||[...villageTrees,...forestTrees].some(p=>Math.hypot(p.x-t.x,p.y-t.y)<30))continue;
+ forestTrees.push(t);marketPocketTrees.push(t);
 }
 const buildings:Box[]=[villageLayout.nursery,villageLayout.fishShop,villageLayout.craftShop];
 export function villageBlocked(x:number,y:number){
