@@ -40,7 +40,7 @@ A Komposztálót a Készletből helyezd le. A meglévő szabály szerint 10 gazb
 
 ## Fejlődés, megfigyelés és vetőmag
 
-Próbaküszöbök: 20 és 40 pont. Az első feloldáshoz legalább egy ágyás mind a kilenc helyéről való betakarítás/maggyűjtés is szükséges. A vetés növényenként számít; valódi gondozás, betakarítás és saját vetőmag is ad munkapontot. Felesleges újraöntözés nem ad pontot. Szintlépéskor a meglévő ünneplős ablak mutatja az új társítást.
+Próbaküszöbök: 20 és 40 összesített munkapont, tehát mindkét szinthez újabb 20 pont kell. Teljes betakarítás vagy maggyűjtési ciklus egyikhez sem feltétel. A vetés növényenként számít; valódi gondozás, betakarítás és saját vetőmag is ad munkapontot. Felesleges újraöntözés nem ad pontot. Szintlépéskor a meglévő ünneplős ablak mutatja az új társítást.
 
 Sam Megfigyeléssel felismerhet két összefüggést:
 
@@ -110,7 +110,7 @@ A háznál elérhető pihenés a próba saját napváltási útvonalát használ
 - A postaláda a normál, ikonozott soros elrendezést használja a tesztben is. A szurokfű, zsálya, körömvirág, borágó, kamilla, citromfű és a többi kísérleti növény saját ikont kapott. A Készletben ugyanezek a rajzok szerepelnek.
 - A Vetőmag az alsó sávban egyetlen, a többivel azonos méretű eszközhely. Kiválasztása teljes növényneveket kínál, kizárólag az adott társításból; a sáv méretét a hosszú nevek nem növelik.
 - A nedvesség 3/2/1/0 értékei külön talajszínt kapnak. Egy nap után világosabb a föld; két locsolás nélküli, napos nap után az alacsony nedvességű, mulccsal nem takart ágyás szélein repedések jelennek meg. Öntözés és eső helyreállítja a felszínt. A vízmegtartás és a mulcs korábbi szabályai megmaradnak.
-- Magérlelésre hagyáskor minden növény külön kertészkedési munkapontot ad. Ismételt kattintás ugyanarra a növényre nem ad további pontot. Az első szinthez a korábban elfogadott teljes betakarítási/maggyűjtési ciklus továbbra is szükséges.
+- Magérlelésre hagyáskor minden növény külön kertészkedési munkapontot ad. Ismételt kattintás ugyanarra a növényre nem ad további pontot. A későbbi döntés ezt felülírta: kizárólag a munkapontok számítanak, nincs teljes ciklushoz kötött feltétel.
 - Az öntözőrendszer minden reggel feltölti a hozzá kapcsolt ágyás nedvességét, és látható vízpermetet kap. Az animáció csak a látható játéktérben fut, nyitott ablak alatt nem fogy el.
 - Az Ösvény kártyán a kő/fa/föld burkolatot mutató ikon választáskor változik. Az Ösvény kialakítása külön építőmódot indít. Az alapúthoz hozzá lehet kötni a saját utat, fűrés és belső határvonal nélkül. Az eredeti alapút nem kerül a bontható elemek közé. Visszafelé húzva az első rajzpont is törölhető, újabb húzást csak új egérlenyomás indít.
 - Bontóvasas teljes visszabontáskor a teljes felhasznált nyersanyag visszajár. Adagon belüli részleges bontásnál az útelemek megmaradnak újra felhasználhatónak; teljes adagból ismét alapanyag lesz. Nem vész el és nem sokszorozható anyag.
@@ -120,3 +120,21 @@ Friss ellenőrzés: 458 teszt / 67 fájl, sikeres build, izolált Chromium CDP-b
 [Katalógus Vissza gomb](concepts/garden-polish-catalogue-back.png) · [Postai magok](concepts/garden-polish-herb-mail.png) · [Frissen öntözve](concepts/garden-polish-wet-soil.png) · [Másnap](concepts/garden-polish-next-morning.png) · [Száradó szélek](concepts/garden-polish-dry-edges.png) · [Reggeli öntözés és teljes táblanév](concepts/garden-polish-irrigation.png) · [Mobilos eszközsáv](concepts/garden-polish-mobile-tools.png) · [Ösvénykártya](concepts/garden-polish-path-card.png) · [Alapúti csatlakozás](concepts/garden-polish-base-path-junction.png).
 
 [Társításválasztó lábléce](concepts/garden-polish-composition-footer.png) · [Az erdei elágazás megőrzött megjelenése](concepts/garden-polish-existing-forest-junction.png).
+
+
+## November 8-i további javítások
+
+- A Kertészkedés első és második szintje 20, illetve 40 összpontnál nyílik; nincs betakarítási ciklusfeltétel. A magérlelésre hagyás is ad pontot. Bal oldali rövid haladásjelzés mutatja az adott szint 20 pontját; a Jártasságok fül a feloldott társításokat és növényeiket is felsorolja.
+- A Komposztálóból átvett mulcs a Készletben szerepel. Az átvétel után közvetlen Készlet gomb is elérhető. Betakarítás, maggyűjtés, mulcsátvétel és tényleges nyersanyag-visszatérítés a közös tárgyjelzést és hangot használja.
+- Az öntöző reggel 0,75 másodperc várakozás után permetez; összesen 2,5 másodperc elteltével sötétedik meg a föld. A növekedési számítás már a reggeli öntözést használja, a késleltetés csak látvány. Az animáció ablak nélkül, látható ágyásnál fut.
+- A száraz talaj szélei szabálytalan, elágazó repedéseket kapnak. Mind a 16 nyilvántartott növénynek külön növekvő és érett formája van; ez nem old fel új társítást.
+- A kétsoros Ágyásjelölő nagyobb deszkát kapott. A lerakhatóság a nagyobb fizikai méretet is figyelembe veszi.
+- Az út érvényessége a kirajzolt, elfordított deszka/kő tényleges körvonalával számol az ágyások és tárgyak mellett. A korábbi túl nagy láthatatlan védősáv megszűnt; az épület-, víz- és alapútvédelem megmaradt.
+
+## Frissítésismertető előnézete
+
+A próba indulásakor a „Megújult a kerted!” ablak mutatja a későbbi kiadás tervezett üzenetét. Az előnézet külön jelzi: a rendes kert és készlet változatlan. Teljes szöveg: [frissítésismertető](kert-frissites-ismerteto.md).
+
+Aktív kertészeti próba alatt az oldal újratöltése **friss, memóriabeli próbát indít**, és ismét megmutatja az ablakot. A próba addigi eredménye nem mentődik el. A jelző csak az adott böngészőfül munkamenetére és farmazonosítójára vonatkozik, fejlesztői módban működik. Kilépés a tesztből vagy másik teszt indítása törli. A rendes farmot és biztonsági másolatát újratöltéskor sem írja felül. A fejlesztői ablakban külön Frissítésismertető · Előnézet gombbal is megnyitható.
+
+Ellenőrzés: 463 teszt / 69 fájl, sikeres build. Izolált Chromium CDP-ben ellenőrizve a mulcs készletbe kerülése, gain-hang/jelzés, 20+20 pontos feloldás teljes ciklus nélkül, reggeli világos–permet–sötét talaj, hosszú táblafelirat, szűk úthely, anyag-visszaadás, növénygaléria, ismertető újratöltése és kilépése, valamint a rendes mentés és backup változatlansága. Cypress-bináris nem elérhető; nem Playwright készült.

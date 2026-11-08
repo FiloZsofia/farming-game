@@ -2,6 +2,12 @@
 
 Aktuális állapot: 2026-11-08. Játékverzió: 0.2.0; a legutóbbi javítások nem jártak verzióemeléssel.
 
+## Legújabb tesztek
+
+- **Terményátadó · Mara fuvarja:** külön teszt, kilenc láda, többféle készlet, kézi fuvar és napléptetés, megszólítható Mara és próbabeli Ismerősök-bejegyzés. A rendes eladóláda nem változott. [Útmutató](termenyatado-teszt.md).
+- **Kertészeti próba:** 20/40 pont alapú szintek, teljes betakarítási feltétel nélkül; mulcs és tárgyjelzések, javított növények, táblák, öntözés és úthelyfoglalás. [Útmutató](elo-agyas-teszt.md).
+- **Frissítésismertető:** csak az új kertészkedés jövőbeli kiadási üzenetének előnézete. Aktív kertészeti teszt újratöltésekor friss próba és ismertető indul; a rendes készletkompenzáció még nincs végrehajtva. [Szöveg](kert-frissites-ismerteto.md).
+
 ## A rendes játék része
 
 - A gyümölcsfák 15 nap után évszakkorlát nélkül kezdhetik a meglévő terméskötődési ciklusokat a csak Tavaszt tartalmazó változatban; látványosabb csemete–termő fa fejlődéssel. A tervezett nyári/őszi évszakok dokumentációja megmarad.

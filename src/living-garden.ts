@@ -16,7 +16,8 @@ export const trialSeedPrices:Record<BedKind,number>={radish:5,lettuce:5,pea:15,t
 export class LivingGarden{
  snapshot:Snapshot;seeds=emptyBedSeeds();pending=emptyBedSeeds();mailbox=emptyBedSeeds();basket=emptyBedSeeds();beds:TrialBed[]=[];paths:GardenPathPiece[]=[];packedMarkers:number[]=[];nextId=1;completedCycles=0;weather:'sunny'|'rain'='sunny';observations:GardenObservation[]=[];observationMemory=new Map<number,{dryDay?:number;waterDay?:number;blossoms:Record<number,{day:number;cycle:number}>}>();
  constructor(snapshot:Snapshot){this.snapshot=structuredClone(snapshot);this.snapshot.skill=createGardenSkill();this.snapshot.travel.crafting??=createCrafting();}
- get level(){return !this.completedCycles?0:this.snapshot.skill.xp>=40?2:this.snapshot.skill.xp>=20?1:0;}
+ get level(){return this.snapshot.skill.xp>=40?2:this.snapshot.skill.xp>=20?1:0;}
+ get progress(){const level=this.level;return {level,current:level>=2?20:this.snapshot.skill.xp-level*20,required:20};}
  availableSeeds(){return [...new Set(Object.values(bedMixes).filter(m=>m.level<=this.level).flatMap(m=>m.plants))];}
  addBed(area:LivingBedArea={...livingBedArea}){const bed:TrialBed={id:this.nextId++,area:{...area},state:createLivingBed(this.snapshot.clock.day),marker:null,irrigation:null,completed:[],watered:false};bed.state.seedStock=this.seeds;bed.state.weather=this.weather;this.beds.push(bed);return bed;}
  sync(bed:TrialBed){bed.state.seedStock=this.seeds;return bed.state;}
@@ -31,7 +32,7 @@ export class LivingGarden{
   else this.credit([`${stamp}:${action==='harvest'||action==='seeds'||action==='replant'||action==='flower'?index:''}`]);
   if(action==='water'){bed.watered=true;const memory=this.memory(bed);if(old.moisture===0&&memory.dryDay!==undefined)memory.waterDay=next.day;}
   if((action==='harvest'||action==='seeds')&&!bed.completed.includes(index))bed.completed.push(index);
-  // A complete first cycle is the trial pacing target, independent of click count.
+  // Cycle history remains available for observations; level unlocks use points only.
   if(bed.watered&&bed.completed.length===9){this.completedCycles++;bed.completed=[];bed.watered=false;}
  }
  orderMany(cart:Record<BedKind,number>){const available=this.availableSeeds();if((Object.keys(cart) as BedKind[]).some(k=>cart[k]>0&&!available.includes(k)))return false;const next=purchaseSeedOrder(this.snapshot.economy.gold,this.seeds,this.pending,this.mailbox,cart,trialSeedPrices);if(!next)return false;this.snapshot.economy.gold=next.gold;this.pending=next.pending;return true;}

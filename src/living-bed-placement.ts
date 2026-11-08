@@ -28,5 +28,5 @@ export function nearBedSide(p:{x:number;y:number},b:LivingBedArea,reach=28){
 
 export function bedMarkerFits(p:{x:number;y:number},b:LivingBedArea){
  const overlaps=(r:{x:number;y:number;w:number;h:number})=>r.x<b.x+b.w&&r.x+r.w>b.x&&r.y<b.y+b.h&&r.y+r.h>b.y;
- return nearBedSide(p,b,44)&&gardenDecorationFits(p,34,18)&&!overlaps({x:p.x-34,y:p.y-17,w:68,h:18})&&!overlaps({x:p.x-2,y:p.y-14,w:4,h:24});
+ return nearBedSide(p,b,44)&&gardenDecorationFits({x:p.x,y:p.y-10},34,22)&&!overlaps({x:p.x-34,y:p.y-31,w:68,h:36})&&!overlaps({x:p.x-2,y:p.y-14,w:4,h:24});
 }

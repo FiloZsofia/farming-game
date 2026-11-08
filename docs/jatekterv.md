@@ -1332,3 +1332,18 @@ A kertészeti változások továbbra is csak a memóriabeli próbában működne
 ### Nyitott ötlet: társítások saját hatásai
 
 A felhasználó felvetette a társításokhoz kötött hatásokat, például időjárási hatást. Felmerült a helyi mikroklíma, árnyékolás, szárazságtűrés, beporzók számára táplálkozóhely és hajnali harmat megőrzése. Ezek még meg nem állapodott ötletek; a próba szabályait nem módosítják. Egy későbbi hatás a ténylegesen beültetett növényektől és állapotuktól függhetne, nem pusztán az ágyás nevétől. Konkrét szabály, számérték és megvalósítás külön egyeztetendő.
+
+
+### Terményátadó és Mara – elfogadott tesztirány, november 8.
+
+A déli kerítés kapujának bal oldalán vászontetős, kilenc nyitott dobozos (3×3) terményátadó váltaná az eladást. Dobozonként egyféle termés, látható tartalom; a kerítésen túli úton érkező sofőr kiszáll és rakodik. A bevétel az átvételkor érkezik. Külön memóriabeli próba, többféle rendelkezésre álló terméssel; egyéb rendszerek működése nem feltétel.
+
+Jóváhagyott sofőr: **Mara**, határozott, csipkelődő humorú nő; felhajtott ujjú ing, munkásmellény, fonott haj, munkáskesztyű. Megszólítható, első találkozás után megjelenik az Ismerősök között. A tesztben kézi Fuvar indítása és Következő nap működik. A végleges napi érkezési idő még nyitott. A normál eladás és mentés jelenleg változatlan. Részletek: [próba](termenyatado-teszt.md).
+
+### Kertészeti próba – újabb döntések, november 8.
+
+**Felülírja az összes korábbi teljes betakarítást/maggyűjtést megkövetelő szintfeltételt:** kizárólag munkapontok számítanak. Első szint 20, második 40 összpontnál; tehát mindkettőhöz újabb 20 pont kell. Az érni/magot érlelni hagyás növényenként pontot ér. A teljes ágyásciklus csak történeti statisztika, nem kapu.
+
+Bal oldali kertészkedési haladásjelzés; a Jártasságok fülön feloldott társításnevek és növények. Mulcs átvétel után a Készletbe kerül; közös tárgyjelzés/hang betakarításnál, maggyűjtésnél és anyag-visszatérítésnél. A reggeli öntöző rövid várakozás és permet után sötétíti a talajt. Organikusabb száraz repedések, felismerhető növekedő/érett növényformák, nagyobb kétsoros táblák. Az ösvények lerakhatósága tényleges rajzolt körvonalukhoz igazodik, túlméretes üres védősáv nélkül.
+
+A későbbi kertészeti átálláskor a játékosokat felugró ismertető fogadja. Témái: ágyások és társítások, jártassággal feloldható korlátozott induló választék, régi ültetések megszűnése és mag-/terménykompenzáció a Készletben, új eladás Marával, ösvények a Tervrajzok között. [Tervezett szöveg](kert-frissites-ismerteto.md). Egyelőre csak előnézet a Kertészeti próbában: indításkor és újratöltéskor megjelenik, külön lábléc jelzi, hogy nincs normál mentésátalakítás. A próba friss memóriabeli állapottal indul újra, explicit kilépés törli az újraindítás jelzőjét.

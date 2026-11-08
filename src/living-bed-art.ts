@@ -1,36 +1,23 @@
+import {paintLivingPlant} from './living-plant-art';
 import Phaser from 'phaser';
-import {bedKinds,bedPlantStage,livingFlowers,type LivingBed} from './living-bed';
+import {livingFlowers,type LivingBed} from './living-bed';
 import {livingBedArea,livingPlantPoint,type LivingBedArea} from './living-bed-layout';
 export {livingBedArea,livingPlantPoint} from './living-bed-layout';
-export function paintMarker(g:Phaser.GameObjects.Graphics,b:LivingBedArea){const x=b.x,y=b.y+b.h;g.fillStyle(0x705137).fillRect(x+31,y+3,4,24);g.fillStyle(0x906b42).fillPoints([{x:x+2,y:y+4},{x:x+66,y:y},{x:x+68,y:y+14},{x:x+3,y:y+18}],true);g.lineStyle(1,0xc4a069).lineBetween(x+7,y+7,x+61,y+4);g.lineStyle(1,0x775236).lineBetween(x+8,y+14,x+57,y+11);g.fillStyle(0xd2b67d).fillCircle(x+9,y+10,1).fillCircle(x+61,y+6,1);}
+export function paintMarker(g:Phaser.GameObjects.Graphics,b:LivingBedArea){const x=b.x,y=b.y+b.h;g.fillStyle(0x705137).fillRect(x+31,y+3,4,24);g.fillStyle(0x906b42).fillPoints([{x:x+2,y:y-10},{x:x+66,y:y-14},{x:x+68,y:y+18},{x:x+3,y:y+22}],true);g.lineStyle(1,0xc4a069).lineBetween(x+7,y-7,x+61,y-11);g.lineStyle(1,0x775236).lineBetween(x+8,y+18,x+57,y+14);g.fillStyle(0xd2b67d).fillCircle(x+9,y+6,1).fillCircle(x+61,y+2,1);}
+
 export function paintLivingBed(g:Phaser.GameObjects.Graphics,s:LivingBed,selected:number,area:LivingBedArea=livingBedArea,valid=true,placing=false,marker=true){
  const {x,y,w,h}=area;g.clear();g.fillStyle(0x304734,.18).fillEllipse(x+w/2,y+h/2+7,w+22,h+14);
 
  if(!s.prepared){g.lineStyle(1,valid?0xc4b480:0xc57662,.85);for(const [a,b]of [[x,y+4],[x+w-5,y],[x+w,y+h],[x+4,y+h-2]]){g.fillStyle(0x755839).fillRect(a-2,b-8,4,13);g.fillStyle(0xc5a777).fillRect(a-2,b-8,4,3);}g.lineStyle(1,valid?0xc7b989:0xd5836b,.8).strokePoints([{x,y:y+4},{x:x+w-5,y},{x:x+w,y:y+h},{x:x+4,y:y+h-2}],true);if(!placing&&marker)paintMarker(g,area);return;}
  g.fillStyle(0x60472f).fillRoundedRect(x-4,y-3,w+8,h+9,17);g.fillStyle([0xb29466,0x9a794f,0x80603f,0x584330][s.moisture]).fillRoundedRect(x,y,w,h,14);
  for(let i=0;i<42;i++){const xx=x+9+(i*43%(w-18)),yy=y+7+(i*29%(h-14));g.fillStyle(s.moisture?0x3d3426:0x6d5337,.28).fillEllipse(xx,yy,3+i%3,1.5);}
- if(!s.mulched&&(s.unwateredDays??0)>=2&&s.moisture<=1){g.lineStyle(1,0x66503a,.8);for(let i=0;i<12;i++){const left=i%2===0,xx=left?x+5:x+w-5,yy=y+15+(i*19%(h-30)),sign=left?1:-1;g.beginPath().moveTo(xx,yy).lineTo(xx+sign*8,yy-2).lineTo(xx+sign*13,yy+3).lineTo(xx+sign*20,yy+1).strokePath();g.lineBetween(xx+sign*13,yy+3,xx+sign*15,yy+8);}}
- if(s.mulched)for(let i=0;i<80;i++){const xx=x+7+i*47%(w-14),yy=y+6+i*31%(h-12);g.lineStyle(1,i%3?0xb79a61:0xd0b87d,.8).lineBetween(xx,yy,xx+4+i%4,yy+(i%3-1)*2);}
- for(let i=0;i<s.plants.length;i++){
-  const p=s.plants[i],point=livingPlantPoint(i,area),xx=point.x,yy=point.y,stage=bedPlantStage(p);if(p.removed){g.lineStyle(1,0x695133,.65).strokeEllipse(xx,yy,10,5);continue;}
-  const size=p.kind==='strawberry'&&(p.cycle??0)>0?1:Math.min(1,.36+p.growth/bedKinds[p.kind].days*.64),droop=s.moisture===0?5:0;
-  g.fillStyle(0x2b3929,.22).fillEllipse(xx+2,yy+3,25*size,9*size);
-  if(i===selected)g.lineStyle(1,0xf0d68f,.9).strokeEllipse(xx,yy+2,30,14);
-  if(p.kind==='strawberry'&&stage==='ready'){for(let j=0;j<3;j++){g.fillStyle(0xba5a56).fillTriangle(xx-8+j*7,yy-8,xx-2+j*7,yy-8,xx-5+j*7,yy-1);g.fillStyle(0xdac080).fillCircle(xx-5+j*7,yy-6,.6);}}
-  if(p.kind==='carrot'&&stage==='ready'){g.fillStyle(0xcf9759).fillTriangle(xx-4,yy-3,xx+4,yy-3,xx,yy+5);}
-  if(p.kind==='radish'&&stage==='ready')g.fillStyle(0xbf6878).fillEllipse(xx,yy-2,9,8);
-  const leaves=p.kind==='lettuce'?9:['thyme','oregano','sage'].includes(p.kind)?8:5;
-  for(let j=0;j<leaves;j++){const angle=j/leaves*Math.PI*2,dx=Math.cos(angle)*(p.kind==='lettuce'?8:10)*size,dy=Math.sin(angle)*4*size-droop*.4,tipY=yy-8*size-Math.abs(Math.cos(angle))*8*size+droop;
-   g.lineStyle(1,p.kind==='thyme'?0x6e825d:0x658b48).lineBetween(xx,yy-1,xx+dx,tipY);
-   g.fillStyle(p.kind==='sage'?(j%2?0xa4ad92:0x80967f):p.kind==='thyme'?(j%2?0x9ca67b:0x748b65):p.kind==='lettuce'?(j%2?0xa6b664:0x7e9d50):(j%2?0x8daa5e:0x638344)).fillEllipse(xx+dx,tipY+dy,p.kind==='thyme'?5*size:10*size,p.kind==='lettuce'?9*size:5*size);
-  }
-  if(['tomato','pepper','cucumber'].includes(p.kind)){g.lineStyle(1,0xa48c63).lineBetween(xx-7,yy,xx-7,yy-33);g.lineStyle(2,0x60864e).lineBetween(xx,yy,xx-3,yy-27*size);for(let j=0;j<3;j++){const fx=xx+(j%2?5:-6),fy=yy-10-j*7;g.fillStyle(0x759953).fillEllipse(fx,fy,11*size,6*size);if(stage==='ready'){g.fillStyle(p.kind==='tomato'?0xc65d48:p.kind==='pepper'?0xd1a152:0x547b43);if(p.kind==='tomato')g.fillCircle(fx+3,fy+3,3.5);else g.fillEllipse(fx+3,fy+3,5,p.kind==='cucumber'?11:8);}}}
-  if(p.kind==='pea'){g.lineStyle(1,0x9b8253).lineBetween(xx-7,yy+1,xx-4,yy-29);g.lineStyle(2,0x6b8b49).lineBetween(xx,yy,xx-3,yy-24*size);if(stage==='ready')g.fillStyle(0xa7b85e).fillEllipse(xx+3,yy-16,5,12);}
-  if(p.kind==='strawberry'&&stage!=='ready'&&(p.growth>1||p.aftermath==='empty')){for(const dx of [-6,4]){g.fillStyle(p.aftermath?0xb4a58a:0xf1e4c7).fillCircle(xx+dx,yy-10,2.2);g.fillStyle(0xd6ba63).fillCircle(xx+dx,yy-10,.8);}}
-  if(['calendula','borage','chamomile'].includes(p.kind)&&stage==='ready'){for(let j=0;j<3;j++){const fx=xx+(j-1)*7,fy=yy-14-j%2*8;g.lineStyle(1,0x738e56).lineBetween(xx,yy,fx,fy);g.fillStyle(p.kind==='calendula'?0xd6a45c:p.kind==='borage'?0x8a9bc3:0xe8dfc2);for(let k=0;k<6;k++)g.fillEllipse(fx+Math.cos(k*Math.PI/3)*3,fy+Math.sin(k*Math.PI/3)*3,3,2);g.fillStyle(0xccaf5d).fillCircle(fx,fy,1.5);}}
-  if(p.flowering&&p.kind==='pea'){for(let j=0;j<3;j++)g.fillStyle(stage==='seed'?0xa38b59:0xa9a16a).fillEllipse(xx+(j-1)*6,yy-13-j%2*8,4,10);}
-  if(p.flowering&&p.kind!=='pea'){for(let j=0;j<3;j++){const fx=xx+(j-1)*7,fy=yy-20-j%2*7;g.lineStyle(1,0x718b51).lineBetween(xx,yy-4,fx,fy);if(stage==='seed'){g.fillStyle(p.seedTaken?0x8e845c:0xbaa26b).fillCircle(fx,fy,2.5);}else{const color=p.kind==='thyme'?0xb59bc2:p.kind==='wildflower'?(i%2?0xa69bc2:0xe3d7b2):0xe6d7aa;g.fillStyle(color);for(let k=0;k<5;k++)g.fillCircle(fx+Math.cos(k*1.256)*3,fy+Math.sin(k*1.256)*3,2);g.fillStyle(0xd2ad62).fillCircle(fx,fy,1.5);}}}
+ if(!s.mulched&&(s.unwateredDays??0)>=2&&s.moisture<=1){
+  const cracks=[[[.025,.31],[.061,.27],[.086,.32],[.139,.28],[.17,.35]],[[.086,.32],[.10,.42],[.14,.45]],[[.97,.24],[.93,.30],[.90,.26],[.86,.34],[.82,.33]],[[.90,.26],[.88,.18],[.84,.16]],[[.045,.75],[.09,.69],[.125,.73],[.16,.66],[.21,.68]],[[.125,.73],[.13,.84],[.17,.89]],[[.95,.78],[.91,.72],[.88,.76],[.84,.68],[.80,.70]],[[.88,.76],[.87,.87],[.82,.91]],[[.30,.04],[.32,.12],[.29,.18],[.34,.23]],[[.32,.12],[.37,.10],[.40,.15]],[[.68,.96],[.65,.87],[.69,.79],[.65,.73]],[[.65,.87],[.60,.84],[.57,.87]]];
+  for(const points of cracks){g.lineStyle(1.25,0x5f4933,.8).beginPath();points.forEach(([xx,yy],i)=>i?g.lineTo(x+xx*w,y+yy*h):g.moveTo(x+xx*w,y+yy*h));g.strokePath();g.lineStyle(.45,0xd0b184,.55).beginPath();points.forEach(([xx,yy],i)=>i?g.lineTo(x+xx*w+.8,y+yy*h+.8):g.moveTo(x+xx*w+.8,y+yy*h+.8));g.strokePath();}
  }
+
+ if(s.mulched)for(let i=0;i<80;i++){const xx=x+7+i*47%(w-14),yy=y+6+i*31%(h-12);g.lineStyle(1,i%3?0xb79a61:0xd0b87d,.8).lineBetween(xx,yy,xx+4+i%4,yy+(i%3-1)*2);}
+ for(let i=0;i<s.plants.length;i++){const point=livingPlantPoint(i,area);paintLivingPlant(g,s.plants[i],point.x,point.y,s.moisture,i===selected);}
  if(marker)paintMarker(g,area);
 }
 export function paintBedVisitors(g:Phaser.GameObjects.Graphics,s:LivingBed,time:number,area:LivingBedArea=livingBedArea,clear=true){if(clear)g.clear();const flowers=livingFlowers(s);if(!flowers||s.weather==='rain')return;for(let i=0;i<Math.min(3,flowers);i++){const point=livingPlantPoint((i*3+2)%9,area),t=time*.001+i*2.4,x=point.x+Math.cos(t)*14,y=point.y-22+Math.sin(t*1.6)*8;g.fillStyle(0xe9e2be,.8).fillEllipse(x-1,y-3,5,3).fillEllipse(x+3,y-3,5,3);g.fillStyle(0xc7a45e).fillEllipse(x,y,6,3);g.lineStyle(1,0x4e5037).lineBetween(x,y-1,x,y+1);}}

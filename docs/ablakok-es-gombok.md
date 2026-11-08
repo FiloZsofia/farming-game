@@ -65,3 +65,8 @@ Az ösvény a Tervrajzokban egyetlen kártya, Burkolat választóval. A rajzoló
 
 
 A társítás összeállításának Vissza gombja a gondozópanel láblécében balra, a Tovább gombbal egy sorban áll. A vetőmagválasztó ugyanakkora eszközhelyet foglal, mint az öt alapeszköz, teljes nevű natív választóval. A teszt postaládája a rendes postaláda ikonozott `.mail-seed-card` sorait és ablakát használja; minden új növény saját rajzot kap. Az Ösvény kártya ikonja a kiválasztott burkolatot ábrázolja, a gomb neve Ösvény kialakítása.
+
+
+### Frissítésismertető és Mara tesztablakai
+
+A kertészeti próba frissítésismertetője a közös beszélgetésablakban jelenik meg: cím, négy rövid szakasz, segítségsor, külön előnézeti lábléc és közös Tovább gomb. Mobilon a teljes tartalom görgethető. A Terményátadó feltöltőablaka és Készlete a natív inventory keretet használja; Mara a közös portrés beszélgetéselrendezést. A bal oldali rövid kertészkedési haladásjelzés nem foglalja el a jobb oldali ágyáskezelőt.

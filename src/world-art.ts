@@ -6,7 +6,7 @@ import {createGarden,type Garden} from './gardening';
 import {farmLayout as layout,farmBounds} from './layout';
 
 // Original procedural artwork. World anchors stay shared with interaction/collision.
-export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),garden:Garden=createGarden(),birdhouse:{x:number;y:number}|null=null,study=false,starterBeds=true){
+export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),garden:Garden=createGarden(),birdhouse:{x:number;y:number}|null=null,study=false,starterBeds=true,fenceGap?:{from:number;to:number}){
  let g=scene.add.graphics();const ground=g;
  let seed=71;const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
  const rect=(x:number,y:number,w:number,h:number,c:number,a=1)=>{g.fillStyle(study?studyColor(c):c,a);g.fillRect(Math.round(x),Math.round(y),w,h);};
@@ -127,7 +127,7 @@ export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),g
   const posts:number[]=[];for(let x=from;x<=to;x+=40)posts.push(x);if(posts.at(-1)!==to)posts.push(to);
   for(const x of posts){poly([x-4,597,x-4,563,x-1,558,x+5,562,x+5,597],0x493021);rect(x-3,565,3,29,0x875a35);line(x+4,565,x+4,595,0x30241a,2);rect(x-5,559,11,5,0x65452c);line(x-4,559,x+5,559,0xa57a4a);for(const y of [573,587]){oval(x+1,y,2,2,0x262a23);}}
  };
- const gate=layout.southGate;fence(farmBounds.left,gate.x-6);fence(gate.x+gate.w+6,farmBounds.right);
+ const gate=layout.southGate;if(fenceGap){fence(farmBounds.left,fenceGap.from);fence(fenceGap.to,gate.x-6);}else fence(farmBounds.left,gate.x-6);fence(gate.x+gate.w+6,farmBounds.right);
  for(const x of [gate.x-6,gate.x+gate.w+6]){rect(x-6,554,12,44,0x493020);rect(x-4,557,4,38,0x8b603a);rect(x-8,551,16,6,0x67472d);line(x-7,551,x+7,551,0xac8050);for(const y of [570,584])rect(x-6,y,12,3,0x35382d);}
  for(let i=0;i<(study?0:110);i++){const x=45+random()*710,y=275+random()*265;if(Math.abs(x-215)<65||x>480&&y>340||x>325&&x<495&&y<380)continue;tuft(x,y,.6+random()*.4);if(i%4===0){line(x,y-3,x,y-9,0x4e7149);oval(x,y-10,4,3,i%2?0xd9cfac:0xb5a5bd);}}
  if(study)drawStudyBorders(g);

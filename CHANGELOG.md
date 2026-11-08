@@ -2,6 +2,10 @@
 
 ## Változások a 0.2.0 óta — verzióemelés nélkül
 
+- 2026-11-08 — külön Terményátadó · Mara fuvarja teszt: kilenc láda, látható termények, teherautó és rakodó/megszólítható sofőr, próbabeli Ismerősök, kézi fuvar/napléptetés és egyszeri fizetés. A normál eladás nem változik.
+- 2026-11-08 — kertészeti próba: az új döntés szerint 20/40 munkapont adja a két szintet, nincs teljes betakarítási ciklusfeltétel. Bal oldali haladásjelzés és részletesebb Jártasságok; mulcs a Készletben, közös gain-jelzés/hang; rövid reggeli permet után sötétedő föld, természetesebb repedések, külön növényformák, nagyobb kétsoros jelölők, tényleges ösvénykörvonalon alapuló ütközés.
+- 2026-11-08 — a jövőbeli kertészeti kiadás ismertetője előnézetként indításkor és teszt-újratöltéskor megjelenik. Újratöltés friss memóriabeli próbát indít, a rendes mentés és backup változatlan; normál kertátalakítás és kompenzáció még nincs.
+
 - 2026-11-08 — kertészeti teszt finomítása: alapból csukott Segítség; Ágyásjelölő, kezdetben üres felirattal, majd teljes társításnévvel; bal alsó Vissza a társításlistára; normál postaládasorok, új növényikonok; egy eszköznyi Vetőmag választó. Fokozatos talajszáradás, két nap után szélső repedések, reggeli öntözőpermet és frissen öntözött ágyás; növényenkénti pont a magérlelési döntésért. Az első teljes ciklus feltétele megmarad.
 - 2026-11-08 — ösvényteszt: Ösvény kialakítása gomb, burkolattal változó ikon, alapúti csatlakozás fűrés nélkül, teljes visszatörlés egérrel. A saját utak anyag-visszatérítése és az alaputak bonthatatlansága ellenőrizve.
 - 2026-11-08 — normál játékban és tesztben a Magkatalógus kilépőgombja rendelés előtt Vissza, sikeres rendelés után Tovább.
