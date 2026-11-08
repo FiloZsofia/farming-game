@@ -2,6 +2,8 @@
 
 ## Változások a 0.2.0 óta — verzióemelés nélkül
 
+- 2026-11-08 — kertészeti teszt: a lakóháznál E-vel vagy kattintással megnyitható a Pihenés reggelig. A pihenés a kertészeti próba saját napváltását indítja: megérkeznek a magok, haladnak a növények és a komposztáló; a normál napzárás nem írja felül a teszt állapotát. Az ablak bezárása nem léptet napot. A fejlesztői kézi napgombok megmaradnak.
+
 - 2026-11-08 — kertészeti teszt: a küldetéskövető és a Célok fül kizárólag a tényleges történeti céloké marad. Külön Tanulási segítség világos jegyzettel, témánként egyszeri automatikus bemutatással, Értem és ? gombbal, visszaolvasható témákkal; saját ÁGYÁSKEZELŐ felirat.
 - 2026-11-08 — kertészeti teszt: önálló Ösvény kártya a Tervrajzokban, kő/fa/föld burkolattal. Visszafelé javítható szabad rajz, piros előnézetből is; költség csak megerősítéskor, adagmaradékok megőrzése és Bontóvasas visszabontás. 1 kőből 5 lépőkő vagy 10 rövid földútszakasz, 1 fából 5 járódeszka. Szabálytalan, lapos kövek; a meglévő alapösvény megjelenése változatlan. A normál játék kertje és mentése nem áll át.
 

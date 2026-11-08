@@ -1,4 +1,4 @@
-export type GardenWindowMode='inventory'|'plans'|'people'|'skills'|'goals'|'catalog'|'mail'|'composter'|'simon'|'notebook';
+export type GardenWindowMode='inventory'|'plans'|'people'|'skills'|'goals'|'catalog'|'mail'|'composter'|'simon'|'notebook'|'rest';
 // Reuse the real dialog, inventory tabs and catalog frame; never replace permanent nodes.
 export class LivingGardenWindow{
  private root:HTMLElement|null=null;

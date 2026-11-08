@@ -18,7 +18,7 @@ import {farmLayout} from './layout';
 import {buyBlueprint,craftMachine,canCraft,blueprintNames,recipes,materialKeys,heldMaterial,materialNames,type Blueprint} from './crafting';
 import {craftChest} from './chests';
 import type {Snapshot} from './storage';
-type Host={actor:()=>GardenPoint;ready:()=>boolean;day:number;snapshot:()=>Snapshot;goals:()=>QuestEntry[];showWindow:(title:string,label:string)=>void;uiReady:()=>boolean;equip:(tool:'hoe'|'water'|'harvest'|'crowbar'|'stick'|'hand')=>void;thought:(text:string)=>void;celebrate:(level:number,mix:{name:string;detail:string;composition:string})=>void;work:(point:GardenPoint,tool:'hoe'|'hand'|'water'|'harvest'|'crowbar')=>void;advanceDay:(day:number)=>void;panelChanged:()=>void};
+type Host={actor:()=>GardenPoint;ready:()=>boolean;day:number;snapshot:()=>Snapshot;goals:()=>QuestEntry[];rest:()=>void;showWindow:(title:string,label:string)=>void;uiReady:()=>boolean;equip:(tool:'hoe'|'water'|'harvest'|'crowbar'|'stick'|'hand')=>void;thought:(text:string)=>void;celebrate:(level:number,mix:{name:string;detail:string;composition:string})=>void;work:(point:GardenPoint,tool:'hoe'|'hand'|'water'|'harvest'|'crowbar')=>void;advanceDay:(day:number)=>void;panelChanged:()=>void};
 type PanelMode='bed'|GardenWindowMode;
 type Tool='stick'|'inspect'|'hoe'|'water'|'harvest'|'mulch'|'crowbar'|'path'|'marker'|'irrigation'|'composter'|'chest'|BedKind;
 const intersect=(a:LivingBedArea,b:LivingBedArea,pad=0)=>a.x-pad<b.x+b.w&&a.x+a.w+pad>b.x&&a.y-pad<b.y+b.h&&a.y+a.h+pad>b.y;
@@ -60,7 +60,12 @@ export class LivingBedController{
  setTool(tool:Tool){if(this.markerBed!==null&&tool!=='marker')return;if(tool in bedKinds&&(!this.isOpen||this.mode!=='bed'||!this.state.mix||!bedMixes[this.state.mix].plants.includes(tool as BedKind)||!this.garden.seeds[tool as BedKind]))return;this.modal.close();this.tool=tool;this.stroke=[];this.drawing=false;this.host.equip(['hoe','water','crowbar','stick','harvest'].includes(tool)?tool as 'hoe'|'water'|'crowbar'|'stick'|'harvest':'hand');this.renderToolbar();this.paintPreview();}
  advanceDay(weather:'sunny'|'rain'){if(!this.host.uiReady())return;this.garden.nextDay(weather);this.host.advanceDay(this.garden.snapshot.clock.day);this.message='';this.paint();if(this.isOpen)this.render();}
 
- private serviceAt(point:GardenPoint){for(const [mode,b]of [['catalog',farmLayout.catalog],['mail',farmLayout.mailbox],['notebook',farmLayout.journal]] as const)if(this.distance(point,b)<15){if(this.distance(this.host.actor(),b)<60)this.open(mode);return true;}const machines=this.garden.snapshot.travel.crafting?.machines??[];const index=machines.findIndex(m=>Math.hypot(m.x-point.x,m.y-point.y)<24);if(index>=0&&this.tool!=='crowbar'){if(Math.hypot(machines[index].x-this.host.actor().x,machines[index].y-this.host.actor().y)<55){this.machineIndex=index;this.open('composter');}return true;}return false;}
+ private serviceAt(point:GardenPoint){
+  for(const [mode,b]of [['catalog',farmLayout.catalog],['mail',farmLayout.mailbox],['notebook',farmLayout.journal]] as const)if(this.distance(point,b)<15){if(this.distance(this.host.actor(),b)<60)this.open(mode);return true;}
+  const door=farmLayout.houseDoor;if((this.distance(point,farmLayout.houseBounds)<15||Math.hypot(point.x-door.x,point.y-door.y)<65)&&Math.hypot(this.host.actor().x-door.x,this.host.actor().y-door.y)<75){this.open('rest');return true;}
+  const machines=this.garden.snapshot.travel.crafting?.machines??[],index=machines.findIndex(m=>Math.hypot(m.x-point.x,m.y-point.y)<24);if(index>=0&&this.tool!=='crowbar'){if(Math.hypot(machines[index].x-this.host.actor().x,machines[index].y-this.host.actor().y)<55){this.machineIndex=index;this.open('composter');}return true;}return false;
+ }
+
  pointer(point:GardenPoint,touch=false){
   if(!this.host.ready())return true;
   if(this.placing){this.movePreview(point);if(!touch)this.confirmPlace();return true;}
@@ -145,12 +150,13 @@ export class LivingBedController{
 
  private render(){
   this.renderToolbar();this.panel.replaceChildren();this.panel.dataset.mix=this.state.mix??'';this.panel.dataset.mode='bed';
-  const titles:Record<PanelMode,string>={bed:this.state.mix?bedMixes[this.state.mix].name:this.state.prepared?'Növénytársítás választása':'Ágyás kialakítása',catalog:'Magkatalógus',mail:'Postaláda',composter:'Komposztáló',inventory:'Készlet',plans:'Tervrajzok',simon:'Műhelybolt',notebook:'Kerti megfigyelések',people:'Ismerősök',skills:'Jártasságok',goals:'Célok'};
+  const titles:Record<PanelMode,string>={bed:this.state.mix?bedMixes[this.state.mix].name:this.state.prepared?'Növénytársítás választása':'Ágyás kialakítása',catalog:'Magkatalógus',mail:'Postaláda',composter:'Komposztáló',inventory:'Készlet',plans:'Tervrajzok',simon:'Műhelybolt',notebook:'Kerti megfigyelések',people:'Ismerősök',skills:'Jártasságok',goals:'Célok',rest:'Otthon'};
   let content:HTMLElement;
   if(this.mode==='bed'){const header=document.createElement('header'),title=document.createElement('h2');title.textContent=titles.bed;header.append(title);this.panel.append(header);content=document.createElement('div');content.className='bed-content';this.panel.append(content);}else content=this.modal.open(this.mode,titles[this.mode]);
   if(this.message)this.text(content,this.message);
   if(this.mode==='bed')this.renderBed(content);
   if(this.mode==='catalog')this.renderCatalog(content);
+  if(this.mode==='rest'){this.text(content,'Lepihensz reggelig?');this.button(content,'Pihenés reggelig','rest',()=>this.host.rest(),false);}
   if(this.mode==='mail'){const waiting=Object.entries(this.garden.mailbox).filter(([,n])=>n>0);this.text(content,waiting.map(([k,n])=>`${bedKinds[k as BedKind].name}: ${n}`).join(' · ')||'Nincs átvehető csomag.');this.button(content,'Átveszem','collect-mail',()=>{this.garden.collectMail();this.render();},false,!waiting.length);}
   if(this.mode==='composter')this.renderComposter(content);
   if(this.mode==='notebook'){if(!this.garden.observations.length)this.text(content,'Még nincs feljegyzett felismerés.');for(const note of this.garden.observations){const card=document.createElement('article');card.className='garden-observation';card.dataset.observation=note.id;const title=document.createElement('h3');title.textContent=note.title;card.append(observationSketch(note.id),title);this.text(card,`${note.earlierDay}. nap → ${note.day}. nap`);this.text(card,note.text);content.append(card);}}

@@ -1306,3 +1306,8 @@ A szabad, hullámos vonal visszafelé húzva javítható, piros előnézetből �
 A kőút változó méretű, szabálytalan, lapos kövekből áll, a faút enyhén eltérő járódeszkákból. A földút a meglévő út palettáját és textúráját követi, összefüggő, belső varrat nélküli csomópontokkal. A **meglévő alapösvény kinézetén nem változtatunk**. A homok mint új alapanyag felmerült, de a felhasználó az olcsó, könnyen beszerezhető kő mellett maradt; homok nem kerül be.
 
 Egyelőre csak tesztmód: a normál kertészkedés és mentés nem áll át, játékverzió 0.2.0, mentésverzió 18 marad.
+
+
+### Kertészeti próba: pihenés és napváltás — javítás, 2026. november 8.
+
+A háznál E-vel vagy kattintással külön Otthon ablak nyílik, Pihenés reggelig megerősítéssel. A teszt saját napváltása egyszer fut: kézbesíti a rendeléseket, haladnak az ágyások és a komposztáló, a következő nap reggel kezdődik. Az ablak bezárása nem napzárás. A ház mellett elérhető Magkatalógus és Napló interakciója megmarad. A kézi Következő nap / Esős nap gombok a Fejlesztői eszközökben továbbra is használhatók. A javítás a memóriabeli kertészeti tesztre korlátozódik; a normál alvás és a rendes mentés változatlan.

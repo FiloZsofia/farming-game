@@ -32,6 +32,8 @@ Az eredeti öt eszköz marad az alsó sávban. Ágyáskezeléskor megjelenik a V
 
 Tovább, Esc, távolodás vagy a talajra kattintás bezárja a panelt; a célkövető visszatér és a vetőmagválasztó eltűnik. A Készlet, Magkatalógus és más megszokott ablakok az eredeti közös megjelenésükkel nyílnak, nem az ágyás oldalsávjában. A Menü, eszközsáv és mobilos mozgásgombok szabadon maradnak.
 
+A **lakóházhoz sétálva E-vel vagy a házra kattintva**, majd a **Pihenés reggelig** gombbal a következő napra léphetsz. A magcsomag megérkezik a postaládába, a növények és a Komposztáló is haladnak. Az ablak Tovább gombja csak bezár, nem léptet napot.
+
 A kézi **Következő nap** és **Esős nap** gombok a Fejlesztői eszközök kertészeti szakaszában találhatók, nem zsúfolják a gondozópanelt. A rendes napóra közben nem fut. A talaj több napig tartja a vizet, szárazon a növekedés megáll, a növények nem pusztulnak el. A levelek és talaj színe jelzik az állapotot. A gyors próba növekedési ideje és árai még nem végleges éles egyensúlyi értékek.
 
 A Komposztálót a Készletből helyezd le. A meglévő szabály szerint 10 gazból vagy túlérett gyümölcsből másnap 4 átvehető mulcs készül. A terméket külön vedd át; egy adag egy teljes ágyásra elég. Ingyenes mulcsozás nincs.
@@ -92,3 +94,10 @@ A küldetéskövető és a Célok fül a valódi történeti célokat mutatja, k
 A legutóbbi ellenőrzés: 454 teszt / 67 fájl és sikeres build; izolált Chromium CDP-ben a segítség egyszerisége és újranyitása, valódi történeti cél megtartása, mobilos elrendezés, mindhárom ösvény, piros rajz visszajavítása, költség és Bontóvasas anyagvisszaadás, valamint a normál mentés/backup változatlansága is ellenőrzött. Cypress-bináris hiányában CDP készült, Playwright nélkül.
 
 Képek: [Külön segítség](concepts/garden-learning-bed.png) · [Visszatérő történeti cél](concepts/garden-learning-quest-restored.png) · [Ösvény kártya](concepts/garden-path-blueprint-dirt.png) · [Három burkolat és csomópont](concepts/garden-path-detail-and-junction.png) · [Mobilos ösvényépítés](concepts/garden-path-mobile.png).
+
+
+### Tesztbeli pihenés javítása
+
+A háznál elérhető pihenés a próba saját napváltási útvonalát használja, a normál napzárás helyett. Izolált Chromium CDP-próba ellenőrizte a valódi magrendelést → háznál E/kattintás → pihenést → másnapi csomagátvételt, a növekedést és a kész mulcsot, a napváltás nélküli ablakzárást és a szomszédos Napló megmaradó interakcióját. A normál mentés és backup exportja változatlan volt teszt közben és kilépés után is. 454 teszt és a build sikeres.
+
+[Kép: pihenés a háznál](concepts/garden-trial-rest-at-home.png) · [Másnap megérkezett magok](concepts/garden-trial-rest-seeds-arrived.png).
