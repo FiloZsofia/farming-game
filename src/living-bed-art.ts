@@ -7,8 +7,9 @@ export function paintLivingBed(g:Phaser.GameObjects.Graphics,s:LivingBed,selecte
  const {x,y,w,h}=area;g.clear();g.fillStyle(0x304734,.18).fillEllipse(x+w/2,y+h/2+7,w+22,h+14);
 
  if(!s.prepared){g.lineStyle(1,valid?0xc4b480:0xc57662,.85);for(const [a,b]of [[x,y+4],[x+w-5,y],[x+w,y+h],[x+4,y+h-2]]){g.fillStyle(0x755839).fillRect(a-2,b-8,4,13);g.fillStyle(0xc5a777).fillRect(a-2,b-8,4,3);}g.lineStyle(1,valid?0xc7b989:0xd5836b,.8).strokePoints([{x,y:y+4},{x:x+w-5,y},{x:x+w,y:y+h},{x:x+4,y:y+h-2}],true);if(!placing&&marker)paintMarker(g,area);return;}
- g.fillStyle(0x60472f).fillRoundedRect(x-4,y-3,w+8,h+9,17);g.fillStyle(s.moisture>1?0x634b36:s.moisture===1?0x7e6042:0x9b7a50).fillRoundedRect(x,y,w,h,14);
+ g.fillStyle(0x60472f).fillRoundedRect(x-4,y-3,w+8,h+9,17);g.fillStyle([0xb29466,0x9a794f,0x80603f,0x584330][s.moisture]).fillRoundedRect(x,y,w,h,14);
  for(let i=0;i<42;i++){const xx=x+9+(i*43%(w-18)),yy=y+7+(i*29%(h-14));g.fillStyle(s.moisture?0x3d3426:0x6d5337,.28).fillEllipse(xx,yy,3+i%3,1.5);}
+ if(!s.mulched&&(s.unwateredDays??0)>=2&&s.moisture<=1){g.lineStyle(1,0x66503a,.8);for(let i=0;i<12;i++){const left=i%2===0,xx=left?x+5:x+w-5,yy=y+15+(i*19%(h-30)),sign=left?1:-1;g.beginPath().moveTo(xx,yy).lineTo(xx+sign*8,yy-2).lineTo(xx+sign*13,yy+3).lineTo(xx+sign*20,yy+1).strokePath();g.lineBetween(xx+sign*13,yy+3,xx+sign*15,yy+8);}}
  if(s.mulched)for(let i=0;i<80;i++){const xx=x+7+i*47%(w-14),yy=y+6+i*31%(h-12);g.lineStyle(1,i%3?0xb79a61:0xd0b87d,.8).lineBetween(xx,yy,xx+4+i%4,yy+(i%3-1)*2);}
  for(let i=0;i<s.plants.length;i++){
   const p=s.plants[i],point=livingPlantPoint(i,area),xx=point.x,yy=point.y,stage=bedPlantStage(p);if(p.removed){g.lineStyle(1,0x695133,.65).strokeEllipse(xx,yy,10,5);continue;}

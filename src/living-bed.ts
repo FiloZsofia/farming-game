@@ -3,7 +3,7 @@ import {setsFruit,RIPE_FRUIT_DAYS,type PollinationContext} from './pollination';
 export type BedKind='radish'|'lettuce'|'pea'|'thyme'|'wildflower'|'oregano'|'sage'|'tomato'|'pepper'|'cucumber'|'strawberry'|'carrot'|'calendula'|'borage'|'chamomile'|'lemonBalm';
 export type BedMix='kitchen'|'pollinator'|'herbs'|'strawberry'|'tea';
 export type BedPlant={kind:BedKind;growth:number;flowering:boolean;flowerDays:number;removed:boolean;seedTaken:boolean;cycle?:number;fruitSet?:boolean;ripeDays?:number;aftermath?:'empty'|'overripe'};
-export type LivingBed={day:number;prepared:boolean;mix:BedMix|null;moisture:number;mulched:boolean;evaporation:number;weather:'sunny'|'rain';plants:BedPlant[];basket:Partial<Record<BedKind,number>>;seeds:number;seedStock:Record<BedKind,number>;layout?:BedKind[]};
+export type LivingBed={day:number;prepared:boolean;mix:BedMix|null;moisture:number;mulched:boolean;evaporation:number;weather:'sunny'|'rain';plants:BedPlant[];basket:Partial<Record<BedKind,number>>;seeds:number;seedStock:Record<BedKind,number>;unwateredDays?:number;layout?:BedKind[]};
 export const bedKinds:Record<BedKind,{name:string;days:number;perennial:boolean}>={
  radish:{name:'Retek',days:3,perennial:false},lettuce:{name:'Saláta',days:2,perennial:false},pea:{name:'Borsó',days:6,perennial:true},thyme:{name:'Kakukkfű',days:3,perennial:true},wildflower:{name:'Vadvirág',days:3,perennial:true},
  oregano:{name:'Szurokfű',days:3,perennial:true},sage:{name:'Zsálya',days:3,perennial:true},tomato:{name:'Paradicsom',days:6,perennial:true},pepper:{name:'Paprika',days:6,perennial:true},cucumber:{name:'Uborka',days:6,perennial:true},strawberry:{name:'Eper',days:6,perennial:true},carrot:{name:'Sárgarépa',days:6,perennial:false},calendula:{name:'Körömvirág',days:3,perennial:true},borage:{name:'Borágó',days:3,perennial:true},chamomile:{name:'Kamilla',days:3,perennial:true},lemonBalm:{name:'Citromfű',days:3,perennial:true}
@@ -19,16 +19,16 @@ export const bedMixes:Record<BedMix,{name:string;detail:string;level:number;memb
 export const emptyBedSeeds=():Record<BedKind,number>=>Object.fromEntries(Object.keys(bedKinds).map(k=>[k,0])) as Record<BedKind,number>;
 export const bedSeedMethod=(kind:BedKind):'heads'|'pods'|'none'=>kind==='pea'?'pods':['carrot','strawberry','tomato','pepper','cucumber'].includes(kind)?'none':'heads';
 export const BED_WATER_CAPACITY=3;
-export const createLivingBed=(day=1):LivingBed=>({day,prepared:false,mix:null,moisture:1,mulched:false,evaporation:0,weather:'sunny',plants:[],basket:{},seeds:0,seedStock:{...emptyBedSeeds(),radish:9,lettuce:9,pea:9,thyme:9,wildflower:9,oregano:9,sage:9,carrot:9}});
+export const createLivingBed=(day=1):LivingBed=>({day,prepared:false,mix:null,moisture:1,mulched:false,evaporation:0,unwateredDays:0,weather:'sunny',plants:[],basket:{},seeds:0,seedStock:{...emptyBedSeeds(),radish:9,lettuce:9,pea:9,thyme:9,wildflower:9,oregano:9,sage:9,carrot:9}});
 export function prepareLivingBed(s:LivingBed){if(s.prepared)return null;return {...structuredClone(s),prepared:true};}
 export function plantLivingBed(s:LivingBed,mix:BedMix,plants:BedKind[]=bedMixes[mix].plants):LivingBed|null{if(!s.prepared||s.mix||plants.length!==9||plants.some(kind=>!bedMixes[mix].plants.includes(kind)))return null;const counts:Partial<Record<BedKind,number>>={};for(const kind of plants)counts[kind]=(counts[kind]??0)+1;if(Object.entries(counts).some(([kind,n])=>s.seedStock[kind as BedKind]<n))return null;const next=structuredClone(s);for(const [kind,n]of Object.entries(counts))next.seedStock[kind as BedKind]-=n;next.mix=mix;next.layout=[...plants];next.plants=plants.map(kind=>({kind,growth:0,flowering:false,flowerDays:0,removed:false,seedTaken:false}));return next;}
-export function waterLivingBed(s:LivingBed){if(!s.prepared||s.moisture>=BED_WATER_CAPACITY)return null;return {...structuredClone(s),moisture:BED_WATER_CAPACITY,evaporation:0};}
+export function waterLivingBed(s:LivingBed){if(!s.prepared||s.moisture>=BED_WATER_CAPACITY)return null;return {...structuredClone(s),moisture:BED_WATER_CAPACITY,evaporation:0,unwateredDays:0};}
 export function mulchLivingBed(s:LivingBed){if(!s.prepared||s.mulched)return null;return {...structuredClone(s),mulched:true};}
 export function bedPlantStage(p:BedPlant){if(p.aftermath==='empty')return 'empty';if(p.aftermath==='overripe')return 'overripe';if(p.removed)return 'picked';if(p.flowering)return p.flowerDays>=2?'seed':'flowering';return p.growth>=bedKinds[p.kind].days?(p.kind==='wildflower'?'flowering':'ready'):'growing';}
 export function advanceLivingBed(s:LivingBed,weather:'sunny'|'rain',ecology?:PollinationContext,identity='bed'):LivingBed{
  const next=structuredClone(s);next.day++;next.weather=weather;
  if(!next.prepared)return next;
- if(weather==='rain'){next.moisture=BED_WATER_CAPACITY;next.evaporation=0;}
+ if(weather==='rain'){next.moisture=BED_WATER_CAPACITY;next.evaporation=0;next.unwateredDays=0;}else next.unwateredDays=(next.unwateredDays??0)+1;
  const moist=next.moisture>0;
  for(const [i,p]of next.plants.entries()){
   if(p.removed)continue;

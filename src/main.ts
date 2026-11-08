@@ -1023,7 +1023,7 @@ class Farm extends Phaser.Scene {
    const label=document.createElement('label');label.className='catalog-row';label.textContent=`${cropNames[crop]} · ${this.materialName(crop)} · ${seedPrices[crop]} gold/db`;
    const input=document.createElement('input');input.type='number';input.min='0';input.max='999999';input.step='1';input.value=String(this.catalogDraft[crop]);input.dataset.orderCrop=crop;input.setAttribute('aria-label',`${cropNames[crop]} rendelési mennyiség`);input.addEventListener('input',()=>{this.catalogDraft=this.readCart();this.updateCart();});label.prepend(seedIcon(crop));label.append(input);rows.append(label);
   }
-  this.updateCart();document.querySelector<HTMLElement>('#catalog-panel')!.hidden=false;
+  this.updateCart();document.querySelector<HTMLElement>('#catalog-panel')!.hidden=false;document.querySelector('#dialogue-close')!.textContent='Vissza';
  }
  private readCart(){const cart=emptyQuantities();for(const crop of crops)cart[crop]=document.querySelector<HTMLInputElement>(`[data-order-crop="${crop}"]`)?.valueAsNumber??0;return cart;}
  private updateCart(){

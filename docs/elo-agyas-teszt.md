@@ -55,9 +55,9 @@ Az eper terméskötődése a meglévő stabil beporzási szabályt használja: h
 
 ## Jelölők és berendezések
 
-Minden ágyáshoz külön fa jelölő tartozik, amely kijelölés után automatikusan kézbe kerül. Ugyanannak az ágyásnak bármely szabad, közvetlen oldala mellé helyezd. A kézírásos tábla Bontóvassal külön visszavehető és ismét lehelyezhető; az ágyás és növényei megmaradnak.
+Minden ágyáshoz külön fa Ágyásjelölő tartozik, amely kijelölés után automatikusan kézbe kerül. Ugyanannak az ágyásnak bármely szabad, közvetlen oldala mellé helyezd. Beültetés előtt a táblán nincs felirat; beültetés után a társítás teljes fantázianeve kerül rá, szükség esetén két sorban. A kézírásos tábla Bontóvassal külön visszavehető és ismét lehelyezhető; az ágyás és növényei megmaradnak.
 
-Az önálló ösvényépítés most a **Készlet → Tervrajzok → Ösvény** egyetlen kártyáján érhető el. A Burkolat választóval kő-, fa- vagy földutat választhatsz, majd az Ösvény rajzolása gombbal kezdheted a szabad vonalhúzást. Nincs ösvénygomb az ágyáskezelőben vagy az eszközsávban.
+Az önálló ösvényépítés most a **Készlet → Tervrajzok → Ösvény** egyetlen kártyáján érhető el. A Burkolat választóval kő-, fa- vagy földutat választhatsz, majd az Ösvény kialakítása gombbal kezdheted a szabad vonalhúzást. Nincs ösvénygomb az ágyáskezelőben vagy az eszközsávban.
 
 A próba költsége: 1 kő → 5 lépőkő; 1 fa → 5 járódeszka; 1 kő → 10 rövid földútszakasz. A rajz teljes költsége előre látszik, anyag csak a Lerakom megerősítéskor fogy. A megmaradt előkészített elemek felhasználhatók a következő rajzhoz. Bontóvassal elemenként visszabontható; az elemek újrahasználhatók, teljes adag esetén az alapanyag visszakerül. Az eredeti alapösvény megjelenése változatlan.
 
@@ -65,7 +65,7 @@ Húzz visszafelé a korábbi vonalhoz a végének törléséhez, piros állapotb
 
 A teszt Készletében a Simon · Vásárlás gomb a próba bolti gyorselérése. A Tárolóláda tervrajza 160 gold; a berendezések a meglévő anyagköltségekkel készíthetők a Tervrajzokban. A normál Simon-boltba a láda a későbbi éles kertészeti átállással kerül. A meglévő tervrajzokat akkor is megőrizzük.
 
-A boltban az Öntözőrendszer **tervrajzát** veszed meg. A Tervrajzok fülön anyagokból elkészítve kerül a Készletbe; onnét az Elhelyezem gombbal tehető le. Egy Öntözőrendszer egy teljes ágyáshoz kapcsolható. Elhelyezéskor a célágyás kiemelve látszik; a következő napoktól az utánvetett növényeket is öntözi. A próba bolti és tervrajzleírása már ezt mutatja. Bontóvassal visszavehető. A normál parcellás öntözőrendszer most még a régi működését őrzi.
+A boltban az Öntözőrendszer **tervrajzát** veszed meg. A Tervrajzok fülön anyagokból elkészítve kerül a Készletbe; onnét az Elhelyezem gombbal tehető le. Egy Öntözőrendszer egy teljes ágyáshoz kapcsolható. Elhelyezéskor a célágyás kiemelve látszik; minden reggel az utánvetett növényeket is öntözi. A próba bolti és tervrajzleírása már ezt mutatja. Bontóvassal visszavehető. A normál parcellás öntözőrendszer most még a régi működését őrzi.
 
 ## Hatókör és ellenőrzés
 
@@ -85,9 +85,10 @@ Cypress-bináris nincs az ellenőrző környezetben, ezért az end-to-end ellen�
 Friss képek: [Magkatalógus](concepts/garden-refined-catalogue.png) · [Ágyás és eszközök](concepts/garden-refined-bed-and-tools.png) · [Készlet](concepts/garden-refined-inventory.png) · [Elkészült öntöző](concepts/garden-refined-irrigation-inventory.png) · [Ünneplés](concepts/garden-refined-celebration.png) · [Mobilos ágyás](concepts/garden-refined-mobile-bed.png) · [Mobilos Készlet](concepts/garden-refined-mobile-inventory.png).
 
 
-### Tanulási segítség és küldetések
+### Segítség és küldetések
 
-A jobb oldali **ÁGYÁSKEZELŐ** külön feliratot kapott. Benne a világos **Tanulási segítség** jegyzet új témánál egyszer automatikusan kinyílik. Értem után összecsukódik; a ? gombbal bármikor újranyitható, a témaválasztóval visszaolvasható a helyválasztás, jelölő, vetés, gondozás, maggyűjtés, utánvetés és mulcs útmutatása. A látott témák tesztfutáson belül maradnak meg; új teszt indításakor újra bemutathatók.
+A jobb oldali **ÁGYÁSKEZELŐ** külön feliratot kapott. Benne a világos **Segítség** jegyzet alapból csukva marad. A ? gombbal nyitható, a témaválasztóval a helyválasztás, Ágyásjelölő, vetés, gondozás, maggyűjtés, utánvetés, öntözőrendszer és mulcs útmutatása olvasható. Az Értem gomb, a helyzetváltás és az ágyáskezelő bezárása összecsukja. Nincs automatikus kinyitás.
+
 
 A küldetéskövető és a Célok fül a valódi történeti célokat mutatja, kertészeti tippek nem írják felül. A gondozópanel nyitása csak átmenetileg rejti a követőt; bezáráskor a történeti cél és haladása változatlanul visszatér. A külön kertészeti próbában alapból nincs aktív történeti cél, ezért ott a követő nem látszik. A normál kertészeti átállás és a segítségek farmonkénti megőrzése későbbi feladat.
 
@@ -101,3 +102,21 @@ Képek: [Külön segítség](concepts/garden-learning-bed.png) · [Visszatérő 
 A háznál elérhető pihenés a próba saját napváltási útvonalát használja, a normál napzárás helyett. Izolált Chromium CDP-próba ellenőrizte a valódi magrendelést → háznál E/kattintás → pihenést → másnapi csomagátvételt, a növekedést és a kész mulcsot, a napváltás nélküli ablakzárást és a szomszédos Napló megmaradó interakcióját. A normál mentés és backup exportja változatlan volt teszt közben és kilépés után is. 454 teszt és a build sikeres.
 
 [Kép: pihenés a háznál](concepts/garden-trial-rest-at-home.png) · [Másnap megérkezett magok](concepts/garden-trial-rest-seeds-arrived.png).
+
+
+### November 8-i további finomítások
+
+- A Magkatalógus kilépőgombja rendelés előtt Vissza, sikeres rendelés után Tovább. Ez a normál játékban is működik. A társítás összeállításánál a Vissza a lábléc bal oldalán áll, a Továbbal egy vonalban, és a társítások listájára vezet.
+- A postaláda a normál, ikonozott soros elrendezést használja a tesztben is. A szurokfű, zsálya, körömvirág, borágó, kamilla, citromfű és a többi kísérleti növény saját ikont kapott. A Készletben ugyanezek a rajzok szerepelnek.
+- A Vetőmag az alsó sávban egyetlen, a többivel azonos méretű eszközhely. Kiválasztása teljes növényneveket kínál, kizárólag az adott társításból; a sáv méretét a hosszú nevek nem növelik.
+- A nedvesség 3/2/1/0 értékei külön talajszínt kapnak. Egy nap után világosabb a föld; két locsolás nélküli, napos nap után az alacsony nedvességű, mulccsal nem takart ágyás szélein repedések jelennek meg. Öntözés és eső helyreállítja a felszínt. A vízmegtartás és a mulcs korábbi szabályai megmaradnak.
+- Magérlelésre hagyáskor minden növény külön kertészkedési munkapontot ad. Ismételt kattintás ugyanarra a növényre nem ad további pontot. Az első szinthez a korábban elfogadott teljes betakarítási/maggyűjtési ciklus továbbra is szükséges.
+- Az öntözőrendszer minden reggel feltölti a hozzá kapcsolt ágyás nedvességét, és látható vízpermetet kap. Az animáció csak a látható játéktérben fut, nyitott ablak alatt nem fogy el.
+- Az Ösvény kártyán a kő/fa/föld burkolatot mutató ikon választáskor változik. Az Ösvény kialakítása külön építőmódot indít. Az alapúthoz hozzá lehet kötni a saját utat, fűrés és belső határvonal nélkül. Az eredeti alapút nem kerül a bontható elemek közé. Visszafelé húzva az első rajzpont is törölhető, újabb húzást csak új egérlenyomás indít.
+- Bontóvasas teljes visszabontáskor a teljes felhasznált nyersanyag visszajár. Adagon belüli részleges bontásnál az útelemek megmaradnak újra felhasználhatónak; teljes adagból ismét alapanyag lesz. Nem vész el és nem sokszorozható anyag.
+
+Friss ellenőrzés: 458 teszt / 67 fájl, sikeres build, izolált Chromium CDP-ben rendelés–pihenés–posta–beültetés, visszalépések, kézi segítség, méretek asztalon/mobilon, száradás és újraöntözés, két külön magérlelési pont, reggeli öntözőpermet, változó ösvényikon, alapúti csatlakozás, első rajzpont törlése, nyersanyag-visszaadás és a normál mentés/backup változatlansága. Cypress-bináris hiányában CDP történt, Playwright nélkül.
+
+[Katalógus Vissza gomb](concepts/garden-polish-catalogue-back.png) · [Postai magok](concepts/garden-polish-herb-mail.png) · [Frissen öntözve](concepts/garden-polish-wet-soil.png) · [Másnap](concepts/garden-polish-next-morning.png) · [Száradó szélek](concepts/garden-polish-dry-edges.png) · [Reggeli öntözés és teljes táblanév](concepts/garden-polish-irrigation.png) · [Mobilos eszközsáv](concepts/garden-polish-mobile-tools.png) · [Ösvénykártya](concepts/garden-polish-path-card.png) · [Alapúti csatlakozás](concepts/garden-polish-base-path-junction.png).
+
+[Társításválasztó lábléce](concepts/garden-polish-composition-footer.png) · [Az erdei elágazás megőrzött megjelenése](concepts/garden-polish-existing-forest-junction.png).

@@ -10,7 +10,7 @@ export class LivingGardenWindow{
  open(mode:GardenWindowMode,title:string){
   this.cleanup();const inventory=['inventory','plans','people','skills','goals'].includes(mode);
   this.show(title,inventory?'NÁLAD VAN':mode==='simon'?'SIMON':mode==='mail'?'POSTALÁDA':'');this.dialog.dataset.livingGardenWindow=mode;
-  const panel=document.querySelector<HTMLElement>(inventory?'#inventory-panel':mode==='catalog'?'#catalog-panel':mode==='simon'?'#shop-panel':'#research-panel')!;
+  const panel=document.querySelector<HTMLElement>(inventory?'#inventory-panel':mode==='catalog'?'#catalog-panel':mode==='simon'?'#shop-panel':mode==='mail'?'#mailbox-panel':'#research-panel')!;
   let target=panel;
   if(inventory){const selected=mode==='inventory'?'items':mode==='plans'?'blueprints':mode;for(const id of ['items','people','skills','goals','blueprints']){const page=document.querySelector<HTMLElement>(`#${id}-page`)!;this.restored.push({node:page,hidden:page.hidden});page.hidden=id!==selected;const tab=document.querySelector<HTMLButtonElement>(`#${id}-tab`)!;tab.setAttribute('aria-selected',String(id===selected));tab.tabIndex=id===selected?0:-1;}target=document.querySelector<HTMLElement>(`#${selected}-page`)!;}
   for(const node of Array.from(target.children) as HTMLElement[]){this.restored.push({node,hidden:node.hidden});node.hidden=true;}

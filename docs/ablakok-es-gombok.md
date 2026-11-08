@@ -6,7 +6,7 @@ Ez az összes jelenlegi és jövőbeli játékablak alapja. Ne ablakonként más
 - Hosszabb, olvasásra szánt szöveg: `system-ui, sans-serif`. Ablakcímek, menüpontok és gombok: `Trebuchet MS, Segoe UI, sans-serif`. A Silent Pollen képi logó külön marad.
 - Gomb: sötétzöld átmenet, aranyszegély, finom belső keret, világos krémszínű felirat. Rámutatás világosít, billentyűzetes fókusz jól látható. A meglévő elrendezést és méretet ne írd felül általános gombszabállyal.
 - Inaktív gomb: látványosan szürkített, tényleges `disabled` állapot. Aktív fülek és tárgykártyák saját állapotjelzése megmarad. Törlés megerősítése megtarthatja a figyelmeztető vöröses színt.
-- Ablakzárás és bolti továbblépés neve Tovább. Vissza csak a Beállításokból az előző menübe és a mentett farmok listájából a főmenübe vezető gombon marad. Konkrét navigációhoz célnevet használunk (Főmenü, Hirdetmények, Mikroszkóp); a Folytatás csak tényleges folytatáshoz használható. Ablakcím és felső címke ne ismételje ugyanazt.
+- Ablakzárás és bolti továbblépés neve Tovább. Vissza a Beállításokból az előző menübe, a mentett farmok listájából a főmenübe, a Magkatalógusból rendelés előtt, illetve a társítás összeállításából a társításválasztó listára vezető gombon szerepel. Sikeres magrendelés után Tovább. Konkrét navigációhoz célnevet használunk (Főmenü, Hirdetmények, Mikroszkóp); a Folytatás csak tényleges folytatáshoz használható. Ablakcím és felső címke ne ismételje ugyanazt.
 - Tartalmi kivételek: a névtelen figyelmeztetés fehér lapja és ceruzabetűi, a szereplők beszédbuborékai/portréi, a mikroszkóp vizsgálati képe, az ünneplések és szirmok megmaradnak. A körülöttük lévő ablakkeret és a műveleti/Tovább gombok azonban közösek.
 - Minden új vagy módosított ablaknál ellenőrizd a billentyűzetet, a mobilnézetet, az inaktív gombokat és a közös stílus tényleges érvényesülését. Ne csak a legutóbb említett kivételeket nézd át.
 
@@ -57,8 +57,11 @@ A panel közeli E/kattintásra jelenik meg. Tovább, Esc, eltávolodás és az �
 A kertészeti próba kizárólag az ágyás gondozását kezeli jobb oldali panelben; a Készlet eredeti lapjai, Magkatalógus, posta, Tervrajzok és megfigyelési napló a közös normál ablakban jelennek meg. Az eredeti öt eszközt csak gondozáskor egészíti ki a társítás magválasztója. Új ágyás külön bal oldali + gombbal indul. A panel alja a tényleges eszközsáv-magasságot követi; teteje a Menü alá kerül. Mobilon a mozgásgombok és a kamera a fenntartott játéktérben maradnak. Beviteli mezőben a nyilak mennyiséget módosítanak, nem Samet mozgatják. A napló saját SVG-vázlatokat és natív betűket használ. A feloldás a meglévő ünneplős ablakban jelenik meg, teljes ablakon hulló szirmokkal, a kilépés Tovább. Minden társításarány ajánlottként, a kilenc hely szabad felosztásának jelzésével jelenjen meg.
 
 
-### Tanulási segítség és önálló ösvényépítés — 2026-11-08, csak kertészeti próba
+### Segítség és önálló ösvényépítés — 2026-11-08, csak kertészeti próba
 
-Az ágyáskezelő saját ÁGYÁSKEZELŐ feliratot kap. A benne lévő Tanulási segítség világos, külön címezett jegyzet, kérdőjeles nyitó/záró gombbal, témaválasztóval és Értem gombbal. Nem veszi át a küldetéskövető tartalmát vagy cél-/teljesítésjelölését. Új témát egyszer mutat automatikusan; később visszaolvasható. A rendes követő történeti tartalma megmarad, gondozáskor átmenetileg rejtve.
+Az ágyáskezelő saját ÁGYÁSKEZELŐ feliratot kap. A benne lévő Segítség világos, külön címezett jegyzet, kérdőjeles nyitó/záró gombbal, témaválasztóval és Értem gombbal. Nem veszi át a küldetéskövető tartalmát vagy cél-/teljesítésjelölését. Alapból mindig csukva van; csak a ? gomb nyitja. Másik helyzetre váltás vagy az ágyáskezelő bezárása összecsukja. A rendes követő történeti tartalma megmarad, gondozáskor átmenetileg rejtve.
 
 Az ösvény a Tervrajzokban egyetlen kártya, Burkolat választóval. A rajzoló kis megerősítőpanelje önálló építési felület, nem ágyáskezelés vagy küldetés. Előre mutatja a teljes költséget; külön megerősítés, utolsóelem-visszavonás, rajztörlés és Befejezem gomb tartozik hozzá. Mobilon sem fedheti a Menüt vagy az eszközsávot.
+
+
+A társítás összeállításának Vissza gombja a gondozópanel láblécében balra, a Tovább gombbal egy sorban áll. A vetőmagválasztó ugyanakkora eszközhelyet foglal, mint az öt alapeszköz, teljes nevű natív választóval. A teszt postaládája a rendes postaláda ikonozott `.mail-seed-card` sorait és ablakát használja; minden új növény saját rajzot kap. Az Ösvény kártya ikonja a kiválasztott burkolatot ábrázolja, a gomb neve Ösvény kialakítása.

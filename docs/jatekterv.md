@@ -1311,3 +1311,24 @@ Egyelőre csak tesztmód: a normál kertészkedés és mentés nem áll át, já
 ### Kertészeti próba: pihenés és napváltás — javítás, 2026. november 8.
 
 A háznál E-vel vagy kattintással külön Otthon ablak nyílik, Pihenés reggelig megerősítéssel. A teszt saját napváltása egyszer fut: kézbesíti a rendeléseket, haladnak az ágyások és a komposztáló, a következő nap reggel kezdődik. Az ablak bezárása nem napzárás. A ház mellett elérhető Magkatalógus és Napló interakciója megmarad. A kézi Következő nap / Esős nap gombok a Fejlesztői eszközökben továbbra is használhatók. A javítás a memóriabeli kertészeti tesztre korlátozódik; a normál alvás és a rendes mentés változatlan.
+
+
+### Kertészeti felület pontosításai — elfogadva, 2026. november 8.
+
+Az alábbiak felülírják az aznapi korábbi automatikus segítségre és rövidített táblanevekre vonatkozó döntéseket.
+
+- A Tanulási segítség neve **Segítség**, mindig alapból csukott; kizárólag a ? nyitja. Helyzetváltáskor és az ágyáskezelő bezárásakor összecsukódik. Nincs több egyszeri automatikus kinyitás. A küldetéskövetőtől továbbra is elkülönül.
+- A tábla neve **Ágyásjelölő**. Amíg nincs beültetett társítás, a felirata üres. Beültetéskor a társítás teljes fantázianeve kerül rá, szükség esetén két sorban; például Epres méhlegelő, Száraz fűszerszegély.
+- Rendelés előtt a Magkatalógus kilépőgombja **Vissza**, sikeres rendelés után **Tovább**, a normál játékban is. A társítás összeállításából a listára vezető **Vissza** a panel bal alsó sarkába, a Továbbal egy sorba kerül a Másik társítás helyett.
+- A postaláda a normál ikonozott elrendezést őrzi a tesztben és a későbbi éles átálláskor. Az új növények saját ikont kapnak. A vetőmagválasztó csak egy alapeszköznyi helyet foglal; a választóban a nevek teljesen olvashatók.
+- Minden nedvességfokozat külön színű földet mutat. Napos időben másnap világosodik a felszín; két kihagyott locsolás után az alacsony nedvességű, fedetlen ágyás szélétől repedezik. Öntözés/eső helyreállítja. A mulcsos vízmegtartást ez nem írja felül.
+- A magérlelésre hagyás növényenként munkapontot ad. A korábban elfogadott, teljes betakarításhoz/maggyűjtéshez kötött első szint feltétele megmarad; az érlelési döntés még nem kész mag begyűjtése.
+- Egy öntöző egy ágyást gondoz, **minden reggel** teljes nedvességre öntözi. Látható vízpermet jelzi, amely a látható játéktérben, ablakon kívül játszódik le.
+- A tervrajzon **Ösvény kialakítása** a gomb neve; a kártya ikonja a kiválasztott kő-, fa- vagy földutat mutatja. A játékos útja az eredeti alapúthoz fűrés nélkül csatlakozhat; a földutak csomópontjai közös külső szegély után kapnak belső felületet. A meglévő alapút stílusa megmarad.
+- Visszafelé rajzolással a legelső pont is eltüntethető. Az eredeti út nem bontható, a saját út elemei Bontóvassal visszavehetők. Teljes visszabontás visszaadja az összes kifizetett anyagot; részleges adagot újrahasználható útelemként őrzünk, hogy ne keletkezzen többletanyag és ne vesszen el a maradék.
+
+A kertészeti változások továbbra is csak a memóriabeli próbában működnek. A normál Magkatalógus gombneve közös javítás; a normál kert és a régi ültetések nem állnak át. Játékverzió 0.2.0, mentésverzió 18 marad.
+
+### Nyitott ötlet: társítások saját hatásai
+
+A felhasználó felvetette a társításokhoz kötött hatásokat, például időjárási hatást. Felmerült a helyi mikroklíma, árnyékolás, szárazságtűrés, beporzók számára táplálkozóhely és hajnali harmat megőrzése. Ezek még meg nem állapodott ötletek; a próba szabályait nem módosítják. Egy későbbi hatás a ténylegesen beültetett növényektől és állapotuktól függhetne, nem pusztán az ágyás nevétől. Konkrét szabály, számérték és megvalósítás külön egyeztetendő.

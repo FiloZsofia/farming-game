@@ -13,12 +13,12 @@ export function livingBedFits(b:LivingBedArea,actor?:{x:number;y:number}){
 }
 
 // Full marker artwork and stone footprints must stay clear of roads and buildings.
-export function gardenDecorationFits(p:{x:number;y:number},rx:number,ry:number){
+export function gardenDecorationFits(p:{x:number;y:number},rx:number,ry:number,allowPaths=false){
  if(!Number.isFinite(p.x)||!Number.isFinite(p.y)||p.x-rx<farmBounds.left+100||p.x+rx>farmBounds.right-100||p.y-ry<farmBounds.top+110||p.y+ry>550)return false;
  const boxes=[...farmBuildingArtwork,farmLayout.houseBounds,farmLayout.shedBounds,farmLayout.porchBounds,farmLayout.porchSteps,farmLayout.shipping,farmLayout.dock,farmLayout.catalog,farmLayout.journal,farmLayout.mailbox];
  if(boxes.some(b=>p.x+rx+4>b.x&&p.x-rx-4<b.x+b.w&&p.y+ry+4>b.y&&p.y-ry-4<b.y+b.h))return false;
  const pond=farmLayout.pond;if(((p.x-pond.x)/(pond.rx*1.07+rx+4))**2+((p.y-pond.y)/(pond.ry*1.07+ry+4))**2<1)return false;
- for(const path of farmLayout.paths)for(let i=1;i<path.points.length;i++){const a=path.points[i-1],b=path.points[i],n=Math.max(1,Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/2));for(let j=0;j<=n;j++){const x=a[0]+(b[0]-a[0])*j/n,y=a[1]+(b[1]-a[1])*j/n;if(Math.hypot(Math.max(0,Math.abs(x-p.x)-rx),Math.max(0,Math.abs(y-p.y)-ry))<path.width/2+3)return false;}}
+ if(!allowPaths)for(const path of farmLayout.paths)for(let i=1;i<path.points.length;i++){const a=path.points[i-1],b=path.points[i],n=Math.max(1,Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/2));for(let j=0;j<=n;j++){const x=a[0]+(b[0]-a[0])*j/n,y=a[1]+(b[1]-a[1])*j/n;if(Math.hypot(Math.max(0,Math.abs(x-p.x)-rx),Math.max(0,Math.abs(y-p.y)-ry))<path.width/2+3)return false;}}
  return true;
 }
 export function nearBedSide(p:{x:number;y:number},b:LivingBedArea,reach=28){

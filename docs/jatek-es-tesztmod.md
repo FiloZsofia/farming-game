@@ -6,6 +6,7 @@ Aktuális állapot: 2026-11-08. Játékverzió: 0.2.0; a legutóbbi javítások 
 
 - A gyümölcsfák 15 nap után évszakkorlát nélkül kezdhetik a meglévő terméskötődési ciklusokat a csak Tavaszt tartalmazó változatban; látványosabb csemete–termő fa fejlődéssel. A tervezett nyári/őszi évszakok dokumentációja megmarad.
 - Kacsalábak és rövid, megállásokkal kísért tóparti séták; a tojás és beköltözés szabályai változatlanok.
+- A Magkatalógus kilépőgombja rendelés előtt Vissza, sikeres rendelés után Tovább.
 - A „Mit ültessünk legközelebb?” ablak új címe: Magkatalógus.
 
 - A teljes Noah-fejezet és a térkép (M), az erdőbe visszatérve újra megjelenő ellenfelek.
@@ -25,7 +26,7 @@ Ezek a közös játékútvonalakon működnek; egyik sem kizárólag a fejleszt�
 ## Csak tesztmód
 
 - Az **Élő ágyás kertészeti próba** teljes bővítése: több szabad ágyás; közvetlen eszközsávos műveletek; öt elfogadott társítás; csoportos Magkatalógus, posta és tényleges átvétel; komposztálós mulcs; 20/40 pontos feloldás ünnepléssel; megfigyelési napló egyszeri pontokkal; fajonkénti maggyűjtés; automatikusan kézbe kerülő, mozgatható kézírásos jelölők; egy ágyásos öntöző; 160 goldos ládatervrajz a próba Simon-vásárlásában. Ez nem váltja le a normál kertészkedést és nem törli a régi növényeket. [Kipróbálás és hatókör](elo-agyas-teszt.md).
-- A kertészeti tesztben szabad, kilenc helyes összeállítás és ajánlott arányok; a megszokott Készlet/Magkatalógus eredeti ablaka; öt alapeszköz, csak gondozáskor látható vetőmagválasztó, külön bal oldali +. Külön Tanulási segítség egyszeri bemutatással és ? gombos visszaolvasással; a küldetéskövető a történeti céloké marad. Önálló ösvényépítés a Tervrajzok egyetlen Ösvény kártyájáról, három választható burkolattal és visszafelé javítható rajzzal.
+- A kertészeti tesztben szabad, kilenc helyes összeállítás és ajánlott arányok; a megszokott Készlet/Magkatalógus eredeti ablaka; öt alapeszköz, csak gondozáskor látható vetőmagválasztó, külön bal oldali +. Külön, alapból csukott Segítség ? gombos megnyitással; a küldetéskövető a történeti céloké marad. Önálló ösvényépítés a Tervrajzok egyetlen Ösvény kártyájáról, három választható burkolattal és visszafelé javítható rajzzal.
 - A Kidolgozott farm alternatív grafikája, új növényzettel és részletesebb formákkal.
 - Sam átdolgozott külseje, copfja, ruhája, arányai és könnyedebb járása.
 

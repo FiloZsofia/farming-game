@@ -2,6 +2,10 @@
 
 ## Változások a 0.2.0 óta — verzióemelés nélkül
 
+- 2026-11-08 — kertészeti teszt finomítása: alapból csukott Segítség; Ágyásjelölő, kezdetben üres felirattal, majd teljes társításnévvel; bal alsó Vissza a társításlistára; normál postaládasorok, új növényikonok; egy eszköznyi Vetőmag választó. Fokozatos talajszáradás, két nap után szélső repedések, reggeli öntözőpermet és frissen öntözött ágyás; növényenkénti pont a magérlelési döntésért. Az első teljes ciklus feltétele megmarad.
+- 2026-11-08 — ösvényteszt: Ösvény kialakítása gomb, burkolattal változó ikon, alapúti csatlakozás fűrés nélkül, teljes visszatörlés egérrel. A saját utak anyag-visszatérítése és az alaputak bonthatatlansága ellenőrizve.
+- 2026-11-08 — normál játékban és tesztben a Magkatalógus kilépőgombja rendelés előtt Vissza, sikeres rendelés után Tovább.
+
 - 2026-11-08 — kertészeti teszt: a lakóháznál E-vel vagy kattintással megnyitható a Pihenés reggelig. A pihenés a kertészeti próba saját napváltását indítja: megérkeznek a magok, haladnak a növények és a komposztáló; a normál napzárás nem írja felül a teszt állapotát. Az ablak bezárása nem léptet napot. A fejlesztői kézi napgombok megmaradnak.
 
 - 2026-11-08 — kertészeti teszt: a küldetéskövető és a Célok fül kizárólag a tényleges történeti céloké marad. Külön Tanulási segítség világos jegyzettel, témánként egyszeri automatikus bemutatással, Értem és ? gombbal, visszaolvasható témákkal; saját ÁGYÁSKEZELŐ felirat.

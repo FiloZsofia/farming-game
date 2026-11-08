@@ -28,7 +28,7 @@ export class LivingGarden{
   const stamp=`trial:${bed.id}:${next.day}:${action}`;
   if(action==='plant')this.credit(next.plants.map((_,i)=>`${stamp}:${i}`));
   else if(action==='refill')this.credit(old.plants.flatMap((p,i)=>p.removed&&!next.plants[i].removed?[`${stamp}:${i}`]:[]));
-  else this.credit([`${stamp}:${action==='harvest'||action==='seeds'||action==='replant'?index:''}`]);
+  else this.credit([`${stamp}:${action==='harvest'||action==='seeds'||action==='replant'||action==='flower'?index:''}`]);
   if(action==='water'){bed.watered=true;const memory=this.memory(bed);if(old.moisture===0&&memory.dryDay!==undefined)memory.waterDay=next.day;}
   if((action==='harvest'||action==='seeds')&&!bed.completed.includes(index))bed.completed.push(index);
   // A complete first cycle is the trial pacing target, independent of click count.
@@ -40,7 +40,7 @@ export class LivingGarden{
  nextDay(weather:'sunny'|'rain'){
   this.snapshot.clock.day++;this.weather=weather;this.snapshot.travel.crafting=advanceCrafting(this.snapshot.travel.crafting,this.snapshot.clock.day);
   for(const k of Object.keys(this.pending) as BedKind[]){this.mailbox[k]+=this.pending[k];this.pending[k]=0;}
-  for(const bed of this.beds){if(weather==='rain'&&bed.state.mix)bed.watered=true;if(bed.irrigation){bed.state=waterLivingBed(bed.state)??bed.state;bed.watered=true;}bed.state=advanceLivingBed(this.sync(bed),weather,{seed:this.snapshot.travel.weatherSeed??0},`bed:${bed.area.x},${bed.area.y}`);for(const [i,p]of bed.state.plants.entries())if(p.aftermath==='overripe'){const point=livingPlantPoint(i,bed.area);addFruitFall(this.snapshot.travel,point.x,point.y,1);}}
+  for(const bed of this.beds){if(weather==='rain'&&bed.state.mix)bed.watered=true;if(bed.irrigation){bed.state=waterLivingBed(bed.state)??bed.state;bed.watered=true;}bed.state=advanceLivingBed(this.sync(bed),weather,{seed:this.snapshot.travel.weatherSeed??0},`bed:${bed.area.x},${bed.area.y}`);if(bed.irrigation)bed.state=waterLivingBed(bed.state)??bed.state;for(const [i,p]of bed.state.plants.entries())if(p.aftermath==='overripe'){const point=livingPlantPoint(i,bed.area);addFruitFall(this.snapshot.travel,point.x,point.y,1);}}
  }
  compost(index:number,input:'weed'|'fallenFruit'='weed'){const next=compostAction(this.snapshot,index,input);if(!next)return false;this.snapshot=next;return true;}
  collectOverripe(index:number,actor:GardenPoint){const pile=this.snapshot.travel.fallenFruit?.[index];if(!pile||Math.hypot(pile.x-actor.x,pile.y-actor.y)>48)return false;const next=pickFallenFruit(this.snapshot,index);if(!next)return false;this.snapshot=next;return true;}
