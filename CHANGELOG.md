@@ -2,6 +2,8 @@
 
 ## Változások a 0.2.0 óta — verzióemelés nélkül
 
+- 2026-11-08 — Mara tesztjének látványfrissítése: nagyobb, kidolgozottabb terményátadó, ládák és látható termények; varrott, redőzött vászontető. Nagyobb, térben forduló pickup részletes fülkével, platóval, ajtóval, kerekekkel és rakománnyal. A jobb oldali átmenő út helyett balra vezető út és fordulóöböl; rakodás után Mara megfordul és balra távozik. A normál eladás nem változik.
+
 - 2026-11-08 — külön Terményátadó · Mara fuvarja teszt: kilenc láda, látható termények, teherautó és rakodó/megszólítható sofőr, próbabeli Ismerősök, kézi fuvar/napléptetés és egyszeri fizetés. A normál eladás nem változik.
 - 2026-11-08 — kertészeti próba: az új döntés szerint 20/40 munkapont adja a két szintet, nincs teljes betakarítási ciklusfeltétel. Bal oldali haladásjelzés és részletesebb Jártasságok; mulcs a Készletben, közös gain-jelzés/hang; rövid reggeli permet után sötétedő föld, természetesebb repedések, külön növényformák, nagyobb kétsoros jelölők, tényleges ösvénykörvonalon alapuló ütközés.
 - 2026-11-08 — a jövőbeli kertészeti kiadás ismertetője előnézetként indításkor és teszt-újratöltéskor megjelenik. Újratöltés friss memóriabeli próbát indít, a rendes mentés és backup változatlan; normál kertátalakítás és kompenzáció még nincs.

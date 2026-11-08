@@ -1,0 +1,4 @@
+import {expect,it} from 'vitest';
+import {marketTurn,marketDeparture,marketParking,marketRoads} from './market-trial-route';
+it('turns continuously from the incoming rightward lane to a leftward departure',()=>{const start=marketTurn(0),middle=marketTurn(.5),end=marketTurn(1);expect(start.x).toBeCloseTo(marketParking.x);expect(start.y).toBe(marketParking.y);expect(start.heading).toBeCloseTo(0);expect(middle.heading).toBeCloseTo(Math.PI/2);expect(end.heading).toBeCloseTo(Math.PI);expect(marketDeparture(0)).toEqual({...end,x:marketParking.x});expect(marketDeparture(1).x).toBeLessThan(-600);expect(marketDeparture(1).y).toBe(end.y);});
+it('has no through road to the right of the farm gate',()=>{expect(marketRoads.flatMap(p=>p.points.map(([x])=>x)).every(x=>x<=170)).toBe(true);expect(marketRoads[0].points[0][0]).toBeLessThan(-400);});

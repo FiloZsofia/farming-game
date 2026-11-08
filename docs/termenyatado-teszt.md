@@ -25,3 +25,16 @@ A SaveStore.beginTest() védelme indulás előtt bekapcsol. Az alapfarm jelenete
 Három modellteszt ellenőrzi a dobozok korlátját, készletmozgatást, zárolást, meglévő árakat, egyszeri fizetést és következő napot. Izolált Chromium CDP-próba ellenőrizte a tényleges E-interakciót, feltöltést, rakodást, beszélgetést, Ismerősök fület, kifizetést, második napot, kilépést és a normál mentés/backup változatlanságát. Cypress-bináris a környezetben nem érhető el.
 
 Képek: [megtöltött átadó](concepts/market-trial-stocked-stand.png), [feltöltés](concepts/market-trial-transfer-window.png), [Mara](concepts/market-trial-mara-conversation.png), [rakodás](concepts/market-trial-mara-loading.png).
+
+
+## Nagyobb átadó és pickup – november 8-i látványfrissítés
+
+Az átadó szélesebb, lépcsőzetes fa tartóállvánnyal, kilenc nagyobb megdöntött ládával. A termények több mint kétszeres rajzméretet kaptak, ritkább elrendezésben. A vászontető külön színű csíkokat, varrott szegélyt, redőket, hullámos lelógó részt, kötélrögzítést és fa merevítéseket mutat.
+
+A pickup eredeti, kódból rajzolt térbeli formákból áll. Nagyobb fülke és plató, valódi kerek kerékformák, üvegezés, tetőperem, hűtőrács, fényszórók, tükrök, kilincs, nyíló ajtó és elkülönülő rakomány készült. A rakomány a forduláskor is együtt mozog a járművel; a fülke helyesen eltakarja a mögötte lévő ládákat.
+
+Az átmenő jobb oldali út helyett **csak balra vezető út és fordulóöböl** van. A farmkapu kanyarodó bekötést kap. A beszállást megfordulás követi; az autó végigfordul a félköríven, majd balra távozik. A kifizetés ideje, a napi egyszeri fuvar és a mentésvédelem nem változik.
+
+Ellenőrzés: 465 teszt / 70 fájl és sikeres build. A két új útvonalteszt a folyamatos irányváltást, a csatlakozó induló/végpontokat és a jobb oldali átmenő út hiányát ellenőrzi. Izolált Chromium CDP-próba: kilenc láda feltöltése, E-interakció, Mara és Ismerősök, rakodás, fordulás köztes állása, balra távozás, egyszeri fizetés, második nap, mobilos nézet, kilépés, normál mentés/backup változatlansága. Cypress-bináris továbbra sem érhető el; Playwrightot nem használtunk.
+
+Új képek: [feltöltött nagy átadó](concepts/market-trial-v2-stocked-stand.png), [pickup és rakodás](concepts/market-trial-v2-mara-loading.png), [fordulás](concepts/market-trial-v2-turn-middle.png), [balra távozás](concepts/market-trial-v2-depart-left.png), [mobil](concepts/market-trial-v2-mobile.png).

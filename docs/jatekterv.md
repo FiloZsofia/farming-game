@@ -1347,3 +1347,10 @@ Jóváhagyott sofőr: **Mara**, határozott, csipkelődő humorú nő; felhajtot
 Bal oldali kertészkedési haladásjelzés; a Jártasságok fülön feloldott társításnevek és növények. Mulcs átvétel után a Készletbe kerül; közös tárgyjelzés/hang betakarításnál, maggyűjtésnél és anyag-visszatérítésnél. A reggeli öntöző rövid várakozás és permet után sötétíti a talajt. Organikusabb száraz repedések, felismerhető növekedő/érett növényformák, nagyobb kétsoros táblák. Az ösvények lerakhatósága tényleges rajzolt körvonalukhoz igazodik, túlméretes üres védősáv nélkül.
 
 A későbbi kertészeti átálláskor a játékosokat felugró ismertető fogadja. Témái: ágyások és társítások, jártassággal feloldható korlátozott induló választék, régi ültetések megszűnése és mag-/terménykompenzáció a Készletben, új eladás Marával, ösvények a Tervrajzok között. [Tervezett szöveg](kert-frissites-ismerteto.md). Egyelőre csak előnézet a Kertészeti próbában: indításkor és újratöltéskor megjelenik, külön lábléc jelzi, hogy nincs normál mentésátalakítás. A próba friss memóriabeli állapottal indul újra, explicit kilépés törli az újraindítás jelzőjét.
+
+
+### Mara fuvarja – látvány és útvonal, elfogadva november 8.
+
+A felhasználó kérésére a terményátadó nagyobb, részletesebb faépítményt és megdöntött ládákat kap. A terményeket nagyobb méretben, jobban elkülönülve mutatjuk. A csíkos vászonárnyékolón felismerhető redők, varrások, hullámos szegély, kötélrögzítések és fa tartók jelennek meg.
+
+A pickup nagyobb és részletesebb: kerekek, fények, hűtőrács, tükrök, üvegezés, nyíló ajtó, fülke, plató és látható rakomány. A próba útja csak balra folytatódik. A jobb oldali átmenő út megszűnik, a kapu rövid kanyarulattal csatlakozik a fordulóöbölhöz. Mara balról érkezik, rakodás és beszállás után látható íven megfordul, majd balra távozik ugyanazon az úton. A kifizetés továbbra is az áru átvételéhez kötött, egyszer történik. Ezek továbbra is csak a külön terményátadó-teszt módosításai.
