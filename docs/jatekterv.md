@@ -1259,3 +1259,23 @@ Jelenleg a normál játék tíz vetőmagfajtája közül a burgonya, hagyma, mé
 
 
 A Magkatalógus ablakában ne legyen a címet ismétlő felső dialogue label: csak a „Magkatalógus” ablakcím maradjon. Elfogadva: 2026-11-06.
+
+
+### Kertészeti kezelőfelület és szabad arányok — 2026. november 8.
+
+- A kilenc helyes társítások korábbi arányai **ajánlott kezdőösszeállítások**, nem kötött receptek. Beültetés előtt a játékos a társítás növényei között szabadon oszthatja fel mind a kilenc helyet; egy faj akár kimaradhat. Utánvetéskor ugyanez a szabadság érvényes. Minden arányszám-megjelenítés jelezze az ajánlást és a szabad felosztást, a Magkatalógusban és az ünneplésnél is. Egy mag továbbra is egy növény.
+- Csak az ágyáskezelő panel marad jobb oldalt. A Készlet, Magkatalógus és a többi megszokott ablak a közös, eredeti ablakkeretet és lapokat használja a tesztben is. Az ágyáskezelő címe a teljes társításnév. A már leszedett növény neve eltűnik a növényválasztóból; nincs ismétlődő „Üres hely” szöveg.
+- Az eredeti öt eszköz marad az alsó sávban. Csak ágyáskezeléskor egészíti ki a Vetőmagok választó, kizárólag az adott társítás fajaival; bezáráskor eltűnik. A mulcsozás a jobb oldali panel művelete. Megfigyelés közeli E-vel vagy kattintással történik, külön eszköz nélkül. Új ágyást a külön bal oldali + gomb indít.
+- Ágyáslehelyezés után automatikusan kézbe kerül az ahhoz tartozó jelölő. Közvetlenül a saját ágyása mellé helyezhető, nem keveredik a Készletben. Bontóvassal külön mozgatható.
+- Simon tervrajzot árul: vásárlás → Tervrajzok → elkészítés → Készlet → elhelyezés. A teszt felülete ezt egyértelműsíti; a vásárlás nem ad ingyen elkészült öntözőt. Egy elkészített öntöző egy ágyást gondoz.
+- Ünnepléskor a beszédszöveg két sora: „Új társítás vált elérhetővé:” és a félkövér társításnév. Alatta az ajánlott arány és a szabad felosztás jelzése. A szirmok a teljes ablakon hullanak.
+- Ezek a kertészeti változtatások csak a memóriabeli próbában működnek; a normál kert migrációja későbbi feladat. A Tovább gombnevek közös felületi változása a rendes játékban is érvényes, a Beállítások és a mentett farmok két valódi visszalépésénél Vissza marad.
+
+### Önálló ösvényépítés — következő fejlesztési irány, 2026. november 8.
+
+Az ösvényépítés az ágyáskezeléstől függetlenül, a **Tervrajzok** közé kerüljön. A jelenlegi ágyástesztből kivesszük; az alábbi új rendszer még terv, nem elkészült funkció.
+
+- Három tervezett megjelenés: szabálytalan, lapos kövekből rakott ösvény; fa járófelület; a világ meglévő alapösvényével egyező földút. A kőváltozat eltérő méretű, kissé elforgatott köveket és változatos hézagokat használjon, járható ösvény benyomását keltve.
+- Az egérrel húzott vonal egyenes vagy hullámos is lehet. Visszafelé húzva a rajzolt vonal vége visszabontható. A piros, érvénytelen előnézetből is vissza lehessen térni érvényes állapotba az egész újrakezdése nélkül.
+- Rajzolás közben csak előnézet és költségjelzés legyen; anyagot a megerősített, érvényes elhelyezés fogyasszon. A kőre korábban elfogadott kiindulás: egy lerakott lépőkő egy követ fogyaszt, Bontóvassal kövenként visszavehető. A fa- és földút költsége, feloldása és pontos elszámolási egysége még egyeztetendő.
+- A meglévő épületek, víz, ágyások és átjárók védelme megmarad. Az összefüggő útfelületek csomópontjai belső varrat nélkül rajzolódjanak a közös rajzolási szabály szerint.

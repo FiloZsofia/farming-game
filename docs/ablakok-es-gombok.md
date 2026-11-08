@@ -6,8 +6,8 @@ Ez az összes jelenlegi és jövőbeli játékablak alapja. Ne ablakonként más
 - Hosszabb, olvasásra szánt szöveg: `system-ui, sans-serif`. Ablakcímek, menüpontok és gombok: `Trebuchet MS, Segoe UI, sans-serif`. A Silent Pollen képi logó külön marad.
 - Gomb: sötétzöld átmenet, aranyszegély, finom belső keret, világos krémszínű felirat. Rámutatás világosít, billentyűzetes fókusz jól látható. A meglévő elrendezést és méretet ne írd felül általános gombszabállyal.
 - Inaktív gomb: látványosan szürkített, tényleges `disabled` állapot. Aktív fülek és tárgykártyák saját állapotjelzése megmarad. Törlés megerősítése megtarthatja a figyelmeztető vöröses színt.
-- Visszalépés neve Vissza / Vissza a játékba; a Folytatás csak tényleges folytatáshoz használható. Ablakcím és felső címke ne ismételje ugyanazt.
-- Tartalmi kivételek: a névtelen figyelmeztetés fehér lapja és ceruzabetűi, a szereplők beszédbuborékai/portréi, a mikroszkóp vizsgálati képe, az ünneplések és szirmok megmaradnak. A körülöttük lévő ablakkeret és a műveleti/Vissza gombok azonban közösek.
+- Ablakzárás és bolti továbblépés neve Tovább. Vissza csak a Beállításokból az előző menübe és a mentett farmok listájából a főmenübe vezető gombon marad. Konkrét navigációhoz célnevet használunk (Főmenü, Hirdetmények, Mikroszkóp); a Folytatás csak tényleges folytatáshoz használható. Ablakcím és felső címke ne ismételje ugyanazt.
+- Tartalmi kivételek: a névtelen figyelmeztetés fehér lapja és ceruzabetűi, a szereplők beszédbuborékai/portréi, a mikroszkóp vizsgálati képe, az ünneplések és szirmok megmaradnak. A körülöttük lévő ablakkeret és a műveleti/Tovább gombok azonban közösek.
 - Minden új vagy módosított ablaknál ellenőrizd a billentyűzetet, a mobilnézetet, az inaktív gombokat és a közös stílus tényleges érvényesülését. Ne csak a legutóbb említett kivételeket nézd át.
 
 ## Kötelező ellenőrzési kör
@@ -27,7 +27,7 @@ A mozgatható tárgyak felvétele Bontóvassal, a `placed-items.ts` közös útv
 - A térkép meleg papírra rajzolt, botanikai terepnaplót idéz. A helynevek vektoros, nagyobb betűk; épületikonjai és útvonalai a meglévő pályából származnak. Hangulati látványterv nem jogosít fel új épület vagy helyszín hozzáadására.
 - A kivonatkészítés világ fölötti célpontnevei képernyőtérben, rendszerbetűvel készülnek, nem kis felbontású, felnagyított játéktextúraként. A felirat szükség esetén feljebb mozdul, hogy ne fedje Samet.
 
-- A teszttérkép maga tölti ki a megnyíló ablakot, külön fejléc/párnázott keret nélkül. A Vissza gomb a térképre kerül; külön Sam-helye jelmagyarázat nincs.
+- A teszttérkép maga tölti ki a megnyíló ablakot, külön fejléc/párnázott keret nélkül. A Tovább gomb a térképre kerül; külön Sam-helye jelmagyarázat nincs.
 - A világban megjelenő Phaser-szövegek legalább 4-es felbontással készülnek, beleértve az interakciós kérdőjelet/három pontot, Sam gondolatait és a táblákat.
 
 - Annie első érkezése is a közös portrés beszédablakot használja. Az érkezési felső felirat és a szereplő neve látszik, ismétlődő külön cím nélkül; a szereplő szavai a beszédbuborékba, a készletbe kerülésről és kezelésről szóló kezdő segítség külön, a buborék alá kerül. Más ablak nyitása törli ezt a kiegészítő megjegyzést.
@@ -43,15 +43,15 @@ Minden teszt és előnézet azonos `.developer-tool-section` szakaszt használ: 
 
 ### Bolti választóablak és éles világfeliratok — 2026-11-06
 
-A beszélgetési témák a buborék alatt, külön sorokban szerepelnek. Az alsó, jobbra igazított gombsorban egymás mellett áll a Vissza és a Vásárlás, egyforma minimális szélességgel. Mobilon szükség esetén tördelhető. Ez váltja a korábbi, függőlegesen sorolt kicsi gombokat.
+A beszélgetési témák a buborék alatt, külön sorokban szerepelnek. Az alsó, jobbra igazított gombsorban egymás mellett áll a Tovább és a Vásárlás, egyforma minimális szélességgel. Mobilon szükség esetén tördelhető. Ez váltja a korábbi, függőlegesen sorolt kicsi gombokat.
 
 A világfeliratok natív HTML-réteget használnak (`world-text.ts`). A réteg követi a kamerát, nagyítást, forgatást, szülőkonténert, láthatóságot és áttűnést, az interakciót a Phaser-tárgy őrzi. A pixeles táj renderelése változatlan. A gondolat saját krémszínű háttere a hárompontos jelzés fölött marad.
 
-Üvegedény vagy lenszövet átadásakor először a boltos eredeti mondata látható a portrés ablakban. A Vissza vagy Esc bezárása indítja a tárgyátadó animációt. Az alkatrész mentése megelőzi az átadási ablakot; hiba esetén nincs átadási mondat vagy animáció. Más ablakra váltás törli az elhalasztott animációt.
+Üvegedény vagy lenszövet átadásakor először a boltos eredeti mondata látható a portrés ablakban. A Tovább vagy Esc bezárása indítja a tárgyátadó animációt. Az alkatrész mentése megelőzi az átadási ablakot; hiba esetén nincs átadási mondat vagy animáció. Más ablakra váltás törli az elhalasztott animációt.
 
 ### Élő ágyás gondozópanelje — csak teszt
 
-A panel közeli E/kattintásra jelenik meg. Vissza, Esc, eltávolodás és az ágyáson kívüli talajra kattintás zárja. A célkövetőt csak a nyitott panel idejére rejti el. Mobilon a nyitás fenntartott kameraterületet ad, bezáráskor visszatér a teljes nézet. A helyválasztási előnézethez külön, kis megerősítőgomb tartozik; ez nem a gondozóablak és nem takarhatja a célkövetőt vagy a mozgásgombokat.
+A panel közeli E/kattintásra jelenik meg. Tovább, Esc, eltávolodás és az ágyáson kívüli talajra kattintás zárja. A célkövetőt csak a nyitott panel idejére rejti el. Mobilon a nyitás fenntartott kameraterületet ad, bezáráskor visszatér a teljes nézet. A helyválasztási előnézethez külön, kis megerősítőgomb tartozik; ez nem a gondozóablak és nem takarhatja a célkövetőt vagy a mozgásgombokat.
 
 
-A bővített kertészeti próba ugyanazon panelben kezeli az ágyást, a társítás szerint kibontott Magkatalógust, postát, Készletet, Tervrajzokat és megfigyelési naplót. A közös ablak-/gombszínváltozókat használja. A panel alja a tényleges eszközsáv-magasságot követi; teteje a Menü alá kerül. Mobilon a mozgásgombok a nyitott panel fölött, a kamera a fenntartott játéktérben marad. Beviteli mezőben a nyilak mennyiséget módosítanak, nem Samet mozgatják. A napló saját SVG-vázlatokat és natív betűket használ. A feloldás a meglévő ünneplős ablakban jelenik meg, a kilépés Vissza a játékba.
+A kertészeti próba kizárólag az ágyás gondozását kezeli jobb oldali panelben; a Készlet eredeti lapjai, Magkatalógus, posta, Tervrajzok és megfigyelési napló a közös normál ablakban jelennek meg. Az eredeti öt eszközt csak gondozáskor egészíti ki a társítás magválasztója. Új ágyás külön bal oldali + gombbal indul. A panel alja a tényleges eszközsáv-magasságot követi; teteje a Menü alá kerül. Mobilon a mozgásgombok és a kamera a fenntartott játéktérben maradnak. Beviteli mezőben a nyilak mennyiséget módosítanak, nem Samet mozgatják. A napló saját SVG-vázlatokat és natív betűket használ. A feloldás a meglévő ünneplős ablakban jelenik meg, teljes ablakon hulló szirmokkal, a kilépés Tovább. Minden társításarány ajánlottként, a kilenc hely szabad felosztásának jelzésével jelenjen meg.

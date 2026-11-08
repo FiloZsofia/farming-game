@@ -2,6 +2,9 @@
 
 ## Változások a 0.2.0 óta — verzióemelés nélkül
 
+- 2026-11-08 — kertészeti teszt: szabad kilenc helyes társításösszeállítás, mindenütt ajánlottként jelölt arányok; eredeti Készlet/Magkatalógus-ablakok, teljes társításnevű gondozópanel, szüret után tisztuló növénylista. Öt alapeszköz, csak ágyáskezeléskor megjelenő vetőmagválasztó, külön bal oldali újágyás-gomb; automatikusan kézbe kerülő jelölő. Egyértelmű tervrajz–elkészítés–Készlet útvonal az öntözőhöz. Kétsoros feloldási szöveg és teljes ablakon hulló szirmok. Az ösvényépítés kikerült az ágyástesztből, önálló későbbi funkcióként dokumentálva.
+- 2026-11-08 — rendes játék és teszt: az általános ablakzáró gomb neve Tovább. A Beállítások és a mentett farmok valódi visszalépése Vissza marad; a konkrét navigáció célnevet kap.
+
 - A Magkatalógus ablakából eltűnt a címet megismétlő felső címke; az ablakcím megmarad.
 
 - 2026-11-06 — összefüggő kertészeti tesztbővítés: több szabad ágyás, közvetlen eszközsávos vetés/gondozás, öt jóváhagyott társítás, társításonként kibontott Magkatalógus és valódi átvételt igénylő rendelés; komposztálós mulcs, 20/40 pontos feloldások ünnepléssel, megfigyelési napló és egyszeri felismeréspontok, növényenként eltérő maggyűjtés. Bontóvassal mozgatható kézírásos jelölők, kövenként elszámolt szabad lépőkőutak, egy ágyáshoz kapcsolt öntöző; tesztbeli ládatervrajz Simonnál 160 goldért. A normál kertészeti rendszer és mentése még nem áll át.

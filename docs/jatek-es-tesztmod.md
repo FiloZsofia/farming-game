@@ -1,6 +1,6 @@
 # Mi működik a rendes játékban, és mi maradt teszt?
 
-Aktuális állapot: 2026-11-06. Játékverzió: 0.2.0; a legutóbbi javítások nem jártak verzióemeléssel.
+Aktuális állapot: 2026-11-08. Játékverzió: 0.2.0; a legutóbbi javítások nem jártak verzióemeléssel.
 
 ## A rendes játék része
 
@@ -10,7 +10,7 @@ Aktuális állapot: 2026-11-06. Játékverzió: 0.2.0; a legutóbbi javítások 
 
 - A teljes Noah-fejezet és a térkép (M), az erdőbe visszatérve újra megjelenő ellenfelek.
 - A boltok nem nyitják meg automatikusan a vásárlást. A pult elől E-vel vagy kattintással indul beszélgetés, a vásárlás külön választható.
-- A konkrét üvegedényes/lenszövetes témák, és az alsó Vissza–Vásárlás gombsor.
+- A konkrét üvegedényes/lenszövetes témák, és az alsó Tovább–Vásárlás gombsor.
 - A négy géprész vizsgálati célja 1 / 4–4 / 4 haladással, a Célok fülön a felfedezés és javítás között.
 - Csak a negyedik rész után elérhető javítási cél, anyaglista, alkatrészes témák és Sam egyszeri gondolata.
 - Annie és Leo eredeti átadási mondata; az ablak bezárása után a tárgyátadó animáció.
@@ -20,9 +20,12 @@ Aktuális állapot: 2026-11-06. Játékverzió: 0.2.0; a legutóbbi javítások 
 
 Ezek a közös játékútvonalakon működnek; egyik sem kizárólag a fejlesztői indítógombokhoz kötött.
 
+- Az ablakzáró gombok neve Tovább; a Beállítások és mentett farmok valódi visszalépő gombja Vissza marad. A konkrét célra visszavezető gombok célnevet használnak (Főmenü, Hirdetmények, Mikroszkóp).
+
 ## Csak tesztmód
 
-- Az **Élő ágyás kertészeti próba** teljes bővítése: több szabad ágyás; közvetlen eszközsávos műveletek; öt elfogadott társítás; csoportos Magkatalógus, posta és tényleges átvétel; komposztálós mulcs; 20/40 pontos feloldás ünnepléssel; megfigyelési napló egyszeri pontokkal; fajonkénti maggyűjtés; mozgatható kézírásos jelölők és lépőkövek; egy ágyásos öntöző; 160 goldos ládatervrajz a próba Simon-vásárlásában. Ez nem váltja le a normál kertészkedést és nem törli a régi növényeket. [Kipróbálás és hatókör](elo-agyas-teszt.md).
+- Az **Élő ágyás kertészeti próba** teljes bővítése: több szabad ágyás; közvetlen eszközsávos műveletek; öt elfogadott társítás; csoportos Magkatalógus, posta és tényleges átvétel; komposztálós mulcs; 20/40 pontos feloldás ünnepléssel; megfigyelési napló egyszeri pontokkal; fajonkénti maggyűjtés; automatikusan kézbe kerülő, mozgatható kézírásos jelölők; egy ágyásos öntöző; 160 goldos ládatervrajz a próba Simon-vásárlásában. Ez nem váltja le a normál kertészkedést és nem törli a régi növényeket. [Kipróbálás és hatókör](elo-agyas-teszt.md).
+- A kertészeti tesztben szabad, kilenc helyes összeállítás és ajánlott arányok; a megszokott Készlet/Magkatalógus eredeti ablaka; öt alapeszköz, csak gondozáskor látható vetőmagválasztó, külön bal oldali +. Az ösvényépítés most nem érhető el: később önálló Tervrajzok-funkcióként készül.
 - A Kidolgozott farm alternatív grafikája, új növényzettel és részletesebb formákkal.
 - Sam átdolgozott külseje, copfja, ruhája, arányai és könnyedebb járása.
 
