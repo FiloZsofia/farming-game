@@ -16,7 +16,7 @@ export const villageLayout={
  square:{x:475,y:1080,rx:181,ry:115},
  nurserySaplings:[{x:518,y:958},{x:542,y:958},{x:646,y:958},{x:670,y:958}],
  benches:[{id:'west',angle:-2.35},{id:'east',angle:-.55}],
- bushes:[{id:'fern',x:230,y:760},{id:'birch',x:238,y:821},{id:'moss',x:70,y:980},{id:'brook',x:191,y:1090}],
+ bushes:[{id:'fern',x:155,y:854},{id:'birch',x:238,y:821},{id:'moss',x:70,y:980},{id:'brook',x:191,y:1090}],
  trees:[{x:44,y:670,kind:0},{x:103,y:650,kind:1},{x:254,y:685,kind:2},{x:53,y:799,kind:2},{x:169,y:777,kind:0},{x:286,y:769,kind:1},{x:51,y:889,kind:1},{x:278,y:934,kind:0},{x:146,y:1000,kind:2},{x:40,y:1059,kind:0},{x:311,y:1120,kind:1},{x:100,y:1165,kind:2},{x:250,y:1184,kind:0}],
 } as const;
 // Drawing and canopy clearance use the same full routes.

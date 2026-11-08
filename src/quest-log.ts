@@ -1,14 +1,17 @@
+import type {SavedGarden} from './homestead-state';
+import {livingPlantPoint} from './living-bed-layout';
 import {forestQuest,type Forest} from './forest';
 import {FLOWER_DAYS,machineInspected,examinedMachineParts,workshopEntered,workshopText,type Research} from './research';
 import {tileKey,type Garden} from './gardening';
 export type QuestEntry={id:string;title:string;detail:string;done:boolean};
-export function questEntries(r:Research,garden:Garden,_day:number,_elapsed:number,forest?:Forest):QuestEntry[]{
+export function questEntries(r:Research,garden:Garden,_day:number,_elapsed:number,forest?:Forest,beds:SavedGarden['beds']=[]):QuestEntry[]{
  const entries:QuestEntry[]=[];
  if(!r.gifted)return entries;
  if(r.inBeds)entries.push({id:'prepare-bed',title:'Alakíts ki egy ágyást',detail:'',done:!!r.bedPrepared||r.flowers.length>0});
  entries.push({id:'plant-flowers',title:r.inBeds?'Ültess el 6 vadvirágmagot':'Ültess el 6 tasak vadvirágmagot',detail:`Elültetve: ${r.flowers.length} / 6.`,done:r.flowers.length===6});
  if(r.flowers.length===6){
-  const progress=Math.min(...r.flowers.map(f=>Math.min(FLOWER_DAYS,f.growth+(garden.plots.get(tileKey(f))?.watered?1:0))));
+  const watered=new Set(beds.filter(b=>b.state.moisture===3&&(b.state.unwateredDays??0)===0).flatMap(b=>b.state.plants.flatMap((p,i)=>p.questFlower?[tileKey(livingPlantPoint(i,b.area))]:[])));
+  const progress=Math.min(...r.flowers.map(f=>Math.min(FLOWER_DAYS,f.growth+((r.inBeds?watered.has(tileKey(f)):garden.plots.get(tileKey(f))?.watered)?1:0))));
   const bloomed=r.flowers.every(f=>f.growth>=FLOWER_DAYS);
   entries.push({id:'grow-flowers',title:'Gondozd a vadvirágokat',detail:bloomed?'Mind a hat vadvirág kivirágzott.':`${progress} / ${FLOWER_DAYS} megöntözött nap`,done:bloomed});
   if(bloomed)entries.push({id:'observe-bee',title:'Figyeld meg a virágokhoz látogató szarvas faliméhet',detail:'',done:!!r.observation});

@@ -1432,3 +1432,12 @@ A szállítóút felületén nem maradnak az erdő korábbi átjárószűkítő 
 - Az elmentett fuvarbevétel külön +összeg gold jelzést kap a jobb felső sarokban; utána a meglévő egyenleg számol fel az új összegre. Csökkentett mozgásnál nincs számolási/ugráló mozgás. Az éjszakai fuvar a reggeli jelenetek után jelzi bevételét.
 - A gyűjtési értesítések az eszközsáv mért magassága fölé kerülnek, mobilon a nyitott ágyáspanelt is figyelembe véve. Az eredeti jártasságjelző megjelenését csak a tesztmód rejtheti el.
 - Teljes postai csomagátvételkor bezár az ablak, részleges átvételnél a maradék látható. Ágyásjelölő és más új tárgyak lehelyezését csak a saját, egyetlen előnézet mutatja.
+
+### 0.3.0 — új farm és tárgyátadás további pontosítása
+
+- A pihenőpad a mögötte álló fák előtt látszik; a statikus bútor külön réteget kap, nem a fák alá sütjük a talajjal. A Falu felirat elé lógó bokor külön, ösvényen kívüli helyre kerül (155, 854), azonos gyűjtési azonosítóval.
+- Az átadóhoz vezető széles út csatlakozó vége nyitott: nincs a keskeny továbbvezető úton túlnyúló kör alakú végzárás. A teljes hálózat közös szegély/belső festési sorrendje megmarad.
+- A fuvarbevétel jelzése nagyobb, aranyszegélyes és 6,5 másodpercig látható; az egyenleg röviden felragyog, majd lassabban számol fel. Csökkentett mozgásnál a felragyogás és számlálás elmarad. A Menü maradjon szabadon.
+- A faliméh-küldetés öntözött napjainak kijelzése az új ágyásokban is azonnal beleszámítja a mai öntözést. Öntözés után elültetett magoknál is működik. Ez előrejelzés a kijelzésben: nem növeli azonnal a tényleges növekedést, nem számol duplán napváltáskor és nem oldja fel idő előtt a méh megfigyelését. Készlet és Célok ugyanazt mutassák.
+- Leo bemutatkozásának kiegészítése: a Készletben kezdéskor retek-, borsó-, saláta- és sárgarépamag is van. Leo hat vadvirágmagjával együtt a Virágos retekágyás és a Korai veteményes két külön ágyásban kialakítható. Ez segítség, nem kötelező összeállítás.
+- Minden szereplőtől történő tárgyátvételnél legyen animáció. A közös `showItemGift()` használható bármely tárgyikonnal, névvel és mennyiséggel. Előbb mentés, majd az eredeti átadó mondat, a Tovább/Esc bezárás után az animáció. A műhelykulcs is ezt követi; utána Leo alapmondata nem jelenik meg újabb ablakban. A hat vadvirágmag és Annie madárodúja szintén átadási animációt kap.

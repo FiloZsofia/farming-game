@@ -19,3 +19,16 @@ it('orders discovery, four-part inspection and repair without exposing repair be
  r.repaired=true;const finished=questEntries(r,garden,9,0);expect(finished.find(g=>g.id==='inspect-machine')!.done).toBe(true);expect(finished.find(g=>g.id==='repair-machine')!.done).toBe(true);expect(finished.findIndex(g=>g.id==='forest-research')).toBe(finished.findIndex(g=>g.id==='repair-machine')+1);
 });
 it('counts only unique machine parts and preserves completed inspection for older repaired saves',()=>{const r=createResearch();r.gifted=true;r.discovered=true;r.examined=['notes','bench','vat','vat','pipes'];let goals=questEntries(r,createGarden(),9,0);expect(goals.find(g=>g.id==='inspect-machine')!.detail).toContain('2 / 4');expect(goals.some(g=>g.id==='repair-machine')).toBe(false);r.repaired=true;goals=questEntries(r,createGarden(),9,0);expect(goals.find(g=>g.id==='inspect-machine')).toMatchObject({done:true,detail:'Megvizsgált géprészek: 4 / 4'});});
+
+it('shows today’s watering in new beds in either action order and preserves that day across save/load',async()=>{
+ const {enableHomestead}=await import('./homestead-migration'),{LivingGarden}=await import('./living-garden'),{prepareLivingBed,waterLivingBed,plantLivingBed}=await import('./living-bed'),{snapshot,decodeSnapshot}=await import('./storage'),{createClock}=await import('./clock'),{startResearch}=await import('./research');
+ for(const waterFirst of [true,false]){
+  let state=enableHomestead(snapshot({x:380,y:532},createClock(1),createGarden()),true);const {weatherOnDay}=await import('./weather');state.travel.weatherSeed=0;while(weatherOnDay(state.travel.weatherSeed,1)==='rain')state.travel.weatherSeed++;state.travel.research=startResearch(state.travel.research,1)!;state.travel.homestead!.garden.extraSeeds.wildflower=6;
+  const g=new LivingGarden(state,true),b=g.addBed({x:670,y:216,w:160,h:88});g.accept(b,prepareLivingBed(g.sync(b))!,'prepare');
+  if(waterFirst)g.accept(b,waterLivingBed(g.sync(b))!,'water');g.accept(b,plantLivingBed(g.sync(b),'pollinator')!,'plant');if(!waterFirst)g.accept(b,waterLivingBed(g.sync(b))!,'water');
+  state=g.writePersistent();expect(decodeSnapshot(state)).not.toBeNull();
+  const goals=()=>questEntries(state.travel.research,createGarden(),state.clock.day,0,undefined,state.travel.homestead!.garden.beds);
+  expect(goals().find(q=>q.id==='grow-flowers')).toMatchObject({done:false,detail:'1 / 3 megöntözött nap'});expect(goals().some(q=>q.id==='observe-bee')).toBe(false);expect(state.travel.research.flowers.every(f=>f.growth===0)).toBe(true);
+  state.clock.day++;const morning=new LivingGarden(state,true);morning.advanceMorning('sunny');state=morning.writePersistent();expect(goals().find(q=>q.id==='grow-flowers')!.detail).toBe('1 / 3 megöntözött nap');
+ }
+});

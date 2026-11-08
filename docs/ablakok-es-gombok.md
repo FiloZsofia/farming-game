@@ -70,3 +70,7 @@ A társítás összeállításának Vissza gombja a gondozópanel láblécében 
 ### Frissítésismertető és Mara tesztablakai
 
 A kertészeti próba frissítésismertetője a közös beszélgetésablakban jelenik meg: cím, négy rövid szakasz, segítségsor, külön előnézeti lábléc és közös Tovább gomb. Mobilon a teljes tartalom görgethető. A Terményátadó feltöltőablaka és Készlete a natív inventory keretet használja; Mara a közös portrés beszélgetéselrendezést. A bal oldali rövid kertészkedési haladásjelzés nem foglalja el a jobb oldali ágyáskezelőt.
+
+### Átvételi animáció — minden szereplőtől kapott tárgyhoz
+
+Az üvegedény, lenszövet és műhelykulcs mellett a későbbi tárgyak is a közös `showItemGift(scene, actor, icon, name, count)` átadást használják. A hat vadvirágmag és a madárodú átvételekor is ez jelenik meg. Csak sikeres mentés után látható az átadó mondat; annak Tovább/Esc bezárása indítja a tárgy animációját. Átvétel után ne térjen vissza automatikusan a szereplő alapmondata vagy a vásárlóablak. Más ablakra váltás és jelenetlezárás ne hagyjon később előugró animációt.

@@ -5,7 +5,7 @@ export const marketOffscreenX=FOREST_LEFT-160;
 export const marketParking={x:-20,y:roadY-laneOffset};
 export const marketDoor={x:38,y:marketParking.y+19};
 export const marketRoads:PaintedPath[]=[
- {width:90,points:[[marketOffscreenX,roadY],[146,roadY]]},
+ {width:90,capEnd:false,points:[[marketOffscreenX,roadY],[170,roadY]]},
  {width:138,points:[[-90,roadY],[105,roadY]]}
 ];
 export function marketArrival(t:number){return{x:marketOffscreenX+(marketParking.x-marketOffscreenX)*Math.max(0,Math.min(1,t)),y:marketParking.y};}

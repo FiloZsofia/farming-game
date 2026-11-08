@@ -28,10 +28,6 @@ export function paintForest(g:Phaser.GameObjects.Graphics,random:()=>number,pain
   }
  }
  for(const [x,y]of [[-300,826],[-487,850],[-740,1130],[-1010,950]]){oval(x,y,40,22,0x737d6c);oval(x-5,y-5,27,12,0xa1aa8a);oval(x+7,y+5,23,9,0x50734a);}
- // A complete wooden resting bench: back slats, supports, seat and four clear legs.
- oval(-461,977,76,16,0x344a30,.25);g.fillStyle(0x655035).fillRect(-489,933,5,43).fillRect(-437,933,5,43).fillRect(-486,960,5,21).fillRect(-440,960,5,21);
- g.fillStyle(0xa88a57).fillRoundedRect(-494,928,64,9,2).fillRoundedRect(-494,939,64,8,2);g.lineStyle(1,0xd4b577).lineBetween(-491,930,-433,930).lineBetween(-491,941,-433,941);
- g.fillStyle(0xb69a65).fillPoints([{x:-493,y:950},{x:-434,y:950},{x:-427,y:961},{x:-499,y:961}],true);g.fillStyle(0x7e6240).fillRect(-499,961,72,5);g.lineStyle(1,0xd0b47b).lineBetween(-492,954,-432,954).lineBetween(-495,958,-430,958);for(const x of [-486,-438])g.fillStyle(0x66543a).fillCircle(x,933,1).fillCircle(x,943,1);
  const n=forestNest;
  // Irregular pockets of exhausted undergrowth blend into the living forest floor.
  // Keep the walking path clear: this change stays beside and behind the log.
@@ -100,4 +96,12 @@ export function drawForestHerb(g:Phaser.GameObjects.Graphics,p:{x:number;y:numbe
     g.fillStyle(0x8caa60).fillTriangle(x-3,p.y-h+5,x,p.y-h-3,x+3,p.y-h+5);
    }
   }
+}
+
+export function drawForestBench(g:Phaser.GameObjects.Graphics){
+ const oval=(x:number,y:number,w:number,h:number,c:number,a=1)=>g.fillStyle(c,a).fillEllipse(x,y,w,h);
+ // A complete wooden resting bench: back slats, supports, seat and four clear legs.
+ oval(-461,977,76,16,0x344a30,.25);g.fillStyle(0x655035).fillRect(-489,933,5,43).fillRect(-437,933,5,43).fillRect(-486,960,5,21).fillRect(-440,960,5,21);
+ g.fillStyle(0xa88a57).fillRoundedRect(-494,928,64,9,2).fillRoundedRect(-494,939,64,8,2);g.lineStyle(1,0xd4b577).lineBetween(-491,930,-433,930).lineBetween(-491,941,-433,941);
+ g.fillStyle(0xb69a65).fillPoints([{x:-493,y:950},{x:-434,y:950},{x:-427,y:961},{x:-499,y:961}],true);g.fillStyle(0x7e6240).fillRect(-499,961,72,5);g.lineStyle(1,0xd0b47b).lineBetween(-492,954,-432,954).lineBetween(-495,958,-430,958);for(const x of [-486,-438])g.fillStyle(0x66543a).fillCircle(x,933,1).fillCircle(x,943,1);
 }

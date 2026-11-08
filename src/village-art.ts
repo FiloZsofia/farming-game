@@ -4,7 +4,7 @@ import {worldText} from './world-text';
 import {forageReady} from './travel';
 import {drawPathNetwork} from './path-art';
 import {farmBounds} from './layout';
-import {paintForest} from './forest-art';
+import {paintForest,drawForestBench} from './forest-art';
 import {FOREST_LEFT} from './forest';
 import {drawWoodlandTree} from './woodland-tree';
 import Phaser from 'phaser';
@@ -118,6 +118,7 @@ export function drawVillage(scene:Phaser.Scene){
  // This scenery is static too; keep tree canopies and paving out of the per-frame geometry pass.
  const terrain=scene.add.renderTexture(FOREST_LEFT,farmBounds.top,1200-FOREST_LEFT,WORLD_HEIGHT-farmBounds.top).setOrigin(0).setDepth(-.5);terrain.draw(g,-FOREST_LEFT,-farmBounds.top);g.destroy();
  const crowns=scene.add.renderTexture(FOREST_LEFT,farmBounds.top,1200-FOREST_LEFT,WORLD_HEIGHT-farmBounds.top).setOrigin(0).setDepth(-.3);crowns.draw(canopy,-FOREST_LEFT,-farmBounds.top);canopy.destroy();
+ drawForestBench(scene.add.graphics().setDepth(1));
  return {graphics:terrain,labels};
 }
 export function drawForage(scene:Phaser.Scene,picked:Record<string,number>,day:number,weatherSeed=0){

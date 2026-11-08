@@ -40,3 +40,5 @@
 - Minden jelenlegi és új bolt a közös `shop-conversation.ts` beszélgetési menüt használja: belépéskor nincs automatikus vásárlóablak, a pult elől E/kattintás indít beszélgetést. A történeti témák külön, feltételes gombok, a Vásárlás külön művelet; a napi mondatok megmaradnak. Az új boltos nevét, találkozási jelzőjét és esetleges alkatrész-szerepét a közös nyilvántartásban add meg; ne kapja meg véletlenül más szereplő témáját.
 
 - Az új kertészkedés normál játékba emelésekor a meglévő `#gardening-skill` jártasságjelző arculatát és animációját őrizd meg (függőleges feltöltődés, számkiemelés, +pont-jelzés, mozdulatok és időzítés); a jobb oldalról balra kerül. A kertészeti teszt egyszerűbb külön jelzője csak ideiglenes próba, nem az éles megjelenés mintája.
+
+- Minden szereplőtől történő tárgyátvétel kapjon átadási animációt a közös `showItemGift()` útvonalon (`material-gift.ts`). Sorrend: sikeres mentés, az átadást kísérő mondat, majd a játékos általi ablakbezárás után az animáció. Ne nyíljon vissza automatikusan a szereplő alapmondata/bolti menüje. Ez a műhelykulcsra és a jövőbeli ajándékokra is vonatkozik; más ablakra váltás törölje az elhalasztott átadást.
