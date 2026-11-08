@@ -1444,3 +1444,9 @@ A szállítóút felületén nem maradnak az erdő korábbi átjárószűkítő 
 
 
 A postaláda részleges átvételnél egyértelműen jelzi: „A rendelt magoknak csak egy részét tudtad átvenni, mert nincs elég hely a Készletedben. A többi a postaládában marad, amíg vissza nem jössz érte.” A maradék magok továbbra is látszanak, nem vesznek el. Ha semmi sem fér el, ezt a postaláda nyitásakor jelzi; a teljes átvétel utáni közvetlen bezárás megmarad.
+
+### Szedhető bokrok kötelező elhelyezési szabálya
+
+A bokor teljes látható lombja az ösvényen/úton kívül legyen, kis füves hézaggal, takarás nélkül. Fa, épület, tábla vagy más tárgy nem fedheti el; legalább egy oldalról megközelíthető legyen. Út és növényzet módosításakor az összes szedhető bokrot ellenőrizzük, nem csak az éppen mozgatottat. A `birch` gyűjtési azonosítójú, Falu tábla melletti bokor a (238, 821) helyről a füves (95, 845) pontra kerül; a korábbi szedési előzménye megmarad. A közös faelhelyezés fenntartja a bokrok takarásmentes helyét.
+
+Az átadó útjának jobbra, a pálya széléig továbbvezetése egyelőre megbeszélés alatt álló ötlet. Nincs jóváhagyva megvalósításra; a jelenlegi útvonal és Mara fordulása ebben a javításban nem változik.

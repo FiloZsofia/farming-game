@@ -2,6 +2,8 @@
 
 ## Javítások a 0.3.0 után — verzióemelés nélkül
 
+- A Falu tábla melletti másik szedhető bokor is füves, út melletti helyre került. Minden szedhető bokor teljes lombját útmentes és takarásmentes terület védi; a fák elhelyezése is figyelembe veszi őket. A szedési előzmények megmaradnak.
+
 - Részleges csomagátvételkor a postaláda jelzi, hogy a helyhiány miatt bent maradt magok megvárják a játékost. Ha egyetlen mag sem fér el, ugyanez az ablak magyarázza az inaktív átvételi gombot.
 
 - Az új ágyások faliméh-küldetése a mai öntözést azonnal kijelzi, az öntözés utáni ültetésnél is. Napváltáskor nem duplázódik a számláló.
