@@ -117,14 +117,14 @@ A ház jobb oldali ablaka melletti katalóguskönyvre kattintva vagy közelről 
 - [Aktuális mobilnézet](docs/concepts/farm-clean-mobile.png)
 - [Mobilos katalógus](docs/concepts/farm-catalogue-mobile.png)
 
-### Fejlesztői tesztmódok
+### Ellenőrzés és a korábbi tesztmódok
 
-A játék hivatkozását `?dev=1` paraméterrel megnyitva a Menüben megjelenik a **Fejlesztői eszközök** menüpont. A **Tesztmódok → A mikroszkóp megtalálása – jelenet** külön, memóriában futó farmmásolatot indít. Kilépéskor az eredeti farm folytatódik; frissítéskor a teszt elvész. Paraméter nélkül a panel rejtett. Ez nem jelszavas hozzáférés-védelem.
+A játékon belüli fejlesztői tesztmódok és indítógombjaik megszűntek. A `?dev=1` hivatkozás sem nyit fejlesztői menüt, a korábbi kertészeti próba frissítés utáni automatikus folytatása törlődik. A normál farm, a történeti haladás és a biztonsági mentés megmarad.
 
-A **Noah küldeménye – erdei kísérlet** tesztben a levél, Simon botfejlesztése, a déli erdei harc és gyantagyűjtés, a kivonatkészítő és a mikroszkópos eredmény is kipróbálható. A kezdőpontválasztóval az egyes szakaszok külön indíthatók. A teljes folyamat a postaládánál kezdődik; a teszt biztosítja a szükséges gyógynövényeket és a fejlesztéshez elég alapanyagot/aranyat. Minden újraindítás az eredeti farm külön másolatából indul. A déli erdő a normál játékban még lezárt és takart.
+A fejlesztés a rendes játékban készül; az ellenőrzést az automatikus tesztek, a build és elkülönített böngészős próbák adják. A tesztekhez használt adat-előkészítő segédek nem játékon belüli tesztmódok.
 
-A Noah-tesztben a **Küldés utáni várakozás** kezdőponttal ellenőrizhető a háromnapos kézbesítés; a teszt alatt a fejlesztői panel **Következő reggel** gombjával gyorsítható a várakozás. A mocsár külön kezdőpontból is próbálható. A kivonatkészítő közelijében WASD/nyilak mozgatják Samet, E vagy egérkattintás veszi fel és dobja az üstbe a hozzávalókat.
+### Noah története a rendes játékban
 
-A Műhely meglévő gépénél először külön edényben készül el a gyantás hordozó Noah előkészítő anyagával. Az üst, a keverőkar, a szűrő, a hűtőszelep és a töltőcsap kézzel kezelhető. E vagy egérgomb nyomva tartása végzi a keverést, szűrést és töltést; a szelepek kattintással/húzással állíthatók. A spóramező saját kezdőpontból is tesztelhető. A megtermelt zöldségek és gyümölcsök evése az alapjátékban is működik, minden szint- és történeti feltétel nélkül.
+Noah levele, Simon botfejlesztése, a déli erdő, a mocsár, a gyantagyűjtés, a kivonatkészítés és a mikroszkópos eredmény a rendes történet részei. A fejezet a minta elküldése után indul; a mentett történeti állapot folytatódik. A térkép a normál játékban M-mel nyílik és záródik.
 
-A kivonatkészítés az eredeti Műhely játékterében zajlik, külön szoba nélkül. A következő célpontot fénylő gyűrű, mozgó nyíl és rövid műveleti útmutató jelöli. A térkép egyelőre csak memóriabeli tesztmódban nyílik/záródik az M billentyűvel; a normál játékban nem érhető el.
+A kivonatkészítés az eredeti Műhely játékterében zajlik. Először külön edényben készül el a gyantás hordozó Noah előkészítő anyagával; az üst, a keverőkar, a szűrő, a hűtőszelep és a töltőcsap kézzel kezelhető. A fénylő célpontok és a rövid műveleti útmutató megmaradnak. A kódban megmaradt egyes „test” elnevezések közös, rendes játékbeli részeket is jelölnek; önmagukban nem jelentik azt, hogy az adott tartalom csak próba.

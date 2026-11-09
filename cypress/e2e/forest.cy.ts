@@ -28,25 +28,8 @@ it('remembers the workshop name after the first entry, even before opening the s
  const s=repairedWorkshop(fresh(632,224));Object.assign(s.travel.research,{shutter:false,entranceShutter:false,examined:[],discovered:false,repaired:false});start(s);press('e','KeyE',69);cy.get('#game').should('have.attr','data-region','workshop');cy.get('#location-label').should('have.text','MŰHELY');press('Tab','Tab',9);cy.get('#items-page').should('contain','Műhely kulcsa').and('not.contain','Melléképület');cy.reload();cy.get('#continue-farm').should('not.be.disabled').click();cy.get('#location-label').should('have.text','MŰHELY');press('Tab','Tab',9);cy.get('#items-page').should('contain','Műhely kulcsa');
 });
 
-it('prepares the nest encounter repeatedly in an isolated memory copy of any farm',()=>{
- const s=repairedWorkshop(fresh(250,220));s.farmName='Próba birtok';s.economy.gold=347;s.clearing.wood=40;s.travel.forest={...createForest(),stick:true,defeated:forestEnemies.map(e=>e.id),sample:true,examined:true,sent:true};start(s,true);cy.get('#menu').click();cy.get('#microscope-test').should('be.visible').click();cy.get('#prepare-microscope-test').click();cy.get('#game').should('have.attr','data-region','forest').and('have.attr','data-forest-sample','false').and('have.attr','data-gold','347').and('have.attr','data-wood','40').and('have.attr','data-microscope-ready','false');press('e','KeyE',69);cy.get('#collect-nest-sample').click();cy.get('#dialogue-title').should('have.text','A minta biztonságban van');cy.get('#dialogue-close').click();cy.get('#game').should('have.attr','data-forest-sample','true');cy.get('#game').should('not.have.attr','data-microscope-delivery');
- cy.get('#menu').click();cy.get('#microscope-test').click();cy.get('#prepare-microscope-test').click();cy.get('#game').should('have.attr','data-forest-sample','false').and('have.attr','data-gold','347');
- cy.get('#test-mode-banner').should('be.visible').click();cy.get('#exit-test-mode').click();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-forest-sample','true');cy.get('#test-mode-banner').should('not.be.visible');
-});
 
-it('runs Noah’s letter and extraction only in an isolated developer test',()=>{
- const s=repairedWorkshop(fresh(250,220));s.economy.gold=347;start(s,true);
- cy.get('#menu').click();cy.get('#microscope-test').click();cy.get('#start-noah-test').click();
- press('e','KeyE',69);cy.get('#dialogue-title').should('have.text','Noah levele');cy.get('#dialogue-text').should('contain','gondolják helyesnek');cy.get('#noah-take-package').click();cy.get('#dialogue-close').click();
- cy.get('#quest-tracker').should('contain','Kérdezd meg Simont a kötőanyagról');
- cy.get('#test-mode-banner').click();cy.get('#noah-test-checkpoint').select('mix');cy.get('#start-noah-test').click();press('e','KeyE',69);
- const labClick=(x:number,y:number)=>cy.get('#workshop-lab').then(el=>{const d=el[0].dataset;cy.get('#game>canvas').click((x-Number(d.cameraX))*Number(d.zoom),(y-Number(d.cameraY))*Number(d.zoom));});
- const take=(id:string,x:number,y:number)=>{labClick(x,y);cy.get('#workshop-lab',{timeout:8000}).should('have.attr','data-carrying',id);};
- const drop=(x:number,y:number)=>{labClick(x,y);cy.get('#workshop-lab',{timeout:8000}).should('have.attr','data-carrying','').and('have.attr','data-throwing','false');};
- cy.get('.noah-lab-canvas').should('not.exist');cy.get('#dialogue').should('not.be.visible');
- take('resin',263,3433);drop(310,3397);take('aid',291,3433);drop(310,3397);
- press('e','KeyE',69);cy.get('body').trigger('keydown',{code:'KeyE',key:'e',keyCode:69,which:69});cy.get('#workshop-lab',{timeout:8000}).should('have.attr','data-carrier-ready','true').and('have.attr','data-phase','load');cy.get('body').trigger('keyup',{code:'KeyE',key:'e',keyCode:69,which:69});
- take('carrier',310,3397);cy.get('#workshop-lab').should('have.attr','data-target','vat');press('m','KeyM',77);cy.get('.test-world-map').should('contain','Öregfák ligete');press('m','KeyM',77);cy.get('#dialogue').should('not.be.visible');drop(339,3270);
- for(const [id,y]of [['thyme',3377],['plantain',3405]]as const){take(id,263,y);drop(339,3270);}labClick(339,3270);cy.get('#workshop-lab',{timeout:8000}).should('have.attr','data-phase','extract');press('Escape','Escape',27);cy.get('#workshop-lab').should('not.exist');press('e','KeyE',69);cy.get('#workshop-lab').should('have.attr','data-phase','extract');press('Escape','Escape',27);
- cy.get('#test-mode-banner').click();cy.get('#exit-test-mode').click();cy.get('#game').should('have.attr','data-ready','true').and('have.attr','data-gold','347').and('have.attr','data-forest-sample','false');cy.get('#test-mode-banner').should('not.be.visible');
-});
+
+
+
+it('does not expose runtime trial menus even through an old developer link',()=>{const s=fresh(250,220);start(s,true);cy.get('#menu').click();cy.get('#microscope-test,#test-mode-banner,#start-noah-test,#start-market-trial,#start-art-study,#start-living-bed-test').should('not.exist');cy.get('#resume-game').should('be.visible').click();cy.get('#game').should('have.attr','data-ready','true');});

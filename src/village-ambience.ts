@@ -5,12 +5,12 @@ export class VillageAmbience{
  private lamps:Phaser.GameObjects.Graphics;private birds:Phaser.GameObjects.Graphics;private time=0;private layer:HTMLDivElement;private lights:{element:HTMLDivElement;x:number;y:number;scale:number}[]=[];
  constructor(private scene:Phaser.Scene){
   const layer=this.layer=document.createElement('div');layer.className='village-light-layer';layer.setAttribute('aria-hidden','true');document.querySelector('#game')!.append(layer);
-  for(const {x,y}of villageLampLights){const element=document.createElement('div');element.className='workshop-lamp-light village-street-light';element.setAttribute('aria-hidden','true');for(const name of ['halo','pool','core']){const part=document.createElement('i');part.className=name;element.append(part);}layer.append(element);this.lights.push({element,x,y,scale:1});}
+  for(const {x,y,scale}of villageLampLights){const element=document.createElement('div');element.className='workshop-lamp-light village-street-light';element.setAttribute('aria-hidden','true');for(const name of ['halo','pool','core']){const part=document.createElement('i');part.className=name;element.append(part);}layer.append(element);this.lights.push({element,x,y,scale});}
   for(const [x,y,w,h]of villageWindows){const element=document.createElement('div');element.className='village-window-light';element.style.width=`${w-4}px`;element.style.height=`${h-4}px`;element.setAttribute('aria-hidden','true');layer.append(element);this.lights.push({element,x:x+2,y:y+2,scale:1});}
   for(const light of this.lights)bindWorldLight(scene,light.element,()=>light);
   scene.events.once('shutdown',()=>this.destroy());
   this.lamps=scene.add.graphics().setDepth(2);this.birds=scene.add.graphics().setDepth(3);
-  for(const {x,y}of villageLampLights){for(const [r,a]of [[46,.035],[30,.06],[17,.12]])this.lamps.fillStyle(0xffd887,a).fillCircle(x,y,r);this.lamps.fillStyle(0xffe6a8,.9).fillRoundedRect(x-5,y-7,10,12,2);this.lamps.fillStyle(0xf8d88a,.09).fillEllipse(x,y+30,78,31);}
+  for(const {x,y,scale}of villageLampLights){for(const [r,a]of [[46,.035],[30,.06],[17,.12]])this.lamps.fillStyle(0xffd887,a).fillCircle(x,y,r*scale);this.lamps.fillStyle(0xffe6a8,.9).fillRoundedRect(x-5*scale,y-7*scale,10*scale,12*scale,2*scale);this.lamps.fillStyle(0xf8d88a,.09).fillEllipse(x,y+30*scale,78*scale,31*scale);}
   for(const [x,y,w,h]of villageWindows){this.lamps.fillStyle(0xffd991,.35).fillRect(x+2,y+2,w-4,h-4);this.lamps.lineStyle(2,0xe8d6aa).lineBetween(x+w/2,y,x+w/2,y+h).lineBetween(x,y+h/2,x+w,y+h/2);}
  }
  update(dt:number,darkness:number,visible:boolean,player:{x:number;y:number},rain:boolean){

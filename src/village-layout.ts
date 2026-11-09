@@ -1,3 +1,4 @@
+import {brookClearForTree} from './brook-layout';
 import {nurseryTreeClear,nurserySolid} from './nursery-grounds';
 import {boundsOffPaths} from './path-clearance';
 import {quadraticPath} from './path-curves';
@@ -16,11 +17,13 @@ export const villageLayout={
  nursery:{x:510,y:840,w:165,h:106,door:{x:591,y:954},entrance:{x:580,y:898,w:29,h:65}},
  fishShop:{x:665,y:960,w:230,h:128,door:{x:708,y:1100},entrance:{x:690,y:1030,w:35,h:76}},
  square:{x:475,y:1080,rx:181,ry:115},
- nurserySaplings:[{x:518,y:958},{x:542,y:958},{x:646,y:958},{x:670,y:958}],
+ nurserySaplings:[{x:518,y:946},{x:542,y:946},{x:627,y:942},{x:649,y:942}],
  benches:[{id:'west',angle:-1.88},{id:'east',angle:-.55}],
  bushes:[{id:'fern',x:105,y:895},{id:'birch',x:95,y:845},{id:'moss',x:70,y:980},{id:'brook',x:191,y:1090}],
  trees:[{x:44,y:670,kind:0},{x:103,y:650,kind:1},{x:254,y:685,kind:2},{x:53,y:799,kind:2},{x:169,y:777,kind:0},{x:286,y:769,kind:1},{x:51,y:889,kind:1},{x:278,y:934,kind:0},{x:146,y:1000,kind:2},{x:40,y:1059,kind:0},{x:311,y:1120,kind:1},{x:100,y:1165,kind:2},{x:250,y:1184,kind:0}],
 } as const;
+export const nurseryDisplays=[{left:501,width:54,plants:villageLayout.nurserySaplings.slice(0,2)},{left:611,width:44,plants:villageLayout.nurserySaplings.slice(2)}];
+export const nurseryDisplayBounds=(d:typeof nurseryDisplays[number])=>({left:d.left,right:d.left+d.width+4,top:Math.min(...d.plants.map(p=>p.y))-53,bottom:Math.max(...d.plants.map(p=>p.y))+16});
 // Drawing and canopy clearance use the same full routes.
 export const villagePaths=[
  {width:32,points:[farmLayout.paths[0].points[0],[170,740]]},
@@ -39,7 +42,7 @@ export function forageBushOffPaths(b:{x:number;y:number}){
 export function woodlandTreeCoversBush(x:number,y:number,scale=1){return villageLayout.bushes.some(b=>{const box=forageBushBounds(b);return x+42*scale>box.left-5&&x-42*scale<box.right+5&&y+7*scale>box.top-5&&y-105*scale<box.bottom+5;});}
 // Match the crown silhouette, leaving room under/along its tapered edges.
 export function woodlandTreeClear(x:number,y:number,scale=1,kind=0){
- if(!nurseryTreeClear(x,y,scale))return false;
+ if(!nurseryTreeClear(x,y,scale)||!brookClearForTree(x,y,scale))return false;
  if(villageLayout.benches.some(b=>{const p=benchPose(b.angle);return x+42*scale>p.x-40&&x-42*scale<p.x+40&&y+7*scale>p.y-43&&y-105*scale<p.y+12;}))return false;
  if([villageLayout.craftShop,villageLayout.nursery,villageLayout.fishShop].some(building=>x+42*scale>building.x-12&&x-42*scale<building.x+building.w+12&&y+12*scale>building.y-40&&y-110*scale<building.y+building.h+12))return false;
  const pot=villageEntrancePot;if(x+42*scale>pot.x-16&&x-42*scale<pot.x+17&&y+7*scale>pot.y-28&&y-105*scale<pot.y+14)return false;
@@ -49,7 +52,8 @@ export function woodlandTreeClear(x:number,y:number,scale=1,kind=0){
 }
 export const villageEntrancePot={x:225,y:1000};
 export const villageLamps=[{id:'fork',x:460,y:942},{id:'square',x:450,y:1240}] as const;
-export const villageLampLights=villageLamps.map(p=>({x:p.x,y:p.y-38}));
+export const workshopWallLamps=[{x:577,y:1297},{x:748,y:1297}] as const;
+export const villageLampLights=[...villageLamps.map(p=>({x:p.x,y:p.y-38,scale:1})),...workshopWallLamps.map(p=>({...p,scale:.6}))];
 export const villageWindows=[[528,873,28,29],[627,873,28,29],[753,1009,41,43],[825,1009,41,43],[578,1253,28,29],[712,1253,28,29]] as const;
 export const lampBounds=(p:{x:number;y:number})=>({left:p.x-12,right:p.x+12,top:p.y-59,bottom:p.y+3});
 export type WoodlandTree={x:number;y:number;kind:number;scale?:number};

@@ -2,6 +2,11 @@
 
 ## Javítások a 0.3.0 után — verzióemelés nélkül
 
+- A falusi tér déli részén mohás kövek közül ered a patak. A kanyargó mederben sebességükben eltérő áramláscsíkok, kavicsos sekélyek, kövek körüli örvények és habfoltok látszanak; balra sűrű parti növényzet mögött folytatódik. A meglévő híd megmarad.
+
+- Finomabb falusi padok, részletes facsemeték és tartók, felismerhető kanna, palántatálca, futónövény és ablakládák. A szökőkút, a hordó, az üvegház és a Műhelybolt kirakott tárgyai is kidolgozottabbak.
+- Megszűntek a játékon belüli fejlesztői tesztmódok és indítógombjaik. A rendes kertészkedés, Mara, Noah kiadott története, a térkép és a mentések megmaradnak. Az automatikus ellenőrző tesztek továbbra is működnek.
+
 - Mara az áru elszállítása után üresen visszatér, a Faiskola melletti új füves-kavicsos beállóban parkol, majd díszbokrokat metsz. Megszólítható; újratöltéskor a parkolás újabb kifizetés nélkül helyreáll. Nyolc érintett fa azonos fajtával és mérettel áthelyezve.
 - Részletesebb üvegház a Faiskola mellett: üvegtáblás tető, festett keret, téglalábazat és látható palánták. A falusi padok kontrasztosabb, egységes faszínt kapnak, szabad kilátással.
 

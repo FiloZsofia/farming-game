@@ -1,3 +1,4 @@
+import {drawBrookBed,drawBrookMouth} from './brook-art';
 import {marketRoadContains} from './market-trial-route';
 import {natureSites,natureReady} from './nature-resources';
 import {drawWoodlandTree} from './woodland-tree';
@@ -13,10 +14,7 @@ export function paintForest(g:Phaser.GameObjects.Graphics,random:()=>number,pain
  // Small overlapping shade patches deepen the hollow gradually, without straight edges.
  for(let i=0;i<100;i++){const x=-1080+random()*1060,y=690+random()*670;oval(x,y,45+random()*110,18+random()*35,0x406846,.05+Math.max(0,-x-200)/3000);}
  paintPaths?.();
- // Curved banks, exposed stones and bright broken reflections make the brook readable.
- const brook=new Phaser.Curves.Spline([new Phaser.Math.Vector2(-1060,1285),new Phaser.Math.Vector2(-780,1250),new Phaser.Math.Vector2(-600,1207),new Phaser.Math.Vector2(-440,1195),new Phaser.Math.Vector2(-260,1240),new Phaser.Math.Vector2(-30,1320)]).getPoints(90);
- for(const [width,color]of [[40,0x617347],[32,0x9c9a70],[25,0x3c7778],[17,0x70aaa5]]){g.lineStyle(width,color).strokePoints(brook);for(const p of brook)oval(p.x,p.y,width,width,color);}
- for(let i=3;i<brook.length-3;i+=5){const p=brook[i];g.lineStyle(1.2,0xd5e3bd,.8).lineBetween(p.x-6,p.y-3,p.x+7,p.y-3);oval(p.x+(i%2?18:-18),p.y+7,8,5,0xa6ab89);g.lineStyle(1.5,0x5c8249).lineBetween(p.x+21,p.y,p.x+23,p.y-10).lineBetween(p.x+23,p.y,p.x+27,p.y-7);}
+ drawBrookBed(g);
  for(let i=0;i<8;i++){g.fillStyle(i%2?0xae925f:0x947951).fillRect(-464,1167+i*8,40,6);}g.lineStyle(3,0x67533b).lineBetween(-465,1165,-465,1229).lineBetween(-423,1165,-423,1229);
  for(let i=0;i<46;i++){let x=-1080+random()*1030;const y=i%2?700+random()*130:1260+random()*115;if(y>1230&&Math.abs(x+444)<70)x=-525;tree(x,y,i%3,.85+(i%3)*.08);}
  // Dense trunks and brambles follow the actual impassable shoulders of both gates.
@@ -70,6 +68,7 @@ export function paintForest(g:Phaser.GameObjects.Graphics,random:()=>number,pain
   }
  }
  oval(n.x-9,n.y-34,46,9,0x62804a);for(let i=0;i<9;i++)oval(n.x-30+i*5,n.y-36+(i%2)*3,5,3,0x8fa057);
+ drawBrookMouth(canopy);
 }
 export function drawForestObjects(scene:Phaser.Scene,f:Forest,day:number,weatherSeed=0){
  const g=scene.add.graphics().setDepth(1);

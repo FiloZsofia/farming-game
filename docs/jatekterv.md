@@ -1500,3 +1500,25 @@ A lezárt aznapi fuvar meglévő mentési adataiból a parkoló autó és Mara h
 A beálló nyolc meglévő fát érint. Ezek közeli, szabad helyre kerülnek, az eredeti fajtával és mérettel. A fák, ütközések, üvegház és díszbokrok közös helyadatait a `nursery-grounds.ts` és a falusi elhelyezés kezeli.
 
 Az üvegház festett zsályazöld keretet, külön üvegtáblás nyeregtetőt, csillanásokat, téglalábazatot, ajtót és küszöböt kap. Az üvegen keresztül palántapolc és terrakottacserepek látszanak. Saját procedurális rajz, külső grafikai függőség nélkül. A falusi tér két padja egységes, kontrasztosabb barna faanyagot, sötét éleket és lábakat kap; lomb nem takarhatja az ülőlapot és háttámlát.
+
+
+### Falusi díszítőelemek finomítása és a tesztmódok megszüntetése
+
+A két falusi pad visszafogott, szürkés faszínt és vékonyabb éleket kap. A facsemeték levelei, fás szára, cserepei és címkéi részletesebbek; a tartók lábai, asztallapjai és elülső pereme saját helyes takarási sorrendben készülnek. A jobb oldali tartó elhelyezése nem metszheti a Kertitó Szaküzlet tetejét vagy a padot, és a teljes látható tartó/növény az ösvényen kívül marad.
+
+A Faiskola locsolókannáján fogantyú, töltőnyílás, cső és locsolófej látszik. A hosszúkás palántatálca, az ablakládák és a futónövény levelei, virágai és támasztéka is kidolgozottabbak. A szökőkút kőpereme, medencéje, vízfelszíne és középső csorgója egységesebb, a szaküzlet hordóján dongák, abroncsok és vízfelszín látszik. Az üvegház lágyabb keretet, oldalsó osztásokat, szellőzőt és további belső palántapolcot kap. A Műhelybolt szerszámtartója, faanyagai, kosara és lámpásai is ugyanilyen részletességgel készülnek. A falra szerelt lámpások fénye közös helyadatot és saját, kisebb méretarányt használ.
+
+A kis díszítőelemek külön, háromszoros felbontású gyorsítótárazott rajzrétegeken készülnek; a teljes pályatextúrát nem növeljük meg. A világban látható szövegek továbbra is natív szövegek maradnak.
+
+A felhasználó kérésére valamennyi játékon belüli tesztmód indítása megszűnik: fejlesztői menü, tesztjelző, látványváltás, külön kertészeti és Mara-próba, történeti kezdőpontok és automatikus próba-folytatás nem érhető el. A `?dev=1` sem kapcsolja be őket. A normál játékban használt közös kód és történeti tartalom megmarad; az automatikus kódteszteket és a tesztadat-segédeket ez nem törli. Új fejlesztést nem kell külön tesztmódba is beépíteni.
+
+Noah teljes kiadott fejezete már a rendes játékban fut. A tesztmódok eltávolítása nem veszi ki Noah levelét, a botfejlesztést, a déli erdőt, a mocsarat, a kivonatkészítést, a térképet vagy a mikroszkópos vizsgálatot, és nem módosítja a mentett haladást. A korábbi, csak tesztmódot említő leírások elavultak.
+
+
+### Forrásból induló patak — jóváhagyott megvalósítás
+
+A falusi tér déli részének korábbi, színes réti virágos foltjánál, mohás kövek közül fakad a forrás. A víz kis sekély medencébe érkezik, onnan nyugat felé kanyarodik, és a korábbi erdei patakmederbe csatlakozik. A folyás iránya mindenütt a forrástól a bal pályaszél felé mutat. Az ottani sűrű parti növényzet eltakarja a látható végét; a meder a pályahatáron túl folytatódik.
+
+Rövid, világos csíkok követik a meder ívét. A középső sáv gyorsabban, a part menti csíkok lassabban mozognak. A kövek mögött apró örvények és habfoltok jelennek meg; sötétebb mélyebb szakaszok és látható kavicsok tagolják a vizet. Az időléptetés és a szakaszok közös, forrástól mért távolságot használnak, ezért az animáció nem fordul szembe a mederrel.
+
+A meglévő erdei híd helye és átjárása megmarad. Az áramlás rajza nem kerülhet a deszkák fölé. Fa törzse nem állhat a mederben, a forrás teljes látható részét pedig lomb sem fedheti el. A forrás körül néhány réti virág megmarad. A táj megjelenése a rendes játékban készül, külön tesztmód nélkül.

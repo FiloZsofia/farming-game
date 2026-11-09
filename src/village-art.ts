@@ -1,4 +1,6 @@
-import {drawGreenhouse,drawMaraBay} from './nursery-art';
+import {drawBrookSpring} from './brook-art';
+import {drawMaraBay} from './nursery-art';
+import {drawVillageDetails} from './village-details';
 import {marketRoads,marketRoadContains} from './market-trial-route';
 import {marketStand} from './market-site';
 import {boundsOffPaths} from './path-clearance';
@@ -10,7 +12,7 @@ import {paintForest,drawForestBench} from './forest-art';
 import {FOREST_LEFT} from './forest';
 import {drawWoodlandTree} from './woodland-tree';
 import Phaser from 'phaser';
-import {villageLayout as layout,villagePaths,woodlandTreeClear,villageTrees,forestTrees,villageLamps,villageWindows,villageEntrancePot,WORLD_HEIGHT,WORLD_WIDTH,benchPose,benchPoint,type BenchPose,shopNames} from './village-layout';
+import {villageLayout as layout,villagePaths,woodlandTreeClear,villageTrees,forestTrees,villageLamps,villageWindows,villageEntrancePot,WORLD_HEIGHT,WORLD_WIDTH,shopNames} from './village-layout';
 // Original procedural scenery, sharing coordinates with the walkable village.
 export function drawVillage(scene:Phaser.Scene){
  const foregroundTrees=scene.add.graphics().setDepth(60),canopy=scene.add.graphics(),g=scene.add.graphics().setDepth(-.5),labels:Phaser.GameObjects.Text[]=[];
@@ -34,20 +36,8 @@ export function drawVillage(scene:Phaser.Scene){
  drawMaraBay(g);
  oval(479,1089,374,240,0x83915d);oval(476,1080,360,230,0xc3b697);
  for(let y=977;y<1183;y+=10)for(let x=298+(y%20?0:8);x<655;x+=17){if(((x-476)/176)**2+((y-1080)/109)**2>1)continue;rect(x,y,14,7,(x+y)%3?0xcabb9a:0xaeaa8e);line(x+2,y+1,x+12,y+1,0xdfcdae);}
- // A shallow stone fountain and a few pots give the square a quiet centre.
- oval(478,1089,67,30,0x485e43,.3);oval(476,1083,59,37,0x817e6b);oval(476,1078,55,31,0xc3b998);oval(476,1076,44,23,0x587e7e);oval(474,1074,36,16,0x8bb8ab);rect(472,1056,8,20,0xa9a88e);oval(476,1055,23,8,0xe0d1a9);line(476,1053,476,1063,0xc3e2cc,2);line(463,1078,470,1078,0xd2dfbc);line(484,1073,490,1073,0xd2dfbc);
  const flowers=(x:number,y:number)=>{oval(x+3,y+4,22,9,0x385d3d,.25);poly([x-9,y-7,x+9,y-7,x+6,y+7,x-6,y+7],0xa8744e);rect(x-10,y-9,20,4,0xc49764);for(let i=0;i<9;i++){const xx=x+(random()-.5)*22,yy=y-10-random()*8;line(xx,yy+5,xx,yy,0x496b3a);oval(xx,yy,4,3,[0xe7bf8e,0xc37c85,0xd6d4a1][i%3]);}};
- const bench=(pose:BenchPose)=>{
-  const p=(x:number,y:number,z=0)=>{const q=benchPoint(pose,x,y);return {x:q.x,y:pose.y+(q.y-pose.y)*.42-z};};
-  const board=(x:number,y:number,w:number,h:number,z:number,c:number)=>{const a=p(x,y,z),b=p(x+w,y,z),d=p(x+w,y+h,z),e=p(x,y+h,z);poly([a.x,a.y,b.x,b.y,d.x,d.y,e.x,e.y],c);};
-  const post=(x:number,y:number,top:number)=>{const a=p(x,y,0),b=p(x,y,top);line(a.x,a.y,b.x,b.y,0x3d3d30,4);line(a.x-1,a.y,b.x-1,b.y,0x7e7659);};
-  oval(pose.x+4,pose.y+7,61,23,0x355c3a,.23);
-  for(const x of [-24,24]){post(x,-8,32);post(x,9,12);}
-  for(const z of [18,25]){const a=p(-28,-9,z),b=p(28,-9,z);line(a.x,a.y,b.x,b.y,0x483022,8);line(a.x,a.y-1,b.x,b.y-1,0x99653c,5);}
-  for(const y of [-5,1,7]){board(-29,y,58,5,12,0x9b693e);const a=p(-29,y+5,12),b=p(29,y+5,12);line(a.x,a.y,b.x,b.y,0x543b28,2);}
-  for(const x of [-26,26]){const a=p(x,-9,19),b=p(x,11,19);line(a.x,a.y,b.x,b.y,0x53614a,3);}
- };
- for(const b of layout.benches)bench(benchPose(b.angle));flowers(villageEntrancePot.x,villageEntrancePot.y);flowers(666,1165);flowers(627,1128);
+ flowers(villageEntrancePot.x,villageEntrancePot.y);flowers(666,1165);flowers(627,1128);
  const house=(x:number,y:number,w:number,h:number,roof:number,wall:number)=>{
   poly([x,y+h-3,x+w,y+h-3,x+w+23,y+h+18,x+13,y+h+21],0x33583b,.28);
   rect(x,y,w,h,wall);rect(x,y+h-10,w,10,0x9c967b);for(let xx=x+2;xx<x+w-10;xx+=15){rect(xx,y+h-9,13,5,0xb9af90);}
@@ -59,16 +49,9 @@ export function drawVillage(scene:Phaser.Scene){
   rect(x+w*.44-4,y+h,34,5,0xb9aa86);rect(x+w*.44-7,y+h+5,40,4,0xd0bf97);
  };
  const c=layout.craftShop;house(c.x,c.y,c.w,c.h,0x856449,0xc7b18a);label(660,1242,'MŰHELYBOLT',11);
- // An open double door, wall-mounted tools, timber rack and wicker wares.
- rect(647,1285,27,47,0x394b38);poly([647,1285,633,1290,633,1333,647,1332],0x947047);poly([674,1285,688,1290,688,1333,674,1332],0xa47d4e);line(635,1295,644,1292,0xd0ac73);line(678,1293,685,1296,0xd0ac73);
- rect(566,1300,8,31,0x70573c);rect(567,1297,52,7,0xb0905d);for(let i=0;i<4;i++){line(578+i*10,1305,576+i*10,1323,0x7f6544,2);rect(572+i*10,1321,10,4,0x81907c);}for(let i=0;i<5;i++){line(704,1326-i*4,753,1324-i*4,0x9d784a,4);line(706,1325-i*4,750,1323-i*4,0xc5a371);}oval(744,1335,28,13,0x987b4e);g.lineStyle(2,0xc4a670).strokeEllipse(744,1325,19,24);for(let i=0;i<4;i++)line(733,1331+i*2,754,1331+i*2,0xc4a670);
- for(const x of [575,746]){rect(x,1292,3,18,0x5d5b40);rect(x-4,1290,12,14,0xd4bd80);poly([x-5,1290,x+2,1283,x+9,1290],0x5a5d43);}flowers(776,1334);
+ // Open workshop doors and detailed wares are painted in a separate detail layer.
+ rect(647,1285,27,47,0x394b38);poly([647,1285,633,1290,633,1333,647,1332],0x947047);poly([674,1285,688,1290,688,1333,674,1332],0xa47d4e);line(635,1295,644,1292,0xd0ac73);line(678,1293,685,1296,0xd0ac73);flowers(789,1334);
  const n=layout.nursery;house(n.x,n.y,n.w,n.h,0x657b52,0xd6c8a0);label(593,864,'FAISKOLA',10);
- // Nursery saplings in tubs, a little glass lean-to and hand-painted tree sign.
- rect(503,952,55,20,0xada17c);rect(630,952,55,20,0xada17c);
- for(const {x,y}of layout.nurserySaplings){rect(x-6,y-7,12,12,0x92704a);line(x,y-7,x,y-36,0x765639,2);oval(x-5,y-30,18,22,0x4d7843);oval(x+4,y-39,20,24,0x66924f);oval(x+1,y-44,13,15,0x8aa75b);}
-
- drawGreenhouse(g);
  // Broad long-side elevation: all walls and joinery stand upright.
  const f=layout.fishShop;
  oval(785,1098,258,32,0x35583b,.24);rect(f.x,f.y,f.w,f.h,0xd7c9a2);rect(f.x,f.y+115,f.w,13,0x9c967b);
@@ -79,16 +62,8 @@ export function drawVillage(scene:Phaser.Scene){
  rect(684,1088,49,6,0xaea385);rect(681,1094,55,6,0xd0bf99);
  for(const [x]of villageWindows.filter(p=>p[2]===41)){rect(x-4,1005,49,51,0xf0dfb7);rect(x,1009,41,43,0x6a9d96);line(x+20,1009,x+20,1052,0xe7dabc,3);line(x,1030,x+41,1030,0xe7dabc,3);line(x+3,1012,x+15,1026,0xc5d7be,2);rect(x-6,1057,53,6,0x796e4d);}
  rect(680,1025,56,6,0x638776);line(680,1025,736,1025,0xb8c4a2,2);label(780,987,shopNames.fishShop,12);
- oval(865,1107,33,16,0x587d6d);rect(849,1086,32,21,0x947d54);oval(865,1086,32,12,0x5b9595);oval(863,1084,24,6,0x92c4b6);
- // A small village-edge flower garden replaces the unused house.
- oval(385,1298,133,55,0x627c45,.42);oval(382,1289,120,39,0x8e9b59,.6);
- for(let i=0;i<15;i++){const x=326+i*8,y=1288+Math.sin(i*.43)*12;oval(x,y,8,4,0x9d9979);line(x-2,y-1,x+2,y-1,0xc8b893);}
- for(const [x,y]of [[344,1270],[367,1293],[398,1264],[416,1285],[443,1276]]){for(let i=0;i<6;i++){const xx=x+(i%3-1)*6,yy=y-Math.floor(i/3)*6;line(xx,yy+6,xx,yy-3,0x4e7441);oval(xx,yy-4,5,4,[0xd1a0a4,0xe1ca85,0xc3bdcf][i%3]);}}
- // Window boxes, climbing foliage and distinct wares make the two shops personal.
- for(const [x,y]of [[541,912],[640,912]])flowers(x,y);
- for(let i=0;i<9;i++){const x=515+Math.sin(i*.8)*4,y=874+i*6;line(x,y,x+3,y+8,0x557345);oval(x-4,y,7,4,0x6c8c4c);oval(x+5,y+4,7,4,0x7f9958);if(i%3===0)oval(x-4,y-2,4,4,0xc7aaa0);}
- // Seedling trays and a terracotta watering jug beside Leo's entrance.
- rect(482,965,20,8,0x796044);for(let i=0;i<4;i++){rect(484+i*4,963,3,3,0x3d4d33);line(485+i*4,964,484+i*4,959,0x6e994f);}oval(489,942,13,15,0xb88457);oval(489,934,10,4,0xd2a16a);line(494,938,502,933,0xb88457,3);
+ // The former meadow flower patch is now the spring; flowers remain around the mossy rim.
+ drawBrookSpring(g);
  // Fish silhouettes and aquatic plants behind Annie's glazing.
  for(const [x]of villageWindows.filter(p=>p[2]===41)){for(let i=0;i<3;i++){line(x+5+i*5,1048,x+4+i*5,1038-i%2*5,0x436f52,2);}oval(x+27,1042,10,4,0xdaa166);poly([x+32,1042,x+36,1039,x+36,1045],0xd0aa72);oval(x+10,1021,8,3,0xe3ce97);poly([x+6,1021,x+2,1018,x+2,1024],0xcabd81);}
  flowers(889,1088);rect(904,1044,2,27,0x827258);line(898,1044,911,1044,0xa39374);for(let i=0;i<3;i++){line(900+i*4,1045,900+i*4,1055+i%2*4,0xb9b393);oval(900+i*4,1057+i%2*4,3,5,0xd5c9a7);}
@@ -121,6 +96,7 @@ export function drawVillage(scene:Phaser.Scene){
  // This scenery is static too; keep tree canopies and paving out of the per-frame geometry pass.
  const terrain=scene.add.renderTexture(FOREST_LEFT,farmBounds.top,1200-FOREST_LEFT,WORLD_HEIGHT-farmBounds.top).setOrigin(0).setDepth(-.5);terrain.draw(g,-FOREST_LEFT,-farmBounds.top);g.destroy();
  const crowns=scene.add.renderTexture(FOREST_LEFT,farmBounds.top,1200-FOREST_LEFT,WORLD_HEIGHT-farmBounds.top).setOrigin(0).setDepth(-.3);crowns.draw(canopy,-FOREST_LEFT,-farmBounds.top);canopy.destroy();
+ drawVillageDetails(scene);
  drawForestBench(scene.add.graphics().setDepth(1));
  return {graphics:terrain,labels};
 }
