@@ -1,3 +1,4 @@
+import {bindWorldLight} from './world-light';
 import {studyColor,drawStudyVine} from './art-study-art';
 import Phaser from 'phaser';
 import {farmLayout} from './layout';
@@ -12,7 +13,7 @@ export class WorkshopExterior {
 
  constructor(scene:Phaser.Scene,study=false){
   const x=601+farmLayout.shedOffset.x,y=133+farmLayout.shedOffset.y;
-  this.scene=scene;this.art=scene.add.graphics().setDepth(-.9);this.window=scene.add.graphics().setDepth(-.8);this.light=document.createElement('div');this.light.className='workshop-lamp-light';this.light.setAttribute('aria-hidden','true');for(const name of ['halo','pool','core']){const part=document.createElement('i');part.className=name;this.light.append(part);}document.querySelector('#game')!.append(this.light);
+  this.scene=scene;this.art=scene.add.graphics().setDepth(-.9);this.window=scene.add.graphics().setDepth(-.8);this.light=document.createElement('div');this.light.className='workshop-lamp-light';this.light.setAttribute('aria-hidden','true');for(const name of ['halo','pool','core']){const part=document.createElement('i');part.className=name;this.light.append(part);}document.querySelector('#game')!.append(this.light);bindWorldLight(scene,this.light,()=>({x:632+(601+farmLayout.shedOffset.x+119-632)*farmLayout.shedScale,y:181+(133+farmLayout.shedOffset.y+31-181)*farmLayout.shedScale,scale:farmLayout.shedScale}));
   const scale=farmLayout.shedScale;for(const art of [this.art,this.window])art.setScale(scale).setPosition(632*(1-scale),181*(1-scale));
   const g=this.art;
   const rect=(a:number,b:number,w:number,h:number,c:number)=>{g.fillStyle(study?studyColor(c):c).fillRect(x+a,y+b,w,h);};
@@ -55,7 +56,7 @@ export class WorkshopExterior {
    else{g.fillStyle(0x87795a).fillRect(x+89,y+19,17,23);for(let i=20;i<43;i+=3)g.lineStyle(1,0x5e5943).lineBetween(x+89,y+i,x+106,y+i);}
    g.fillStyle(0xb8a17a).fillRect(x+84,y+45,27,3);
   }
-  const camera=this.scene.cameras.main,z=camera.zoom,scale=farmLayout.shedScale,lx=632+(x+119-632)*scale,ly=181+(y+31-181)*scale;this.light.style.transform=`translate(${(lx-camera.worldView.x)*z}px,${(ly-camera.worldView.y)*z}px) scale(${z*scale})`;this.light.style.opacity=String(Math.min(1,Math.max(0,darkness/.55)));this.light.hidden=!camera.worldView.contains(lx,ly);
+  const camera=this.scene.cameras.main,scale=farmLayout.shedScale,lx=632+(x+119-632)*scale,ly=181+(y+31-181)*scale;this.light.style.opacity=String(Math.min(1,Math.max(0,darkness/.55)));this.light.hidden=!camera.worldView.contains(lx,ly);
  }
  destroy(){this.art.destroy();this.window.destroy();this.light.remove();}
 }

@@ -1,3 +1,4 @@
+import {bindWorldLight} from './world-light';
 import {studyColor,drawStudyHouseDetails} from './art-study-art';
 import Phaser from 'phaser';
 import {farmLayout} from './layout';
@@ -39,8 +40,8 @@ export class HouseExterior {
  if(study)drawStudyHouseDetails(g);
  // Two wall-mounted lamps sit outside the veranda roof and window boxes.
  for(const x of [134,344]){line(x-3,185,x+2,185,0x3d493c,2);rect(x-3,188,8,12,0x46503f);rect(x-1,190,4,8,0xc3b17b);poly([x-5,188,x+1,183,x+7,188],0x4e5845);rect(x-4,200,10,2,0x3d493c);
- const light=document.createElement('div');light.className='workshop-lamp-light';light.setAttribute('aria-hidden','true');for(const name of ['halo','pool','core']){const el=document.createElement('i');el.className=name;light.append(el);}document.querySelector('#game')!.append(light);this.lights.push(light);}
+ const light=document.createElement('div');light.className='workshop-lamp-light';light.setAttribute('aria-hidden','true');for(const name of ['halo','pool','core']){const el=document.createElement('i');el.className=name;light.append(el);}document.querySelector('#game')!.append(light);this.lights.push(light);bindWorldLight(scene,light,()=>({x:239+(x+1-239)*1.35,y:223+(194-223)*1.25+farmLayout.houseOffset.y,scale:1.25}));}
  }
- update(darkness:number){const c=this.scene.cameras.main,z=c.zoom;this.lights.forEach((light,i)=>{const x=239+([135,345][i]-239)*1.35,y=223+(194-223)*1.25+farmLayout.houseOffset.y;light.hidden=!c.worldView.contains(x,y);light.style.transform=`translate(${(x-c.worldView.x)*z}px,${(y-c.worldView.y)*z}px) scale(${z*1.25})`;light.style.opacity=String(Math.min(1,Math.max(0,darkness/.55)));});}
+ update(darkness:number){const c=this.scene.cameras.main;this.lights.forEach((light,i)=>{const x=239+([135,345][i]-239)*1.35,y=223+(194-223)*1.25+farmLayout.houseOffset.y;light.hidden=!c.worldView.contains(x,y);light.style.opacity=String(Math.min(1,Math.max(0,darkness/.55)));});}
  destroy(){this.art.destroy();this.lights.forEach(light=>light.remove());}
 }

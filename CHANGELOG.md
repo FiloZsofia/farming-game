@@ -2,6 +2,9 @@
 
 ## Javítások a 0.3.0 után — verzióemelés nélkül
 
+- A tér bejáratát elzáró pad jobbra, a belógó virágcserép balra, az ösvényen kívülre került. A Falu tábla enyhén jobbra dől, a bokrok melletti erdősáv és Mara keleti autóútjának mindkét oldala sűrűbb.
+- A falusi lámpák és ablakfények közös helyadatokat használnak a tárgyukkal. A falusi, ház-, műhely- és belső lámpafények a végleges kameramátrixot követik, így séta közben nem csúsznak el.
+
 - Mara a kerítésen kívül, a megfelelő ládaoszlop alatt rakodik; nem sétál be az átadó sorai mellé.
 
 - Minden ágyás naponta öntözést igényel a növekedéshez; az eső és az öntözőrendszer ezt elvégzi. A mulcs nedvességőrzése nem helyettesíti a napi öntözést. A faliméh-küldetés kihagyott öntözés után nem lép tovább.

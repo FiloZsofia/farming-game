@@ -16,7 +16,7 @@ export const villageLayout={
  fishShop:{x:665,y:960,w:230,h:128,door:{x:708,y:1100},entrance:{x:690,y:1030,w:35,h:76}},
  square:{x:475,y:1080,rx:181,ry:115},
  nurserySaplings:[{x:518,y:958},{x:542,y:958},{x:646,y:958},{x:670,y:958}],
- benches:[{id:'west',angle:-2.35},{id:'east',angle:-.55}],
+ benches:[{id:'west',angle:-1.88},{id:'east',angle:-.55}],
  bushes:[{id:'fern',x:105,y:895},{id:'birch',x:95,y:845},{id:'moss',x:70,y:980},{id:'brook',x:191,y:1090}],
  trees:[{x:44,y:670,kind:0},{x:103,y:650,kind:1},{x:254,y:685,kind:2},{x:53,y:799,kind:2},{x:169,y:777,kind:0},{x:286,y:769,kind:1},{x:51,y:889,kind:1},{x:278,y:934,kind:0},{x:146,y:1000,kind:2},{x:40,y:1059,kind:0},{x:311,y:1120,kind:1},{x:100,y:1165,kind:2},{x:250,y:1184,kind:0}],
 } as const;
@@ -39,11 +39,15 @@ export function woodlandTreeCoversBush(x:number,y:number,scale=1){return village
 // Match the crown silhouette, leaving room under/along its tapered edges.
 export function woodlandTreeClear(x:number,y:number,scale=1,kind=0){
  if([villageLayout.craftShop,villageLayout.nursery,villageLayout.fishShop].some(building=>x+42*scale>building.x-12&&x-42*scale<building.x+building.w+12&&y+12*scale>building.y-40&&y-110*scale<building.y+building.h+12))return false;
+ const pot=villageEntrancePot;if(x+42*scale>pot.x-16&&x-42*scale<pot.x+17&&y+7*scale>pot.y-28&&y-105*scale<pot.y+14)return false;
  if(!natureTreeClear(x,y,scale)||woodlandTreeCoversBush(x,y,scale)||!marketTreeManeuverClear(x,y,scale))return false;
  const crowns=kind===2?Array.from({length:4},(_,i)=>({x:0,y:-90+i*19+22,rx:15+i*8,ry:24})):[{x:-18,y:-48,rx:22.5,ry:19.5},{x:12,y:-56,rx:25.5,ry:23.5},{x:-3,y:-76,rx:24.5,ry:19.5},{x:0,y:-38,rx:28,ry:16}];
  return [...villagePaths,...marketRoads].every(path=>path.points.slice(1).every((b,i)=>{const a=path.points[i],steps=Math.max(1,Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/3)),margin=path.width/2+4;for(let j=0;j<=steps;j++){const xx=a[0]+(b[0]-a[0])*j/steps,yy=a[1]+(b[1]-a[1])*j/steps;if(Math.hypot(xx-Math.max(x-5*scale,Math.min(x+6*scale,xx)),yy-Math.max(y-44*scale,Math.min(y+7*scale,yy)))<margin)return false;if(crowns.some(c=>((xx-x-c.x*scale)/(c.rx*scale+margin))**2+((yy-y-c.y*scale)/(c.ry*scale+margin))**2<1))return false;}return true;}));
 }
+export const villageEntrancePot={x:225,y:1000};
 export const villageLamps=[{id:'fork',x:460,y:942},{id:'square',x:450,y:1240}] as const;
+export const villageLampLights=villageLamps.map(p=>({x:p.x,y:p.y-38}));
+export const villageWindows=[[528,873,28,29],[627,873,28,29],[753,1009,41,43],[825,1009,41,43],[578,1253,28,29],[712,1253,28,29]] as const;
 export const lampBounds=(p:{x:number;y:number})=>({left:p.x-12,right:p.x+12,top:p.y-59,bottom:p.y+3});
 export type WoodlandTree={x:number;y:number;kind:number;scale?:number};
 // Preserve the actual trees affected by the new eastern road and the grass pull-off.
@@ -77,6 +81,13 @@ for(let row=0;row<4;row++)for(let column=0;column<17;column++){
  if(t.x> -280||!woodlandTreeClear(t.x,t.y,1,t.kind)||natureSites.some(p=>Math.hypot(p.x-t.x,p.y-t.y)<38)||forestPlants.some(p=>Math.hypot(p.x-t.x,p.y-t.y)<42)||[...villageTrees,...forestTrees].some(p=>Math.hypot(p.x-t.x,p.y-t.y)<34))continue;
  forestTrees.push(t);marketRoadsideTrees.push(t);
 }
+// Continue the woodland on both sides of Mara's eastern exit, preserving crossings.
+export const marketEasternTrees:WoodlandTree[]=[];
+for(let row=0;row<4;row++)for(let col=0;col<16;col++){
+ const t={x:340+col*43+(row%2)*14,y:[650,680,900,935][row]+(col%3-1)*4,kind:(row+col)%3,scale:.8+((row+col)%3)*.08};
+ if(!woodlandTreeClear(t.x,t.y,t.scale,t.kind)||[...villageTrees,...forestTrees].some(p=>Math.hypot(p.x-t.x,p.y-t.y)<32)||natureSites.some(p=>Math.hypot(p.x-t.x,p.y-t.y)<38)||forestPlants.some(p=>Math.hypot(p.x-t.x,p.y-t.y)<42))continue;
+ forestTrees.push(t);marketEasternTrees.push(t);
+}
 // Younger trees fill the narrow pocket below the pickup bay without covering either path.
 export const marketPocketTrees:WoodlandTree[]=[];
 for(let row=0;row<2;row++)for(let column=0;column<11;column++){
@@ -86,8 +97,8 @@ for(let row=0;row<2;row++)for(let column=0;column<11;column++){
 }
 // Restore the wooded shoulder in the direction of the forest sign; keep berry crowns free.
 export const forestEdgeTrees:WoodlandTree[]=[];
-for(let row=0;row<5;row++)for(let col=0;col<19;col++){
- const t={x:-390+col*28+(row%2)*11,y:850+row*16,kind:(row+col)%3,scale:.65+((row+col)%4)*.1};
+for(let row=0;row<9;row++)for(let col=0;col<19;col++){
+ const t={x:-390+col*28+(row%2)*11,y:786+row*16,kind:(row+col)%3,scale:.65+((row+col)%4)*.1};
  if(!woodlandTreeClear(t.x,t.y,t.scale,t.kind)||[...villageTrees,...forestTrees].some(p=>Math.hypot(p.x-t.x,p.y-t.y)<29)||forestPlants.some(p=>Math.hypot(p.x-t.x,p.y-t.y)<42)||natureSites.some(p=>Math.hypot(p.x-t.x,p.y-t.y)<38))continue;
  forestTrees.push(t);forestEdgeTrees.push(t);
 }

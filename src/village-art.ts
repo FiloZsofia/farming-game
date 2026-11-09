@@ -9,7 +9,7 @@ import {paintForest,drawForestBench} from './forest-art';
 import {FOREST_LEFT} from './forest';
 import {drawWoodlandTree} from './woodland-tree';
 import Phaser from 'phaser';
-import {villageLayout as layout,villagePaths,woodlandTreeClear,villageTrees,forestTrees,villageLamps,WORLD_HEIGHT,WORLD_WIDTH,benchPose,benchPoint,type BenchPose,shopNames} from './village-layout';
+import {villageLayout as layout,villagePaths,woodlandTreeClear,villageTrees,forestTrees,villageLamps,villageWindows,villageEntrancePot,WORLD_HEIGHT,WORLD_WIDTH,benchPose,benchPoint,type BenchPose,shopNames} from './village-layout';
 // Original procedural scenery, sharing coordinates with the walkable village.
 export function drawVillage(scene:Phaser.Scene){
  const foregroundTrees=scene.add.graphics().setDepth(60),canopy=scene.add.graphics(),g=scene.add.graphics().setDepth(-.5),labels:Phaser.GameObjects.Text[]=[];
@@ -45,7 +45,7 @@ export function drawVillage(scene:Phaser.Scene){
   for(const y of [-5,1,7])board(-29,y,58,5,12,0xb79762);
   for(const x of [-26,26]){const a=p(x,-9,19),b=p(x,11,19);line(a.x,a.y,b.x,b.y,0x53614a,3);}
  };
- for(const b of layout.benches)bench(benchPose(b.angle));flowers(300,985);flowers(666,1165);flowers(627,1128);
+ for(const b of layout.benches)bench(benchPose(b.angle));flowers(villageEntrancePot.x,villageEntrancePot.y);flowers(666,1165);flowers(627,1128);
  const house=(x:number,y:number,w:number,h:number,roof:number,wall:number)=>{
   poly([x,y+h-3,x+w,y+h-3,x+w+23,y+h+18,x+13,y+h+21],0x33583b,.28);
   rect(x,y,w,h,wall);rect(x,y+h-10,w,10,0x9c967b);for(let xx=x+2;xx<x+w-10;xx+=15){rect(xx,y+h-9,13,5,0xb9af90);}
@@ -53,7 +53,7 @@ export function drawVillage(scene:Phaser.Scene){
   poly([x-12,y+15,x+20,y-39,x+w-23,y-39,x+w+13,y+15],0x5c5341);poly([x-8,y+11,x+22,y-36,x+w-24,y-36,x+w+8,y+11],roof);
   for(let yy=y-31;yy<y+10;yy+=7){const d=(yy-y+36)*.61;line(x+22-d,yy,x+w-24+d,yy,0x534b3c,1,.55);for(let xx=x+25-d;xx<x+w-25+d;xx+=15)line(xx,yy,xx-2,yy+6,0xc4aa77,1,.3);}
   rect(x+w*.44,y+h-48,25,48,0x654f39);rect(x+w*.44+3,y+h-45,19,42,0x8f7753);rect(x+w*.44+18,y+h-26,2,3,0xe5cb7d);
-  for(const xx of[x+18,x+w-48]){rect(xx-3,y+30,34,37,0xe6d7ac);rect(xx,y+33,28,29,0x4d6966);poly([xx+2,y+35,xx+26,y+35,xx+2,y+59],0xa5bcb0,.7);line(xx+14,y+34,xx+14,y+62,0xe5d6ad,2);line(xx+1,y+48,xx+27,y+48,0xe5d6ad,2);rect(xx-4,y+65,36,4,0x7c704f);}
+  for(const [xx]of villageWindows.filter(([xx,yy])=>xx>=x&&xx<x+w&&yy>=y&&yy<y+h)){rect(xx-3,y+30,34,37,0xe6d7ac);rect(xx,y+33,28,29,0x4d6966);poly([xx+2,y+35,xx+26,y+35,xx+2,y+59],0xa5bcb0,.7);line(xx+14,y+34,xx+14,y+62,0xe5d6ad,2);line(xx+1,y+48,xx+27,y+48,0xe5d6ad,2);rect(xx-4,y+65,36,4,0x7c704f);}
   rect(x+w*.44-4,y+h,34,5,0xb9aa86);rect(x+w*.44-7,y+h+5,40,4,0xd0bf97);
  };
  const c=layout.craftShop;house(c.x,c.y,c.w,c.h,0x856449,0xc7b18a);label(660,1242,'MŰHELYBOLT',11);
@@ -75,7 +75,7 @@ export function drawVillage(scene:Phaser.Scene){
  for(let y=930;y<969;y+=8)line(681-(y-925)*.5,y,878+(y-925)*.5,y,0x9bb29a,1,.6);
  rect(691,1031,34,57,0x67543c);rect(695,1035,26,49,0xa18559);rect(698,1038,20,23,0x89b1a5);rect(715,1067,3,4,0xe6c778);
  rect(684,1088,49,6,0xaea385);rect(681,1094,55,6,0xd0bf99);
- for(const x of [753,825]){rect(x-4,1005,49,51,0xf0dfb7);rect(x,1009,41,43,0x6a9d96);line(x+20,1009,x+20,1052,0xe7dabc,3);line(x,1030,x+41,1030,0xe7dabc,3);line(x+3,1012,x+15,1026,0xc5d7be,2);rect(x-6,1057,53,6,0x796e4d);}
+ for(const [x]of villageWindows.filter(p=>p[2]===41)){rect(x-4,1005,49,51,0xf0dfb7);rect(x,1009,41,43,0x6a9d96);line(x+20,1009,x+20,1052,0xe7dabc,3);line(x,1030,x+41,1030,0xe7dabc,3);line(x+3,1012,x+15,1026,0xc5d7be,2);rect(x-6,1057,53,6,0x796e4d);}
  rect(680,1025,56,6,0x638776);line(680,1025,736,1025,0xb8c4a2,2);label(780,987,shopNames.fishShop,12);
  oval(865,1107,33,16,0x587d6d);rect(849,1086,32,21,0x947d54);oval(865,1086,32,12,0x5b9595);oval(863,1084,24,6,0x92c4b6);
  // A small village-edge flower garden replaces the unused house.
@@ -88,7 +88,7 @@ export function drawVillage(scene:Phaser.Scene){
  // Seedling trays and a terracotta watering jug beside Leo's entrance.
  rect(482,965,20,8,0x796044);for(let i=0;i<4;i++){rect(484+i*4,963,3,3,0x3d4d33);line(485+i*4,964,484+i*4,959,0x6e994f);}oval(489,942,13,15,0xb88457);oval(489,934,10,4,0xd2a16a);line(494,938,502,933,0xb88457,3);
  // Fish silhouettes and aquatic plants behind Annie's glazing.
- for(const x of [753,825]){for(let i=0;i<3;i++){line(x+5+i*5,1048,x+4+i*5,1038-i%2*5,0x436f52,2);}oval(x+27,1042,10,4,0xdaa166);poly([x+32,1042,x+36,1039,x+36,1045],0xd0aa72);oval(x+10,1021,8,3,0xe3ce97);poly([x+6,1021,x+2,1018,x+2,1024],0xcabd81);}
+ for(const [x]of villageWindows.filter(p=>p[2]===41)){for(let i=0;i<3;i++){line(x+5+i*5,1048,x+4+i*5,1038-i%2*5,0x436f52,2);}oval(x+27,1042,10,4,0xdaa166);poly([x+32,1042,x+36,1039,x+36,1045],0xd0aa72);oval(x+10,1021,8,3,0xe3ce97);poly([x+6,1021,x+2,1018,x+2,1024],0xcabd81);}
  flowers(889,1088);rect(904,1044,2,27,0x827258);line(898,1044,911,1044,0xa39374);for(let i=0;i<3;i++){line(900+i*4,1045,900+i*4,1055+i%2*4,0xb9b393);oval(900+i*4,1057+i%2*4,3,5,0xd5c9a7);}
  // A second village lantern frames the southern edge of the square.
 
@@ -106,7 +106,7 @@ export function drawVillage(scene:Phaser.Scene){
  // Supported wooden signs at the road and its forest fork, rather than text in grass.
  const sign=(postX:number,groundY:number,left:number,top:number,width:number,text:string,direction:'left'|'right'|'down')=>{
   oval(postX+4,groundY+3,19,7,0x35553a,.22);rect(postX-2,top+10,5,groundY-top-8,0x6b5438);rect(postX-1,top+12,2,groundY-top-10,0xac8858);
-  const tilt=0,pivotX=postX,pivotY=top+14;g.save();g.translateCanvas(pivotX,pivotY).rotateCanvas(tilt).translateCanvas(-pivotX,-pivotY);
+  const tilt=direction==='down'?-.25:0,pivotX=postX,pivotY=top+14;g.save();g.translateCanvas(pivotX,pivotY).rotateCanvas(tilt).translateCanvas(-pivotX,-pivotY);
   const arrow=direction==='down'?[left,top,left+width,top,left+width,top+51,left+width/2,top+65,left,top+51]:direction==='right'?[left,top,left+width-10,top,left+width,top+11,left+width-10,top+22,left,top+22]:[left+10,top,left+width,top,left+width,top+22,left+10,top+22,left,top+11];
   poly(arrow,0x604f35);poly(arrow.map((v,i)=>v+(i%2? -1:0)),0xa98a59);if(direction==='down'){line(left+3,top+4,left+3,top+48,0xcfb17b);line(left+width-3,top+4,left+width-3,top+48,0x735b3c);}else line(left+12,top+3,left+width-12,top+3,0xcfb17b);if(direction!=='down')line(left+12,top+19,left+width-12,top+19,0x735b3c);oval(postX,top+6,2,2,0x5c5b45);oval(postX,top+16,2,2,0x5c5b45);
   g.restore();

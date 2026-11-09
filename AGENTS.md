@@ -57,3 +57,5 @@
 - A közös tárgyátadási animáció rövid, finom csilingelést indítson. Kövesse a Menühangok beállítást, háttérben maradjon néma, hanghiba nem akadályozhatja a mentett tárgyat vagy az animációt.
 
 - Semmilyen tárgy, növény vagy dekoráció nem állhat az ösvény/út festett felületén. A teljes látható alakot ellenőrizd, ne csak a középpontot; használd a közös `boundsOffPaths()` ellenőrzést. A szedhető növények maradjanak takarásmentesek és elérhetők. Az ütköző fákat helyezd át, ne ritkítsd ki miattuk az erdőt.
+
+- Minden meglévő és jövőbeli fényforrás egyetlen összetartozó tárgy: a test, ablak/üveg, fényközép, fényudvar, talajfény, árnyék és felirat közös helyadatból és helyi eltolásokból származzon. Áthelyezés/méretezés ne hagyjon régi koordinátán részt. HTML-fény kamerakövetését a kirajzolás utáni végleges kameramátrixhoz kösd (`bindWorldLight()`), ne az update közbeni worldView-hoz. Mozgó kamera, nagyítás és éjszaka mellett is ellenőrizd a pontos illeszkedést. A tárgy részeinek és a környezetnek a takarása/rétegzése együtt legyen helyes; a sötétítés fölötti fényréteg ne emeljen előtérbe fizikailag takart tárgyrészt.

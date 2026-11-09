@@ -1478,3 +1478,12 @@ Mara az adott áru tényleges ládasoránál áll meg. Az autó mögött őt és
 
 
 Mara rakodási helyének pontosítása: a kerítés külső, déli oldalán marad, az árut tartalmazó három ládaoszlop megfelelője alatt áll meg. Nem megy be a sorok mellé. Ez felülírja a korábbi soronkénti megállást; az autó mögötti takarás megmarad.
+
+
+### Fények és falusi bejárat pontosítása
+
+A tér északnyugati padja jobbra, a tér peremén maradva kerül; a bevezető gyalogösvény teljes szélessége szabad. A Falu tábla deszkája és felirata együtt enyhén jobbra dől, az oszlopa függőleges. A három bokor bal oldalán további fák nőnek, a szedhető lomb és az utak szabadon maradnak.
+
+Minden meglévő és jövőbeli világító tárgy részei összetartoznak: test, ablak, fényközép, udvar és talajfény közös helyadatból készüljenek. A HTML-fények a végleges kameramátrixot kirajzolás után követik; mozgás, nagyítás és takarás mellett sem válhatnak el a forrástól. A falusi ablakok és lámpák közös nyilvántartásból készülnek.
+
+A bejárati virágcserép a bal oldali füves részre kerül, teljes virágzattal az ösvényen kívül. Mara keleti, jobbra vezető autóútját mindkét oldalán további fák szegélyezik, a meglévő épületek, útkeresztezések és járműmozgás szabad helyét megőrizve.
