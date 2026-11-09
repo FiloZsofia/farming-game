@@ -1544,3 +1544,30 @@ A korábbi végleges leállás helyett Mara rövid pihenőkkel felváltva gondoz
 Éjszaka nem metsz. A parkolóból a Kertitó Szaküzlet mellett, majd a téren át a Faiskola ajtajához sétál, ott eltűnik éjszakára. Az útvonal épületet, üvegházat, bokrot és autót nem metsz. Éjszakai betöltéskor már bent van; az üres kocsi a beállóban marad. Új mentésmező és újabb kifizetés nem szükséges. Ez felülírja a korábbi, felső bokornál végleg megálló nappali animációt.
 
 Társítási név- és növényötletek, még nem elfogadott fejlesztések: Bogyós menedék (mézbogyó–citromfű–borágó), Málnás búvóhely (málna–citromfű–körömvirág), Erdei ékszerkert (áfonya–vörösáfonya–csarab), Kapaszkodó lakoma (uborka–kapor–sarkantyúka), Illatos piroskert (paradicsom–bazsalikom–bársonyvirág), Citromillatú udvar (dézsás citrom–bazsalikom–körömvirág). A játéknövényekhez új faj ebből még nem kerül be.
+
+### Kertészeti bővítési tervek — 2026-11-09, csak dokumentáció
+
+**Aktuális hatókör:** egyelőre kizárólag a meglévő öt társítással dolgozunk: Korai veteményes, Virágos retekágyás, Száraz fűszerszegély, Epres méhlegelő, Esti teakert. Az alábbiak elmentett tervek, nem játékba építési utasítások. A jelenlegi napi öntözés és a meglévő működés ettől nem változik.
+
+A későbbi feloldások legutóbb kiválasztott sorrendje (a korábbi ötletlisták helyett):
+
+| Tervezett szint | Társítás | Növények |
+| --- | --- | --- |
+| 3 | Bogyós menedék | Mézbogyó · metélőhagyma · körömvirág |
+| 4 | Málnás zug | Málna · menta · körömvirág |
+| 5 | Napfürdő sziklakert | Levendula · kövirózsa · varjúháj |
+| 6 | Paprikás konyhakert | Paprika · hagyma · bazsalikom |
+| 7 | Illatos piroskert | Paradicsom · bazsalikom · bársonyvirág |
+| 8 | Kacskaringó lugas | Uborka · kapor · sarkantyúka |
+
+A felhasználó a lista után kiegészítést jelzett; a bevezetés és a hiányzó részletek további egyeztetést igényelnek. Az ajánlott arányok még nincsenek meghatározva; a szabad kilenchelyes összeállítás elve megmarad. Az 50 munkapont/szint jelenlegi döntés.
+
+Elmentett mechanikai irányok és még egyeztetendő számok:
+
+- **Eltérő vízigény:** az általános napi öntözés mellett a Napfürdő sziklakert ritkább vizet és homokos-kavicsos talajt kapna. Javasolt próbaérték: öntözés után két teljes napig megfelelő, a harmadik napon öntözendő. Ez még nem elfogadott játékmeneti szám. Az eső és az automata öntözés számítana; az automata az ágyás szükségletéhez igazodna. A vízhiány a fejlődést/újratermést állítaná meg; növénypusztulás nincs eldöntve.
+- **Újraszedés:** egyszeri felszedés (például retek, répa, hagyma), megmaradó termő növény (eper, bogyósok, paprika, paradicsom, uborka), illetve visszanövő fűszerhajtás különülne el. Javasolt, még egyeztetendő újraszedési idő két megfelelő vízellátású növekedési nap. A kövirózsa/varjúháj sarj- vagy dugványgyűjtése külön kidolgozandó. A tartós növény eltávolítása tudatos, külön művelet legyen.
+- **Támrendszer:** Sam külön munkával karózná a paradicsomot, lugast/rácsot készítene az uborkának, huzalos támaszt a málnának. Ültetés előtte is lehetséges lenne; a megfelelő fejlődési szakasznál a támasz hiánya megállítaná a további növekedést. Fa és kötözőanyag felhasználása, pontos recept még egyeztetendő. A támasz újraszedéskor megmaradna, kompatibilis utánültetéshez megtartható; Bontóvassal visszavehető.
+- **Talaj és takarás:** a bedolgozandó talajkeverék és a felszíni talajtakarás két külön dolog. A Komposztáló mulcsa és készletbeli kezelése megmaradna. Marától speciális talajkeverék és takarókavics lenne rendelhető; az univerzális termék még nyitott kérdés.
+- **Mara zsákos szállítása:** másnapi fuvarral nagy zsákot hozna, a kertben kijelölt szabad lerakóhelyre. Nem közvetlenül a Készletbe kerülne; Sam külön művelettel használná fel a kiválasztott ágyáson, elterítési/bedolgozási animációval. A lerakóhely megközelíthető, ösvényen kívüli és takarásmentes legyen. Javaslat: egy zsák egy ágyásra, egyszeri talajelőkészítés és egyelőre el nem fogyó takarás; mennyiségek, árak és hatások még egyeztetendők.
+
+Az általános gondozás továbbra is egész ágyásra vonatkozna; a szüret és a növénytámasz az egyes növényekhez kapcsolódna. Ezek a tervek nem engedélyeznek új társítást, magot, rendelést vagy mentésmigrációt a jelenlegi játékban.
