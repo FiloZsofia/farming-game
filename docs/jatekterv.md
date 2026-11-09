@@ -1487,3 +1487,16 @@ A tér északnyugati padja jobbra, a tér peremén maradva kerül; a bevezető g
 Minden meglévő és jövőbeli világító tárgy részei összetartoznak: test, ablak, fényközép, udvar és talajfény közös helyadatból készüljenek. A HTML-fények a végleges kameramátrixot kirajzolás után követik; mozgás, nagyítás és takarás mellett sem válhatnak el a forrástól. A falusi ablakok és lámpák közös nyilvántartásból készülnek.
 
 A bejárati virágcserép a bal oldali füves részre kerül, teljes virágzattal az ösvényen kívül. Mara keleti, jobbra vezető autóútját mindkét oldalán további fák szegélyezik, a meglévő épületek, útkeresztezések és járműmozgás szabad helyét megőrizve.
+
+
+### Mara visszatérése a Faiskolához és az üvegház külseje
+
+A fuvar eddigi rakodása és egyszeri kifizetése megmarad. Mara az áruval jobbra elhagyja a pályát, majd rögtön üres platóval visszatér. A Faiskola és az üvegház jobb oldalán, az autóútról nyíló füves-kavicsos beállóban dél felé fordulva parkol. A visszaúton ugyanaz a lassítás, megállás és végigsöpört járműterület-ellenőrzés védi Samet, mint a fuvaron.
+
+Mara kiszáll, körbesétálja az autót, és a beálló jobb szélén lévő díszbokrokat metszőollóval gondozza. A játékos közelében és beszélgetéskor szünetelteti a metszést. A közös boltos beszélgetés és egyelőre inaktív Vásárlás gomb megmarad. A parkoló autóban nincs második Mara.
+
+A lezárt aznapi fuvar meglévő mentési adataiból a parkoló autó és Mara helyreáll újratöltéskor, üres platóval, újabb kifizetés nélkül. Új mentésmező vagy verzióváltás nem szükséges. A következő napon az eddigi napi fuvarrend folytatódik. Ez felülírja a korábbi, fuvar utáni egész napos távollétet; késő délutáni visszatérés helyett azonnali visszatérés az elfogadott döntés.
+
+A beálló nyolc meglévő fát érint. Ezek közeli, szabad helyre kerülnek, az eredeti fajtával és mérettel. A fák, ütközések, üvegház és díszbokrok közös helyadatait a `nursery-grounds.ts` és a falusi elhelyezés kezeli.
+
+Az üvegház festett zsályazöld keretet, külön üvegtáblás nyeregtetőt, csillanásokat, téglalábazatot, ajtót és küszöböt kap. Az üvegen keresztül palántapolc és terrakottacserepek látszanak. Saját procedurális rajz, külső grafikai függőség nélkül. A falusi tér két padja egységes, kontrasztosabb barna faanyagot, sötét éleket és lábakat kap; lomb nem takarhatja az ülőlapot és háttámlát.

@@ -3,10 +3,11 @@ import Phaser from 'phaser';
 export class MaraArt{
  readonly root:Phaser.GameObjects.Container;private g:Phaser.GameObjects.Graphics;
  constructor(scene:Phaser.Scene){this.root=scene.add.container(0,0);this.g=scene.add.graphics();this.root.add(this.g);this.paint(0,false,false);}
- paint(time:number,walking:boolean,carrying:boolean){const g=this.g;g.clear();const stride=walking?Math.sin(time*11)*3:0,r=(x:number,y:number,w:number,h:number,c:number)=>g.fillStyle(c).fillRoundedRect(x,y,w,h,Math.min(2,w/3));
+ paint(time:number,walking:boolean,carrying:boolean,pruning=false){const g=this.g;g.clear();const stride=walking?Math.sin(time*11)*3:0,r=(x:number,y:number,w:number,h:number,c:number)=>g.fillStyle(c).fillRoundedRect(x,y,w,h,Math.min(2,w/3));
   g.fillStyle(0x253c30,.25).fillEllipse(1,0,23,7);for(const [x,step]of [[-6,stride],[1,-stride]]){r(x,-17+step,5,15,0x54625c);r(x-1,-4+step,8,5,0x644a34);r(x-1,-1+step,8,2,0x383c32);}
   r(-8,-34,16,19,0xd4c6a0);g.fillStyle(0x3f655f).fillPoints([{x:-9,y:-34},{x:-2,y:-36},{x:-1,y:-17},{x:-8,y:-16},{x:-10,y:-28}],true).fillPoints([{x:2,y:-36},{x:9,y:-33},{x:10,y:-17},{x:1,y:-17}],true);r(-7,-24,5,4,0x6e8980);r(3,-24,5,4,0x6e8980);g.lineStyle(.7,0x9bad8e).lineBetween(-1,-33,-1,-18);r(-7,-17,14,2,0x6e5841);
-  for(const x of [-11,8]){r(x,-31,4,8,0xdacda9);r(x-.5,-25,5,2,0xb8ab88);r(x,-23,4,carrying?5:8,0xd9aa83);r(carrying?x*.6:x,-18,5,6,0x9f8458);g.lineStyle(.6,0xd0b985).lineBetween(x+1,-16,x+3,-16);}
+  for(const x of pruning?[]:[-11,8]){r(x,-31,4,8,0xdacda9);r(x-.5,-25,5,2,0xb8ab88);r(x,-23,4,carrying?5:8,0xd9aa83);r(carrying?x*.6:x,-18,5,6,0x9f8458);g.lineStyle(.6,0xd0b985).lineBetween(x+1,-16,x+3,-16);}
+  if(pruning){const snip=Math.max(0,Math.sin(time*4)),lift=Math.sin(time*1.4)*2;g.lineStyle(4,0xdacda9).lineBetween(-9,-30,-15,-25+lift).lineBetween(8,-30,-9,-22+lift);g.lineStyle(3,0x9f8458).lineBetween(-15,-25+lift,-21,-24+lift).lineBetween(-9,-22+lift,-17,-22+lift);g.lineStyle(1.8,0x394b40).strokeCircle(-21,-25+lift,2).strokeCircle(-18,-22+lift,2);g.lineStyle(1.2,0xc9d0b7).lineBetween(-20,-24+lift,-28,-28+lift-snip*3).lineBetween(-20,-24+lift,-29,-25+lift+snip*2);g.fillStyle(0xe0ca8f).fillCircle(-20,-24+lift,1);}
   r(-2.5,-39,5,7,0xd3a17d);
   g.fillStyle(0x513c2d).fillEllipse(0,-43,15,19);
   g.fillStyle(0xe3b18a).fillPoints([{x:-5.2,y:-47},{x:3.8,y:-47.5},{x:6,y:-44},{x:5.5,y:-39},{x:3.4,y:-35.2},{x:.8,y:-33.6},{x:-2,y:-34.2},{x:-4.8,y:-38},{x:-5.8,y:-42}],true);

@@ -1,3 +1,4 @@
+import {drawGreenhouse,drawMaraBay} from './nursery-art';
 import {marketRoads,marketRoadContains} from './market-trial-route';
 import {marketStand} from './market-site';
 import {boundsOffPaths} from './path-clearance';
@@ -30,6 +31,7 @@ export function drawVillage(scene:Phaser.Scene){
  // Northern woodland backdrop continues beyond the farm's left edge, instead of blank green.
  for(let i=0;i<4700;i++){const x=FOREST_LEFT+random()*(-400-FOREST_LEFT),y=farmBounds.top+random()*(600-farmBounds.top);rect(x,y,1+random()*2,1,[0x4f783f,0x9bb669,0xb1bf72][i%3],.6);}
  paintForest(g,random,()=>drawPathNetwork(g,[...villagePaths,...marketRoads]),canopy,woodlandTreeClear);
+ drawMaraBay(g);
  oval(479,1089,374,240,0x83915d);oval(476,1080,360,230,0xc3b697);
  for(let y=977;y<1183;y+=10)for(let x=298+(y%20?0:8);x<655;x+=17){if(((x-476)/176)**2+((y-1080)/109)**2>1)continue;rect(x,y,14,7,(x+y)%3?0xcabb9a:0xaeaa8e);line(x+2,y+1,x+12,y+1,0xdfcdae);}
  // A shallow stone fountain and a few pots give the square a quiet centre.
@@ -38,11 +40,11 @@ export function drawVillage(scene:Phaser.Scene){
  const bench=(pose:BenchPose)=>{
   const p=(x:number,y:number,z=0)=>{const q=benchPoint(pose,x,y);return {x:q.x,y:pose.y+(q.y-pose.y)*.42-z};};
   const board=(x:number,y:number,w:number,h:number,z:number,c:number)=>{const a=p(x,y,z),b=p(x+w,y,z),d=p(x+w,y+h,z),e=p(x,y+h,z);poly([a.x,a.y,b.x,b.y,d.x,d.y,e.x,e.y],c);};
-  const post=(x:number,y:number,top:number)=>{const a=p(x,y,0),b=p(x,y,top);line(a.x,a.y,b.x,b.y,0x4b5946,3);line(a.x-1,a.y,b.x-1,b.y,0x89927a);};
+  const post=(x:number,y:number,top:number)=>{const a=p(x,y,0),b=p(x,y,top);line(a.x,a.y,b.x,b.y,0x3d3d30,4);line(a.x-1,a.y,b.x-1,b.y,0x7e7659);};
   oval(pose.x+4,pose.y+7,61,23,0x355c3a,.23);
   for(const x of [-24,24]){post(x,-8,32);post(x,9,12);}
-  for(const z of [18,25]){const a=p(-28,-9,z),b=p(28,-9,z);line(a.x,a.y,b.x,b.y,0x72583d,7);line(a.x,a.y-1,b.x,b.y-1,0xc3a06b,4);}
-  for(const y of [-5,1,7])board(-29,y,58,5,12,0xb79762);
+  for(const z of [18,25]){const a=p(-28,-9,z),b=p(28,-9,z);line(a.x,a.y,b.x,b.y,0x483022,8);line(a.x,a.y-1,b.x,b.y-1,0x99653c,5);}
+  for(const y of [-5,1,7]){board(-29,y,58,5,12,0x9b693e);const a=p(-29,y+5,12),b=p(29,y+5,12);line(a.x,a.y,b.x,b.y,0x543b28,2);}
   for(const x of [-26,26]){const a=p(x,-9,19),b=p(x,11,19);line(a.x,a.y,b.x,b.y,0x53614a,3);}
  };
  for(const b of layout.benches)bench(benchPose(b.angle));flowers(villageEntrancePot.x,villageEntrancePot.y);flowers(666,1165);flowers(627,1128);
@@ -66,7 +68,7 @@ export function drawVillage(scene:Phaser.Scene){
  rect(503,952,55,20,0xada17c);rect(630,952,55,20,0xada17c);
  for(const {x,y}of layout.nurserySaplings){rect(x-6,y-7,12,12,0x92704a);line(x,y-7,x,y-36,0x765639,2);oval(x-5,y-30,18,22,0x4d7843);oval(x+4,y-39,20,24,0x66924f);oval(x+1,y-44,13,15,0x8aa75b);}
 
- rect(684,839,64,68,0x586d59);for(let i=0;i<3;i++){rect(688+i*20,845,16,55,0xa6bdb0,.8);line(689+i*20,846,701+i*20,888,0xd7dfc7);}poly([680,839,712,815,751,839],0x8da998);line(682,839,712,817,0xe0d6b2,3);line(712,817,750,839,0xe0d6b2,3);
+ drawGreenhouse(g);
  // Broad long-side elevation: all walls and joinery stand upright.
  const f=layout.fishShop;
  oval(785,1098,258,32,0x35583b,.24);rect(f.x,f.y,f.w,f.h,0xd7c9a2);rect(f.x,f.y+115,f.w,13,0x9c967b);

@@ -2,6 +2,9 @@
 
 ## Javítások a 0.3.0 után — verzióemelés nélkül
 
+- Mara az áru elszállítása után üresen visszatér, a Faiskola melletti új füves-kavicsos beállóban parkol, majd díszbokrokat metsz. Megszólítható; újratöltéskor a parkolás újabb kifizetés nélkül helyreáll. Nyolc érintett fa azonos fajtával és mérettel áthelyezve.
+- Részletesebb üvegház a Faiskola mellett: üvegtáblás tető, festett keret, téglalábazat és látható palánták. A falusi padok kontrasztosabb, egységes faszínt kapnak, szabad kilátással.
+
 - A tér bejáratát elzáró pad jobbra, a belógó virágcserép balra, az ösvényen kívülre került. A Falu tábla enyhén jobbra dől, a bokrok melletti erdősáv és Mara keleti autóútjának mindkét oldala sűrűbb.
 - A falusi lámpák és ablakfények közös helyadatokat használnak a tárgyukkal. A falusi, ház-, műhely- és belső lámpafények a végleges kameramátrixot követik, így séta közben nem csúsznak el.
 

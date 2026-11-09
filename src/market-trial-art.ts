@@ -73,7 +73,7 @@ type Face={vertices:Vertex[];color:number;edge?:number;alpha?:number};
 export class MarketTruckArt{
  readonly root:Phaser.GameObjects.Container;private g:Phaser.GameObjects.Graphics;private front:Phaser.GameObjects.Graphics;private interior:Phaser.GameObjects.Graphics;private windowMask:Phaser.GameObjects.Graphics;private doorArt:Phaser.GameObjects.Graphics;private sway=0;private driver:Phaser.GameObjects.Graphics;private glass:Phaser.GameObjects.Graphics;private cargo:Phaser.GameObjects.Container;private crates:readonly {product:string;count:number}[]=[];
  constructor(private scene:Phaser.Scene){this.root=scene.add.container(-700,695).setDepth(70);this.g=scene.add.graphics();this.cargo=scene.add.container(0,0);this.front=scene.add.graphics();this.interior=scene.add.graphics();this.doorArt=scene.add.graphics();this.windowMask=scene.add.graphics().setVisible(false);this.driver=scene.add.graphics();this.glass=scene.add.graphics();this.root.add([this.g,this.cargo,this.front,this.interior,this.driver,this.doorArt,this.glass]);const mask=this.windowMask.createGeometryMask();this.interior.setMask(mask);this.driver.setMask(mask);this.root.once('destroy',()=>{this.windowMask.destroy();mask.destroy();});this.paint(false,0);}
- paint(door:boolean,wheel:number,heading=0,moving=false,time=0){
+ paint(door:boolean,wheel:number,heading=0,moving=false,time=0,occupied=!door){
   const g=this.g,c=Math.cos(heading),s=Math.sin(heading),faces:Face[]=[],frontFaces:Face[]=[],driverFaces:Face[]=[],glassFaces:Face[]=[],doorFaces:Face[]=[];let cab=false,doorLayer=false;
   const project=(v:Vertex)=>({x:v.x*c-v.y*s,y:(v.x*s+v.y*c)*.48-v.z});
   const face=(vertices:Vertex[],color:number,edge?:number,alpha=1)=>(doorLayer?doorFaces:cab?frontFaces:faces).push({vertices,color,edge,alpha});
@@ -119,7 +119,7 @@ export class MarketTruckArt{
    box(69,76,y*1.2-2,y*1.2+2,65,71,0x43594d,0x344e43,0x384f43);
   }
   // A seated Mara is drawn behind translucent panes, in the visible window plane.
-  if(!door){
+  if(!door&&occupied){
    const frontView=Math.abs(s)>.55;
    const driverPoint=(u:number,z:number):Vertex=>frontView?{x:82-(z-59)*18/32,y:14+u,z}:{x:46+u,y:side,z};
    const driverShape=(points:number[][],color:number)=>driverFaces.push({vertices:points.map(([u,z])=>driverPoint(u,z)),color});

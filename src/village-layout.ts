@@ -1,3 +1,4 @@
+import {nurseryTreeClear,nurserySolid} from './nursery-grounds';
 import {boundsOffPaths} from './path-clearance';
 import {quadraticPath} from './path-curves';
 import {marketRoads,marketRoadContains,marketTreeManeuverClear} from './market-trial-route';
@@ -38,6 +39,8 @@ export function forageBushOffPaths(b:{x:number;y:number}){
 export function woodlandTreeCoversBush(x:number,y:number,scale=1){return villageLayout.bushes.some(b=>{const box=forageBushBounds(b);return x+42*scale>box.left-5&&x-42*scale<box.right+5&&y+7*scale>box.top-5&&y-105*scale<box.bottom+5;});}
 // Match the crown silhouette, leaving room under/along its tapered edges.
 export function woodlandTreeClear(x:number,y:number,scale=1,kind=0){
+ if(!nurseryTreeClear(x,y,scale))return false;
+ if(villageLayout.benches.some(b=>{const p=benchPose(b.angle);return x+42*scale>p.x-40&&x-42*scale<p.x+40&&y+7*scale>p.y-43&&y-105*scale<p.y+12;}))return false;
  if([villageLayout.craftShop,villageLayout.nursery,villageLayout.fishShop].some(building=>x+42*scale>building.x-12&&x-42*scale<building.x+building.w+12&&y+12*scale>building.y-40&&y-110*scale<building.y+building.h+12))return false;
  const pot=villageEntrancePot;if(x+42*scale>pot.x-16&&x-42*scale<pot.x+17&&y+7*scale>pot.y-28&&y-105*scale<pot.y+14)return false;
  if(!natureTreeClear(x,y,scale)||woodlandTreeCoversBush(x,y,scale)||!marketTreeManeuverClear(x,y,scale))return false;
@@ -102,9 +105,17 @@ for(let row=0;row<9;row++)for(let col=0;col<19;col++){
  if(!woodlandTreeClear(t.x,t.y,t.scale,t.kind)||[...villageTrees,...forestTrees].some(p=>Math.hypot(p.x-t.x,p.y-t.y)<29)||forestPlants.some(p=>Math.hypot(p.x-t.x,p.y-t.y)<42)||natureSites.some(p=>Math.hypot(p.x-t.x,p.y-t.y)<38))continue;
  forestTrees.push(t);forestEdgeTrees.push(t);
 }
+// Preserve the eight established trees displaced by the nursery bay, with their species and size.
+export const nurseryTreeOrigins:WoodlandTree[]=[{x:770,y:900,kind:0,scale:.8},{x:813,y:904,kind:1,scale:.88},{x:856,y:896,kind:2,scale:.96},{x:899,y:900,kind:0,scale:.8},{x:942,y:904,kind:1,scale:.88},{x:985,y:896,kind:2,scale:.96},{x:956,y:939,kind:2,scale:.96},{x:999,y:931,kind:0,scale:.8}];
+export const relocatedNurseryTrees:{from:WoodlandTree;to:WoodlandTree}[]=[];
+for(const origin of nurseryTreeOrigins){
+ const offsets=Array.from({length:32},(_,i)=>{const d=(i+1)*8;return [[d,0],[0,d],[-d,0],[0,-d],[d,d],[-d,d],[d,-d],[-d,-d]];}).flat();
+ const point=offsets.map(([dx,dy])=>({...origin,x:origin.x+dx,y:origin.y+dy})).find(t=>t.x>=300&&t.x<=1160&&t.y>=610&&t.y<=1300&&woodlandTreeClear(t.x,t.y,t.scale,t.kind)&&[...villageTrees,...forestTrees].every(p=>Math.hypot(p.x-t.x,p.y-t.y)>=32));
+ if(!point)throw Error('A Faiskola beállója mellől áthelyezett fa nem maradhat ki.');forestTrees.push(point);marketEasternTrees.push(point);relocatedNurseryTrees.push({from:origin,to:point});
+}
 const buildings:Box[]=[villageLayout.nursery,villageLayout.fishShop,villageLayout.craftShop];
 export function villageBlocked(x:number,y:number){
- if(noticeBoardBlocked(x,y))return true;
+ if(nurserySolid(x,y)||noticeBoardBlocked(x,y))return true;
  if([...villageTrees,...forestTrees].some(t=>Math.hypot((x-t.x)/12,(y-t.y)/9)<1))return true;
  if(villageLamps.some(p=>Math.abs(x-p.x)<8&&Math.abs(y-p.y)<5))return true;
  if(x>=-300&&x<=150&&y>=600&&y<=708)return false;
@@ -154,7 +165,7 @@ export function benchContains(b:BenchPose,x:number,y:number){const dx=x-b.x,dy=y
 // Move only positions affected by those changes, preserving every possession.
 export function relocateVillagePlayer(player:{x:number;y:number}){
  const {x,y}=player,b=villageLayout.fishShop;
- const changed=villageLamps.some(p=>Math.abs(x-p.x)<8&&Math.abs(y-p.y)<5)||noticeBoardBlocked(x,y)||buildings.some(b=>x+7>b.x&&x-7<b.x+b.w&&y+3>b.y&&y-4<b.y+b.h)||[...villageTrees,...forestTrees].some(t=>Math.hypot((x-t.x)/12,(y-t.y)/9)<1)||(x+7>b.x&&x-7<b.x+b.w&&y+3>b.y&&y-4<b.y+b.h)||villageLayout.benches.some(p=>benchContains(benchPose(p.angle),x,y));
+ const changed=nurserySolid(x,y)||villageLamps.some(p=>Math.abs(x-p.x)<8&&Math.abs(y-p.y)<5)||noticeBoardBlocked(x,y)||buildings.some(b=>x+7>b.x&&x-7<b.x+b.w&&y+3>b.y&&y-4<b.y+b.h)||[...villageTrees,...forestTrees].some(t=>Math.hypot((x-t.x)/12,(y-t.y)/9)<1)||(x+7>b.x&&x-7<b.x+b.w&&y+3>b.y&&y-4<b.y+b.h)||villageLayout.benches.some(p=>benchContains(benchPose(p.angle),x,y));
  if(!changed||!worldBlocked(x,y))return player;
  for(let distance=8;distance<=160;distance+=8)for(let angle=0;angle<Math.PI*2;angle+=Math.PI/8){const point={x:x+Math.cos(angle)*distance,y:y+Math.sin(angle)*distance};if(!worldBlocked(point.x,point.y))return point;}
  return {x:560,y:1100};
