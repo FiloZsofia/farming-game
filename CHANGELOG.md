@@ -2,6 +2,11 @@
 
 ## Javítások a 0.3.0 után — verzióemelés nélkül
 
+- Minden ágyás naponta öntözést igényel a növekedéshez; az eső és az öntözőrendszer ezt elvégzi. A mulcs nedvességőrzése nem helyettesíti a napi öntözést. A faliméh-küldetés kihagyott öntözés után nem lép tovább.
+- Az ágyáskijelölés bármely alsó eszköz kiválasztásával megszakítható.
+- Az út menti gyógynövények és falusi lámpák az ösvényen kívülre kerültek. Sűrűbb erdősáv és a kapu vonalában délre folytatódó gyalogösvény.
+- Mara az árut tartalmazó ládasornál rakodik; az autó mögött a jármű takarja őt és a csomagot. A füves rakodóhely gyalog bejárható.
+
 - Mara autója az átadó melletti füves részre húzódik le, majd visszatér az útra és jobbra távozik. Megszűnt a fordulóöböl; az autóút mindkét pályaszélig folyamatos. Az útban álló meglévő fák közeli helyeken megmaradtak. Sam előtt a kocsi lassít és megáll, a járművön gyalog sem lehet áthaladni.
 - Leo kezdő ablakának bezárása után pulzáló arany kör mutatja az első ágyás kijelölésének + gombját.
 - Az Esti napló valamennyi bejegyzése félkövér fejlécet és külön normál törzsszöveget kap.

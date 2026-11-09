@@ -3,7 +3,7 @@ export const gardenHelpTopics={
  marker:{title:'Ágyásjelölő',text:'A kezedben lévő táblát az ágyás valamelyik szabad oldala mellé helyezheted. Bontóvassal később átteheted ugyanannak az ágyásnak másik oldalára.'},
  prepare:{title:'Az első lépések',text:'Készítsd elő az ágyás földjét, majd válassz növénytársítást. E-vel vagy közeli kattintással később is megnyithatod az ágyáskezelőt.'},
  sow:{title:'Társítás és vetés',text:'A kilenc helyet szabadon oszthatod fel a társítás növényei között. A nálad lévő magokat használod; ha továbbiakra van szükséged, a Magkatalógusból rendelhetsz, és másnap a postaládából veheted át őket.'},
- care:{title:'Gondozás és megfigyelés',text:'Az Öntözés eszközzel az ágyásra kattintva az egész ágyást locsolod. E-vel vagy közeli kattintással megfigyelheted a növények állapotát.'},
+ care:{title:'Gondozás és megfigyelés',text:'A növekedéshez az ágyásnak minden nap öntözésre van szüksége. Az Öntözés eszközzel az egész ágyást locsolod; esőben vagy öntözőrendszerrel ez automatikus. E-vel vagy közeli kattintással megfigyelheted a növények állapotát.'},
  harvest:{title:'Termés vagy vetőmag',text:'A szedhető növényre a Gyűjtés eszközzel kattints. Ahol elérhető, terményszedés helyett magot is érlelni hagyhatsz; az elkészült magot szintén Gyűjtéssel szedheted le.'},
  replant:{title:'Új növény a felszabadult helyre',text:'A nyitott ágyáskezelő mellett válassz vetőmagot az alsó sávban, majd kattints a felszabadult helyre. A társítás bármelyik növényét választhatod, ha van hozzá magod.'},
  irrigation:{title:'Öntözőrendszer',text:'Minden reggel automatikusan megöntözi a hozzá kapcsolt teljes ágyást, az utánvetett növényeket is. A reggeli locsolást vízpermet jelzi.'},

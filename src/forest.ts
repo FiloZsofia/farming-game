@@ -3,7 +3,7 @@ import {validMicroscopy,type Microscopy} from './microscopy';
 export const FOREST_LEFT=-1120;
 export type Herb='thyme'|'plantain'|'nettle';
 export const herbNames:Record<Herb,string>={thyme:'Vadkakukkfű',plantain:'Lándzsás útifű',nettle:'Csalán'};
-export const forestPlants:{id:string;kind:Herb;x:number;y:number}[]=[{id:'thyme-stone',kind:'thyme',x:-315,y:810},{id:'thyme-bank',kind:'thyme',x:-475,y:870},{id:'plantain-path',kind:'plantain',x:-200,y:1000},{id:'plantain-rest',kind:'plantain',x:-470,y:1080},{id:'nettle-brook',kind:'nettle',x:-340,y:1170},{id:'nettle-log',kind:'nettle',x:-550,y:1140}];
+export const forestPlants:{id:string;kind:Herb;x:number;y:number}[]=[{id:'thyme-stone',kind:'thyme',x:-315,y:810},{id:'thyme-bank',kind:'thyme',x:-475,y:870},{id:'plantain-path',kind:'plantain',x:-200,y:1060},{id:'plantain-rest',kind:'plantain',x:-470,y:1080},{id:'nettle-brook',kind:'nettle',x:-340,y:1170},{id:'nettle-log',kind:'nettle',x:-550,y:1140}];
 export const forestNest={x:-946,y:974};
 export const forestBench={x:-461,y:970};
 export const walkingStick={x:-430,y:996};

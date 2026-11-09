@@ -1464,3 +1464,14 @@ Leo kezdő ablakának bezárása után a + gombot a Naplóéhoz hasonló arany p
 Az Esti napló minden bejegyzése azonos formát kap: félkövér fejléc (típus, dátum, tárgy), új sorban normál törzsszöveg. Az első faliméh-megfigyelés is ezt követi, a meglévő szöveg tartalma megmarad.
 
 Minden közös tárgyátadási animáció indulásakor halk, két hangból álló csilingelés szól. Ugyanazt a hangbeállítást használja, mint a Menühangok: kikapcsolva vagy háttérbe tett oldalon nincs hang. A szintetizált saját hanghoz nem kell külső hangfájl; hangengedély/hiba esetén az átadás változatlanul működik.
+
+
+### Napi ágyásgondozás és elhelyezési javítások — 2026-11-09
+
+Minden ágyás minden nap öntözést igényel a növekedéshez. Eső és telepített öntözőrendszer automatikusan teljesíti ezt. A mulcs megtartja a lassabb párolgást és a repedezés elleni látványbeli védelmet, de nem helyettesíti a napi öntözést. A mai öntözés külön jelzett; ültetés előtti öntözés is számít, a másnapi számláló nem dupláz. A korábbi növekedés és mentések megmaradnak.
+
+Az el nem helyezett ágyás kijelölése bármely alsó eszköz kiválasztásával megszakítható.
+
+Semmilyen tárgy, lámpa, növény vagy dekoráció nem kerülhet az utak festett felületére. A teljes látható alakot közösen ellenőrizzük. A gyógynövények áthelyezése megőrzi az azonosítókat és gyűjtési előzményeket. A déli gyalogösvény a kapu T-csatlakozásának vonalában folytatódik; az erdei ág külön csatlakozik hozzá. Az út menti erdősáv sűrűbb, a szedhető bokrok szabadon maradnak. Ez felülírja a korábbi eltolt déli leágazás tervét.
+
+Mara az adott áru tényleges ládasoránál áll meg. Az autó mögött őt és a cipelt árut is a jármű takarja. A füves rakodóterület a játékos számára bejárható, a jármű és a fák ütközése megmarad.

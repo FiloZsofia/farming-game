@@ -5,7 +5,8 @@ import {itemIcon} from './item-icons';
 import {marketProducts} from './market-trial';
 export {marketStandOffset,marketStand,marketFenceGap} from './market-site';
 import {marketStandOffset} from './market-site';
-export const marketCratePoint=(i:number)=>({x:-125+(i%3)*83,y:486+Math.floor(i/3)*36});
+export {marketCratePoint} from './market-site';
+import {marketCratePoint} from './market-site';
 export async function loadMarketIcons(scene:Phaser.Scene,production=false){await Promise.all((production?farmProducts:marketProducts).map(async kind=>{const key=`market-product-${kind}`;if(scene.textures.exists(key))return;const svg=itemIcon(production?farmProductIcon(kind as FarmProduct):kind as Parameters<typeof itemIcon>[0]);svg.setAttribute('width','72');svg.setAttribute('height','72');const source='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(svg)),img=new Image();await new Promise<void>((resolve,reject)=>{img.onload=()=>resolve();img.onerror=()=>reject(new Error('A terményikon nem tölthető be.'));img.src=source;});scene.textures.addImage(key,img);}));}
 export class MarketStandArt{
  readonly root:Phaser.GameObjects.Container;private contents:Phaser.GameObjects.Container;

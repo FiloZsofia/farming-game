@@ -29,6 +29,6 @@ it('shows today’s watering in new beds in either action order and preserves th
   state=g.writePersistent();expect(decodeSnapshot(state)).not.toBeNull();
   const goals=()=>questEntries(state.travel.research,createGarden(),state.clock.day,0,undefined,state.travel.homestead!.garden.beds);
   expect(goals().find(q=>q.id==='grow-flowers')).toMatchObject({done:false,detail:'1 / 3 megöntözött nap'});expect(goals().some(q=>q.id==='observe-bee')).toBe(false);expect(state.travel.research.flowers.every(f=>f.growth===0)).toBe(true);
-  state.clock.day++;const morning=new LivingGarden(state,true);morning.advanceMorning('sunny');state=morning.writePersistent();expect(goals().find(q=>q.id==='grow-flowers')!.detail).toBe('1 / 3 megöntözött nap');
+  state.clock.day++;const morning=new LivingGarden(state,true);morning.advanceMorning('sunny');state=morning.writePersistent();expect(goals().find(q=>q.id==='grow-flowers')!.detail).toBe('1 / 3 megöntözött nap');state.clock.day++;const unwatered=new LivingGarden(state,true);unwatered.advanceMorning('sunny');state=unwatered.writePersistent();expect(goals().find(q=>q.id==='grow-flowers')!.detail).toBe('1 / 3 megöntözött nap');expect(decodeSnapshot(state)).not.toBeNull();
  }
 });

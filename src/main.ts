@@ -1770,7 +1770,7 @@ class Farm extends Phaser.Scene {
  private currentWeather(){if(this.livingBedStudy)return this.livingBedStudy.state.weather;const seed=this.travel.weatherSeed??0,day=this.clock.day;if(this.weatherCache?.seed!==seed||this.weatherCache.day!==day)this.weatherCache={seed,day,value:weatherOnDay(seed,day)};return this.weatherCache.value;}
  private aimAhead(){this.target=targetTile(this.actor.x+this.direction.x*22,this.actor.y+this.direction.y*22,this.garden.plots);}
  update(time:number,delta:number){
-  if(!this.actor)return;this.gardenController?.update(time,dialogue.open||this.choosingFarm);this.farmMarket?.update(time,delta);this.livingBedStudy?.update(time,dialogue.open||this.choosingFarm);this.ensureNoahChapter();
+  if(!this.actor)return;this.gardenController?.update(time,dialogue.open||this.choosingFarm);this.farmMarket?.update(time,delta);this.actor.setDepth(this.farmMarket?.actorDepth(this.actor)??100);this.livingBedStudy?.update(time,dialogue.open||this.choosingFarm);this.ensureNoahChapter();
   if(this.noahTest?.labActive){this.woodlandMushrooms?.hide();this.lastTick=performance.now();if(dialogue.open||document.hidden||!document.hasFocus()){this.noahTest.pauseLab();return;}this.noahTest.updateLab(Math.min(delta/1000,.05),this.lastTick);this.sinceSave+=delta/1000;if(this.sinceSave>=5){this.sinceSave=0;void this.persist();}return;}
   this.noticeBoard?.setDepth(this.actor.y<villageNotice.y?101:3);
   if(dialogue.open||!inForest(this.actor.x,this.actor.y))document.querySelector<HTMLElement>('#forest-health')!.hidden=true;

@@ -16,7 +16,7 @@ import {worldText} from './world-text';
 import {livingBedArea as defaultArea,livingPlantPoint,type LivingBedArea} from './living-bed-layout';
 import {bedAreaAt,livingBedFits,gardenDecorationFits,nearBedSide,bedMarkerFits} from './living-bed-placement';
 import {paintLivingBed,paintBedVisitors,paintBedMarker} from './living-bed-art';
-import {prepareLivingBed,plantLivingBed,waterLivingBed,mulchLivingBed,flowerLivingPlant,harvestLivingPlant,collectLivingSeeds,replantLivingSpot,refillLivingBed,createLivingBed,bedKinds,bedMixes,bedPlantStage,bedSeedMethod,livingFlowers,emptyBedSeeds,recommendedBedCounts,recommendedComposition,composeLivingBed,type LivingBed,type BedMix,type BedKind} from './living-bed';
+import {prepareLivingBed,plantLivingBed,waterLivingBed,bedWateredToday,mulchLivingBed,flowerLivingPlant,harvestLivingPlant,collectLivingSeeds,replantLivingSpot,refillLivingBed,createLivingBed,bedKinds,bedMixes,bedPlantStage,bedSeedMethod,livingFlowers,emptyBedSeeds,recommendedBedCounts,recommendedComposition,composeLivingBed,type LivingBed,type BedMix,type BedKind} from './living-bed';
 import {LivingGarden,trialSeedPrices,type TrialBed,type GardenPoint} from './living-garden';
 import {placedItemAt,pickPlacedItem,type RuntimePlacedItems,type PlacedItem} from './placed-items';
 import {farmLayout} from './layout';
@@ -65,7 +65,7 @@ export class LivingBedController{
  showInventory(mode:'plans'|'inventory'|'people'|'skills'|'goals'='inventory'){this.open(mode);}
  private canUse(){return (this.modal.isOpen||this.host.production&&document.querySelector<HTMLDialogElement>('#dialogue')!.open)?this.host.uiReady():this.host.ready();}
  private open(mode:PanelMode){if(mode==='catalog'&&(!this.modal.isOpen||this.mode!=='catalog')){this.orderedInCatalog=false;this.catalogMix=null;}if(mode!==this.mode&&mode!=='bed')this.message='';if(mode!=='bed')this.closePanel();else this.modal.close();this.mode=mode;this.isOpen=mode==='bed';this.render();this.panel.hidden=!this.isOpen;this.host.panelChanged();}
- setTool(tool:Tool){if(this.markerBed!==null&&tool!=='marker')return;if(tool in bedKinds&&(!this.isOpen||this.mode!=='bed'||!this.state.mix||!bedMixes[this.state.mix].plants.includes(tool as BedKind)||!this.garden.seeds[tool as BedKind]))return;this.modal.close();this.tool=tool;this.stroke=[];this.drawing=false;this.host.equip(['hoe','water','crowbar','stick','harvest'].includes(tool)?tool as 'hoe'|'water'|'crowbar'|'stick'|'harvest':'hand');this.renderToolbar();this.paintPreview();}
+ setTool(tool:Tool){if(this.placing)this.cancelPlacement();if(this.markerBed!==null&&tool!=='marker')return;if(tool in bedKinds&&(!this.isOpen||this.mode!=='bed'||!this.state.mix||!bedMixes[this.state.mix].plants.includes(tool as BedKind)||!this.garden.seeds[tool as BedKind]))return;this.modal.close();this.tool=tool;this.stroke=[];this.drawing=false;this.host.equip(['hoe','water','crowbar','stick','harvest'].includes(tool)?tool as 'hoe'|'water'|'crowbar'|'stick'|'harvest':'hand');this.renderToolbar();this.paintPreview();}
  advanceDay(weather:'sunny'|'rain'){if(!this.host.uiReady())return;this.garden.nextDay(weather);for(const bed of this.garden.beds)if(bed.irrigation)this.sprayRemaining.set(bed.id,2500);this.host.advanceDay(this.garden.snapshot.clock.day);this.message='';this.paint();if(this.isOpen)this.render();}
 
  private serviceAt(point:GardenPoint,byKeyboard=false){
@@ -247,7 +247,7 @@ export class LivingBedController{
   }
  }
  private renderBed(content:HTMLElement){
-  const s=this.state;this.text(content,`${s.moisture} / 3 nedvesség${s.mulched?' · Mulccsal takarva':''}${this.active.irrigation?' · Öntözőrendszerrel':''}`);
+  const s=this.state;this.text(content,`${s.moisture} / 3 nedvesség${s.mulched?' · Mulccsal takarva':''}${this.active.irrigation?' · Öntözőrendszerrel':''}`);if(s.prepared)this.text(content,bedWateredToday(s)?'Ma megöntözve.':'Ma még nincs megöntözve.');
   if(!s.prepared){this.button(content,'Ágyás kialakítása','prepare',()=>this.apply(prepareLivingBed(this.state),'hoe','prepare'));return;}
   if(!s.mix){this.renderComposition(content);return;}
   if(!s.mulched)this.button(content,`Mulcsozás · ${this.garden.mulch} / 1`,'mulch',()=>this.mulch(),true,!this.garden.mulch);

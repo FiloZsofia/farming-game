@@ -1,3 +1,4 @@
+import {boundsOffPaths} from './path-clearance';
 import {quadraticPath} from './path-curves';
 import {marketRoads,marketRoadContains,marketTreeManeuverClear} from './market-trial-route';
 import {noticeBoardBlocked} from './village-notice';
@@ -16,24 +17,23 @@ export const villageLayout={
  square:{x:475,y:1080,rx:181,ry:115},
  nurserySaplings:[{x:518,y:958},{x:542,y:958},{x:646,y:958},{x:670,y:958}],
  benches:[{id:'west',angle:-2.35},{id:'east',angle:-.55}],
- bushes:[{id:'fern',x:155,y:854},{id:'birch',x:95,y:845},{id:'moss',x:70,y:980},{id:'brook',x:191,y:1090}],
+ bushes:[{id:'fern',x:105,y:895},{id:'birch',x:95,y:845},{id:'moss',x:70,y:980},{id:'brook',x:191,y:1090}],
  trees:[{x:44,y:670,kind:0},{x:103,y:650,kind:1},{x:254,y:685,kind:2},{x:53,y:799,kind:2},{x:169,y:777,kind:0},{x:286,y:769,kind:1},{x:51,y:889,kind:1},{x:278,y:934,kind:0},{x:146,y:1000,kind:2},{x:40,y:1059,kind:0},{x:311,y:1120,kind:1},{x:100,y:1165,kind:2},{x:250,y:1184,kind:0}],
 } as const;
 // Drawing and canopy clearance use the same full routes.
 export const villagePaths=[
  {width:32,points:[farmLayout.paths[0].points[0],[170,740]]},
- {width:17,points:[...quadraticPath([300,889],[210,870],[150,900]),...quadraticPath([150,900],[120,910],[107,930]).slice(1),[211,1040],[356,1080]]},
+ {width:17,points:[[170,930],[107,930]]},
  {width:28,points:[[474,1016],[586,978],[591,940]]},
  {width:25,points:[[606,1097],[660,1100],[708,1100]]},
  {width:23,points:[[493,1320],[493,1364],[660,1364],[660,1341]]},
  {width:20,points:[[107,930],[40,930],[-120,938],[-270,1000],[-450,995],[-570,962],[-660,978],[-780,984],[-940,1010]]},
- {width:32,points:[...quadraticPath([300,740],[255,815],[300,889]),[393,955],[476,1030],[493,1320],[493,WORLD_HEIGHT-6]]},
+ {width:32,points:[[170,740],[170,860],[170,930],...quadraticPath([170,930],[265,945],[350,1000]).slice(1),[476,1060],[493,1320],[493,WORLD_HEIGHT-6]]},
 ];
 // The whole harvestable crown stays off paving, with a clear margin around its leaves.
 export const forageBushBounds=(b:{x:number;y:number})=>({left:b.x-20,right:b.x+20,top:b.y-22,bottom:b.y+8});
 export function forageBushOffPaths(b:{x:number;y:number}){
- const box=forageBushBounds(b);
- return [...villagePaths,...marketRoads].every(path=>path.points.slice(1).every((end,i)=>{const start=path.points[i],steps=Math.max(1,Math.ceil(Math.hypot(end[0]-start[0],end[1]-start[1])/2));for(let j=0;j<=steps;j++){const x=start[0]+(end[0]-start[0])*j/steps,y=start[1]+(end[1]-start[1])*j/steps;if(Math.hypot(x-Math.max(box.left,Math.min(box.right,x)),y-Math.max(box.top,Math.min(box.bottom,y)))<path.width/2+4)return false;}return true;}));
+ return boundsOffPaths(forageBushBounds(b),[...villagePaths,...marketRoads]);
 }
 export function woodlandTreeCoversBush(x:number,y:number,scale=1){return villageLayout.bushes.some(b=>{const box=forageBushBounds(b);return x+42*scale>box.left-5&&x-42*scale<box.right+5&&y+7*scale>box.top-5&&y-105*scale<box.bottom+5;});}
 // Match the crown silhouette, leaving room under/along its tapered edges.
@@ -43,6 +43,8 @@ export function woodlandTreeClear(x:number,y:number,scale=1,kind=0){
  const crowns=kind===2?Array.from({length:4},(_,i)=>({x:0,y:-90+i*19+22,rx:15+i*8,ry:24})):[{x:-18,y:-48,rx:22.5,ry:19.5},{x:12,y:-56,rx:25.5,ry:23.5},{x:-3,y:-76,rx:24.5,ry:19.5},{x:0,y:-38,rx:28,ry:16}];
  return [...villagePaths,...marketRoads].every(path=>path.points.slice(1).every((b,i)=>{const a=path.points[i],steps=Math.max(1,Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/3)),margin=path.width/2+4;for(let j=0;j<=steps;j++){const xx=a[0]+(b[0]-a[0])*j/steps,yy=a[1]+(b[1]-a[1])*j/steps;if(Math.hypot(xx-Math.max(x-5*scale,Math.min(x+6*scale,xx)),yy-Math.max(y-44*scale,Math.min(y+7*scale,yy)))<margin)return false;if(crowns.some(c=>((xx-x-c.x*scale)/(c.rx*scale+margin))**2+((yy-y-c.y*scale)/(c.ry*scale+margin))**2<1))return false;}return true;}));
 }
+export const villageLamps=[{id:'fork',x:460,y:942},{id:'square',x:450,y:1240}] as const;
+export const lampBounds=(p:{x:number;y:number})=>({left:p.x-12,right:p.x+12,top:p.y-59,bottom:p.y+3});
 export type WoodlandTree={x:number;y:number;kind:number;scale?:number};
 // Preserve the actual trees affected by the new eastern road and the grass pull-off.
 export const marketTreeOrigins:WoodlandTree[]=[{x:286,y:769,kind:1},{x:246,y:739,kind:1},{x:302,y:736,kind:2},{x:327,y:776,kind:0},{x:252,y:797,kind:2},{x:280,y:821,kind:1},{x:315,y:813,kind:2},{x:306,y:858,kind:0},{x:341,y:858,kind:1},{x:410,y:750,kind:0,scale:.9},{x:746,y:766,kind:1,scale:.9},{x:-398,y:679,kind:0},{x:-350,y:669,kind:1},{x:-302,y:674,kind:2}];
@@ -82,10 +84,19 @@ for(let row=0;row<2;row++)for(let column=0;column<11;column++){
  if(!woodlandTreeClear(t.x,t.y,t.scale,t.kind)||natureSites.some(p=>Math.hypot(p.x-t.x,p.y-t.y)<38)||forestPlants.some(p=>Math.hypot(p.x-t.x,p.y-t.y)<40)||villageLayout.bushes.some(p=>Math.hypot(p.x-t.x,p.y-t.y)<38)||[...villageTrees,...forestTrees].some(p=>Math.hypot(p.x-t.x,p.y-t.y)<30))continue;
  forestTrees.push(t);marketPocketTrees.push(t);
 }
+// Restore the wooded shoulder in the direction of the forest sign; keep berry crowns free.
+export const forestEdgeTrees:WoodlandTree[]=[];
+for(let row=0;row<5;row++)for(let col=0;col<19;col++){
+ const t={x:-390+col*28+(row%2)*11,y:850+row*16,kind:(row+col)%3,scale:.65+((row+col)%4)*.1};
+ if(!woodlandTreeClear(t.x,t.y,t.scale,t.kind)||[...villageTrees,...forestTrees].some(p=>Math.hypot(p.x-t.x,p.y-t.y)<29)||forestPlants.some(p=>Math.hypot(p.x-t.x,p.y-t.y)<42)||natureSites.some(p=>Math.hypot(p.x-t.x,p.y-t.y)<38))continue;
+ forestTrees.push(t);forestEdgeTrees.push(t);
+}
 const buildings:Box[]=[villageLayout.nursery,villageLayout.fishShop,villageLayout.craftShop];
 export function villageBlocked(x:number,y:number){
  if(noticeBoardBlocked(x,y))return true;
- if(forestTrees.some(t=>Math.hypot((x-t.x)/12,(y-t.y)/9)<1))return true;
+ if([...villageTrees,...forestTrees].some(t=>Math.hypot((x-t.x)/12,(y-t.y)/9)<1))return true;
+ if(villageLamps.some(p=>Math.abs(x-p.x)<8&&Math.abs(y-p.y)<5))return true;
+ if(x>=-300&&x<=150&&y>=600&&y<=708)return false;
  if(x>=FOREST_LEFT+24&&x<22&&marketRoadContains(x,y,-8))return false;
  if(x<22&&y>=695&&y<=1340)return forestBlocked(x,y);
  if(x<22||x>WORLD_WIDTH-22||y<600||y>WORLD_HEIGHT-26)return true;
@@ -132,7 +143,7 @@ export function benchContains(b:BenchPose,x:number,y:number){const dx=x-b.x,dy=y
 // Move only positions affected by those changes, preserving every possession.
 export function relocateVillagePlayer(player:{x:number;y:number}){
  const {x,y}=player,b=villageLayout.fishShop;
- const changed=noticeBoardBlocked(x,y)||buildings.some(b=>x+7>b.x&&x-7<b.x+b.w&&y+3>b.y&&y-4<b.y+b.h)||[...villageTrees,...forestTrees].some(t=>Math.hypot((x-t.x)/12,(y-t.y)/9)<1)||(x+7>b.x&&x-7<b.x+b.w&&y+3>b.y&&y-4<b.y+b.h)||villageLayout.benches.some(p=>benchContains(benchPose(p.angle),x,y));
+ const changed=villageLamps.some(p=>Math.abs(x-p.x)<8&&Math.abs(y-p.y)<5)||noticeBoardBlocked(x,y)||buildings.some(b=>x+7>b.x&&x-7<b.x+b.w&&y+3>b.y&&y-4<b.y+b.h)||[...villageTrees,...forestTrees].some(t=>Math.hypot((x-t.x)/12,(y-t.y)/9)<1)||(x+7>b.x&&x-7<b.x+b.w&&y+3>b.y&&y-4<b.y+b.h)||villageLayout.benches.some(p=>benchContains(benchPose(p.angle),x,y));
  if(!changed||!worldBlocked(x,y))return player;
  for(let distance=8;distance<=160;distance+=8)for(let angle=0;angle<Math.PI*2;angle+=Math.PI/8){const point={x:x+Math.cos(angle)*distance,y:y+Math.sin(angle)*distance};if(!worldBlocked(point.x,point.y))return point;}
  return {x:560,y:1100};

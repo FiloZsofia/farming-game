@@ -8,6 +8,12 @@
 - A mentést érintő módosításoknál adatvesztés és verzióváltás ellen is ellenőrizz.
 - Vizuális változásról készíts ellenőrizhető képet. A felhasználónak a GitHubon tárolt képek működtek.
 
+## Munkamenet és feladatméret
+
+- Kis javításnál tartsd szűken a módosítás körét; kapcsolódó ötlet miatt ne bővítsd önállóan a feladatot. Az ismétlődő hiba közös okát javítsd, ne újabb helyi kivételeket adj hozzá.
+- Az ellenőrzés igazodjon a változáshoz. A kötelező teljes tesztet és buildet a kész módosításokon futtasd; csak új kódváltozás, hiba vagy konkrét nyitott kockázat indokoljon ismétlést. Pusztán dokumentációmódosítás után ne ismételd a játék tesztjeit.
+- Állapotjelzésben különítsd el: elkészült helyben, ellenőrizve, feltöltve, élesítés sikeres. Folyamatban lévő vagy csak helyben kész munkát ne jelents befejezettként. Új felhasználói kérés ne okozza a már elvégzett munka újrakezdését.
+
 - A Készlet tárgykártyáin csak a tárgy vagy növény neve jelenjen meg. Ne adj hozzá árat, leírást, „Eszköz”, „Küldetéstárgy” vagy „1 db” toldalékot. A szükséges mennyiséget külön számozott jelvény jelezheti; a receptek a Tervrajzok fülre tartoznak.
 
 - A történeti célok és Sam gondolatai ne árulják el a megoldás helyét vagy lépéseit. Ne adj hozzá „menj ide”, „beszélj vele”, „itt keresd” útmutatást vagy korábbi felfedezésre alapozott célzott tippet külön felhasználói kérés nélkül. A már elfogadott cél- és gondolatszövegeket őrizd meg; az új mechanikai feltétel nem engedély ezek átírására.
@@ -49,3 +55,5 @@
 - Az Esti napló minden bejegyzése egységes: `<strong>` fejléc, sortörés, normál szövegtörzs. A fejléc fogja össze a bejegyzés típusát, dátumát és tárgyát; új bejegyzés is ugyanazt a közös hozzáadó útvonalat használja.
 - Mara új autóútja balról jobbra vezet a teljes látható pályán át. Az átadónál a füves rakodóhelyre húzódik le, majd visszasorol, nem fordul meg és nincs fordulóöböl. Sam előtt lelassít és megáll, a játékos felszabaduló útján folytatja. A jármű talajon elfoglalt és mozgás közben végigsöpört területét közösen ellenőrizd a próbában és a rendes játékban is. Az útba eső meglévő fákat fajta és méret megtartásával közeli helyre helyezd át.
 - A közös tárgyátadási animáció rövid, finom csilingelést indítson. Kövesse a Menühangok beállítást, háttérben maradjon néma, hanghiba nem akadályozhatja a mentett tárgyat vagy az animációt.
+
+- Semmilyen tárgy, növény vagy dekoráció nem állhat az ösvény/út festett felületén. A teljes látható alakot ellenőrizd, ne csak a középpontot; használd a közös `boundsOffPaths()` ellenőrzést. A szedhető növények maradjanak takarásmentesek és elérhetők. Az ütköző fákat helyezd át, ne ritkítsd ki miattuk az erdőt.

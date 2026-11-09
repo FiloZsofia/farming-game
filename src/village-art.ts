@@ -1,5 +1,6 @@
 import {marketRoads,marketRoadContains} from './market-trial-route';
 import {marketStand} from './market-site';
+import {boundsOffPaths} from './path-clearance';
 import {worldText} from './world-text';
 import {forageReady} from './travel';
 import {drawPathNetwork} from './path-art';
@@ -8,7 +9,7 @@ import {paintForest,drawForestBench} from './forest-art';
 import {FOREST_LEFT} from './forest';
 import {drawWoodlandTree} from './woodland-tree';
 import Phaser from 'phaser';
-import {villageLayout as layout,villagePaths,woodlandTreeClear,villageTrees,forestTrees,WORLD_HEIGHT,WORLD_WIDTH,benchPose,benchPoint,type BenchPose,shopNames} from './village-layout';
+import {villageLayout as layout,villagePaths,woodlandTreeClear,villageTrees,forestTrees,villageLamps,WORLD_HEIGHT,WORLD_WIDTH,benchPose,benchPoint,type BenchPose,shopNames} from './village-layout';
 // Original procedural scenery, sharing coordinates with the walkable village.
 export function drawVillage(scene:Phaser.Scene){
  const foregroundTrees=scene.add.graphics().setDepth(60),canopy=scene.add.graphics(),g=scene.add.graphics().setDepth(-.5),labels:Phaser.GameObjects.Text[]=[];
@@ -90,7 +91,7 @@ export function drawVillage(scene:Phaser.Scene){
  for(const x of [753,825]){for(let i=0;i<3;i++){line(x+5+i*5,1048,x+4+i*5,1038-i%2*5,0x436f52,2);}oval(x+27,1042,10,4,0xdaa166);poly([x+32,1042,x+36,1039,x+36,1045],0xd0aa72);oval(x+10,1021,8,3,0xe3ce97);poly([x+6,1021,x+2,1018,x+2,1024],0xcabd81);}
  flowers(889,1088);rect(904,1044,2,27,0x827258);line(898,1044,911,1044,0xa39374);for(let i=0;i<3;i++){line(900+i*4,1045,900+i*4,1055+i%2*4,0xb9b393);oval(900+i*4,1057+i%2*4,3,5,0xd5c9a7);}
  // A second village lantern frames the southern edge of the square.
- rect(518,1192,4,40,0x615940);rect(512,1185,17,18,0xd9c994);rect(510,1183,21,3,0x5b6550);poly([509,1183,520,1173,532,1183],0x566650);
+
  // Diverse forest silhouettes: broad oak, silver birch and fir.
  const tree=(x:number,y:number,kind:number,s=1)=>{if(x>170&&y===700&&!woodlandTreeClear(x,y,s,kind))y-=16;if(woodlandTreeClear(x,y,s,kind)){const inFront=y>=marketStand.bottom&&y-150*s<marketStand.bottom&&x+70*s>marketStand.left&&x-70*s<marketStand.right;drawWoodlandTree(inFront?foregroundTrees:g,random,x,y,kind,s);}};
  for(let row=0;row<17;row++)for(let column=0;column<9;column++){const x=FOREST_LEFT+25+column*77+(row%2)*24,y=farmBounds.top+50+row*65;if(x< -445)tree(x,y,(row+column)%3,.85+(column%3)*.08);}
@@ -101,20 +102,20 @@ export function drawVillage(scene:Phaser.Scene){
  for(const t of [...villageTrees,...forestTrees].sort((a,b)=>a.y-b.y))tree(t.x,t.y,t.kind,t.scale??1);
  for(const[x,y,k]of [[762,1178,0],[738,1337,2],[559,1372,1],[273,1375,0]])tree(x,y,k,.9);
  // Ferns, fallen leaves and meadow flowers along the shaded fork.
- for(let i=0;i<70;i++){const x=45+random()*240,y=660+random()*520;if(marketRoadContains(x,y,8))continue;for(let j=0;j<4;j++)line(x,y,x+(j-1.5)*4,y-5-random()*8,0x63894e);if(i%3===0)oval(x,y,4,2,0xc6b77c,.7);}
+ for(let i=0;i<70;i++){const x=45+random()*240,y=660+random()*520;if(!boundsOffPaths({left:x-7,right:x+7,top:y-12,bottom:y+5},[...villagePaths,...marketRoads]))continue;for(let j=0;j<4;j++)line(x,y,x+(j-1.5)*4,y-5-random()*8,0x63894e);if(i%3===0)oval(x,y,4,2,0xc6b77c,.7);}
  // Supported wooden signs at the road and its forest fork, rather than text in grass.
  const sign=(postX:number,groundY:number,left:number,top:number,width:number,text:string,direction:'left'|'right'|'down')=>{
   oval(postX+4,groundY+3,19,7,0x35553a,.22);rect(postX-2,top+10,5,groundY-top-8,0x6b5438);rect(postX-1,top+12,2,groundY-top-10,0xac8858);
-  const tilt=direction==='down'?-.86:0,pivotX=postX,pivotY=top+14;g.save();g.translateCanvas(pivotX,pivotY).rotateCanvas(tilt).translateCanvas(-pivotX,-pivotY);
+  const tilt=0,pivotX=postX,pivotY=top+14;g.save();g.translateCanvas(pivotX,pivotY).rotateCanvas(tilt).translateCanvas(-pivotX,-pivotY);
   const arrow=direction==='down'?[left,top,left+width,top,left+width,top+51,left+width/2,top+65,left,top+51]:direction==='right'?[left,top,left+width-10,top,left+width,top+11,left+width-10,top+22,left,top+22]:[left+10,top,left+width,top,left+width,top+22,left+10,top+22,left,top+11];
   poly(arrow,0x604f35);poly(arrow.map((v,i)=>v+(i%2? -1:0)),0xa98a59);if(direction==='down'){line(left+3,top+4,left+3,top+48,0xcfb17b);line(left+width-3,top+4,left+width-3,top+48,0x735b3c);}else line(left+12,top+3,left+width-12,top+3,0xcfb17b);if(direction!=='down')line(left+12,top+19,left+width-12,top+19,0x735b3c);oval(postX,top+6,2,2,0x5c5b45);oval(postX,top+16,2,2,0x5c5b45);
   g.restore();
   const tx=left+width/2+(direction==='left'?3:direction==='right'?-3:0),ty=top+(direction==='down'?25:11),dx=tx-pivotX,dy=ty-pivotY;
   const title=worldText(scene,pivotX+dx*Math.cos(tilt)-dy*Math.sin(tilt),pivotY+dx*Math.sin(tilt)+dy*Math.cos(tilt),text,{fontFamily:'Georgia,serif',fontSize:'9px',color:'#fff0c8',resolution:4}).setOrigin(.5).setRotation((direction==='down'?Math.PI/2:0)+tilt).setDepth(5);labels.push(title);
  };
- sign(240,850,231,783,18,'Falu','down');sign(310,958,238,907,88,'Erdei ösvény','left');
+ sign(225,861,216,795,18,'Falu','down');sign(25,1016,-47,956,88,'Erdei ösvény','left');
 
- rect(416,930,4,42,0x615940);rect(409,925,18,18,0xd9c994);rect(408,924,20,3,0x5b6550);poly([406,924,418,913,430,924],0x566650);
+ for(const lamp of villageLamps){const x=lamp.x,y=lamp.y;rect(x-2,y-42,4,42,0x615940);rect(x-9,y-47,18,18,0xd9c994);rect(x-10,y-48,20,3,0x5b6550);poly([x-12,y-48,x,y-59,x+12,y-48],0x566650);}
  // This scenery is static too; keep tree canopies and paving out of the per-frame geometry pass.
  const terrain=scene.add.renderTexture(FOREST_LEFT,farmBounds.top,1200-FOREST_LEFT,WORLD_HEIGHT-farmBounds.top).setOrigin(0).setDepth(-.5);terrain.draw(g,-FOREST_LEFT,-farmBounds.top);g.destroy();
  const crowns=scene.add.renderTexture(FOREST_LEFT,farmBounds.top,1200-FOREST_LEFT,WORLD_HEIGHT-farmBounds.top).setOrigin(0).setDepth(-.3);crowns.draw(canopy,-FOREST_LEFT,-farmBounds.top);canopy.destroy();
