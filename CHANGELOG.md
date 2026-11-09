@@ -2,6 +2,8 @@
 
 ## Javítások a 0.3.0 után — verzióemelés nélkül
 
+- Mara betöltés után is folytatja a nappali bokorgondozást, rövid pihenőkkel felváltva dolgozik mindkét bokron. Közelről nézhető, beszélgetéskor megáll. Éjszakára a Faiskolába sétál és eltűnik, éjszakai betöltéskor már bent van.
+
 - Részletesebb mohás forrás, finomabb áramlás és örvények. A térkép a valódi patakot a forrásig követi, és az aktuális ágyásokat is mutatja.
 - A HUD-ból kikerült az évszak neve. Jobbra döntöttebb Falu tábla, kidolgozott állólámpák, tiszta ablaküveg a Kertitó Szaküzletnél és hézagmentes ösvénycsatlakozás a térhez.
 - Mara mindkét díszbokrot megmetszi, köztük átsétál; a formára nyírt lomb és a levágott levelek láthatók.

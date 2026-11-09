@@ -1,5 +1,5 @@
 import {brookClearForTree} from './brook-layout';
-import {nurseryTreeClear,nurserySolid} from './nursery-grounds';
+import {nurseryTreeClear,nurserySolid,nurseryDoor} from './nursery-grounds';
 import {boundsOffPaths} from './path-clearance';
 import {quadraticPath} from './path-curves';
 import {marketRoads,marketRoadContains,marketTreeManeuverClear} from './market-trial-route';
@@ -14,7 +14,7 @@ export const WORLD_HEIGHT=1520;
 export const WORLD_WIDTH=1000;
 export const villageLayout={
  craftShop:{x:560,y:1220,w:200,h:112,door:{x:660,y:1341},entrance:{x:645,y:1290,w:34,h:57}},
- nursery:{x:510,y:840,w:165,h:106,door:{x:591,y:954},entrance:{x:580,y:898,w:29,h:65}},
+ nursery:{x:510,y:840,w:165,h:106,door:nurseryDoor,entrance:{x:580,y:898,w:29,h:65}},
  fishShop:{x:665,y:960,w:230,h:128,door:{x:708,y:1100},entrance:{x:690,y:1030,w:35,h:76}},
  square:{x:475,y:1080,rx:181,ry:115},
  nurserySaplings:[{x:518,y:946},{x:542,y:946},{x:627,y:942},{x:649,y:942}],

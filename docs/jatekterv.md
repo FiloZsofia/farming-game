@@ -1535,3 +1535,12 @@ A jobb felső időjárás/nap kijelzésből az évszaknév eltűnik. A belső na
 Mara visszatérés után először az alsó díszbokrot metszi, majd a parkoló autó mellett átsétál a felsőhöz és azt is megnyírja. A lomb a munka során fokozatosan rendezett formát kap; mellette levágott levelek látszanak. A játékos közelében a munka és a séta szünetel. Mindkét bokor befejezése után Mara a felsőnél pihen és megszólítható. Az aznap már lezárt fuvar betöltésekor a díszbokrok nyírt állapotban állnak helyre; nincs új mentésmező vagy játékbeli jutalom.
 
 A következő társítás továbbra is egyeztetés alatt áll. A „Nyári lugaskert” helyett évszaktól független nevet keresünk; a felhasználó újabb gyümölcsös társítást szeretne, például málnával vagy citrussal. Felvetett, még nem elfogadott irány a Málnás zug (málna–citromfű–körömvirág). Új társítás és mag ebben a változatban nem kerül be.
+
+
+### Mara folyamatos nappali gondozása és éjszakai pihenője
+
+A korábbi végleges leállás helyett Mara rövid pihenőkkel felváltva gondozza mindkét díszbokrot. A már rendezett forma megmarad, a következő körben fenntartó metszést végez. Az aznapi fuvar mentésének betöltésekor is folytatja. Sam közelről nézheti a metszést; beszélgetéskor a munka és mozgás szünetel, közvetlenül az útjában álló játékos előtt a séta megáll.
+
+Éjszaka nem metsz. A parkolóból a Kertitó Szaküzlet mellett, majd a téren át a Faiskola ajtajához sétál, ott eltűnik éjszakára. Az útvonal épületet, üvegházat, bokrot és autót nem metsz. Éjszakai betöltéskor már bent van; az üres kocsi a beállóban marad. Új mentésmező és újabb kifizetés nem szükséges. Ez felülírja a korábbi, felső bokornál végleg megálló nappali animációt.
+
+Társítási név- és növényötletek, még nem elfogadott fejlesztések: Bogyós menedék (mézbogyó–citromfű–borágó), Málnás búvóhely (málna–citromfű–körömvirág), Erdei ékszerkert (áfonya–vörösáfonya–csarab), Kapaszkodó lakoma (uborka–kapor–sarkantyúka), Illatos piroskert (paradicsom–bazsalikom–bársonyvirág), Citromillatú udvar (dézsás citrom–bazsalikom–körömvirág). A játéknövényekhez új faj ebből még nem kerül be.

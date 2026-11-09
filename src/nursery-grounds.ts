@@ -20,3 +20,6 @@ export function nurseryTreeClear(x:number,y:number,scale=1){
  return returnPoses.every(p=>!marketTruckContains(p,{x,y},12*scale));
 }
 export function nurserySolid(x:number,y:number){return x>greenhouse.x-7&&x<greenhouse.x+greenhouse.w+7&&y>greenhouse.y-3&&y<greenhouse.y+greenhouse.h+4||ornamentalShrubs.some(p=>Math.hypot((x-p.x)/16,(y-p.y)/10)<1);}
+
+export const nurseryDoor={x:591,y:954};
+export function maraNightWalk(from:{x:number;y:number}){return[{x:from.x,y:from.y},{x:954,y:927},{x:918,y:927},{x:918,y:1130},{x:600,y:1130},{x:560,y:1020},{x:nurseryDoor.x,y:978},nurseryDoor];}
