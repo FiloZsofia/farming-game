@@ -2,6 +2,8 @@
 
 ## Javítások a 0.3.0 után — verzióemelés nélkül
 
+- Mara a kerítésen kívül, a megfelelő ládaoszlop alatt rakodik; nem sétál be az átadó sorai mellé.
+
 - Minden ágyás naponta öntözést igényel a növekedéshez; az eső és az öntözőrendszer ezt elvégzi. A mulcs nedvességőrzése nem helyettesíti a napi öntözést. A faliméh-küldetés kihagyott öntözés után nem lép tovább.
 - Az ágyáskijelölés bármely alsó eszköz kiválasztásával megszakítható.
 - Az út menti gyógynövények és falusi lámpák az ösvényen kívülre kerültek. Sűrűbb erdősáv és a kapu vonalában délre folytatódó gyalogösvény.

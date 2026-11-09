@@ -1475,3 +1475,6 @@ Az el nem helyezett ágyás kijelölése bármely alsó eszköz kiválasztásáv
 Semmilyen tárgy, lámpa, növény vagy dekoráció nem kerülhet az utak festett felületére. A teljes látható alakot közösen ellenőrizzük. A gyógynövények áthelyezése megőrzi az azonosítókat és gyűjtési előzményeket. A déli gyalogösvény a kapu T-csatlakozásának vonalában folytatódik; az erdei ág külön csatlakozik hozzá. Az út menti erdősáv sűrűbb, a szedhető bokrok szabadon maradnak. Ez felülírja a korábbi eltolt déli leágazás tervét.
 
 Mara az adott áru tényleges ládasoránál áll meg. Az autó mögött őt és a cipelt árut is a jármű takarja. A füves rakodóterület a játékos számára bejárható, a jármű és a fák ütközése megmarad.
+
+
+Mara rakodási helyének pontosítása: a kerítés külső, déli oldalán marad, az árut tartalmazó három ládaoszlop megfelelője alatt áll meg. Nem megy be a sorok mellé. Ez felülírja a korábbi soronkénti megállást; az autó mögötti takarás megmarad.
