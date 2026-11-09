@@ -877,7 +877,7 @@ class Farm extends Phaser.Scene {
  private openTestMap(){
   if(!this.ready||!this.hasFarm||this.choosingFarm||this.naming)return;
   if(dialogue.open&&dialogue.dataset.presentation==='test-map'){dialogue.close();return;}if(dialogue.open||this.choosingFarm||this.naming)return;
-  showDialogue('Térkép','','');dialogue.dataset.presentation='test-map';const panel=document.querySelector<HTMLElement>('#research-panel')!;panel.replaceChildren(createTestMap(this.actor,!!this.noahChapter?.state.upgraded,this.farmName??'Farm'));panel.hidden=false;
+  showDialogue('Térkép','','');dialogue.dataset.presentation='test-map';const panel=document.querySelector<HTMLElement>('#research-panel')!;panel.replaceChildren(createTestMap(this.actor,!!this.noahChapter?.state.upgraded,this.farmName??'Farm',this.travel.homestead?.garden.beds.map(b=>b.area)));panel.hidden=false;
  }
  private openStoryArchive(){
   showDialogue('Történet','','');dialogue.dataset.presentation='story';
@@ -1674,7 +1674,7 @@ class Farm extends Phaser.Scene {
   if(performance.now()>this.skillUntil)document.querySelector<HTMLElement>('#gardening-skill')!.hidden=true;
   const now=performance.now();const seconds=Math.max(0,(now-this.lastTick)/1000);this.lastTick=now;
   document.querySelector('#gold')!.textContent=String(this.shownGold??this.incomeBalance());
-  document.querySelector('#day-number')!.textContent=`${this.clock.day}.`;document.querySelector('#season-name')!.textContent=seasons[seasonIndex(calendarDay(this.clock.day,this.farmName))];
+  document.querySelector('#day-number')!.textContent=`${this.clock.day}.`;
   document.querySelector('#clock-label')!.textContent=clockLabel(this.clock);
   document.querySelector<HTMLElement>('#night-shade')!.style.opacity=String(nightOpacity(this.clock));
   this.homeLight?.update(nightOpacity(this.clock));

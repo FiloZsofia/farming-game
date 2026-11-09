@@ -2,6 +2,10 @@
 
 ## Javítások a 0.3.0 után — verzióemelés nélkül
 
+- Részletesebb mohás forrás, finomabb áramlás és örvények. A térkép a valódi patakot a forrásig követi, és az aktuális ágyásokat is mutatja.
+- A HUD-ból kikerült az évszak neve. Jobbra döntöttebb Falu tábla, kidolgozott állólámpák, tiszta ablaküveg a Kertitó Szaküzletnél és hézagmentes ösvénycsatlakozás a térhez.
+- Mara mindkét díszbokrot megmetszi, köztük átsétál; a formára nyírt lomb és a levágott levelek láthatók.
+
 - A falusi tér déli részén mohás kövek közül ered a patak. A kanyargó mederben sebességükben eltérő áramláscsíkok, kavicsos sekélyek, kövek körüli örvények és habfoltok látszanak; balra sűrű parti növényzet mögött folytatódik. A meglévő híd megmarad.
 
 - Finomabb falusi padok, részletes facsemeték és tartók, felismerhető kanna, palántatálca, futónövény és ablakládák. A szökőkút, a hordó, az üvegház és a Műhelybolt kirakott tárgyai is kidolgozottabbak.

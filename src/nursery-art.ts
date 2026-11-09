@@ -9,7 +9,7 @@ export function drawMaraBay(g:Phaser.GameObjects.Graphics){
  // Two worn wheel tracks run into the grass-and-gravel bay from the road.
  for(const dx of [-28,28]){g.lineStyle(9,0xa99f7c,.5).lineBetween(x+dx,768,x+dx,908);g.lineStyle(2,0xd0c3a0,.35).lineBetween(x+dx-2,783,x+dx-2,911);}
  for(let i=0;i<24;i++){const px=x-65+(i%2)*130+rnd()*8,py=782+Math.floor(i/2)*12;g.lineStyle(1,0x72934d).lineBetween(px,py,px-2,py-4).lineBetween(px,py,px+2,py-3);}
- for(const p of ornamentalShrubs){g.fillStyle(0x314a34,.24).fillEllipse(p.x+3,p.y+3,36,12);g.fillStyle(0x786044).fillRect(p.x-2,p.y-15,4,17);g.fillStyle(0x355d40).fillRoundedRect(p.x-17,p.y-27,34,28,11);g.fillStyle(0x527c49).fillRoundedRect(p.x-16,p.y-30,32,25,10);g.fillStyle(0x789451).fillRoundedRect(p.x-13,p.y-32,26,9,6);for(let i=0;i<10;i++)g.fillStyle(i%2?0x829d5a:0x426d41).fillEllipse(p.x-12+(i%4)*8,p.y-20+Math.floor(i/4)*7,4,2);g.fillStyle(0x8a9d58).fillEllipse(p.x+18,p.y+2,4,2).fillEllipse(p.x+22,p.y+5,3,2);}
+
 }
 export function drawGreenhouse(g:Phaser.GameObjects.Graphics){
  const {x,y,w,h}=greenhouse,front=w-10;
@@ -38,4 +38,11 @@ export function drawGreenhouse(g:Phaser.GameObjects.Graphics){
  for(const dy of [22,44])line(front+2,dy,w-1,dy-7,0xb9c6a7,.8);line(front+5,-2,front+5,h-10,0xaebfa1,.7);
  line(-3,3,-3,h-3,0x78917c,1.8);line(-3,3,-2,3,0xc6cdae,.7);rect(-4,h-3,3,3,0x9b9e81);
  rect(19,h+2,28,4,0xc5b99a);line(20,h+2,46,h+2,0xe0d3b0);
+}
+
+export class OrnamentalShrubArt{
+ private g:Phaser.GameObjects.Graphics;private signature='';
+ constructor(scene:Phaser.Scene){this.g=scene.add.graphics().setDepth(-.24);this.paint([0,0]);}
+ paint(progress:readonly number[]){const key=progress.map(p=>Math.round(p*24)).join(',');if(key===this.signature)return;this.signature=key;const g=this.g;g.clear();ornamentalShrubs.forEach((p,i)=>{const t=progress[i],w=36-t*5;g.fillStyle(0x314a34,.2).fillEllipse(p.x+3,p.y+3,38,12);g.fillStyle(0x786044).fillRect(p.x-2,p.y-16,4,18);g.fillStyle(0x395e41).fillRoundedRect(p.x-w/2,p.y-29,w,29,9);g.fillStyle(0x5d814c).fillRoundedRect(p.x-w/2+1,p.y-32,w-2,25,8);g.fillStyle(0x829c5b).fillRoundedRect(p.x-w/2+4,p.y-33,w-8,8,4);for(let k=0;k<13;k++){const a=k*2.4,x=p.x+Math.cos(a)*(14-t*4),y=p.y-18+Math.sin(a)*(13-t*5);g.fillStyle(k%2?0x739452:0x527a46).fillEllipse(x,y,5+(1-t)*3,3+(1-t)*2);}if(t>.3){g.lineStyle(.7,0x9aae6a,t*.6).lineBetween(p.x-10,p.y-29,p.x+10,p.y-29);for(let k=0;k<Math.floor(t*6);k++)g.fillStyle(k%2?0x8da464:0x68894c).fillEllipse(p.x+17+k%3*3,p.y-2+Math.floor(k/3)*3,3,1.5);} });}
+ destroy(){this.g.destroy();}
 }

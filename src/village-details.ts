@@ -1,5 +1,7 @@
+import {drawBrookSpring} from './brook-art';
+import {brookSource} from './brook-layout';
 import Phaser from 'phaser';
-import {benchPose,benchPoint,villageLayout,nurseryDisplays,workshopWallLamps,type BenchPose} from './village-layout';
+import {benchPose,benchPoint,villageLayout,nurseryDisplays,workshopWallLamps,villageLamps,type BenchPose} from './village-layout';
 import {drawGreenhouse} from './nursery-art';
 // Small scenery gets its own high-resolution cache: smooth joinery without enlarging the terrain texture.
 function detail(scene:Phaser.Scene,x:number,y:number,w:number,h:number,paint:(g:Phaser.GameObjects.Graphics)=>void){
@@ -66,7 +68,12 @@ function workshopDecor(g:Phaser.GameObjects.Graphics){
  g.lineStyle(2,0x9b8961).strokeEllipse(759,1317,17,23);g.lineStyle(.6,0xc8b58b).strokeEllipse(759,1317,14,21);poly([[746,1320],[772,1320],[769,1336],[749,1336]],0xae9366);oval(759,1320,27,9,0xc5ac7b);oval(759,1320,22,5.5,0x7c6d4a);for(let i=0;i<5;i++)line(748,1323+i*2.6,771,1323+i*2.6,0xd0b98b,.65);for(let i=0;i<7;i++)line(749+i*3.2,1322,750+i*3,1334,0x8c7955,.55);
  for(const p of workshopWallLamps){line(p.x-5,p.y-8,p.x,p.y-8,0x65705a,1.5);rect(p.x-5,p.y-6,10,13,0x6b775e);rect(p.x-3,p.y-4,6,8,0xc5c5a0);line(p.x,p.y-4,p.x,p.y+4,0x8b9678,.7);poly([[p.x-7,p.y-6],[p.x,p.y-12],[p.x+7,p.y-6]],0x7b856b);line(p.x-6,p.y-6,p.x,p.y-11,0xb2b497,.7);rect(p.x-6,p.y+6,12,2,0x7b846a);}
 }
+function streetLamp(g:Phaser.GameObjects.Graphics,p:{x:number;y:number}){
+ const {rect,line,poly,oval}=brush(g),{x,y}=p;oval(x+2,y+3,17,7,0x3d513b,.18);poly([[x-6,y],[x+6,y],[x+7,y+3],[x-7,y+3]],0x8e9076);rect(x-4,y-4,8,5,0x7f856d);line(x,y-29,x,y-4,0x65725c,3);line(x-.7,y-28,x-.7,y-5,0xa7ac8d,.8);rect(x-3,y-29,6,3,0x7b866b);
+ poly([[x-9,y-49],[x+9,y-49],[x+7,y-28],[x-7,y-28]],0x63765f);poly([[x-6.5,y-46],[x+6.5,y-46],[x+5,y-31],[x-5,y-31]],0xc8c7a1);poly([[x-5.5,y-45],[x-.7,y-45],[x-.7,y-32],[x-4,y-32]],0xe1d7af,.75);line(x,y-46,x,y-30,0x8b997b,.8);poly([[x-12,y-49],[x,y-60],[x+12,y-49]],0x6b7a61);line(x-10,y-49,x,y-58,0xb0b498,.8);line(x,y-58,x+10,y-49,0x87987a,.65);rect(x-11,y-50,22,2,0x9ba48a);rect(x-9,y-29,18,2,0x899477);oval(x,y-60,3,3,0x869073);
+}
 export function drawVillageDetails(scene:Phaser.Scene){
+ detail(scene,brookSource.x-56,brookSource.y-54,112,90,drawBrookSpring);for(const lamp of villageLamps)detail(scene,lamp.x-17,lamp.y-65,34,73,g=>streetLamp(g,lamp));
  for(const b of villageLayout.benches){const p=benchPose(b.angle);detail(scene,p.x-42,p.y-43,84,60,g=>bench(g,p));}
  detail(scene,440,1039,76,69,fountain);detail(scene,474,866,218,165,nurseryDecor);detail(scene,677,798,88,121,drawGreenhouse);detail(scene,843,1075,46,42,fishBarrel);detail(scene,558,1278,223,68,workshopDecor);
 }

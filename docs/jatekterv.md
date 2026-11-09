@@ -1522,3 +1522,16 @@ A falusi tér déli részének korábbi, színes réti virágos foltjánál, moh
 Rövid, világos csíkok követik a meder ívét. A középső sáv gyorsabban, a part menti csíkok lassabban mozognak. A kövek mögött apró örvények és habfoltok jelennek meg; sötétebb mélyebb szakaszok és látható kavicsok tagolják a vizet. Az időléptetés és a szakaszok közös, forrástól mért távolságot használnak, ezért az animáció nem fordul szembe a mederrel.
 
 A meglévő erdei híd helye és átjárása megmarad. Az áramlás rajza nem kerülhet a deszkák fölé. Fa törzse nem állhat a mederben, a forrás teljes látható részét pedig lomb sem fedheti el. A forrás körül néhány réti virág megmarad. A táj megjelenése a rendes játékban készül, külön tesztmód nélkül.
+
+
+### Patakfinomítás, térképkövetés és Mara két díszbokra
+
+A forrás finomabb felbontású külön rajzréteget kap: tagolt mohás kövek, áttetsző sekély víz, kavicsok, csillanások és apró kifutó hullámok látszanak. A sodrás rövid íveken halad, a kövek mögötti örvények finomabbak. A híd takarása és a forrásból nyugatra folyó irány megmarad.
+
+A térkép a valódi patak teljes mintasorából készül, forrásjelölővel; az autóút és az aktuális ágyások is a közös adatokból látszanak. Minden későbbi világmódosításnak a térképen is követhetőnek kell lennie. A jelölők és nevek a díszítő elemek fölé kerüljenek.
+
+A jobb felső időjárás/nap kijelzésből az évszaknév eltűnik. A belső naptári és mentési adatok nem változnak. A Falu tábla a feliratával együtt kicsit jobban jobbra dől. A Kertitó Szaküzlet ablakából eltűnnek a halak és hínárok; az üveg színe, kerete és éjszakai fénye megmarad. A falusi állólámpák részletesebb talpat, szárat, üvegezést és tetőt kapnak, a közös fényankorral. A tér füves szegélye már nem takarja ki a Műhelybolt ösvényének csatlakozását.
+
+Mara visszatérés után először az alsó díszbokrot metszi, majd a parkoló autó mellett átsétál a felsőhöz és azt is megnyírja. A lomb a munka során fokozatosan rendezett formát kap; mellette levágott levelek látszanak. A játékos közelében a munka és a séta szünetel. Mindkét bokor befejezése után Mara a felsőnél pihen és megszólítható. Az aznap már lezárt fuvar betöltésekor a díszbokrok nyírt állapotban állnak helyre; nincs új mentésmező vagy játékbeli jutalom.
+
+A következő társítás továbbra is egyeztetés alatt áll. A „Nyári lugaskert” helyett évszaktól független nevet keresünk; a felhasználó újabb gyümölcsös társítást szeretne, például málnával vagy citrussal. Felvetett, még nem elfogadott irány a Málnás zug (málna–citromfű–körömvirág). Új társítás és mag ebben a változatban nem kerül be.
