@@ -1285,6 +1285,7 @@ class Farm extends Phaser.Scene {
   const r=this.travel.research,near=(x:number,y:number,d=48)=>Math.hypot(this.actor.x-x,this.actor.y-y)<d;
   if(inWorkshop(this.actor.y)){
    if(near(400,3500,38))return 'workshop-exit';
+   if(microscopeReady(r)&&near(microscope.x,microscope.y,64))return 'microscope';
    const web=remainingWebs(r).filter(w=>near(w.x,w.y,50)).sort((a,b)=>Math.hypot(this.actor.x-a.x,this.actor.y-a.y)-Math.hypot(this.actor.x-b.x,this.actor.y-b.y))[0];if(web)return `cobweb:${web.id}`;
    const object=workshopObjects.filter(o=>workshopLit(r)||o.id==='shutter'&&!r.shutter||o.id==='entrance-shutter'&&!entranceShutterOpen(r)).map(o=>({o,d:Math.hypot(this.actor.x-o.x,this.actor.y-o.y)})).sort((a,b)=>a.d-b.d)[0];
    return object&&object.d<76?`examine:${object.o.id}`:'';
@@ -1299,6 +1300,7 @@ class Farm extends Phaser.Scene {
   if(!this.canInteract())return false;
   if(this.nearChest()>=0){this.openChest(this.nearChest());return true;}const n=this.researchNearby();
   if(n==='workshop-exit'){void this.travelTo({x:632,y:224});return true;}
+  if(n==='microscope'){this.openMicroscope();return true;}
   if(n==='leo-visit'){void this.receiveFlowers();return true;}
   if(n==='observe-bee'){void this.observeResearchBee();return true;}
   if(n.startsWith('cobweb:')){void this.removeCobweb(n.slice(7));return true;}

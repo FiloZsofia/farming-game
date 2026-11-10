@@ -1,3 +1,4 @@
+import {createNoahChapter} from '../../src/noah-story';
 import {snapshot,type Snapshot} from '../../src/storage';
 import {createClock} from '../../src/clock';
 import {createGarden} from '../../src/gardening';
@@ -33,3 +34,19 @@ it('remembers the workshop name after the first entry, even before opening the s
 
 
 it('does not expose runtime trial menus even through an old developer link',()=>{const s=fresh(250,220);start(s,true);cy.get('#menu').click();cy.get('#microscope-test,#test-mode-banner,#start-noah-test,#start-market-trial,#start-art-study,#start-living-bed-test').should('not.exist');cy.get('#resume-game').should('be.visible').click();cy.get('#game').should('have.attr','data-ready','true');});
+
+it('opens the finished extract comparison instead of inspecting the workbench',()=>{
+ const s=repairedWorkshop(fresh(182,3395));
+ s.travel.forest={...createForest(),stick:true,sample:true,examined:true,sent:true};
+ s.travel.storyEndSeen=true;
+ s.travel.noah={...createNoahChapter(1),letter:true,mixtureMade:true,pendingResult:true};
+ start(s);press('e','KeyE',69);
+ cy.get('.noah-micro-field').should('have.length',2);
+ cy.get('#noah-microscope-focus').invoke('val',72).trigger('input');
+ cy.get('#noah-observe-result').should('not.be.disabled');
+ cy.get('#dialogue-close').click();clickWorld(182,3346);
+ cy.get('.noah-micro-field').should('have.length',2);
+ cy.get('#noah-microscope-focus').invoke('val',72).trigger('input');
+ cy.get('#noah-observe-result').click();
+ cy.get('#dialogue-title').should('have.text','Biztató eredmény');
+});
