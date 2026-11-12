@@ -65,26 +65,22 @@ export function drawWoodlandTree(g:Phaser.GameObjects.Graphics,random:()=>number
    // Irregular interlocking leaf fingers: no circular base or concentric highlight.
    shape(p([-.9,.15,-1,-.2,-.7,-.3,-.8,-.65,-.45,-.65,-.4,-.95,0,-.85,.25,-1,.45,-.7,.8,-.75,.75,-.4,1,-.2,.85,.15,1,.45,.65,.55,.7,.9,.3,.8,.1,1,-.2,.8,-.6,.9,-.55,.55,-.95,.5]),palette[1]);
    shape(p([-.85,-.15,-.55,-.25,-.65,-.55,-.3,-.5,-.25,-.8,.1,-.7,.3,-.85,.45,-.55,.75,-.55,.65,-.2,.85,0,.55,.1,.7,.35,.35,.3,.4,.6,.05,.4,-.15,.6,-.3,.3,-.65,.4,-.55,.05]),palette[2]);
-   shape(p([-.55,-.45,-.3,-.45,-.2,-.7,.05,-.6,.25,-.7,.4,-.4,.6,-.4,.45,-.15,.2,-.2,.1,.05,-.1,-.05,-.35,.1,-.3,-.2,-.6,-.1]),palette[3]);
-   // Short connected ridges split broad light planes into leafy edges.
-   for(let j=0;j<5;j++){
-    const xx=cx-rx*.62+j*rx*.28,yy=cy-ry*.36+Math.sin(j*1.8+k)*ry*.16;
-    shape([xx,yy,xx+1.5,yy-1.5,xx+4.5,yy-1.5,xx+3,yy,xx+4.5,yy+1.5,xx+1.5,yy+1.5,xx,yy+3,xx-1.5,yy+1.5],j%3?palette[3]:palette[4]);
-    const foldY=cy+ry*(.22+(j%2)*.14);
-    shape([xx,foldY,xx+3,foldY+1.5,xx+4.5,foldY,xx+6,foldY+1.5,xx+3,foldY+3,xx,foldY+1.5,xx-1.5,foldY+3,xx-3,foldY+1.5],palette[1]);
+   // Individual pointed leaves follow staggered sprays, with a dark lower edge.
+   // Consistent shapes replace the former cross-shaped/random colour flecks.
+   for(let row=0;row<4;row++)for(let col=0;col<5;col++){
+    const a=hash(k*31+row*5+col,k+7);
+    if(a%11===0)continue;
+    const xx=cx+(col-2)*rx*.33+(row%2?1.5:0),yy=cy+(row-1.7)*ry*.4+((col+row)%2)*1.5;
+    const length=birch?4.5:6,half=length/2,lean=(col<2?-1:1)*3;
+    const leaf=[xx-half,yy,xx-1.5,yy-3,xx+1.5,yy+lean-3,xx+half,yy+lean,xx+1.5,yy+lean+1.5,xx-1.5,yy+3];
+    shape(leaf.map((v,i)=>i%2?v+1.5:v),palette[1]);
+    const lit=row<2?3:2;
+    shape(leaf,palette[lit]);
+    shape([xx-half,yy,xx-1.5,yy-3,xx+1.5,yy+lean-3,xx+half,yy+lean,xx,yy+lean*.5],palette[a%7===0?4:Math.min(4,lit+1)]);
    }
-   // Recessed folds cut into the lit leaf fans without outlining a round lobe.
-   shape(p([-.45,-.2,-.2,-.1,-.1,.1,.1,.15,.05,.35,-.2,.2,-.3,0,-.5,-.05]),palette[1]);
-   shape(p([.25,-.5,.4,-.4,.35,-.15,.55,0,.45,.1,.2,-.1,.25,-.3]),palette[2]);
-   // Lower hanging sprays are greener than the deep gap behind them.
-   for(const [lx,ly]of [[-.6,.56],[-.2,.74],[.35,.62]]){
-    shape(p([lx,ly,lx+.2,ly-.08,lx+.3,ly+.07,lx+.12,ly+.14,lx+.08,ly+.28,lx-.07,ly+.19,lx-.12,ly+.06]),palette[2]);
-    shape(p([lx,ly,lx+.12,ly,lx+.17,ly+.07,lx+.03,ly+.13,lx-.07,ly+.07]),palette[3]);
-   }
-   for(let j=0;j<15;j++){
-    const a=hash(k*13+j,k+3),xx=cx-rx*.65+(a%13)/12*rx*1.3,yy=cy-ry*.55+((a>>>8)%11)/10*ry*1.1;
-    shape([xx,yy,xx+3,yy,xx+3,yy+1.5,xx+1.5,yy+1.5,xx+1.5,yy+3,xx-1.5,yy+3,xx-1.5,yy+1.5,xx,yy+1.5],j%5===0?palette[4]:j%3===1?palette[1]:palette[2]);
-   }
+   // Narrow recesses retain the volume between sprays.
+   shape(p([-.3,.25,-.1,.35,.05,.3,.2,.4,.05,.5,-.15,.45,-.3,.55,-.4,.4]),palette[1]);
+
   }
   if(birch){
    // Small real gaps preserve the pale branching visible in the reference.
