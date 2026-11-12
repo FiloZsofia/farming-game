@@ -72,7 +72,7 @@ export function drawWoodlandTree(g:Phaser.GameObjects.Graphics,random:()=>number
   for(let k=0;k<patches.length;k++){
    const [cx,cy,rx,ry]=patches[k];
    for(let row=0;row<4;row++)for(let col=0;col<5;col++){
-    const a=hash(k*31+row*5+col,k+7);if(a%3===0)continue;
+    const a=hash(k*31+row*5+col,k+7);if(a%3===0||a%13===0)continue;
     const xx=Math.round(cx+(col-2)*rx*.34+(row%2?2:0)+(a%3)-1),yy=Math.round(cy+(row-1.5)*ry*.39+(col%2)+((a>>>5)%3)-1);
     const angle=(col<2?-1:1)*(.45+(a%3)*.18),cos=Math.cos(angle),sin=Math.sin(angle);
     const transform=(points:number[])=>points.map((v,i)=>i%2?yy+points[i-1]*sin+v*cos:xx+v*cos-points[i+1]*sin);

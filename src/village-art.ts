@@ -1,9 +1,8 @@
 import {drawShrubLeaf} from './foliage-leaf';
 import {drawMaraBay} from './nursery-art';
 import {drawVillageDetails} from './village-details';
-import {marketRoads,marketRoadContains} from './market-trial-route';
+import {marketRoads} from './market-trial-route';
 import {marketStand} from './market-site';
-import {boundsOffPaths} from './path-clearance';
 import {worldText} from './world-text';
 import {forageReady} from './travel';
 import {drawPathNetwork} from './path-art';
@@ -76,8 +75,7 @@ export function drawVillage(scene:Phaser.Scene){
  for(let i=0;i<25;i++)tree(-170+(i%4)*47,695+Math.floor(i/4)*83,i%3,.85+(i%3)*.08);
  for(const t of [...villageTrees,...forestTrees].sort((a,b)=>a.y-b.y))tree(t.x,t.y,t.kind,t.scale??1);
  for(const[x,y,k]of [[762,1178,0],[738,1337,2],[559,1372,1],[273,1375,0]])tree(x,y,k,.9);
- // Ferns, fallen leaves and meadow flowers along the shaded fork.
- for(let i=0;i<70;i++){const x=45+random()*240,y=660+random()*520;if(!boundsOffPaths({left:x-7,right:x+7,top:y-12,bottom:y+5},[...villagePaths,...marketRoads]))continue;for(let j=0;j<4;j++)line(x,y,x+(j-1.5)*4,y-5-random()*8,0x63894e);if(i%3===0)oval(x,y,4,2,0xc6b77c,.7);}
+ // Decorative grass tufts removed: the forest floor stays below the trees.
  // Supported wooden signs at the road and its forest fork, rather than text in grass.
  const sign=(postX:number,groundY:number,left:number,top:number,width:number,text:string,direction:'left'|'right'|'down')=>{
   oval(postX+4,groundY+3,19,7,0x35553a,.22);rect(postX-2,top+10,5,groundY-top-8,0x6b5438);rect(postX-1,top+12,2,groundY-top-10,0xac8858);
