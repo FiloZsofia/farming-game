@@ -1,3 +1,4 @@
+import {thinTreeLeaves} from './tree-leaf-selection';
 import {leafContour} from './foliage-leaf';
 import {natureTreeClear} from './nature-resources';
 import type Phaser from 'phaser';
@@ -69,10 +70,13 @@ export function drawWoodlandTree(g:Phaser.GameObjects.Graphics,random:()=>number
   }
   // Finish all crown volumes first, then draw fully outlined little leaves on top.
   // Later volume patches must not paint over the outlines of earlier leaves.
-  for(let k=0;k<patches.length;k++){
+  const leaves:{k:number;row:number;col:number;a:number;rank:number}[]=[];
+  for(let k=0;k<patches.length;k++)for(let row=0;row<4;row++)for(let col=0;col<5;col++){
+   const a=hash(k*31+row*5+col,k+7);if(a%3===0||a%13===0)continue;
+   leaves.push({k,row,col,a,rank:hash(k*43+row*11+col,91)});
+  }
+  for(const {k,row,col,a}of thinTreeLeaves(leaves)){
    const [cx,cy,rx,ry]=patches[k];
-   for(let row=0;row<4;row++)for(let col=0;col<5;col++){
-    const a=hash(k*31+row*5+col,k+7);if(a%3===0||a%13===0)continue;
     const xx=Math.round(cx+(col-2)*rx*.34+(row%2?2:0)+(a%3)-1),yy=Math.round(cy+(row-1.5)*ry*.39+(col%2)+((a>>>5)%3)-1);
     const angle=(col<2?-1:1)*(.45+(a%3)*.18),cos=Math.cos(angle),sin=Math.sin(angle);
     const transform=(points:number[])=>points.map((v,i)=>i%2?yy+points[i-1]*sin+v*cos:xx+v*cos-points[i+1]*sin);
@@ -81,7 +85,6 @@ export function drawWoodlandTree(g:Phaser.GameObjects.Graphics,random:()=>number
     shape(leaf(3.8,1.7),birch?0x2c6450:0x2c5936);
     shape(leaf(2.7,.85),row<2?(birch?0x4a9264:0x3d8444):palette[2]);
     if(row<2&&a%3===0)shape(transform([-1,-1,1,-1,0,0,-1,0]),palette[3]);
-   }
   }
 
   if(birch){

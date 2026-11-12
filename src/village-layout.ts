@@ -27,7 +27,7 @@ export const nurseryDisplayBounds=(d:typeof nurseryDisplays[number])=>({left:d.l
 // Drawing and canopy clearance use the same full routes.
 export const villagePaths=[
  {width:32,points:[farmLayout.paths[0].points[0],[170,740]]},
- {width:17,points:[[170,930],[107,930]]},
+ {width:20,points:[[170,930],[107,930]]},
  {width:28,points:[[474,1016],[586,978],[591,940]]},
  {width:25,points:[[606,1097],[660,1100],[708,1100]]},
  {width:23,points:[[493,1320],[493,1364],[660,1364],[660,1341]]},

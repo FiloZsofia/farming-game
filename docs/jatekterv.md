@@ -1591,3 +1591,9 @@ A felhasználó az elkülönülő, sötét szélű levelek irányát elfogadta. 
 A következő finomításnál a levelek hegyesebbek, a fák lombján ritkábbak. Az áfonyabokrok szabályos levélsorai helyett néhány rövid hajtáshoz kapcsolódó, lazább levélcsoport készül. Mara bokrain a felhasználó által kedvelt kiálló levelek és azok metszés alatti visszahúzódása megmarad.
 
 A felhasználó további enyhe levélritkítást kért a fákon; az áfonyabokrok legutóbbi megjelenését egyelőre változatlanul kell hagyni. A kis dekorációs fűcsomók nem tetszenek neki, ezért a farmról és az erdei/falusi elágazás mellől eltűnnek. A finom talajtextúra, a szedhető gyógynövények és az eltávolítható gaz megmarad. A fa fölé rajzolódó dekorációs fűcsomók hibáját az érintett fűcsomók eltávolítása oldja meg; az utólagos díszítő réteg nem takarhatja át a fák lombját.
+
+### Fánkénti levélkvóta és egységes ösvényfelület
+
+A lombos erdei fák levélhelyeiből minden fa a saját darabszámának további 8%-át veszíti el (felfelé kerekítve, legalább egy levél). Ez meghatározott fánkénti kvóta, nem újabb, esetenként alig ható kihagyási feltétel. A sorrend és a megosztott véletlenszám-fogyasztás megmarad. A bokrok nem változnak.
+
+A farm, az erdei és falusi alapösvények, az autóút és a hozzájuk csatlakozó játékos-földutak közös, finom földes-kavicsos mintázatot használnak. Világkoordinátához rögzül, így a telekhatáron és a csatlakozásokban sem vált más mintára. A földút színe megmarad. Az Erdei ösvény tábla fölötti rövid összekötő szakasz szélessége a folytatásával egyezik; a sűrűn mintázott enyhe kanyarokban nincs minden ponton újabb kerek illesztés, így nem keletkezik gyöngyöző szegély. A teljes hálózat külső szegélyei továbbra is a belső rétegek előtt készülnek. A térkép a közös útadatokat használja.

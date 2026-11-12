@@ -9,8 +9,7 @@ export function paintGardenPaths(g:Phaser.GameObjects.Graphics,pieces:readonly G
  const roads=dirt.flatMap(p=>{const before=byId.get(p.previous??-1),road={width:24,points:before&&before.material==='dirt'?[[before.x,before.y],[p.x,p.y]]:[[p.x,p.y],[p.x,p.y]]};return p.baseJoin?[road,{width:24,points:[[p.baseJoin.x,p.baseJoin.y],[p.x,p.y]]}]:[road];});
 
  if(preview!==undefined){for(const road of roads){g.lineStyle(25,preview,.65).beginPath();road.points.forEach(([x,y],i)=>i?g.lineTo(x,y):g.moveTo(x,y));g.strokePath();for(const [x,y]of road.points)g.fillStyle(preview,.65).fillCircle(x,y,12.5);}}
- else{const base=dirt.some(p=>p.baseJoin)?basePaths:[];drawPathNetwork(g,[...base,...roads]);for(const [index,path]of base.entries())for(let i=1;i<path.points.length;i++){const a=path.points[i-1],b=path.points[i],length=Math.hypot(b[0]-a[0],b[1]-a[1]);for(let d=0;d<length;d+=3){const t=d/length,offset=(noise(index*10000+i*500+d,2)-.5)*(path.width-7);g.fillStyle(d%2?0x9f916e:0xd6c29a,.7).fillRect(Math.round(a[0]+(b[0]-a[0])*t-(b[1]-a[1])/length*offset),Math.round(a[1]+(b[1]-a[1])*t+(b[0]-a[0])/length*offset),2,1);}}
-for(const p of dirt)for(let j=0;j<3;j++)g.fillStyle(j%2?0xd6c29a:0x9f916e,.65).fillRect(p.x+(noise(p.id,j)-.5)*16,p.y+(noise(p.id,j+4)-.5)*16,2,1);}
+ else{const base=dirt.some(p=>p.baseJoin)?basePaths:[];drawPathNetwork(g,[...base,...roads]);}
  for(const p of pieces){if(p.material==='dirt')continue;
   if(p.material==='stone'){
    const vertices=pathFootprint(p);

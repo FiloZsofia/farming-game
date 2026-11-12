@@ -45,8 +45,10 @@ export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),g
  for(let i=0;i<12500;i++){const x=left+random()*width,y=top+random()*height;rect(x,y,1+random()*2,1,[0x658b3f,0xb0bf71,0x82a851][i%3],.55);}
  }
  drawPathNetwork(g,layout.paths,study?studyColor:undefined);
- // Texture follows the paths rather than spilling over their edges.
- for(const p of layout.paths)for(let i=1;i<p.points.length;i++){const [ax,ay]=p.points[i-1],[bx,by]=p.points[i],length=Math.hypot(bx-ax,by-ay);for(let j=0;j<length;j+=3){const t=j/length,offset=(random()-.5)*(p.width-7);rect(ax+(bx-ax)*t-(by-ay)/length*offset,ay+(by-ay)*t+(bx-ax)/length*offset,2,1,j%2?0x9f916e:0xd6c29a,.7);}}
+ // Keep the former random stream so the shared texture does not relocate trees.
+ for(const path of layout.paths)for(let i=1;i<path.points.length;i++){
+  const a=path.points[i-1],b=path.points[i],length=Math.hypot(b[0]-a[0],b[1]-a[1]);for(let d=0;d<length;d+=3)random();
+ }
  // Boundary trees leave the usable centre and paths open.
  for(let i=0;i<50;i++){const x=left+random()*width,y=top+random()*height;if(y<top+35||x<left+30||x>right-30)tree(x,y,.8+random()*.35);}
  for(let x=left+20;x<right;x+=48)tree(x,top+10,.85+random()*.2);
