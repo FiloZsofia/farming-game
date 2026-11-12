@@ -1,3 +1,4 @@
+import {drawShrubLeaf} from './foliage-leaf';
 import type Phaser from 'phaser';
 import {greenhouse,maraVillageParking,ornamentalShrubs} from './nursery-grounds';
 export function drawMaraBay(g:Phaser.GameObjects.Graphics){
@@ -43,6 +44,27 @@ export function drawGreenhouse(g:Phaser.GameObjects.Graphics){
 export class OrnamentalShrubArt{
  private g:Phaser.GameObjects.Graphics;private signature='';
  constructor(scene:Phaser.Scene){this.g=scene.add.graphics().setDepth(-.24);this.paint([0,0]);}
- paint(progress:readonly number[]){const key=progress.map(p=>Math.round(p*24)).join(',');if(key===this.signature)return;this.signature=key;const g=this.g;g.clear();ornamentalShrubs.forEach((p,i)=>{const t=progress[i],w=36-t*5;g.fillStyle(0x314a34,.2).fillEllipse(p.x+3,p.y+3,38,12);g.fillStyle(0x786044).fillRect(p.x-2,p.y-16,4,18);g.fillStyle(0x395e41).fillRoundedRect(p.x-w/2,p.y-29,w,29,9);g.fillStyle(0x5d814c).fillRoundedRect(p.x-w/2+1,p.y-32,w-2,25,8);g.fillStyle(0x829c5b).fillRoundedRect(p.x-w/2+4,p.y-33,w-8,8,4);for(let k=0;k<13;k++){const a=k*2.4,x=p.x+Math.cos(a)*(14-t*4),y=p.y-18+Math.sin(a)*(13-t*5);g.fillStyle(k%2?0x739452:0x527a46).fillEllipse(x,y,5+(1-t)*3,3+(1-t)*2);}if(t>.3){g.lineStyle(.7,0x9aae6a,t*.6).lineBetween(p.x-10,p.y-29,p.x+10,p.y-29);for(let k=0;k<Math.floor(t*6);k++)g.fillStyle(k%2?0x8da464:0x68894c).fillEllipse(p.x+17+k%3*3,p.y-2+Math.floor(k/3)*3,3,1.5);} });}
+ paint(progress:readonly number[]){
+  const key=progress.map(p=>Math.round(p*24)).join(',');if(key===this.signature)return;this.signature=key;
+  const g=this.g;g.clear();ornamentalShrubs.forEach((p,i)=>{
+   const t=progress[i],w=36-t*5;
+   g.fillStyle(0x314a34,.2).fillEllipse(p.x+3,p.y+3,38,12);
+   g.fillStyle(0x786044).fillRect(p.x-2,p.y-16,4,18);
+   g.fillStyle(0x395e41).fillRoundedRect(p.x-w/2,p.y-29,w,29,9);
+   g.fillStyle(0x557b49).fillRoundedRect(p.x-w/2+1,p.y-32,w-2,27,8);
+   for(let row=0;row<7;row++)for(let col=0;col<7;col++){
+    const dx=(col-3)*(w-5)/6+(row%2?.7:0),dy=-30+row*4;
+    if(Math.abs(dx)>w/2-3||row===0&&Math.abs(dx)>w/2-6)continue;
+    drawShrubLeaf(g,p.x+dx,p.y+dy,(col<3?-1:1)*(.4+(row%3)*.2),row<3,.9);
+   }
+   // Outlying shoots recede as Mara clips the bush into a compact topiary.
+   for(let k=0;k<9;k++){
+    const a=k*2.4,dx=Math.cos(a)*(17-t*5),dy=-18+Math.sin(a)*(16-t*5);
+    drawShrubLeaf(g,p.x+dx,p.y+dy,a*.3,k%2===0,1.15-t*.3);
+   }
+   if(t>.3)for(let k=0;k<Math.floor(t*6);k++)drawShrubLeaf(g,p.x+17+k%3*3,p.y-2+Math.floor(k/3)*3,k*.6,true,.65);
+  });
+ }
+
  destroy(){this.g.destroy();}
 }

@@ -1,3 +1,4 @@
+import {leafContour} from './foliage-leaf';
 import {natureTreeClear} from './nature-resources';
 import type Phaser from 'phaser';
 
@@ -75,11 +76,11 @@ export function drawWoodlandTree(g:Phaser.GameObjects.Graphics,random:()=>number
     const xx=Math.round(cx+(col-2)*rx*.34+(row%2?2:0)+(a%3)-1),yy=Math.round(cy+(row-1.5)*ry*.39+(col%2)+((a>>>5)%3)-1);
     const angle=(col<2?-1:1)*(.45+(a%3)*.18),cos=Math.cos(angle),sin=Math.sin(angle);
     const transform=(points:number[])=>points.map((v,i)=>i%2?yy+points[i-1]*sin+v*cos:xx+v*cos-points[i+1]*sin);
-    const leaf=(length:number,height:number)=>transform([-length,0,-1,-height,1,-height,length,0,1,height,-1,height]);
+    const leaf=(length:number,height:number)=>transform(leafContour(length,height));
     // A one-pixel dark rim all around, not just a drop shadow.
-    shape(leaf(3,2),palette[0]);
-    shape(leaf(2,1),palette[row<2?3:2]);
-    if(row<2&&a%3===0)shape(transform([-1,-1,1,-1,0,0,-1,0]),palette[4]);
+    shape(leaf(3.4,1.9),birch?0x2c6450:0x2c5936);
+    shape(leaf(2.35,1),row<2?(birch?0x4a9264:0x3d8444):palette[2]);
+    if(row<2&&a%3===0)shape(transform([-1,-1,1,-1,0,0,-1,0]),palette[3]);
    }
   }
 
