@@ -100,12 +100,14 @@ export function drawVillage(scene:Phaser.Scene){
 }
 export function drawForage(scene:Phaser.Scene,picked:Record<string,number>,day:number,weatherSeed=0){
  const g=scene.add.graphics().setDepth(2);
- for(const b of layout.bushes){g.fillStyle(0x2f5138,.25).fillEllipse(b.x+3,b.y+5,40,13);g.fillStyle(0x355f40).fillEllipse(b.x,b.y-6,35,24);g.fillStyle(0x527b48).fillEllipse(b.x-3,b.y-9,29,22);
-  for(let row=0;row<5;row++)for(let col=0;col<7;col++){
-   const dx=(col-3)*4.4+(row%2?1.4:0),dy=(row-2)*4;
-   if((dx/15.4)**2+(dy/10.3)**2>1)continue;
-   drawShrubLeaf(g,b.x+dx,b.y-7+dy,(col<3?-1:1)*(.45+((row+col)%3)*.18),row<3);
-  }
+ for(const b of layout.bushes){
+  g.fillStyle(0x2f5138,.25).fillEllipse(b.x+3,b.y+5,40,13);
+  g.fillStyle(0x355f40).fillPoints([[-17,-2],[-15,-10],[-9,-16],[-2,-17],[6,-17],[13,-12],[17,-5],[15,2],[7,5],[-6,5],[-15,2]].map(([dx,dy])=>({x:b.x+dx,y:b.y+dy})),true);
+  g.fillStyle(0x476e43).fillPoints([[-13,-5],[-9,-13],[-1,-15],[7,-13],[11,-7],[4,-5],[-4,0],[-10,-1]].map(([dx,dy])=>({x:b.x+dx,y:b.y+dy})),true);
+  // Loose alternating leaves belong to three short shoots, not a surface grid.
+  for(const side of [-1,0,1])g.lineStyle(.8,0x61734a).lineBetween(b.x+side*2,b.y+1,b.x+side*9,b.y-13);
+  const leaves=[[-6,-14,-2.4],[2,-14,-.7],[10,-10,-.5],[-12,-8,-2.6],[-4,-8,-.7],[5,-7,-2.3],[13,-3,-.4],[-12,-1,-2.8],[-5,-2,-.6],[3,-1,-2.5],[9,3,-.4],[-5,3,-2.7],[1,4,-.5]];
+  for(let i=0;i<leaves.length;i++){const [dx,dy,a]=leaves[i];drawShrubLeaf(g,b.x+dx,b.y+dy,a,dy< -4,i%3===0?1.5:1.35);}
   if(forageReady({picked,weatherSeed},b.id,day))for(const[dx,dy]of [[-10,-5],[2,-12],[10,-4],[-3,0]]){g.fillStyle(0x565b84).fillCircle(b.x+dx,b.y+dy,3);g.fillStyle(0xa8a9c7).fillCircle(b.x+dx-1,b.y+dy-1,.8);g.lineStyle(.6,0x3c456b).strokeCircle(b.x+dx,b.y+dy,3);}}
  return g;
 }

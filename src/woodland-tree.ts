@@ -72,14 +72,14 @@ export function drawWoodlandTree(g:Phaser.GameObjects.Graphics,random:()=>number
   for(let k=0;k<patches.length;k++){
    const [cx,cy,rx,ry]=patches[k];
    for(let row=0;row<4;row++)for(let col=0;col<5;col++){
-    const a=hash(k*31+row*5+col,k+7);if(a%7===0)continue;
+    const a=hash(k*31+row*5+col,k+7);if(a%3===0)continue;
     const xx=Math.round(cx+(col-2)*rx*.34+(row%2?2:0)+(a%3)-1),yy=Math.round(cy+(row-1.5)*ry*.39+(col%2)+((a>>>5)%3)-1);
     const angle=(col<2?-1:1)*(.45+(a%3)*.18),cos=Math.cos(angle),sin=Math.sin(angle);
     const transform=(points:number[])=>points.map((v,i)=>i%2?yy+points[i-1]*sin+v*cos:xx+v*cos-points[i+1]*sin);
     const leaf=(length:number,height:number)=>transform(leafContour(length,height));
     // A one-pixel dark rim all around, not just a drop shadow.
-    shape(leaf(3.4,1.9),birch?0x2c6450:0x2c5936);
-    shape(leaf(2.35,1),row<2?(birch?0x4a9264:0x3d8444):palette[2]);
+    shape(leaf(3.8,1.7),birch?0x2c6450:0x2c5936);
+    shape(leaf(2.7,.85),row<2?(birch?0x4a9264:0x3d8444):palette[2]);
     if(row<2&&a%3===0)shape(transform([-1,-1,1,-1,0,0,-1,0]),palette[3]);
    }
   }

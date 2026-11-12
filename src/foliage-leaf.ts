@@ -1,7 +1,7 @@
 import type Phaser from 'phaser';
 
-/** A tapered oval leaf, shared by pixel trees and small garden shrubs. */
-export function leafContour(length:number,halfWidth:number){return [-length,0,-length*.65,-halfWidth*.7,0,-halfWidth,length*.65,-halfWidth*.65,length,0,length*.35,halfWidth,-length*.25,halfWidth*.85,-length*.7,halfWidth*.55];}
+/** A narrow pointed leaf, shared by pixel trees and small garden shrubs. */
+export function leafContour(length:number,halfWidth:number){return [-length,0,-length*.4,-halfWidth, length*.15,-halfWidth*.8,length,0,length*.15,halfWidth*.8,-length*.4,halfWidth];}
 export function drawShrubLeaf(g:Phaser.GameObjects.Graphics,x:number,y:number,angle:number,light:boolean,size=1){
  const cos=Math.cos(angle),sin=Math.sin(angle);
  const leaf=(l:number,h:number,c:number)=>{
@@ -18,5 +18,5 @@ export function drawShrubLeaf(g:Phaser.GameObjects.Graphics,x:number,y:number,an
    for(let i=0;i+1<hits.length;i+=2){const left=Math.ceil(hits[i]),right=Math.floor(hits[i+1]);if(right>=left)g.fillRect(left,yy,right-left+1,1);}
   }
  };
- leaf(2.8,1.65,0x385f40);leaf(1.95,.9,light?0x648b53:0x4e7848);
+ leaf(3.1,1.45,0x385f40);leaf(2.1,.75,light?0x729658:0x5b834b);
 }

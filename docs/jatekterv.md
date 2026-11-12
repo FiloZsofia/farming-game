@@ -1587,3 +1587,5 @@ A felhasználó kifejezett pontosítása: a nyír, lombos fa és fenyő korábbi
 ### Elfogadott sötét szélű levelek finomítása és bokrok — 2026-11-12
 
 A felhasználó az elkülönülő, sötét szélű levelek irányát elfogadta. A levélforma nyújtottabb, lágyabban ívelt; a kontúr maradjon felismerhető, de kisebb legyen a belső levélszínhez viszonyított kontrasztja. Az áfonyabokrok és Mara mindkét díszbokra ugyanilyen részletességű leveleket kap. Az áfonya szedhetősége és a látható bogyók megmaradnak; Mara metszése továbbra is fokozatosan rendezett formát alakít ki, levágott levelekkel. Elhelyezés és játékmenet nem változik.
+
+A következő finomításnál a levelek hegyesebbek, a fák lombján ritkábbak. Az áfonyabokrok szabályos levélsorai helyett néhány rövid hajtáshoz kapcsolódó, lazább levélcsoport készül. Mara bokrain a felhasználó által kedvelt kiálló levelek és azok metszés alatti visszahúzódása megmarad.
