@@ -1,3 +1,4 @@
+import {drawLily,drawDuckNest} from './pond-place-art';
 import {drawLeafCrown} from './tree-foliage';
 import {orchardGrowth} from './orchard-growth';
 import {drawTreeBlossomGaps} from './pollination-art';
@@ -20,17 +21,13 @@ export function drawEstate(scene:Phaser.Scene,estate:Estate,day:number){
   if(t.fruit)for(let i=0;i<t.fruit;i++){const xx=x+Math.cos(i*2.4)*19,yy=y-48+Math.sin(i*2.4)*14;g.fillStyle(t.fruitDay!==undefined&&day-t.fruitDay>=2?(t.kind==='cherry'?0xa26b59:t.kind==='plum'?0x81738a:0xa99a6f):t.kind==='cherry'?0xb94f49:t.kind==='plum'?0x776187:t.kind==='apple'?0xcf9450:0xc1b566).fillEllipse(xx,yy,6,t.kind==='pear'?9:6);g.lineStyle(1,0x65583a).lineBetween(xx,yy-3,xx+1,yy-6);}
   if(t.fruit)drawRipeMarker(g,x+25*s,y-65*s);
  }
- for(const p of estate.pond){if(p.kind==='lily'){
-   for(const [dx,dy,r]of [[-8,3,14],[10,6,12]]){g.fillStyle(0x3c7651).fillEllipse(p.x+dx,p.y+dy,r*2,r);g.fillStyle(0x88aa5b).fillEllipse(p.x+dx-2,p.y+dy-2,r*1.7,r*.7);g.lineStyle(.8,0xb2c580).lineBetween(p.x+dx,p.y+dy,p.x+dx+r*.6,p.y+dy-2);g.fillStyle(0x397f87).fillTriangle(p.x+dx,p.y+dy,p.x+dx+r,p.y+dy-4,p.x+dx+r,p.y+dy+2);}
-   for(let i=0;i<8;i++){const a=i*Math.PI/4;g.fillStyle(i%2?0xe5aeb8:0xf5d7d4).fillEllipse(p.x+Math.cos(a)*7,p.y-5+Math.sin(a)*3.5,10,5);}
-   g.fillStyle(0xffeee0).fillEllipse(p.x,p.y-8,9,9);g.fillStyle(0xe5bd55).fillEllipse(p.x,p.y-5,6,4);
-  }
+ for(const p of estate.pond){if(p.kind==='lily'){drawLily(g,p.x,p.y);}
   else if(p.kind==='reed'){
    const growth=Math.min(1,Math.max(0,(day-(p.lastHarvest??p.day))/3)),shoots=7+Math.min(5,Math.floor((day-p.day)/3));
    g.fillStyle(0x416f53,.4).fillEllipse(p.x,p.y+2,25,8);for(let i=0;i<shoots;i++){const offset=i<7?(i-3)*3:(i%2?-1:1)*(12+(i-7)*2),x=p.x+offset,s=i<7?.32+growth*.68:.3+growth*.36,h=(21+i%3*7)*s,lean=offset*.55;g.lineStyle(i<7?2:1.4,i<7?0x6e8d43:0x91ac60).lineBetween(x,p.y,x+lean,p.y-h);g.lineStyle(1,0xa4b877).lineBetween(x,p.y-3,x+lean-4,p.y-h*.7);if(i<7&&growth>=.8)g.lineStyle(3,0x816440).lineBetween(x+lean,p.y-h,x+lean,p.y-h-8);}
    if(reedReady(p,day))drawRipeMarker(g,p.x+16,p.y-40);
   }
-  else{g.fillStyle(0x8e734a).fillEllipse(p.x,p.y,33,20);g.fillStyle(0xc6a474).fillEllipse(p.x,p.y-3,30,17);g.fillStyle(0x6e6446).fillEllipse(p.x,p.y-4,20,10);}
+  else{drawDuckNest(g,p.x,p.y);}
  }
  // Spawn clings to submerged vegetation in the shallows, rather than a marker on land.
  if(Object.values(estate.roe).some(n=>n>0)){
@@ -50,7 +47,30 @@ export function drawEstate(scene:Phaser.Scene,estate:Estate,day:number){
 
 export function drawDuck(g:Phaser.GameObjects.Graphics,x:number,y:number,male:boolean,wing=0,pose:{ground?:boolean;stride?:number;facing?:1|-1}={}){
  g.save().translateCanvas(x,y).scaleCanvas(pose.facing??1,1);x=0;y=0;
- if(pose.ground){g.fillStyle(0x334f43,.2).fillEllipse(1,10,25,6);for(const [i,hip]of [-4,4].entries()){const step=Math.sin((pose.stride??0)+i*Math.PI)*2.5,lift=Math.max(0,Math.sin((pose.stride??0)+i*Math.PI))*1.5,foot=hip+step;g.lineStyle(1.8,0xc9964e).lineBetween(hip,1,foot,8-lift);g.fillStyle(0xd8ab5d).fillTriangle(foot-2,8-lift,foot+5,9-lift,foot-2,10-lift);}}
- else g.fillStyle(0x334f43,.18).fillEllipse(x+2,y+4,24,7);
- g.fillStyle(male?0xb6b29b:0x9b8059).fillEllipse(x,y-2,23,13);g.fillStyle(male?0x647f77:0xc0a074).fillEllipse(x-2,y-4,15,8);g.fillStyle(male?0x426b51:0x92724d).fillCircle(x+9,y-10,5);g.fillStyle(0xe4c176).fillTriangle(x+13,y-11,x+20,y-9,x+13,y-7);g.fillStyle(0x273e32).fillCircle(x+10,y-11,1);if(male)g.lineStyle(1,0xe4dac0).lineBetween(x+6,y-6,x+12,y-6);g.fillStyle(0xf4e3b7).fillCircle(x+10.3,y-11.4,.35);g.lineStyle(.8,male?0x466b75:0x70563b).lineBetween(x-7,y-4,x+2,y-1);if(!male)for(let i=0;i<4;i++)g.lineStyle(.7,0x70563f).lineBetween(x-7+i*3,y-4,x-5+i*3,y-2);g.fillStyle(0x444e42).fillTriangle(x-10,y-4,x-17,y-6,x-12,y);if(wing)g.lineStyle(3,0x8d9b85).lineBetween(x,y-5,x-10,y-5-wing);g.restore();
+ if(pose.ground){g.fillStyle(0x334f43,.2).fillEllipse(1,10,25,6);for(const [i,hip]of [-4,4].entries()){const step=Math.sin((pose.stride??0)+i*Math.PI)*2.5,lift=Math.max(0,Math.sin((pose.stride??0)+i*Math.PI))*1.5,foot=hip+step;g.lineStyle(1.7,0xb68e56).lineBetween(hip,1,foot,8-lift);g.fillStyle(0xc69e64).fillTriangle(foot-2,8-lift,foot+5,9-lift,foot-2,10-lift);}}
+ else g.fillStyle(0x334f43,.18).fillEllipse(2,4,24,7);
+ // Layered body and overlapping flight feathers keep the familiar silhouette.
+ g.fillStyle(male?0x8d9386:0x8b7353).fillEllipse(0,-2,23,13);
+ g.fillStyle(male?0xb9baaa:0xb49b74).fillEllipse(-2,-4,18,9);
+ g.fillStyle(male?0x6f8077:0x9c825e).fillPoints([{x:-10,y:-6},{x:0,y:-8},{x:6,y:-3},{x:1,y:2},{x:-9,y:1}],true);
+ for(let i=0;i<5;i++){
+  const xx=-8+i*2.4,yy=-5+i*.55;
+  g.lineStyle(.7,male?0xc2c5b2:0xc0a87e,.8).lineBetween(xx,yy,xx+3,yy+2);
+  g.lineStyle(.55,male?0x53675d:0x735d43,.75).lineBetween(xx,yy+1.5,xx+2.8,yy+3);
+ }
+ g.fillStyle(male?0x566e7c:0x7a7162).fillPoints([{x:-6,y:-3},{x:0,y:-4},{x:3,y:-1},{x:-3,y:0}],true);
+ g.lineStyle(.7,0xd0c8ab,.8).lineBetween(-6,-3,0,-4);
+ g.fillStyle(male?0x354e41:0x776044).fillTriangle(-10,-3,-17,-6,-12,1);
+ g.lineStyle(.6,male?0x959f88:0xb49b74).lineBetween(-15,-5,-10,-3);
+ // A short neck, shaped head, two-tone bill and a small eye highlight.
+ g.fillStyle(male?0x715a43:0x9b7e57).fillEllipse(7,-5,7,8);
+ g.fillStyle(male?0x365c49:0x88704f).fillEllipse(9,-10,10,11);
+ g.fillStyle(male?0x547762:0xa58b63).fillEllipse(8,-12,6,5);
+ if(!male){g.lineStyle(.65,0x5b503d).lineBetween(5,-10,11,-11);g.lineStyle(.6,0xc1ab83).lineBetween(6,-8,11,-9);}
+ else g.lineStyle(1,0xd3cdb1).lineBetween(6,-6,12,-6);
+ g.fillStyle(0xb79457).fillPoints([{x:13,y:-12},{x:19,y:-10},{x:19,y:-8},{x:13,y:-8}],true);
+ g.lineStyle(.6,0xd1b378).lineBetween(13,-11,18,-10);g.lineStyle(.6,0x806c46).lineBetween(14,-8.5,18,-8.5);
+ g.fillStyle(0x253c31).fillCircle(10,-11,1);g.fillStyle(0xe4dbc2).fillCircle(10.3,-11.4,.3);
+ if(wing)g.lineStyle(3,0x8d9b85).lineBetween(0,-5,-10,-5-wing);
+ g.restore();
 }

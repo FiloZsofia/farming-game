@@ -1,3 +1,5 @@
+import {PondExpansionController} from './pond-expansion-controller';
+import {bindPondExpansion} from './pond-shape';
 import {BrookCurrent} from './brook-art';
 import {claimHomesteadRefunds} from './homestead-refunds';
 import {overlapsMarket} from './market-site';
@@ -793,6 +795,7 @@ class Farm extends Phaser.Scene {
   const recipes=document.querySelector<HTMLElement>('#blueprints-page')!;recipes.replaceChildren();
   this.appendCraftRecipes(recipes);
   this.gardenController?.appendPlans(recipes);
+  this.pondBuilder?.appendPlan(recipes);
   if(!this.skill.chestBlueprint&&!this.travel.homestead?.garden.chestBlueprint)return;
   const card=document.createElement('div');card.className='inventory-card';card.textContent='Tárolóláda · 24 rekesz';card.prepend(itemIcon('chest'));
   const costs=document.createElement('div');costs.className='recipe-costs';
@@ -1131,6 +1134,7 @@ class Farm extends Phaser.Scene {
   this.renderShipping();document.querySelector<HTMLElement>('#shipping-panel')!.hidden=false;
  }
  private selectTool(tool:FarmTool){
+  this.pondBuilder?.cancel();
   if(this.microscopeDeliveryPlaying)return;
   if(this.gardenController&&(['hoe','water','harvest','crowbar','stick','mulch'].includes(tool)||tool in bedKinds))this.gardenController.setTool(tool as 'hoe');
   if(tool==='hand')tool='harvest';if(tool==='axe'||tool==='pickaxe')tool='crowbar';
@@ -1342,6 +1346,7 @@ class Farm extends Phaser.Scene {
   this.noahChapter=this.makeNoahController(this.travel.noah,noahTestConfig);this.redrawForest();
  }
  private makeNoahController(state:import('./noah-story').NoahTestState,config:NoahTestConfig){return new NoahTestController(this,state,config,{herbCount:id=>this.travel.estate.produce[id],persist:()=>this.persist(),regularMicroscope:()=>this.openMicroscope(false),stickUpgraded:()=>this.syncStickUpgrade(true),actor:()=>this.actor,avatar:()=>this.avatar,day:()=>this.clock.day,map:()=>this.openTestMap(),laboratory:active=>{if(!active){if(worldBlocked(this.actor.x,this.actor.y))this.actor.setPosition(337,3415);void this.persist();}release();movementInput.clear();this.input.keyboard?.resetKeys();this.jumpRemaining=0;this.body.setY(0);this.selection.setVisible(!active);this.bubble.setVisible(false);this.fitCamera(active);},read:()=>this.currentSnapshot(),commit:(s,after)=>this.commitChest(s,after),show:(title,text,label)=>{showDialogue(title,text,label??'');if(title==='Simon')this.showSpeaker('craftShop');},notice:text=>this.notice(text),record:id=>recordStoryEvent(this.travel,id,this.clock.day),gather:point=>this.avatar.use(point.x-this.actor.x,point.y-this.actor.y,'harvest')});}
+ private pondBuilder:PondExpansionController|null=null;
  private gardenController:LivingBedController|null=null;
  private farmMarket:FarmMarketController|null=null;
  private homesteadSpace(x:number,y:number,r:number){if(!this.travel.homestead)return true;return !overlapsMarket({x,y},r,r)&&this.travel.homestead.garden.beds.every(b=>Math.hypot(Math.max(b.area.x-x,0,x-b.area.x-b.area.w),Math.max(b.area.y-y,0,y-b.area.y-b.area.h))>r)&&this.travel.homestead.garden.paths.every(p=>Math.hypot(p.x-x,p.y-y)>r+10);}
@@ -1454,6 +1459,7 @@ class Farm extends Phaser.Scene {
   finally{this.transitioning=false;this.lastTick=performance.now();}
  }
  private async doWork(){
+  if(this.pondBuilder?.active)return;
 
   if(this.canInteract()&&this.farmMarket?.interact())return;
   if(!this.ready||performance.now()<this.eatingUntil||dialogue.open||this.transitioning||this.fishThrowPlaying||this.collapseRemaining>0||this.jumpRemaining>0||this.avatar.isWorking()||!this.target)return;
@@ -1503,6 +1509,7 @@ class Farm extends Phaser.Scene {
  }
 
  create(){
+  bindPondExpansion(()=>this.travel.estate.pondExpansion??[]);
   drawVillage(this);this.noticeBoard=drawVillageNotice(this);this.shopLeo=drawShop(this,'nursery');this.shopAnnie=drawShop(this,'fishShop');this.shopMaker=drawShop(this,'craftShop');
   this.redrawScenery();
   const objectZone=(id:string,area:{x:number;y:number;w:number;h:number},action:()=>void)=>{
@@ -1550,13 +1557,13 @@ class Farm extends Phaser.Scene {
   });
   this.input.on('pointermove',(pointer:Phaser.Input.Pointer)=>{if(this.noahChapter?.labActive)return;
     if(!this.ready||dialogue.open)return;
-    const point=this.cameras.main.getWorldPoint(pointer.x,pointer.y);this.gardenController?.movePreview(point);if(pointer.wasTouch)return;this.target=this.placing==='goldfish'||this.placing==='carp'?{x:point.x-TILE/2,y:point.y-TILE/2}:targetTile(point.x,point.y,this.garden.plots);
+    const point=this.cameras.main.getWorldPoint(pointer.x,pointer.y);if(this.pondBuilder?.active){this.pondBuilder.move(point);return;}this.gardenController?.movePreview(point);if(pointer.wasTouch)return;this.target=this.placing==='goldfish'||this.placing==='carp'?{x:point.x-TILE/2,y:point.y-TILE/2}:targetTile(point.x,point.y,this.garden.plots);
   });
-  this.input.on('pointerup',()=>{this.gardenController?.endPointer();});
-  this.input.on('pointerupoutside',()=>{this.gardenController?.endPointer();});
+  this.input.on('pointerup',()=>{this.pondBuilder?.endPointer();this.gardenController?.endPointer();});
+  this.input.on('pointerupoutside',()=>{this.pondBuilder?.endPointer();this.gardenController?.endPointer();});
   this.input.on('pointerdown',(pointer:Phaser.Input.Pointer)=>{
     if(!this.ready||dialogue.open||this.noahChapter?.labActive||pointer.button!==0)return;
-    const point=this.cameras.main.getWorldPoint(pointer.x,pointer.y);if(this.canInteract()&&(this.farmMarket?.interact(point)||this.gardenController?.pointer(point,pointer.wasTouch)))return;if(journalHelpPending(this.story,this.clock.day)&&Math.hypot(point.x-farmLayout.journal.x-9,point.y-farmLayout.journal.y-7)<=36){this.openJournalHelp();return;}this.target=this.placing==='goldfish'||this.placing==='carp'?{x:point.x-TILE/2,y:point.y-TILE/2}:targetTile(point.x,point.y,this.garden.plots);if(!this.placing&&this.canInteract()&&this.gatherTargetWeed(point))return;if(inForest(this.actor.x,this.actor.y)||this.noahChapter&&inNoahSouth(this.actor.x,this.actor.y)){const d=Math.hypot(point.x-this.actor.x,point.y-this.actor.y)||1;this.direction={x:(point.x-this.actor.x)/d,y:(point.y-this.actor.y)/d};}this.forestClick=point;void this.doWork();this.forestClick=null;
+    const point=this.cameras.main.getWorldPoint(pointer.x,pointer.y);if(this.pondBuilder?.active){if(!(pointer.event.target as HTMLElement)?.closest('.pond-builder-panel'))this.pondBuilder.pointer(point);return;}if(this.canInteract()&&(this.farmMarket?.interact(point)||this.gardenController?.pointer(point,pointer.wasTouch)))return;if(journalHelpPending(this.story,this.clock.day)&&Math.hypot(point.x-farmLayout.journal.x-9,point.y-farmLayout.journal.y-7)<=36){this.openJournalHelp();return;}this.target=this.placing==='goldfish'||this.placing==='carp'?{x:point.x-TILE/2,y:point.y-TILE/2}:targetTile(point.x,point.y,this.garden.plots);if(!this.placing&&this.canInteract()&&this.gatherTargetWeed(point))return;if(inForest(this.actor.x,this.actor.y)||this.noahChapter&&inNoahSouth(this.actor.x,this.actor.y)){const d=Math.hypot(point.x-this.actor.x,point.y-this.actor.y)||1;this.direction={x:(point.x-this.actor.x)/d,y:(point.y-this.actor.y)/d};}this.forestClick=point;void this.doWork();this.forestClick=null;
   });
   this.actor=this.add.container(START.x,START.y).setDepth(100);
   this.shadow=this.add.ellipse(0,0,20,7,0x35442e,0.25);this.actor.add(this.shadow);
@@ -1573,6 +1580,7 @@ class Farm extends Phaser.Scene {
   this.thought=worldText(this,0,0,'',{fontFamily:'Georgia',fontSize:'10px',color:'#344939',padding:{x:5,y:3},wordWrap:{width:112},align:'center'}).setOrigin(.5,1).setDepth(160).setResolution(4).setData('worldTextKind','thought').setVisible(false);
   this.bubble=worldText(this,0,0,'', {fontFamily:'Georgia',fontSize:'20px',color:'#fff4cf',backgroundColor:'#293e30',padding:{x:9,y:4}}).setOrigin(.5,1).setDepth(101).setResolution(4).setInteractive({useHandCursor:true});
   const inspect=()=>{
+  if(this.pondBuilder?.active)return;
 
   if(this.canInteract()&&this.researchInteraction())return;
   if(this.canInteract()&&(this.farmMarket?.interact()||this.gardenController?.interact()))return;
@@ -1607,6 +1615,7 @@ class Farm extends Phaser.Scene {
   this.game.canvas.tabIndex=-1;
   dialogue.addEventListener('close',()=>{this.microscopeUI?.destroy();this.microscopeUI=null;this.input.keyboard?.resetKeys();release();queueMicrotask(()=>{if(this.ready&&this.hasFarm&&!this.choosingFarm&&!this.naming&&!dialogue.open&&!this.transitioning)this.game.canvas.focus({preventScroll:true});});});
   showDialogue('',story,'');
+  this.pondBuilder=new PondExpansionController(this,{read:()=>this.currentSnapshot(),ready:()=>this.canInteract(),commit:next=>this.commitChest(next,()=>{}),begin:()=>{this.selectTool('harvest');this.gardenController?.cancelPlacement();this.gardenController?.closePanel();},changed:()=>{this.redrawScenery();this.drawGarden();this.avatar.use(1,0,'restore');},notice:text=>this.notice(text)});
   void this.initStorage();
   this.keys=this.input.keyboard!.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT,SHIFT',false) as Record<string,Phaser.Input.Keyboard.Key>;
   const inventoryTabs=['items','people','skills','goals','blueprints'] as const;
@@ -1705,6 +1714,7 @@ class Farm extends Phaser.Scene {
   this.drawJournalHint(now);
   const guides=this.hasFarm&&!this.choosingFarm&&!this.travel.homestead?plantingGuideTools(this.story,this.travel.research,this.garden,weather==='rain'):[];
   for(const tool of ['hoe','water'])document.querySelector(`#toolbar [data-tool="${tool}"]`)?.classList.toggle('tool-attention',guides.includes(tool as 'hoe'|'water'));
+  this.pondBuilder?.update();
   this.machineActivity??=this.add.graphics().setDepth(104);drawMachineActivity(this.machineActivity,this.travel.crafting,now);
   if(!this.ready||dialogue.open||this.transitioning||document.hidden||!document.hasFocus()){this.input.keyboard?.resetKeys();this.selection.setVisible(false);return;}
   if(this.collapseRemaining>0){

@@ -1,7 +1,7 @@
+import {drawNaturalPond} from './pond-art';
 import {drawPathNetwork} from './path-art';
 import {studyColor,drawStudyGrass,drawStudyTree,drawStudyBorders} from './art-study-art';
 import Phaser from 'phaser';
-import {pondRadius} from './pond-shape';
 import {activeDebris,createClearing,type Clearing} from './cleanup';
 import {createGarden,type Garden} from './gardening';
 import {farmLayout as layout,farmBounds} from './layout';
@@ -100,17 +100,8 @@ export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),g
  rect(c.x+7,c.y+8,6,1,0xe4cb88);
  const m=layout.mailbox;rect(m.x+10,m.y+m.h,5,20,0x80613e);rect(m.x,m.y,m.w,m.h,0x536e72);rect(m.x+2,m.y+2,m.w-4,4,0x94a7a2);rect(m.x+8,m.y+9,8,2,0x273f40);
  g=ground;
- // Water keeps the exact collision ellipse; only shoreline detail extends outward.
- const p=layout.pond;
- const shoreline=(inset:number)=>{const points:number[]=[];for(let i=0;i<64;i++){const a=i/64*Math.PI*2;const wobble=pondRadius(a);points.push(p.x+Math.cos(a)*(p.rx+inset)*wobble,p.y+Math.sin(a)*(p.ry+inset)*wobble);}return points;};
- poly(shoreline(13),0x62794f);poly(shoreline(7),0xaeaa82);poly(shoreline(0),0x246c7c);
- // Broad shallow patches follow the bays, instead of concentric swimming-pool rings.
- poly(shoreline(-7),0x288b98);const shallows=new Phaser.Curves.Spline([p.x-100,p.y-25,p.x-74,p.y-62,p.x-13,p.y-76,p.x+44,p.y-56,p.x+101,p.y-9,p.x+118,p.y+38,p.x+68,p.y+76,p.x+9,p.y+87,p.x-68,p.y+55,p.x-104,p.y+12,p.x-100,p.y-25]);poly(shallows.getPoints(72).flatMap(point=>[point.x,point.y]),0x42a5a7);
- for(let i=0;i<(study?0:110);i++){const x=p.x-p.rx+random()*p.rx*2,y=p.y-p.ry+random()*p.ry*2;if(((x-p.x)/p.rx)**2+((y-p.y)/p.ry)**2<.87)line(x,y,x+4+random()*12,y, i%3?0x98d9cb:0xe1edbc,1,.45);}
- for(const [dx,dy,w]of [[-72,-52,18],[-61,-48,8],[-89,-44,13],[-44,-59,10],[-68,-39,5]])line(p.x+dx,p.y+dy,p.x+dx+w,p.y+dy,0xf0f0c2,1,.8);
- for(let i=0;i<48;i++){const a=random()*Math.PI*2,wobble=pondRadius(a),x=p.x+Math.cos(a)*(p.rx+5)*wobble,y=p.y+Math.sin(a)*(p.ry+5)*wobble;if(x<500&&y<420)continue;if(i%5===0)rock(x,y,.3);}
- for(const [x,y]of [[570,443],[731,480],[620,540]]){oval(x+2,y+2,18,8,0x345e52);oval(x,y,16,7,0x7b9a64);line(x-5,y,x+4,y,0xa1b27e);oval(x+3,y-3,5,4,0xe2cfb1);}
- for(let i=0;i<17;i++){const x=557+i*6,y=358-Math.sin(i*.3)*5;line(x,y,x-2,y-17,0x4c6945);rect(x-3,y-21,2,7,0x735e3d);}
+ // One shared shoreline drives the original pond and every saved expansion.
+ drawNaturalPond(g);
  const d=layout.dock;oval(d.x+34,d.y+27,76,17,0x2f5047,.35);rect(d.x,d.y,d.w,d.h,0x5f503c);for(let x=d.x+2;x<d.x+d.w;x+=8){rect(x,d.y+2,6,d.h-4,0xa18a61);line(x+2,d.y+5,x+2,d.y+d.h-6,0xc0ab7a);rect(x+2,d.y+4,1,1,0x4a4a3a);}for(const x of [d.x,d.x+d.w-5]){rect(x,d.y-5,5,11,0x735337);rect(x,d.y+d.h-6,5,11,0x735337);rect(x,d.y-5,5,2,0xc2aa78);}
  for(const b of starterBeds?layout.beds:[]){
   const width=b.w,height=b.h;

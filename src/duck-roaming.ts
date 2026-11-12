@@ -1,5 +1,5 @@
 import {farmLayout} from './layout';
-import {pondRadius} from './pond-shape';
+import {pondRadius,currentPondExpansion} from './pond-shape';
 import {worldBlocked} from './village-layout';
 type Point={x:number;y:number};
 const smooth=(value:number)=>{const t=Math.max(0,Math.min(1,value));return t*t*(3-2*t);};
@@ -16,7 +16,7 @@ export function duckPose(nest:Point,elapsed:number,index:number,blocked:(p:Point
  const offsets=[[0,0],[15,3],[-7,8],[-15,2]],points=offsets.map(([along,out])=>({x:anchor.x-n.y*along+n.x*out,y:anchor.y+n.x*along+n.y*out}));
  let routeSafe=points.every(safe);
  for(let i=0;routeSafe&&i<points.length;i++){const a=points[i],b=points[(i+1)%points.length];for(let j=0;j<=8;j++)if(!safe({x:a.x+(b.x-a.x)*j/8,y:a.y+(b.y-a.y)*j/8})){routeSafe=false;break;}}
- const position=(time:number)=>{const clock=Math.max(0,time)+index*4,segment=Math.floor(clock/12)%points.length,t=smooth((clock%12)/5),a=points[segment],b=points[(segment+1)%points.length],land=routeSafe?{x:anchor.x+((a.x+(b.x-a.x)*t)-anchor.x)*wander,y:anchor.y+((a.y+(b.y-a.y)*t)-anchor.y)*wander}:anchor,angle=time*.025+index*1.4,swim={x:615+Math.sin(angle)*27+(index?12:0),y:477+Math.cos(angle)*15+(index?6:0)};return {x:land.x+(swim.x-land.x)*water,y:land.y+(swim.y-land.y)*water};};
+ const position=(time:number)=>{const clock=Math.max(0,time)+index*4,segment=Math.floor(clock/12)%points.length,t=smooth((clock%12)/5),a=points[segment],b=points[(segment+1)%points.length],land=routeSafe?{x:anchor.x+((a.x+(b.x-a.x)*t)-anchor.x)*wander,y:anchor.y+((a.y+(b.y-a.y)*t)-anchor.y)*wander}:anchor,angle=time*.025+index*1.4,swim=currentPondExpansion().some(n=>n>0)?{x:pond.x+Math.sin(angle)*pond.rx*pondRadius(Math.PI/2-angle)*.65,y:pond.y+Math.cos(angle)*pond.ry*pondRadius(Math.PI/2-angle)*.65}:{x:615+Math.sin(angle)*27+(index?12:0),y:477+Math.cos(angle)*15+(index?6:0)};return {x:land.x+(swim.x-land.x)*water,y:land.y+(swim.y-land.y)*water};};
  const p=position(elapsed),next=position(elapsed+.08),ground=!inWater(p),moving=Math.hypot(next.x-p.x,next.y-p.y)>.012;
  return {...p,phase,ground,walking:ground&&moving&&phase!=='resting',facing:(next.x-p.x<-.001?-1:1) as 1|-1,stride:ground&&moving?elapsed*7+index*2:0};
 }

@@ -1,3 +1,4 @@
+import {pondOutline} from './pond-shape';
 import {brookSamples,brookSource,brookBridge} from './brook-layout';
 import {marketRoads} from './market-trial-route';
 import {farmBounds,farmLayout} from './layout';
@@ -36,7 +37,7 @@ export function createTestMap(player:{x:number;y:number},unlocked:boolean,farmNa
  const building=(x:number,y:number,name:string,lx:number,ly:number)=>{const p=mapPoint({x,y});element('rect',{x:p.x-14,y:p.y-7,width:28,height:22,fill:'#d5c59a',stroke:'#776246','stroke-width':1.2});element('path',{d:`M${p.x-18} ${p.y-7}L${p.x} ${p.y-22}L${p.x+18} ${p.y-7}Z`,fill:'#a47450',stroke:'#75513c','stroke-width':1.2});for(let i=0;i<3;i++)element('path',{d:`M${p.x-11+i*8} ${p.y-7}l6-10`,stroke:'#c59463','stroke-width':1});element('rect',{x:p.x-3,y:p.y+3,width:6,height:12,fill:'#725f44'});for(const dx of [-9,7])element('rect',{x:p.x+dx,y:p.y-1,width:5,height:6,fill:'#81978a',stroke:'#e8d7ae','stroke-width':1});element('path',{d:`M${p.x} ${p.y+18}L${lx} ${ly-19}`,fill:'none',stroke:'#a18c61','stroke-width':1});label(name,lx,ly,21);};
  for(const bed of beds){const p=mapPoint(bed);element('rect',{x:p.x,y:p.y,width:bed.w*.34,height:bed.h*.24,fill:'#958359',stroke:'#6f6b44'});for(let i=0;i<3;i++)element('path',{d:`M${p.x+4+i*8} ${p.y+3}v7`,stroke:'#697c47','stroke-width':2});}
  building(239,100,'Otthon',490,203);building(632,105,'Műhely',668,203);
- const pond=mapPoint(farmLayout.pond);element('path',{d:`M${pond.x-42} ${pond.y-10}q10-20 40-16t48 23q-6 23-43 18t-45-25Z`,fill:'#8da69a',stroke:'#6e8c7b','stroke-width':2});for(let i=0;i<4;i++)element('path',{d:`M${pond.x-25+i*15} ${pond.y+i%2*9}h9`,stroke:'#d1d9bd','stroke-width':1});
+ const pond=mapPoint(farmLayout.pond),pondPoints=pondOutline().map(mapPoint);element('path',{d:pondPoints.map((p,i)=>`${i?'L':'M'}${p.x} ${p.y}`).join(' ')+'Z','data-map-feature':'pond',fill:'#8da69a',stroke:'#6e8c7b','stroke-width':2});for(let i=0;i<4;i++)element('path',{d:`M${pond.x-25+i*15} ${pond.y+i%2*9}h9`,stroke:'#d1d9bd','stroke-width':1});
  const square=mapPoint(villageLayout.square);element('ellipse',{cx:square.x,cy:square.y,rx:62,ry:29,fill:'#decea3',stroke:'#b09c74','stroke-width':3});
  building(villageLayout.nursery.x+villageLayout.nursery.w/2,villageLayout.nursery.y+35,'Faiskola',660,361);building(villageLayout.fishShop.x+villageLayout.fishShop.w/2,villageLayout.fishShop.y+40,'Kertitó Szaküzlet',714,420);building(villageLayout.craftShop.x+villageLayout.craftShop.w/2,villageLayout.craftShop.y+40,'Műhelybolt',694,491);
  label(farmName.length>27?farmName.slice(0,26)+'…':farmName,570,82,27,true);label('Falu',522,344,29,true);label(mapNames.north,235,307,27,true);
