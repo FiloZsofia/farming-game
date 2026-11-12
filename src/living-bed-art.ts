@@ -27,6 +27,8 @@ export function paintLivingBed(g:Phaser.GameObjects.Graphics,s:LivingBed,selecte
  }
 
  if(s.mulched)for(let i=0;i<80;i++){const xx=x+7+i*47%(w-14),yy=y+6+i*31%(h-12);g.lineStyle(1,i%3?0xb79a61:0xd0b87d,.8).lineBetween(xx,yy,xx+4+i%4,yy+(i%3-1)*2);}
+ if(s.cover==='gravel')for(let i=0;i<140;i++){const xx=x+7+(i*47%(w-14)),yy=y+6+(i*31%(h-12));g.fillStyle([0xb4ac93,0x8e9580,0xc8bda3][i%3]).fillEllipse(xx,yy,3+i%3,2+i%2);}
+ if(s.trellis)for(const row of [.25,.65]){const yy=y+h*row;for(const xx of [x+7,x+w-7]){g.lineStyle(2.3,0x82613f).lineBetween(xx,yy+5,xx,yy-48);g.lineStyle(.7,0xb49665).lineBetween(xx-1,yy+3,xx-1,yy-47);}for(const dy of [-18,-34])g.lineStyle(.7,0xb0a98b,.8).lineBetween(x+8,yy+dy,x+w-8,yy+dy);}
  for(let i=0;i<s.plants.length;i++){const point=livingPlantPoint(i,area);paintLivingPlant(g,s.plants[i],point.x,point.y,s.moisture,i===selected);}
  if(marker)paintMarker(g,area);
 }

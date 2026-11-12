@@ -1643,3 +1643,34 @@ A felhasználó új ára: **10% = 95 gold és 16 kő**, arányosan, egészre fel
 A tó a felhasználó kérésére világosabb, melegebb, szürkéskék palettát kapott. A mozgó hullámok és a tavirózsalevelek közti vízszín ehhez igazodik. A világ, az ütközések és a térkép a közös geometriát követik.
 
 A felhasználó a két ellenőrző képen látott melegebb, világosabb kék palettát elvetette. A tó, a hullámfény és a tavirózsa körüli víz színe visszaáll a próbát megelőző, visszafogott zöldeskék palettára. Az új alapforma, a hullámzás és a 95 gold / 16 kő ár változatlan.
+
+### Három új társítás és műveletenkénti kertészkedés — 2026-11-12
+
+A korábbi, még csak tervezett társításlista helyett most ezek kerülnek a meglévő öt társítás után, egyenként megszerezhető jutalomként:
+
+| Szint | Társítás | Növények |
+| --- | --- | --- |
+| 3 | Paprikás konyhakert | Paprika · Hagyma · Bazsalikom |
+| 4 | Bogyós menedék | Málna · Menta · Szeder |
+| 5 | Illatos piroskert | Paradicsom · Bársonyvirág · Burgonya |
+
+Ajánlott induló arány fajonként 3 növény. Ez ajánlás: a 9 ültetési helyet a társítás növényei között szabadon lehet felosztani. A bogyósok hátul, a menta előttük jelenik meg. Ha a természetes bokros rajz zsúfolt, a Bogyós menedék nagyobb ágyást is kaphat; ez nem jelenti a többi ágyás méretének kötelező megváltoztatását. A felhasználó kifejezetten kidolgozott, egymástól jól megkülönböztethető növény- és termésrajzot kért.
+
+**Pontozás:** minden sikeres, pontot adó kertészeti művelet 1 pont. Egy egész ágyás felkapálása, beültetése, utánvetése, öntözése vagy mulcsozása egy művelet. A növényenként végzett szüret, magérlelési döntés, maggyűjtés és utánültetés egyenként 1 pont; egy új, egyszer megszerezhető megfigyelés is 1 pont. Ugyanazon állapot eredménytelen ismétlése nem ad pontot. Szintenként 30 új pont kell; egy szint egy új társítást ad. A szintlépés ünneplőablaka és a bal oldali eredeti jártasságanimáció megmarad.
+
+**Tartalmi szinthatár:** az utolsó elérhető szint felett nem gyűlhet rejtett többletpont. Új társítások későbbi bevezetésekor a játékos megtartja a megszerzett szintjét, de a régi szinthatár után végzett műveletek nem oldhatják fel automatikusan az új jutalmakat. Ezt a jelenlegi és minden későbbi tartalombővítésnél is alkalmazni kell. A régi, 50 pontos rendszerből a megszerzett szint megmarad; a még folyamatban lévő szint arányos előrehaladása megőrizhető, a régi 2. szint feletti pontok eldobandók. Nem indul újra nulláról a kertészkedés.
+
+A felhasználó által elfogadott árak (első: 1 mag megvásárlása; második: 1 termés eladása, goldban): bazsalikom 5 / 14, menta 5 / 16, málna 20 / 25, szeder 20 / 24, bársonyvirág 5 / 8, paprika 15 / 28, paradicsom 15 / 30. A hagyma és burgonya meglévő árai megmaradnak. Növekedés legfeljebb 4 gondozott nap; napi ágyásöntözés és a meglévő maggyűjtési szabályok továbbra is érvényesek. A bogyósok terméshozama is a közös beporzási mechanikához kapcsolódik.
+
+A felhasználó a fenti bővítés közben kérte a korábban dokumentált eltérő vízigény, újraszedés, Sam által épített támasz és választható talajtakarás megvalósítását is, a már megfelelő növényekhez. Ez megvalósításra engedélyezett irány, de a kiküldött konkrét paraméterjavaslatok még válaszra várnak: száraz fűszerek kétnaponkénti öntözése; az öt termő növény kétnapos újratermése; 2 fa/paradicsomkaró, 6 fa/bogyós ágyás támasz, 2 kő/kavicstakarás. Ezek nem elfogadott számok addig, amíg a felhasználó nem hagyja jóvá. A takarások előnyei is még egyeztetendők. A korábbi állapotot és a napi gondozást a válasz előtt nem változtatjuk meg ezekkel a javaslatokkal.
+
+Az első növényrajz-próbán a Bogyós menedék a meglévő 160 × 88-as ágyásban, hátul a málnával, középen a szederrel és elöl a mentával elfért. Egyelőre nincs méretváltás; a nagyobb ágyás lehetősége későbbi visszajelzés alapján megmarad.
+
+### Elfogadott gondozási részletek az új társításokkal együtt
+
+A fenti paraméterkérdésekre a felhasználó jóváhagyása megérkezett; a korábbi „válaszra vár” megjelölés ezekre már nem érvényes.
+
+- **Víz:** takarás nélkül a Száraz fűszerszegély kétnaponta, minden más jelenlegi társítás naponta öntözendő. Az automata csak akkor öntöz és mutat permetezést, amikor az adott ágyás szükséglete ezt indokolja. A szükségtelen ismételt öntözés nem ad pontot. A kezelő megmutatja a tényleges öntözési ritmust és a vízellátás állapotát.
+- **Újraszedés:** az eper, málna, szeder, paprika és paradicsom töve megmarad, és két megfelelő vízellátású növekedési nap után adhat új termést. A bogyósok beporzásfüggése megmarad; a két nap nem garantálja a sikertelen beporzásból származó termést. Újraszedés után a tő nem zsugorodik palántává. A burgonya és hagyma felszedése után újraültetés kell.
+- **Támasz:** paradicsomnál növényenként 2 fa egy karó, málnánál/szedernél az egész ágyásra 6 fa a támrendszer. Az ágyáskezelőben a kiválasztott érintett növénynél Sam külön munkával építi meg. A támasz nélkül a fejlődés két növekedési nap után, még a termés előtt megáll; a tő nem pusztul el. A karó és a bogyós támrendszer látszik, mentődik, szüretkor megmarad. A karó a beültetett helyhez tartozik, utánültetéskor is megtartható. A szerelés is sikeres kertészeti művelet, 1 pont, a szinthatárig.
+- **Talajtakarás:** minden ágyásra választható 1 adag komposztálós mulcs; a Száraz fűszerszegélyhez 2 kőből kavicstakarás is. Egyszerre egy takarás lehet, de az új anyag felhasználásával cserélhető. A leváltott elhasznált takarásért nincs visszatérítés. Mindkettő +1 napot ad az öntözési időközhöz: normál ágyás mulccsal kétnaponta, száraz fűszerek mulccsal vagy kaviccsal háromnaponta öntözendők. A felhasználó ezt a mulcs korábbi napi öntözési szabályát módosítva külön jóváhagyta. A kavics és mulcs vizuálisan elkülönül. A Komposztáló és a Készlet meglévő mulcsútvonala megmarad; ehhez nem készül új Mara-termék vagy rendelési rendszer.

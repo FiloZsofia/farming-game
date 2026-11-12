@@ -66,3 +66,5 @@
 - Amíg nincs évszakváltás a játékban, a jobb felső HUD ne írjon évszaknevet. Új társítás neve se sugalljon konkrét évszakot; a még egyeztetett név nem engedély új társítás, mag vagy ár beépítésére.
 
 - Mara nappal rövid pihenőkkel váltogassa a két díszbokor gondozását; a már nyírt forma ne állítsa le végleg, és betöltés után is folytassa. Sam közelsége a metszést ne szakítsa meg, beszélgetéskor szüneteljen. Éjszaka nem metsz: szabad útvonalon a tér felől a Faiskolába megy, az ajtónál eltűnik. Éjszakai mentés betöltésekor már bent marad; az üres autó a beállóban áll.
+
+- Kertészkedési tartalombővítéskor a játékos megszerzett szintjét meg kell őrizni, de az előző legmagasabb szint fölötti munkát tilos rejtett pontként tárolni vagy új jutalmakra átváltani. A pontgyűjtés az aktuális tartalmi szinthatárnál megáll. Szintenként 30 sikeres művelet kell, műveletenként 1 pont; egy egész ágyás beültetése is 1 művelet, nem 9. A közös `garden-progression.ts` szabályait és mentésmigrációját használd, új szinteknél is teszteld a többletpontok kizárását. Új növényhez a növekvő/kifejlett alak, termésikon, készlet, posta, eladás, ehetőség és mentéskezelés együtt készüljön.

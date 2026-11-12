@@ -1,3 +1,4 @@
+import {normalizeGardenProgress} from './garden-progression';
 import {overlapsMarket} from './market-site';
 import {gardenDecorationFits} from './living-bed-placement';
 import type {Snapshot} from './storage';
@@ -8,8 +9,8 @@ import {extras} from './estate';
 export function enableHomestead(source:Snapshot,fresh=false):Snapshot{
  if(source.travel.homestead){
   const next=structuredClone(source),g=next.travel.homestead!.garden;
-  // This reset applies once, including farms already upgraded to 0.3.0.
-  if(g.progressionVersion!==1){g.points=0;g.credited=[];g.levelFloor=0;g.rewardedLevel=0;g.progressionVersion=1;}
+  // Preserve earned levels, discard work banked beyond the old content cap.
+  normalizeGardenProgress(g);
   return next;
  }
  const next=structuredClone(source),h=createHomestead(next.clock.day);next.travel.homestead=h;next.version=19;

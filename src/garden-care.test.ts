@@ -1,0 +1,23 @@
+import {it,expect} from 'vitest';
+import {createLivingBed,prepareLivingBed,bedMixes,emptyBedSeeds,plantLivingBed,waterLivingBed,mulchLivingBed,gravelLivingBed,bedWaterInterval,bedWaterSatisfied,advanceLivingBed,bedPlantStage,harvestLivingPlant,supportLivingBed,plantSupport,type LivingBed,type BedKind} from './living-bed';
+import {LivingGarden} from './living-garden';
+import {snapshot,validSnapshot,decodeSnapshot} from './storage';
+import {createClock} from './clock';
+import {createGarden} from './gardening';
+import {enableHomestead} from './homestead-migration';
+function planted(mix:keyof typeof bedMixes){const s=prepareLivingBed(createLivingBed())!;s.seedStock=Object.fromEntries(Object.keys(emptyBedSeeds()).map(k=>[k,9])) as Record<BedKind,number>;return plantLivingBed(s,mix)!;}
+it('uses daily water normally, two days for dry herbs, and one extra day per cover',()=>{
+ const normal=waterLivingBed(planted('kitchen'))!,dry=waterLivingBed(planted('herbs'))!;expect(bedWaterInterval(normal)).toBe(1);expect(bedWaterInterval(dry)).toBe(2);expect(bedWaterSatisfied(advanceLivingBed(normal,'sunny'))).toBe(false);let next=advanceLivingBed(dry,'sunny');expect(bedWaterSatisfied(next)).toBe(true);expect(waterLivingBed(next)).toBeNull();next=advanceLivingBed(next,'sunny');expect(bedWaterSatisfied(next)).toBe(false);expect(waterLivingBed(next)).not.toBeNull();
+ for(const cover of [mulchLivingBed(dry)!,gravelLivingBed(dry)!]){expect(bedWaterInterval(cover)).toBe(3);let s=cover;for(let i=0;i<2;i++)s=advanceLivingBed(s,'sunny');expect(bedWaterSatisfied(s)).toBe(true);expect(bedWaterSatisfied(advanceLivingBed(s,'sunny'))).toBe(false);}expect(bedWaterInterval(mulchLivingBed(normal)!)).toBe(2);
+});
+it('allows a single appropriate cover and lets the player replace it',()=>{const dry=planted('herbs'),mulch=mulchLivingBed(dry)!,gravel=gravelLivingBed(mulch)!;expect(gravel.cover).toBe('gravel');expect(gravel.mulched).toBe(false);expect(gravelLivingBed(gravel)).toBeNull();expect(mulchLivingBed(gravel)!.cover).toBe('mulch');expect(gravelLivingBed(planted('pepperKitchen'))).toBeNull();});
+it('stops unsupported tomatoes and berries before fruit, then allows building and growth',()=>{
+ for(const mix of ['redGarden','berryRefuge'] as const){let s=waterLivingBed(planted(mix))!;for(let i=0;i<5;i++)s=advanceLivingBed(s,'rain');expect(s.plants[0].growth).toBe(2);expect(plantSupport(s,0)).toBe(mix==='redGarden'?'stake':'trellis');s=supportLivingBed(s,0)!;expect(supportLivingBed(s,0)).toBeNull();for(let i=0;i<2;i++)s=advanceLivingBed(s,'rain');expect(bedPlantStage(s.plants[0])).toBe('ready');}
+});
+it('keeps fruit plants mature and gives new fruit after exactly two cared days',()=>{
+ for(const kind of ['strawberry','raspberry','blackberry','pepper','tomato'] as const){let s=planted(kind==='strawberry'?'strawberry':kind==='pepper'?'pepperKitchen':kind==='tomato'?'redGarden':'berryRefuge');const i=s.plants.findIndex(p=>p.kind===kind);s.plants[i].growth=4;s.plants[i].supported=true;s.trellis=true;s=harvestLivingPlant(s,i)!;expect(s.plants[i].removed).toBe(false);expect(s.plants[i].regrowing).toBe(true);s=waterLivingBed(s)!;s=advanceLivingBed(s,'rain');expect(bedPlantStage(s.plants[i])).toBe('growing');s=advanceLivingBed(s,'rain');expect(bedPlantStage(s.plants[i])).toBe('ready');}
+ for(const kind of ['potato','onion'] as const){const s=planted(kind==='potato'?'redGarden':'pepperKitchen'),i=s.plants.findIndex(p=>p.kind===kind);s.plants[i].growth=4;expect(harvestLivingPlant(s,i)!.plants[i].removed).toBe(true);}
+});
+it('automatic irrigation follows the bed interval and keeps support and cover in saves',()=>{
+ const s=enableHomestead(snapshot({x:300,y:300},createClock(1,()=>.5),createGarden()),true),g=new LivingGarden(s,true),b=g.addBed();b.state=mulchLivingBed(waterLivingBed(planted('herbs'))!)!;b.irrigation={x:280,y:450};g.nextDay('sunny');expect(b.state.wateredDay).toBe(1);g.nextDay('sunny');expect(b.state.wateredDay).toBe(1);g.nextDay('sunny');expect(b.state.wateredDay).toBe(4);b.state.trellis=true;const saved=g.writePersistent();expect(validSnapshot(saved)).toBe(true);expect(decodeSnapshot(saved)).toEqual(saved);
+});

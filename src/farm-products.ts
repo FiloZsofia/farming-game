@@ -3,7 +3,7 @@ import {cropNames,type Crop} from './gardening';
 import {extras,extraNames,extraPrices,type Extra} from './estate';
 import {bedKinds,type BedKind} from './living-bed';
 import type {Snapshot} from './storage';
-export const cultivatedPrices={thyme:12,oregano:14,sage:16,chamomile:15,lemonBalm:18,calendula:8,borage:8} as const;
+export const cultivatedPrices={thyme:12,oregano:14,sage:16,chamomile:15,lemonBalm:18,calendula:8,borage:8,basil:14,mint:16,raspberry:25,blackberry:24,marigold:8,pepper:28,tomato:30} as const;
 export type CultivatedProduct=keyof typeof cultivatedPrices;
 export type FarmProduct=Crop|Extra|`garden:${CultivatedProduct}`;
 export const farmProducts:FarmProduct[]=[...crops,...extras,...(Object.keys(cultivatedPrices) as CultivatedProduct[]).map(k=>`garden:${k}` as const)];
