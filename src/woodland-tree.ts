@@ -6,9 +6,9 @@ import type Phaser from 'phaser';
 export function drawWoodlandTree(g:Phaser.GameObjects.Graphics,random:()=>number,x:number,y:number,kind:number,s=1){
  if(!natureTreeClear(x,y,s))return;
  let seed=0;if(kind!==2)for(let i=0;i<264;i++)seed=(seed+Math.floor(random()*65535))>>>0;
- const pixel=1.5,width=56,height=70,data=new Int32Array(width*height).fill(-1);
+ const pixel=1,width=84,height=105,data=new Int32Array(width*height).fill(-1);
  const hash=(a:number,b:number)=>((Math.imul(a+seed,374761393)^Math.imul(b+19,668265263))>>>0);
- const put=(xx:number,yy:number,c:number)=>{const a=Math.round(xx/pixel)+28,b=Math.round((yy+99)/pixel);if(a>=0&&a<width&&b>=0&&b<height)data[b*width+a]=c;};
+ const put=(xx:number,yy:number,c:number)=>{const a=Math.round(xx/pixel)+42,b=Math.round((yy+99)/pixel);if(a>=0&&a<width&&b>=0&&b<height)data[b*width+a]=c;};
  const shape=(points:number[],color:number)=>{
   const ys=points.filter((_,i)=>i%2),min=Math.min(...ys),max=Math.max(...ys);
   for(let row=Math.ceil((min+99)/pixel);row<=Math.floor((max+99)/pixel);row++){
@@ -65,23 +65,24 @@ export function drawWoodlandTree(g:Phaser.GameObjects.Graphics,random:()=>number
    // Irregular interlocking leaf fingers: no circular base or concentric highlight.
    shape(p([-.9,.15,-1,-.2,-.7,-.3,-.8,-.65,-.45,-.65,-.4,-.95,0,-.85,.25,-1,.45,-.7,.8,-.75,.75,-.4,1,-.2,.85,.15,1,.45,.65,.55,.7,.9,.3,.8,.1,1,-.2,.8,-.6,.9,-.55,.55,-.95,.5]),palette[1]);
    shape(p([-.85,-.15,-.55,-.25,-.65,-.55,-.3,-.5,-.25,-.8,.1,-.7,.3,-.85,.45,-.55,.75,-.55,.65,-.2,.85,0,.55,.1,.7,.35,.35,.3,.4,.6,.05,.4,-.15,.6,-.3,.3,-.65,.4,-.55,.05]),palette[2]);
-   // Individual pointed leaves follow staggered sprays, with a dark lower edge.
-   // Consistent shapes replace the former cross-shaped/random colour flecks.
-   for(let row=0;row<4;row++)for(let col=0;col<5;col++){
-    const a=hash(k*31+row*5+col,k+7);
-    if(a%11===0)continue;
-    const xx=cx+(col-2)*rx*.33+(row%2?1.5:0),yy=cy+(row-1.7)*ry*.4+((col+row)%2)*1.5;
-    const length=birch?4.5:6,half=length/2,lean=(col<2?-1:1)*3;
-    const leaf=[xx-half,yy,xx-1.5,yy-3,xx+1.5,yy+lean-3,xx+half,yy+lean,xx+1.5,yy+lean+1.5,xx-1.5,yy+3];
-    shape(leaf.map((v,i)=>i%2?v+1.5:v),palette[1]);
-    const lit=row<2?3:2;
-    shape(leaf,palette[lit]);
-    shape([xx-half,yy,xx-1.5,yy-3,xx+1.5,yy+lean-3,xx+half,yy+lean,xx,yy+lean*.5],palette[a%7===0?4:Math.min(4,lit+1)]);
-   }
-   // Narrow recesses retain the volume between sprays.
-   shape(p([-.3,.25,-.1,.35,.05,.3,.2,.4,.05,.5,-.15,.45,-.3,.55,-.4,.4]),palette[1]);
-
   }
+  // Finish all crown volumes first, then draw fully outlined little leaves on top.
+  // Later volume patches must not paint over the outlines of earlier leaves.
+  for(let k=0;k<patches.length;k++){
+   const [cx,cy,rx,ry]=patches[k];
+   for(let row=0;row<4;row++)for(let col=0;col<5;col++){
+    const a=hash(k*31+row*5+col,k+7);if(a%7===0)continue;
+    const xx=Math.round(cx+(col-2)*rx*.34+(row%2?2:0)+(a%3)-1),yy=Math.round(cy+(row-1.5)*ry*.39+(col%2)+((a>>>5)%3)-1);
+    const angle=(col<2?-1:1)*(.45+(a%3)*.18),cos=Math.cos(angle),sin=Math.sin(angle);
+    const transform=(points:number[])=>points.map((v,i)=>i%2?yy+points[i-1]*sin+v*cos:xx+v*cos-points[i+1]*sin);
+    const leaf=(length:number,height:number)=>transform([-length,0,-1,-height,1,-height,length,0,1,height,-1,height]);
+    // A one-pixel dark rim all around, not just a drop shadow.
+    shape(leaf(3,2),palette[0]);
+    shape(leaf(2,1),palette[row<2?3:2]);
+    if(row<2&&a%3===0)shape(transform([-1,-1,1,-1,0,0,-1,0]),palette[4]);
+   }
+  }
+
   if(birch){
    // Small real gaps preserve the pale branching visible in the reference.
    shape([-13,-70,-10,-70,-9,-58,-5,-53,-5,-47,-9,-52,-12,-60],bark[1]);
@@ -93,5 +94,5 @@ export function drawWoodlandTree(g:Phaser.GameObjects.Graphics,random:()=>number
   for(let i=0;i<data.length;i++)if(!crownMask[i])data[i]=-1;
  }
  g.fillStyle(0x294d3a,.25).fillEllipse(x+10*s,y+8*s,67*s,22*s);
- for(let row=0;row<height;row++)for(let col=0;col<width;){const c=data[row*width+col];let end=col+1;while(end<width&&data[row*width+end]===c)end++;if(c!==-1)g.fillStyle(c).fillRect(x+(col-28)*pixel*s,y+(row*pixel-99)*s,(end-col)*pixel*s,pixel*s);col=end;}
+ for(let row=0;row<height;row++)for(let col=0;col<width;){const c=data[row*width+col];let end=col+1;while(end<width&&data[row*width+end]===c)end++;if(c!==-1)g.fillStyle(c).fillRect(x+(col-42)*pixel*s,y+(row*pixel-99)*s,(end-col)*pixel*s,pixel*s);col=end;}
 }
