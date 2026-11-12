@@ -31,7 +31,7 @@ export function drawWoodlandTree(g:Phaser.GameObjects.Graphics,random:()=>number
  }
  for(let i=0;i<7;i++){
   const yy=-3-i*6;
-  if(birch){const side=i%3===0?-1:1,offset=i%2?1.5:0;shape([side*4,yy,side*1.5,yy-offset,side*.5,yy+1.5,side*4,yy+3],i%3===0?bark[0]:bark[1]);}
+  if(birch){const left=i%2?-3:0,right=i%2?0:3;shape([left,yy,right,yy-1.5,right,yy+1.5,left-1.5,yy+1.5],bark[0]);if(i%3===0)shape([-3,yy-3,-1.5,yy-3,-1.5,yy-1.5,-3,yy-1.5],bark[1]);}
   else shape([1,yy,3,yy-3,4,yy-2,3,yy+3,1,yy+4],i%2?bark[0]:bark[3]);
  }
  const palette=kind===2?[0x123624,0x19492b,0x235f32,0x2e773b,0x428b49]:birch?[0x174333,0x255d47,0x37825b,0x53a36d,0x6cb77e]:[0x183d28,0x245631,0x32783c,0x45964b,0x64a95a];
@@ -44,12 +44,12 @@ export function drawWoodlandTree(g:Phaser.GameObjects.Graphics,random:()=>number
    shape(fan,palette[1]);
    shape([-1,cy-3,2,cy+3,0,cy+7,w*.65,cy+13,w*.25,cy+12,-1,cy+9,-w*.6,cy+13,-w*.3,cy+7],palette[2]);
    shape([-1,cy,0,cy+5,-w*.4,cy+10,-w*.6,cy+11,-w*.3,cy+7],palette[3]);
-   for(let j=0;j<5;j++){
-    const side=j%2?-1:1,xx=side*w*(.15+j*.12),yy=cy+7+j*.9;
+   for(let j=0;j<9;j++){
+    const side=j%2?-1:1,xx=side*w*(.1+j*.075),yy=cy+5+j*.75;
     shape([xx,yy,xx+side*3,yy+1.5,xx+side*5,yy+4.5,xx+side*1.5,yy+3,xx-side*1.5,yy],palette[2]);
     shape([xx,yy,xx+side*1.5,yy+1.5,xx+side*3,yy+4.5,xx,yy+3],j%2?palette[3]:palette[1]);
    }
-   for(let j=0;j<8;j++){const xx=(j-3.5)*w*.18,yy=cy+6+Math.abs(j-3.5)*1.5;shape([xx,yy,xx+1.5,yy+1.5,xx+4,yy+4,xx+1.5,yy+3,xx-1.5,yy+1.5],j%3?palette[1]:palette[3]);}
+   for(let j=0;j<12;j++){const xx=(j-5.5)*w*.13,yy=cy+6+Math.abs(j-5.5)*1.1;shape([xx,yy,xx+1.5,yy+1.5,xx+4,yy+4,xx+1.5,yy+3,xx-1.5,yy+1.5],j%3?palette[1]:palette[3]);}
   }
  }else{
   // One coherent crown: forks/gaps in the birch, a dense rounded oak outline.
@@ -73,9 +73,17 @@ export function drawWoodlandTree(g:Phaser.GameObjects.Graphics,random:()=>number
     const foldY=cy+ry*(.22+(j%2)*.14);
     shape([xx,foldY,xx+3,foldY+1.5,xx+4.5,foldY,xx+6,foldY+1.5,xx+3,foldY+3,xx,foldY+1.5,xx-1.5,foldY+3,xx-3,foldY+1.5],palette[1]);
    }
-   for(let j=0;j<10;j++){
+   // Recessed folds cut into the lit leaf fans without outlining a round lobe.
+   shape(p([-.45,-.2,-.2,-.1,-.1,.1,.1,.15,.05,.35,-.2,.2,-.3,0,-.5,-.05]),palette[1]);
+   shape(p([.25,-.5,.4,-.4,.35,-.15,.55,0,.45,.1,.2,-.1,.25,-.3]),palette[2]);
+   // Lower hanging sprays are greener than the deep gap behind them.
+   for(const [lx,ly]of [[-.6,.56],[-.2,.74],[.35,.62]]){
+    shape(p([lx,ly,lx+.2,ly-.08,lx+.3,ly+.07,lx+.12,ly+.14,lx+.08,ly+.28,lx-.07,ly+.19,lx-.12,ly+.06]),palette[2]);
+    shape(p([lx,ly,lx+.12,ly,lx+.17,ly+.07,lx+.03,ly+.13,lx-.07,ly+.07]),palette[3]);
+   }
+   for(let j=0;j<15;j++){
     const a=hash(k*13+j,k+3),xx=cx-rx*.65+(a%13)/12*rx*1.3,yy=cy-ry*.55+((a>>>8)%11)/10*ry*1.1;
-    shape([xx,yy,xx+3,yy,xx+3,yy+1.5,xx+1.5,yy+1.5,xx+1.5,yy+3,xx-1.5,yy+3,xx-1.5,yy+1.5,xx,yy+1.5],j%3===0?palette[4]:j%3===1?palette[1]:palette[2]);
+    shape([xx,yy,xx+3,yy,xx+3,yy+1.5,xx+1.5,yy+1.5,xx+1.5,yy+3,xx-1.5,yy+3,xx-1.5,yy+1.5,xx,yy+1.5],j%5===0?palette[4]:j%3===1?palette[1]:palette[2]);
    }
   }
   if(birch){
