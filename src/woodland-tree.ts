@@ -31,7 +31,7 @@ export function drawWoodlandTree(g:Phaser.GameObjects.Graphics,random:()=>number
  }
  for(let i=0;i<7;i++){
   const yy=-3-i*6;
-  if(birch)shape([-4,yy,-1,yy-1,2,yy-1,3,yy+1,-3,yy+2],i%2?bark[0]:bark[1]);
+  if(birch){const side=i%3===0?-1:1,offset=i%2?1.5:0;shape([side*4,yy,side*1.5,yy-offset,side*.5,yy+1.5,side*4,yy+3],i%3===0?bark[0]:bark[1]);}
   else shape([1,yy,3,yy-3,4,yy-2,3,yy+3,1,yy+4],i%2?bark[0]:bark[3]);
  }
  const palette=kind===2?[0x123624,0x19492b,0x235f32,0x2e773b,0x428b49]:birch?[0x174333,0x255d47,0x37825b,0x53a36d,0x6cb77e]:[0x183d28,0x245631,0x32783c,0x45964b,0x64a95a];
@@ -44,6 +44,11 @@ export function drawWoodlandTree(g:Phaser.GameObjects.Graphics,random:()=>number
    shape(fan,palette[1]);
    shape([-1,cy-3,2,cy+3,0,cy+7,w*.65,cy+13,w*.25,cy+12,-1,cy+9,-w*.6,cy+13,-w*.3,cy+7],palette[2]);
    shape([-1,cy,0,cy+5,-w*.4,cy+10,-w*.6,cy+11,-w*.3,cy+7],palette[3]);
+   for(let j=0;j<5;j++){
+    const side=j%2?-1:1,xx=side*w*(.15+j*.12),yy=cy+7+j*.9;
+    shape([xx,yy,xx+side*3,yy+1.5,xx+side*5,yy+4.5,xx+side*1.5,yy+3,xx-side*1.5,yy],palette[2]);
+    shape([xx,yy,xx+side*1.5,yy+1.5,xx+side*3,yy+4.5,xx,yy+3],j%2?palette[3]:palette[1]);
+   }
    for(let j=0;j<8;j++){const xx=(j-3.5)*w*.18,yy=cy+6+Math.abs(j-3.5)*1.5;shape([xx,yy,xx+1.5,yy+1.5,xx+4,yy+4,xx+1.5,yy+3,xx-1.5,yy+1.5],j%3?palette[1]:palette[3]);}
   }
  }else{
@@ -56,12 +61,19 @@ export function drawWoodlandTree(g:Phaser.GameObjects.Graphics,random:()=>number
    [17,-53,18,16],[-22,-37,14,12],[0,-36,18,12],[25,-33,10,9]
   ];
   for(let k=0;k<patches.length;k++){
-   const [cx,cy,rx,ry]=patches[k],p=(coords:number[])=>coords.map((v,i)=>i%2?cy+v*ry:cx+v*rx);
+   const [cx,cy,rx,ry]=patches[k],p=(coords:number[])=>coords.map((v,i)=>i%2?cy+(v+Math.sin(i*2.3+k)*.055)*ry:cx+(v+Math.cos(i*1.7+k)*.055)*rx);
    // Irregular interlocking leaf fingers: no circular base or concentric highlight.
    shape(p([-.9,.15,-1,-.2,-.7,-.3,-.8,-.65,-.45,-.65,-.4,-.95,0,-.85,.25,-1,.45,-.7,.8,-.75,.75,-.4,1,-.2,.85,.15,1,.45,.65,.55,.7,.9,.3,.8,.1,1,-.2,.8,-.6,.9,-.55,.55,-.95,.5]),palette[1]);
    shape(p([-.85,-.15,-.55,-.25,-.65,-.55,-.3,-.5,-.25,-.8,.1,-.7,.3,-.85,.45,-.55,.75,-.55,.65,-.2,.85,0,.55,.1,.7,.35,.35,.3,.4,.6,.05,.4,-.15,.6,-.3,.3,-.65,.4,-.55,.05]),palette[2]);
    shape(p([-.55,-.45,-.3,-.45,-.2,-.7,.05,-.6,.25,-.7,.4,-.4,.6,-.4,.45,-.15,.2,-.2,.1,.05,-.1,-.05,-.35,.1,-.3,-.2,-.6,-.1]),palette[3]);
-   for(let j=0;j<8;j++){
+   // Short connected ridges split broad light planes into leafy edges.
+   for(let j=0;j<5;j++){
+    const xx=cx-rx*.62+j*rx*.28,yy=cy-ry*.36+Math.sin(j*1.8+k)*ry*.16;
+    shape([xx,yy,xx+1.5,yy-1.5,xx+4.5,yy-1.5,xx+3,yy,xx+4.5,yy+1.5,xx+1.5,yy+1.5,xx,yy+3,xx-1.5,yy+1.5],j%3?palette[3]:palette[4]);
+    const foldY=cy+ry*(.22+(j%2)*.14);
+    shape([xx,foldY,xx+3,foldY+1.5,xx+4.5,foldY,xx+6,foldY+1.5,xx+3,foldY+3,xx,foldY+1.5,xx-1.5,foldY+3,xx-3,foldY+1.5],palette[1]);
+   }
+   for(let j=0;j<10;j++){
     const a=hash(k*13+j,k+3),xx=cx-rx*.65+(a%13)/12*rx*1.3,yy=cy-ry*.55+((a>>>8)%11)/10*ry*1.1;
     shape([xx,yy,xx+3,yy,xx+3,yy+1.5,xx+1.5,yy+1.5,xx+1.5,yy+3,xx-1.5,yy+3,xx-1.5,yy+1.5,xx,yy+1.5],j%3===0?palette[4]:j%3===1?palette[1]:palette[2]);
    }
