@@ -1,3 +1,4 @@
+import {drawLeafCrown} from './tree-foliage';
 import {natureTreeClear} from './nature-resources';
 import Phaser from 'phaser';
 export function drawWoodlandTree(g:Phaser.GameObjects.Graphics,random:()=>number,x:number,y:number,kind:number,s=1){
@@ -18,12 +19,10 @@ export function drawWoodlandTree(g:Phaser.GameObjects.Graphics,random:()=>number
   if(kind===2){for(let i=0;i<4;i++){const yy=y-90*s+i*19*s,w=(15+i*8)*s;poly([x,yy,x-w*.31,yy+12*s,x-w*.18,yy+11*s,x-w*.68,yy+25*s,x-w*.48,yy+23*s,x-w,yy+35*s,x-w*.35,yy+32*s,x,yy+35*s,x+w*.5,yy+32*s,x+w,yy+35*s,x+w*.55,yy+22*s,x+w*.7,yy+24*s,x+w*.24,yy+10*s],i%2?0x426d52:0x365c47);poly([x-2*s,yy+4*s,x-w*.75,yy+30*s,x+6*s,yy+28*s],0x62875b,.8);for(let j=0;j<5;j++){const bx=x+(j-2)*w*.25,by=yy+(21+Math.abs(j-2)*4)*s;line(bx,by,bx-4*s,by+3*s,0x809862,.7*s,.65);line(bx+3*s,by+4*s,bx+8*s,by+6*s,0x284d3f,.8*s,.65);}}}
   else for(const[xx,yy,w,h]of [[-18,-48,45,39],[12,-56,51,47],[-3,-76,49,39],[0,-38,56,32]]){
    const cx=x+xx*s,cy=y+yy*s,rx=w*s/2,ry=h*s/2;
-   const canopy=(dx:number,dy:number,k:number,c:number)=>poly([cx+dx-rx*k,cy+dy,cx+dx-rx*.8*k,cy+dy-ry*.65*k,cx+dx-rx*.1*k,cy+dy-ry*k,cx+dx+rx*.65*k,cy+dy-ry*.8*k,cx+dx+rx*k,cy+dy-ry*.1*k,cx+dx+rx*.7*k,cy+dy+ry*.65*k,cx+dx-rx*.25*k,cy+dy+ry*.7*k],c);
-   canopy(0,0,1,kind===1?0x587644:0x35583c);canopy(-3*s,-5*s,.84,kind===1?0x87a457:0x587b47);
-   // Keep the same three random draws per leaf so scenery placement is unchanged.
-   for(let i=0;i<22;i++){const lx=cx+(random()-.5)*w*s*.75,ly=cy+(random()-.55)*h*s*.65,length=(2+random()*3)*s;
-    oval(lx,ly,length,1.6*s,[0x91a667,0x759354,0xa9b878][i%3],.72);
-    if(i%4===0){oval(lx+2*s,ly+2*s,length*.8,1.5*s,kind===1?0x6d8b50:0x456a43,.7);line(lx-1*s,ly,lx+length*.35,ly-.4*s,0xc0c990,.45*s,.55);}
-   }
+   // Consume the original shared random sequence so no scenery moves.
+   let seed=0;
+   for(let i=0;i<22;i++){const a=random(),b=random(),c=random();seed=(seed+Math.floor((a+b+c)*0x1fffffff))>>>0;}
+   drawLeafCrown(g,cx,cy,rx,ry,kind===1,seed);
+
   }
 }

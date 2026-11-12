@@ -1,3 +1,4 @@
+import {drawLeafCrown} from './tree-foliage';
 import {orchardGrowth} from './orchard-growth';
 import {drawTreeBlossomGaps} from './pollination-art';
 import {drawRipeMarker} from './crop-art';
@@ -11,10 +12,7 @@ export function drawEstate(scene:Phaser.Scene,estate:Estate,day:number){
   const crown=growth.canopies===1?[[0,-49]]:growth.canopies===2?[[-10,-43],[9,-56]]:[[-13,-43],[12,-49],[0,-64]];
   for(const [dx,dy]of crown){
    const cx=x+dx*s,cy=y+dy*s;
-   g.fillStyle(0x3d693f).fillEllipse(cx,cy,46*s,37*s);
-   g.fillStyle(0x5b8249).fillEllipse(cx-3*s,cy-4*s,39*s,29*s);
-   g.fillStyle(0x819e5a).fillEllipse(cx-7*s,cy-8*s,26*s,19*s);
-   for(let i=0;i<18;i++){const a=i*2.39996,r=Math.sqrt((i+.5)/18),lx=cx+Math.cos(a)*17*s*r,ly=cy+Math.sin(a)*12*s*r;g.fillStyle(i%3?0x6e9251:0xa0b477,.8).fillEllipse(lx,ly,3.8*s,1.8*s);}
+   drawLeafCrown(g,cx,cy,23*s,18.5*s,false,Math.abs(Math.round(x*31+y*17+dx*13+dy*7)));
   }
   g.lineStyle(.9*s,0x493e30,.7).lineBetween(x+2*s,y-3*s,x+2*s,y-29*s);
   g.lineStyle(.7*s,0xb09463,.8).lineBetween(x-2*s,y-8*s,x-2*s,y-24*s);

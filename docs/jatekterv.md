@@ -1575,3 +1575,5 @@ Az általános gondozás továbbra is egész ágyásra vonatkozna; a szüret és
 ### Fák és falusi hirdetőtábla megjelenése — 2026-11-12
 
 A meglévő fák és a hirdetőtábla a részletesebbé vált környezethez igazodó finomítást kapnak: tagoltabb kéreg, elágazások, kisebb levélcsoportok, szabálytalanabb fenyőágak; a gyümölcsfák lombjában is finomabb fények és levelek. A fák helye, mérete, ütközése, növekedése és termése nem változik. A hirdetőtábla fa kerete, deszkázata, papírlapjai és rögzítései részletesebbek; a közlemény és az interakció változatlan. Külön tesztmód nem készül.
+
+A lomb finomításának felhasználói visszajelzése: a nagy, egymásra rajzolt világos koronafoltok túl pacásak. Ezek helyett sok kisebb, szabálytalan levélcsoport, keskeny levélfény és helyi árnyék tagolja az erdei lombos fák és a gyümölcsfák koronáját. A helyadatok és a megosztott véletlensorozat továbbra sem változik.
