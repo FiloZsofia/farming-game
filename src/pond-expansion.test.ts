@@ -18,7 +18,7 @@ it('creates connected, bounded water and rejects disconnected or oversized draft
 it('charges proportional agreed costs once and preserves the original state and pond items',()=>{
  const s=clean(),d=east(),price=pondExpansionCost([],d);s.travel.estate.pond.push({kind:'lily',x:630,y:465,day:1});const before=structuredClone(s),next=expandPond(s,d)!;
  expect(next).not.toBeNull();expect(next.economy.gold).toBe(s.economy.gold-price.gold);expect(next.clearing.stone).toBe(s.clearing.stone-price.stone);expect(next.travel.estate.pond).toEqual(s.travel.estate.pond);expect(s).toEqual(before);expect(expandPond(next,d)).toBeNull();expect(validSnapshot(next)).toBe(true);expect(decodeSnapshot(next)).toEqual(next);
- const ten=Array.from({length:POND_SECTORS},(_,i)=>{const p=pondOutline([])[i];return Math.hypot(p.x-638,p.y-464)*(Math.sqrt(1.1)-1);});const cost=pondExpansionCost([],ten);expect(cost.percent).toBeCloseTo(10,8);expect(cost.gold).toBeLessThanOrEqual(181);expect(cost.gold).toBeGreaterThanOrEqual(180);expect(cost.stone).toBeGreaterThanOrEqual(25);expect(cost.stone).toBeLessThanOrEqual(26);
+ const ten=Array.from({length:POND_SECTORS},(_,i)=>{const p=pondOutline([])[i];return Math.hypot(p.x-638,p.y-464)*(Math.sqrt(1.1)-1);});const cost=pondExpansionCost([],ten);expect(cost.percent).toBeCloseTo(10,8);expect(cost.gold).toBeLessThanOrEqual(96);expect(cost.gold).toBeGreaterThanOrEqual(95);expect(cost.stone).toBeGreaterThanOrEqual(16);expect(cost.stone).toBeLessThanOrEqual(17);
 });
 it('protects buildings, the player, plants and placed items, and refuses insufficient funds',()=>{
  const s=clean(),d=east();s.player={x:805,y:464};expect(pondExpansionError(s,d)).not.toBeNull();expect(expandPond(s,d)).toBeNull();s.player={x:330,y:260};s.travel.estate.trees.push({kind:'apple',x:805,y:450,planted:1,last:0,fruit:0});expect(expandPond(s,d)).toBeNull();s.travel.estate.trees=[];s.economy.gold=0;expect(expandPond(s,d)).toBeNull();
@@ -56,7 +56,7 @@ it('keeps refund totals through repeated purchases and save round trips',()=>{
  expect(second).not.toBeNull();const loaded=decodeSnapshot(second)!;expect(pondRefund(loaded)).toEqual({gold:old.economy.gold-second.economy.gold,stone:old.clearing.stone-second.clearing.stone});const restored=removePondExpansion(loaded)!;expect(restored.economy.gold).toBe(old.economy.gold);expect(restored.clearing.stone).toBe(old.clearing.stone);
 });
 it('protects water plants on the extension and offers area refunds for pre-ledger saves',()=>{
- const old=clean();old.travel.estate.pondExpansion=east();expect(pondRefund(old)).toEqual({gold:pondExpansionCost([],east()).gold,stone:pondExpansionCost([],east()).stone});old.travel.estate.pond.push({kind:'lily',x:800,y:464,day:1});const copy=structuredClone(old);expect(removePondExpansion(old)).toBeNull();expect(old).toEqual(copy);old.travel.estate.pond=[];expect(removePondExpansion(old)).not.toBeNull();
+ const old=clean();old.travel.estate.pondExpansion=east();const ratio=(pondArea(east())-ORIGINAL_POND_AREA)/ORIGINAL_POND_AREA;expect(pondRefund(old)).toEqual({gold:Math.ceil(ratio*1800-1e-8),stone:Math.ceil(ratio*250-1e-8)});old.travel.estate.pond.push({kind:'lily',x:800,y:464,day:1});const copy=structuredClone(old);expect(removePondExpansion(old)).toBeNull();expect(old).toEqual(copy);old.travel.estate.pond=[];expect(removePondExpansion(old)).not.toBeNull();
 });
 
 it('persists the free shoreline upgrade and its refund across real database reloads',async()=>{

@@ -5,7 +5,7 @@ export function drawLily(g:Phaser.GameObjects.Graphics,x:number,y:number){
   g.fillStyle(0x294f43,.4).fillEllipse(x+dx+1,y+dy+2,r*2,r*.95);g.fillStyle(0x477454).fillPoints(points,true);
   g.fillStyle(0x668b5e,.65).fillEllipse(x+dx-2,y+dy-1,r*1.55,r*.64);
   for(let j=0;j<6;j++){const a=j*Math.PI/3;g.lineStyle(.55,0x91a57b,.65).lineBetween(x+dx,y+dy,x+dx+Math.cos(a)*r*.82,y+dy+Math.sin(a)*r*.39);}
-  g.fillStyle(0x517b75).fillTriangle(x+dx,y+dy,x+dx+r,y+dy-1.5,x+dx+r*.8,y+dy+2.5);
+  g.fillStyle(0x719292).fillTriangle(x+dx,y+dy,x+dx+r,y+dy-1.5,x+dx+r*.8,y+dy+2.5);
  }
  g.fillStyle(0x35584c,.35).fillEllipse(x,y-1,23,7);
  for(const [count,radius,h]of [[10,8,4.2],[8,5.5,5],[6,3,6]])for(let i=0;i<count;i++){

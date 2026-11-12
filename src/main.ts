@@ -227,7 +227,7 @@ class Farm extends Phaser.Scene {
  private draftingFarm=false;
  private hasFarm=false;
  private loadRecovered=false;
- private travel=createTravel();
+ private travel=createTravel(true);
  private villageForage:Phaser.GameObjects.Graphics|null=null;
  private garden=createGarden();
  private economy:Economy={...createEconomy(),gold:100};
@@ -420,7 +420,7 @@ class Farm extends Phaser.Scene {
   try{
    if(this.draftingFarm){
     const data:Snapshot=snapshot(START,createClock(),createGarden(),{...createEconomy(),gold:100},createOrders(),name,createClearing(),createStory(),createGardenSkill());
-    data.travel.weatherSeed=randomWeatherSeed();const id=await this.store.createFarm(enableHomestead(data,true));this.reloadFarm(id);return;
+    data.travel=createTravel(true);data.travel.weatherSeed=randomWeatherSeed();const id=await this.store.createFarm(enableHomestead(data,true));this.reloadFarm(id);return;
    }
    this.travel.weatherSeed??=randomWeatherSeed();
    await this.saveChecked(snapshot(this.actor,this.clock,this.garden,this.economy,this.orders,name,this.clearing,this.story,this.skill,this.farmerName,this.travel));

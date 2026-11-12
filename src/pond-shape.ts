@@ -15,9 +15,9 @@ export function pondArea(expansion:readonly number[]=[]){const points=pondOutlin
 export const ORIGINAL_POND_AREA=pondArea([]);
 export function pondWaterAt(x:number,y:number,expansion:readonly number[]=activeExpansion(),insetFactor=.92){const p=farmLayout.pond,dx=(x-p.x)/p.rx,dy=(y-p.y)/p.ry;return Math.hypot(dx,dy)<pondRadius(Math.atan2(dy,dx),expansion)*insetFactor;}
 export function pondShoreAt(x:number,y:number,expansion:readonly number[]=activeExpansion()){const p=farmLayout.pond,dx=(x-p.x)/p.rx,dy=(y-p.y)/p.ry;return Math.abs(Math.hypot(dx,dy)-pondRadius(Math.atan2(dy,dx),expansion))<.23;}
-export function validPondExpansion(value:unknown):value is number[]{
- if(!Array.isArray(value)||value.length!==POND_SECTORS||!Array.from(value).every(n=>typeof n==='number'&&Number.isFinite(n)&&n>=0&&n<=MAX_POND_GROWTH))return false;
- return pondArea(value)<=ORIGINAL_POND_AREA*2+.01&&pondOutline(value,8).every(p=>p.x>=farmBounds.left+24&&p.x<=farmBounds.right-24&&p.y>=farmBounds.top+32&&p.y<=farmBounds.bottom-24);
+export function validPondExpansion(value:unknown,foundation:readonly number[]=[]):value is number[]{
+ if(!Array.isArray(value)||value.length!==POND_SECTORS||!Array.from(value).every(n=>typeof n==='number'&&Number.isFinite(n)&&n>=0&&n<=MAX_POND_GROWTH+Math.max(0,...foundation)))return false;
+ return value.every((n,i)=>n>=(foundation[i]??0)-1e-7&&n<=(foundation[i]??0)+MAX_POND_GROWTH)&&pondArea(value)<=pondArea(foundation)*2+.01&&pondOutline(value,8).every(p=>p.x>=farmBounds.left+24&&p.x<=farmBounds.right-24&&p.y>=farmBounds.top+32&&p.y<=farmBounds.bottom-24);
 }
 /** Paint a connected circle into the radial shoreline; no disconnected water or holes. */
 export function brushPond(expansion:readonly number[],point:{x:number;y:number},brush:number){
@@ -35,11 +35,11 @@ export function brushPond(expansion:readonly number[],point:{x:number;y:number},
 
 /** Diffuse sharp changes along the shore, then restore the paid area exactly.
  * A floor keeps already-built water intact while previewing a new extension. */
-export function smoothPondExpansion(value:readonly number[],floor:readonly number[]=[]){
+export function smoothPondExpansion(value:readonly number[],floor:readonly number[]=[],foundation:readonly number[]=[]){
  if(!value.length)return [];
  const target=pondArea(value);let shape=Array.from({length:POND_SECTORS},(_,i)=>value[i]??0);
  for(let pass=0;pass<10;pass++)shape=shape.map((n,i)=>(shape[(i+63)%64]+2*n+shape[(i+1)%64])/4);
- const scaled=(scale:number)=>shape.map((n,i)=>Math.max(floor[i]??0,Math.min(MAX_POND_GROWTH,n*scale)));
+ const scaled=(scale:number)=>shape.map((n,i)=>Math.max(floor[i]??0,Math.min((foundation[i]??0)+MAX_POND_GROWTH,n*scale)));
  let lo=0,hi=4;for(let i=0;i<60;i++){const mid=(lo+hi)/2;if(pondArea(scaled(mid))<target)lo=mid;else hi=mid;}
  return scaled((lo+hi)/2);
 }

@@ -1631,3 +1631,13 @@ A Tervrajzok tókártyáján Bővítés visszabontása lehetőség jelenik meg. 
 Az új vásárlások pontos gold- és kőköltsége külön összesítésben mentődik, ismételt bővítésnél is. A korábbi mentések nem tartalmaztak vásárlási előzményt; azok visszatérítését az eredeti, elfogadott területarányos árból számoljuk, nem kitalált részletekből. Emiatt a korábbi többrészletes vásárlások egyenkénti kerekítése nem rekonstruálható. Az új összesítésből már a ténylegesen befizetett teljes összeg jár vissza.
 
 A felhasználó a hullámzás és a gyümölcsfák korábbi változását nem látta elegendőnek, és bátrabb átdolgozást kért. A gyümölcsfák három egymásra tett lombpamacsát egyetlen szabálytalan, sötét szélű korona és kevés nagyobb, hegyes levél váltja. A tóba nem kerülnek többé a terepbe sütött, mozdulatlan vízcsíkok: hosszabb, ívelt, a felületen lassan tovahaladó hullámfények láthatók. A hullámok halak nélkül is működnek, a kibővített partot követik.
+
+### Az Erdőszéli birtok tava mint új alapforma; olcsóbb bővítés
+
+A felhasználó feltöltötte az `erdoszeli-birtok-113.json` mentést, és ennek saját tóformáját kérte alapnak. Az új farmok az abban tárolt 64 partvonalpont pontos másolatával indulnak (`pond-foundation.ts`). Csak a geometria kerül át; a mentés növényei, vízinövényei, állatai, tárgyai, pénze és egyéb személyes játékállapota nem. A teljes feltöltött mentés nem része a repónak.
+
+Az új alap tó ingyenes kezdőterület, 100%-nak számít, önmagában nem visszabontható és nem jár érte visszatérítés. Innen a legfeljebb kétszeres terület és legfeljebb 100 világkoordináta-egységnyi növekedés érvényes, a telekhatáron belül. A későbbi bővítés visszabontása erre az új alapformára áll vissza. A mentésben külön alapforma-azonosító őrzi ezt; a korábbi farmok a korábbi alapjukat és kialakított tavukat megtartják. Egy régi farmon az új alap miatt nem tűnik el visszatérítés vagy megvásárolt vízterület.
+
+A felhasználó új ára: **10% = 95 gold és 16 kő**, arányosan, egészre felfelé kerekítve. Teljes megduplázás: 950 gold és 160 kő. Az ár az adott farm saját alap tavához viszonyít. A korábbi befizetések a régi összeggel járnak vissza; az új vásárlások az új árral növelik a pontos fizetési összesítést. A nyilvántartás előtti bővítésekhez továbbra is a korábbi területarányos visszatérítés tartozik.
+
+A tó a felhasználó kérésére világosabb, melegebb, szürkéskék palettát kapott. A mozgó hullámok és a tavirózsalevelek közti vízszín ehhez igazodik. A világ, az ütközések és a térkép a közös geometriát követik.

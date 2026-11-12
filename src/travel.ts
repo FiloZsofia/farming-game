@@ -11,7 +11,7 @@ import {createEstate,validEstate,type Estate} from './estate';
 import {validMorningSale,type MorningSale} from './morning-report';
 import {villageLayout} from './village-layout';
 export type Travel={homestead?:Homestead;noah?:NoahTestState;storyEvents?:StoryEvent[];fallenFruit?:{x:number;y:number;count:number}[];pollinationObservation?:{day:number};metSimon?:boolean;crafting?:Crafting;storyEndSeen?:boolean;forest?:Forest;homeVisited?:boolean;weatherSeed?:number;research:Research;estate:Estate;picked:Record<string,number>;morning:string|null;metAnnie:boolean;metLeo:boolean;sale:MorningSale|null};
-export const createTravel=():Travel=>({storyEvents:[],research:createResearch(),estate:createEstate(),picked:{},morning:null,metAnnie:false,metLeo:false,sale:null});
+export const createTravel=(newFarm=false):Travel=>({storyEvents:[],research:createResearch(),estate:createEstate(newFarm),picked:{},morning:null,metAnnie:false,metLeo:false,sale:null});
 export function validTravel(value:unknown,day:number,legacy=false):value is Travel{
  if(!value||typeof value!=='object'||!validStoryEvents((value as Travel).storyEvents,day))return false;const picked=(value as Travel).picked;
  if((value as Travel).fallenFruit!==undefined&&(!Array.isArray((value as Travel).fallenFruit)||(value as Travel).fallenFruit!.length>2000||(value as Travel).fallenFruit!.some(p=>!p||!Number.isFinite(p.x)||!Number.isFinite(p.y)||p.x< -400||p.x>1200||p.y< -400||p.y>600||!Number.isSafeInteger(p.count)||p.count<1||p.count>999999)))return false;
