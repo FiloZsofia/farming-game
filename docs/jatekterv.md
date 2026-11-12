@@ -1641,3 +1641,5 @@ Az új alap tó ingyenes kezdőterület, 100%-nak számít, önmagában nem viss
 A felhasználó új ára: **10% = 95 gold és 16 kő**, arányosan, egészre felfelé kerekítve. Teljes megduplázás: 950 gold és 160 kő. Az ár az adott farm saját alap tavához viszonyít. A korábbi befizetések a régi összeggel járnak vissza; az új vásárlások az új árral növelik a pontos fizetési összesítést. A nyilvántartás előtti bővítésekhez továbbra is a korábbi területarányos visszatérítés tartozik.
 
 A tó a felhasználó kérésére világosabb, melegebb, szürkéskék palettát kapott. A mozgó hullámok és a tavirózsalevelek közti vízszín ehhez igazodik. A világ, az ütközések és a térkép a közös geometriát követik.
+
+A felhasználó a két ellenőrző képen látott melegebb, világosabb kék palettát elvetette. A tó, a hullámfény és a tavirózsa körüli víz színe visszaáll a próbát megelőző, visszafogott zöldeskék palettára. Az új alapforma, a hullámzás és a 95 gold / 16 kő ár változatlan.

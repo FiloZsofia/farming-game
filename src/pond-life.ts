@@ -29,8 +29,8 @@ export class PondLife{
     const points=Array.from({length:7},(_,j)=>{const t=j/6;return{x:x+(t-.5)*w*2,y:y+Math.sin(t*Math.PI)*1.7};});
     if(points.every(p=>pondWaterAt(p.x,p.y,undefined,.87))){
      const alpha=(daylight?.25:.12)+.12*Math.sin(phase);
-     this.water.lineStyle(.9,0xc5d2c5,alpha).strokePoints(points,false);
-     if(i%3===0)this.water.lineStyle(.6,0x8baaa2,alpha*.8).lineBetween(x-w*.5,y+3,x+w*.5,y+3);
+     this.water.lineStyle(.9,0xb4cdbb,alpha).strokePoints(points,false);
+     if(i%3===0)this.water.lineStyle(.6,0x779e93,alpha*.8).lineBetween(x-w*.5,y+3,x+w*.5,y+3);
     }
    }
   }

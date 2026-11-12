@@ -39,3 +39,5 @@ Képek: `concepts/production-automatic-pond-smoothing.png`, `concepts/production
 - 534 sikeres teszt, sikeres build. Melegebb vízszín közeli böngészős képen ellenőrizve.
 
 Képek: `concepts/production-estate113-default-pond-warm-blue.png`, `concepts/production-pond-price95-stone16.png`.
+
+A melegebb kék színt a felhasználó a képek alapján elvetette; az eredeti zöldeskék palettát visszaállítottuk. A végleges szín és az új alapforma képe: `concepts/production-estate113-default-pond-approved-color.png`. Az új ár és a farmonkénti alapforma megmaradt; ismételt böngészős ellenőrzésben a feltöltött régi mentés és a korábbi befizetés továbbra is változatlan.
