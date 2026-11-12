@@ -1571,3 +1571,7 @@ Elmentett mechanikai irányok és még egyeztetendő számok:
 - **Mara zsákos szállítása:** másnapi fuvarral nagy zsákot hozna, a kertben kijelölt szabad lerakóhelyre. Nem közvetlenül a Készletbe kerülne; Sam külön művelettel használná fel a kiválasztott ágyáson, elterítési/bedolgozási animációval. A lerakóhely megközelíthető, ösvényen kívüli és takarásmentes legyen. Javaslat: egy zsák egy ágyásra, egyszeri talajelőkészítés és egyelőre el nem fogyó takarás; mennyiségek, árak és hatások még egyeztetendők.
 
 Az általános gondozás továbbra is egész ágyásra vonatkozna; a szüret és a növénytámasz az egyes növényekhez kapcsolódna. Ezek a tervek nem engedélyeznek új társítást, magot, rendelést vagy mentésmigrációt a jelenlegi játékban.
+
+### Fák és falusi hirdetőtábla megjelenése — 2026-11-12
+
+A meglévő fák és a hirdetőtábla a részletesebbé vált környezethez igazodó finomítást kapnak: tagoltabb kéreg, elágazások, kisebb levélcsoportok, szabálytalanabb fenyőágak; a gyümölcsfák lombjában is finomabb fények és levelek. A fák helye, mérete, ütközése, növekedése és termése nem változik. A hirdetőtábla fa kerete, deszkázata, papírlapjai és rögzítései részletesebbek; a közlemény és az interakció változatlan. Külön tesztmód nem készül.

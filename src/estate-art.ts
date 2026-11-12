@@ -9,7 +9,15 @@ export function drawEstate(scene:Phaser.Scene,estate:Estate,day:number){
   g.fillStyle(0x345737,.25).fillEllipse(x+7,y+5,61*s,22*s);g.lineStyle(7*s,0x785738).lineBetween(x,y,x,y-49*s);g.lineStyle(3*s,0x96714b).lineBetween(x-1,y,x-1,y-48*s);
   if(growth.progress>=1/3){g.lineStyle(3*s,0x785738).lineBetween(x,y-25*s,x-13*s,y-43*s).lineBetween(x,y-32*s,x+12*s,y-49*s);}
   const crown=growth.canopies===1?[[0,-49]]:growth.canopies===2?[[-10,-43],[9,-56]]:[[-13,-43],[12,-49],[0,-64]];
-  for(const [dx,dy]of crown){g.fillStyle(0x3d693f).fillEllipse(x+dx*s,y+dy*s,46*s,37*s);g.fillStyle(0x74964d).fillEllipse(x+(dx-4)*s,y+(dy-5)*s,35*s,26*s);}
+  for(const [dx,dy]of crown){
+   const cx=x+dx*s,cy=y+dy*s;
+   g.fillStyle(0x3d693f).fillEllipse(cx,cy,46*s,37*s);
+   g.fillStyle(0x5b8249).fillEllipse(cx-3*s,cy-4*s,39*s,29*s);
+   g.fillStyle(0x819e5a).fillEllipse(cx-7*s,cy-8*s,26*s,19*s);
+   for(let i=0;i<18;i++){const a=i*2.39996,r=Math.sqrt((i+.5)/18),lx=cx+Math.cos(a)*17*s*r,ly=cy+Math.sin(a)*12*s*r;g.fillStyle(i%3?0x6e9251:0xa0b477,.8).fillEllipse(lx,ly,3.8*s,1.8*s);}
+  }
+  g.lineStyle(.9*s,0x493e30,.7).lineBetween(x+2*s,y-3*s,x+2*s,y-29*s);
+  g.lineStyle(.7*s,0xb09463,.8).lineBetween(x-2*s,y-8*s,x-2*s,y-24*s);
   if(grown)drawTreeBlossomGaps(g,x,y,s,t.fruit>0,t.bloomState);
   if(t.fruit)for(let i=0;i<t.fruit;i++){const xx=x+Math.cos(i*2.4)*19,yy=y-48+Math.sin(i*2.4)*14;g.fillStyle(t.fruitDay!==undefined&&day-t.fruitDay>=2?(t.kind==='cherry'?0xa26b59:t.kind==='plum'?0x81738a:0xa99a6f):t.kind==='cherry'?0xb94f49:t.kind==='plum'?0x776187:t.kind==='apple'?0xcf9450:0xc1b566).fillEllipse(xx,yy,6,t.kind==='pear'?9:6);g.lineStyle(1,0x65583a).lineBetween(xx,yy-3,xx+1,yy-6);}
   if(t.fruit)drawRipeMarker(g,x+25*s,y-65*s);
