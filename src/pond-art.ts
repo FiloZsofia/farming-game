@@ -20,12 +20,5 @@ export function drawNaturalPond(g:Phaser.GameObjects.Graphics){
   }
   const a=i*.91,gravel=outline(-4)[i];if(i%3===0){g.fillStyle(0xb0af8e,.38).fillEllipse(gravel.x+Math.sin(a)*2,gravel.y,2.4,1.1);}
  }
- const bounds=outline(-10),minX=Math.min(...bounds.map(p=>p.x)),maxX=Math.max(...bounds.map(p=>p.x)),minY=Math.min(...bounds.map(p=>p.y)),maxY=Math.max(...bounds.map(p=>p.y));
- let seed=419;const rnd=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
- for(let i=0;i<160;i++){
-  const x=minX+rnd()*(maxX-minX),y=minY+rnd()*(maxY-minY),w=2+rnd()*7;
-  if(!pondWaterAt(x,y,expansion,.87))continue;
-  g.lineStyle(.7,i%3?0xa6c1b2:0x7fa79b,i%5?.25:.4).lineBetween(x,y,x+w,y-.3);
-  if(i%9===0)g.lineStyle(.55,0xabc9b8,.22).lineBetween(x+2,y+2,x+w*.7,y+2);
- }
+ // Surface reflections are animated by PondLife, not baked into the terrain.
 }

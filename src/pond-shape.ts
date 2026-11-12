@@ -32,3 +32,14 @@ export function brushPond(expansion:readonly number[],point:{x:number;y:number},
  }
  return result;
 }
+
+/** Diffuse sharp changes along the shore, then restore the paid area exactly.
+ * A floor keeps already-built water intact while previewing a new extension. */
+export function smoothPondExpansion(value:readonly number[],floor:readonly number[]=[]){
+ if(!value.length)return [];
+ const target=pondArea(value);let shape=Array.from({length:POND_SECTORS},(_,i)=>value[i]??0);
+ for(let pass=0;pass<10;pass++)shape=shape.map((n,i)=>(shape[(i+63)%64]+2*n+shape[(i+1)%64])/4);
+ const scaled=(scale:number)=>shape.map((n,i)=>Math.max(floor[i]??0,Math.min(MAX_POND_GROWTH,n*scale)));
+ let lo=0,hi=4;for(let i=0;i<60;i++){const mid=(lo+hi)/2;if(pondArea(scaled(mid))<target)lo=mid;else hi=mid;}
+ return scaled((lo+hi)/2);
+}

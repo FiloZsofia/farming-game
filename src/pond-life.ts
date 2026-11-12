@@ -22,9 +22,16 @@ export class PondLife{
  update(dt:number,estate:Estate,daylight:boolean,outdoors:boolean){
   this.waterTime+=dt;this.water.clear();
   if(outdoors){const outline=pondOutline(),left=Math.min(...outline.map(p=>p.x)),right=Math.max(...outline.map(p=>p.x)),top=Math.min(...outline.map(p=>p.y)),bottom=Math.max(...outline.map(p=>p.y));
-   for(let i=0;i<32;i++){
-    const phase=this.waterTime*.6+i*2.4,x=left+(right-left)*((i*.6180339)%1)+Math.sin(phase)*2,y=top+(bottom-top)*((i*.381966+.2)%1)+Math.cos(phase*.7)*1.2,w=3+i%4;
-    if(pondWaterAt(x-w,y,undefined,.82)&&pondWaterAt(x+w,y,undefined,.82))this.water.lineStyle(.65,0xb0c5b3,(daylight?.12:.05)+(.06+.06*Math.sin(phase))).lineBetween(x-w,y,x+w,y);
+   for(let i=0;i<34;i++){
+    const phase=this.waterTime*.85+i*2.4,drift=this.waterTime*2.5,spread=Math.sin(i*78.233+4.1)*43758.5453,
+     x=left+(right-left)*((i*.6180339)%1)+Math.sin(phase*.45)*5,
+     y=top+((bottom-top)*(spread-Math.floor(spread))+drift)%(bottom-top),w=5+i%5*1.8;
+    const points=Array.from({length:7},(_,j)=>{const t=j/6;return{x:x+(t-.5)*w*2,y:y+Math.sin(t*Math.PI)*1.7};});
+    if(points.every(p=>pondWaterAt(p.x,p.y,undefined,.87))){
+     const alpha=(daylight?.25:.12)+.12*Math.sin(phase);
+     this.water.lineStyle(.9,0xb4cdbb,alpha).strokePoints(points,false);
+     if(i%3===0)this.water.lineStyle(.6,0x779e93,alpha*.8).lineBetween(x-w*.5,y+3,x+w*.5,y+3);
+    }
    }
   }
   const count=estate.fish.goldfish+estate.fish.carp,view=this.scene.cameras.main.worldView;

@@ -1,3 +1,4 @@
+import {settlePondShore} from './pond-expansion';
 import {validHomestead} from './homestead-state';
 import {birdhouseVisible} from './birdhouse-placement';
 import {southBlocked,inNoahSouth} from './south-forest-terrain';
@@ -65,7 +66,7 @@ function validSnapshotRecord(value:unknown,legacy=false):value is Snapshot{
 }
 // Migrate known formats without discarding the original backup until a v18 write succeeds.
 export function decodeSnapshot(value:unknown):Snapshot|null{
- if(value&&typeof value==='object'&&'version' in value&&value.version===19){const next=structuredClone(value) as Snapshot;if(next.player&&Number.isFinite(next.player.x)&&Number.isFinite(next.player.y)&&next.player.y>=600&&next.player.y<1400)next.player=relocateVillagePlayer(next.player);return validSnapshot(next)?next:null;}
+ if(value&&typeof value==='object'&&'version' in value&&value.version===19){const next=structuredClone(value) as Snapshot;if(next.player&&Number.isFinite(next.player.x)&&Number.isFinite(next.player.y)&&next.player.y>=600&&next.player.y<1400)next.player=relocateVillagePlayer(next.player);return validSnapshot(next)?settlePondShore(next):null;}
  if(value&&typeof value==='object'&&'version' in value&&Number(value.version)>=1&&Number(value.version)<=18){const v=value as Snapshot;const accounts=[v.travel?.estate?.produce,v.travel?.estate?.shipping,v.travel?.estate?.roe,v.travel?.sale?.extras,v.economy?.lastSale?.extras];if(accounts.some(c=>c&&typeof c==='object'&&!Array.isArray(c)&&c.basket===undefined)){const n=structuredClone(v);for(const c of [n.travel?.estate?.produce,n.travel?.estate?.shipping,n.travel?.estate?.roe,n.travel?.sale?.extras,n.economy?.lastSale?.extras])if(c&&typeof c==='object'&&!Array.isArray(c)&&c.basket===undefined)c.basket=0;return decodeSnapshot(n);}}
 
 
@@ -94,7 +95,7 @@ export function decodeSnapshot(value:unknown):Snapshot|null{
    if(flower)result.travel.research.seeds++;removed.add(key);return false;
   });
   result.travel.research.flowers=result.travel.research.flowers.filter(f=>!removed.has(tileKey(f)));
-  result.skill=migrateGardenSkill(result.skill);if(result.travel.forest)result.travel.forest=migrateForest(result.travel.forest);if(result.travel.research.supplied===undefined&&(result.travel.research.materials.glass>0||result.travel.research.materials.linen>0))result.travel.research.supplied=[...(result.travel.research.materials.glass>0?['annie' as const]:[]),...(result.travel.research.materials.linen>0?['leo' as const]:[])];return result;}
+  result.skill=migrateGardenSkill(result.skill);if(result.travel.forest)result.travel.forest=migrateForest(result.travel.forest);if(result.travel.research.supplied===undefined&&(result.travel.research.materials.glass>0||result.travel.research.materials.linen>0))result.travel.research.supplied=[...(result.travel.research.materials.glass>0?['annie' as const]:[]),...(result.travel.research.materials.linen>0?['leo' as const]:[])];return settlePondShore(result);}
  // Layout changes can cover saved debris and a placed birdhouse as well as the player.
  // Move only objects in the newly occupied strips; never reset the farm or its resources.
  if(value&&typeof value==='object'&&'version' in value&&(value.version===17||value.version===18)){

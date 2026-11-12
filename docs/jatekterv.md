@@ -1619,3 +1619,15 @@ A tó visszafogott zöldeskék vizet, tagolt mélységeket, finom vízcsíkokat 
 A mentett partvonal módosulásakor a farm gyorsítótárazott tájrajza újraépül, így a bővítés azonnal vízként látszik. Korábban a mentés és költséglevonás megtörténhetett, miközben a régi tórajz maradt látható; a javítás nem kér újabb fizetést a már mentett bővítésért.
 
 A kiugró és telepítéskor bedobott halak közös rajza természetesebb, visszafogott aranybarna/zöldesszürke színt, formázott testet, úszókat és finom részleteket kap. A tó halvány, lassan mozgó vízfényei a közös partvonalon belül maradnak, bővítés után is. A gyümölcsfákon a sok átfedő, kerek lombfoltot egyszerűbb, összefüggő sziluett és ritkább, hegyes levelek váltják. A növekedés, a hely, a méret és a termések változatlanok.
+
+### Automatikus partsimítás és tóbővítés visszabontása — 2026-11-12
+
+A felhasználó automatikus partsimítást választott, külön rendezőgomb nélkül. Az új bővítés már az előnézetben kisimított, szélesebb íveket mutat; ugyanez készül el és ebből számolódik az ár. A simítás nem csökkenti a meglévő vizet, és nem változtatja meg a kijelölt új terület nagyságát. A méret-, távolság- és tárgyvédelmi korlátok megmaradnak.
+
+A régi mentések bővítése betöltéskor díjmentes, egyszeri területmegőrző rendezést kap. Vízinövény, fészek, tárgy és Sam helye védett; zsúfolt partszakasz mellett csak a biztonságos mértékű rendezés történhet. A sikeres rendezés jelzője mentődik, így a part nem változik újra minden betöltéskor. A bővítés nélküli tó változatlan.
+
+A Tervrajzok tókártyáján Bővítés visszabontása lehetőség jelenik meg. Külön előnézet és megerősítés után a teljes bővítés eltűnik, az eredeti tó megmarad, a gold és a kő visszajár. A gomb a megerősítés előtt mutatja az összegeket. A bővítésen álló vízinövényt vagy fészket előbb Bontóvassal kell visszavenni; ezek nem veszhetnek el. A halállomány megmarad az eredeti tóban. A visszatérítés csak sikeres mentés után történik, nem ismételhető.
+
+Az új vásárlások pontos gold- és kőköltsége külön összesítésben mentődik, ismételt bővítésnél is. A korábbi mentések nem tartalmaztak vásárlási előzményt; azok visszatérítését az eredeti, elfogadott területarányos árból számoljuk, nem kitalált részletekből. Emiatt a korábbi többrészletes vásárlások egyenkénti kerekítése nem rekonstruálható. Az új összesítésből már a ténylegesen befizetett teljes összeg jár vissza.
+
+A felhasználó a hullámzás és a gyümölcsfák korábbi változását nem látta elegendőnek, és bátrabb átdolgozást kért. A gyümölcsfák három egymásra tett lombpamacsát egyetlen szabálytalan, sötét szélű korona és kevés nagyobb, hegyes levél váltja. A tóba nem kerülnek többé a terepbe sütött, mozdulatlan vízcsíkok: hosszabb, ívelt, a felületen lassan tovahaladó hullámfények láthatók. A hullámok halak nélkül is működnek, a kibővített partot követik.

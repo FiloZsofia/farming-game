@@ -1,15 +1,15 @@
 import type {Snapshot} from './storage';
 import {farmLayout,farmBounds} from './layout';
-import {ORIGINAL_POND_AREA,pondArea,pondOutline,pondWaterAt,validPondExpansion} from './pond-shape';
+import {ORIGINAL_POND_AREA,pondArea,pondOutline,pondWaterAt,pondShoreAt,validPondExpansion,smoothPondExpansion} from './pond-shape';
 import {activeDebris} from './cleanup';
 import {createGarden} from './gardening';
 import {junkSites,junkPoint,junkPlacementRadius} from './junk-sites';
 export const pondExpansionPrice={gold:1800,stone:250};
 export function pondExpansionCost(before:readonly number[],after:readonly number[]){const area=Math.max(0,pondArea(after)-pondArea(before)),ratio=area/ORIGINAL_POND_AREA;return{area,gold:Math.ceil(ratio*pondExpansionPrice.gold-1e-8),stone:Math.ceil(ratio*pondExpansionPrice.stone-1e-8),percent:ratio*100};}
-export function pondExpansionError(s:Snapshot,after:readonly number[]):string|null{
+export function pondExpansionError(s:Snapshot,after:readonly number[],reshaping=false):string|null{
  const before=s.travel.estate.pondExpansion??[];
  if(!validPondExpansion(after))return 'A tó legfeljebb kétszeresére és az eredeti parttól legfeljebb 100 távolságegységnyire bővíthető, a telekhatáron belül.';
- if(after.some((n,i)=>n<(before[i]??0)))return 'A meglévő tó nem tölthető vissza.';
+ if(!reshaping&&after.some((n,i)=>n<(before[i]??0)-1e-7))return 'A meglévő tó nem tölthető vissza.';
  const boxes:{x:number;y:number;w:number;h:number}[]=[farmLayout.houseBounds,farmLayout.shedBounds,farmLayout.porchBounds,farmLayout.porchSteps,farmLayout.dock,{...farmLayout.mailbox},farmLayout.catalog,farmLayout.journal];
  const circles:{x:number;y:number;r:number}[]=[];
  for(const bed of s.travel.homestead?.garden.beds??[]){boxes.push({x:bed.area.x-10,y:bed.area.y-10,w:bed.area.w+20,h:bed.area.h+20});if(bed.marker)boxes.push({x:bed.marker.x-36,y:bed.marker.y-34,w:72,h:46});if(bed.irrigation)circles.push({...bed.irrigation,r:20});}
@@ -31,5 +31,38 @@ export function pondExpansionError(s:Snapshot,after:readonly number[]):string|nu
 export function expandPond(s:Snapshot,after:readonly number[]){
  const before=s.travel.estate.pondExpansion??[],cost=pondExpansionCost(before,after);
  if(cost.area<1||pondExpansionError(s,after)||s.economy.gold<cost.gold||s.clearing.stone<cost.stone)return null;
- const next=structuredClone(s);next.economy.gold-=cost.gold;next.clearing.stone-=cost.stone;next.travel.estate.pondExpansion=[...after];return next;
+ const paid=pondRefund(s),next=structuredClone(s);next.travel.estate.pondPaid={gold:paid.gold+cost.gold,stone:paid.stone+cost.stone};next.economy.gold-=cost.gold;next.clearing.stone-=cost.stone;next.travel.estate.pondExpansion=[...after];next.travel.estate.pondSmoothed=true;return next;
+}
+
+/** Upgrade a legacy shoreline without a purchase or moving any placed object. */
+export function settlePondShore(s:Snapshot){
+ const estate=s.travel.estate,before=estate.pondExpansion;
+ if(!before||estate.pondSmoothed)return s;
+ const smooth=smoothPondExpansion(before),target=pondArea(before);
+ // Search progressively gentler blends where existing shores are crowded.
+ for(const blend of [1,.75,.5,.25,.125,.0625]){
+  const shape=before.map((n,i)=>n+(smooth[i]-n)*blend);
+  // Blending radii changes area slightly; compensate within the same outline.
+  let lo=0,hi=2;for(let k=0;k<50;k++){const scale=(lo+hi)/2;if(pondArea(shape.map(n=>Math.min(100,n*scale)))<target)lo=scale;else hi=scale;}
+  const candidate=shape.map(n=>Math.min(100,n*(lo+hi)/2));
+  if(pondExpansionError(s,candidate,true))continue;
+  if(estate.pond.some(p=>p.kind==='duckNest'?!pondShoreAt(p.x,p.y,candidate):pondWaterAt(p.x,p.y,before)&&!pondWaterAt(p.x,p.y,candidate)))continue;
+  const next=structuredClone(s);next.travel.estate.pondExpansion=candidate;next.travel.estate.pondSmoothed=true;return next;
+ }
+ // Keep a valid crowded save intact; retry when its surroundings change.
+ return s;
+}
+
+/** Old saves predate the payment ledger; use the agreed area price for those. */
+export function pondRefund(s:Snapshot){const paid=s.travel.estate.pondPaid;if(paid)return {...paid};const {gold,stone}=pondExpansionCost([],s.travel.estate.pondExpansion??[]);return {gold,stone};}
+export function pondRemovalError(s:Snapshot){
+ if(pondArea(s.travel.estate.pondExpansion??[])-ORIGINAL_POND_AREA<1)return 'Nincs visszabontható tóbővítés.';
+ if(s.travel.estate.pond.some(p=>p.kind==='duckNest'?!pondShoreAt(p.x,p.y,[]):!pondWaterAt(p.x,p.y,[])))return 'Előbb vedd vissza Bontóvassal a bővített részen lévő vízinövényeket és fészket.';
+ const refund=pondRefund(s);if(s.economy.gold+refund.gold>999999||s.clearing.stone+refund.stone>999999)return 'Előbb szabadíts fel helyet a visszajáró goldnak vagy kőnek.';
+ return null;
+}
+export function removePondExpansion(s:Snapshot){
+ if(pondRemovalError(s))return null;const next=structuredClone(s),refund=pondRefund(s);
+ next.economy.gold+=refund.gold;next.clearing.stone+=refund.stone;
+ delete next.travel.estate.pondExpansion;delete next.travel.estate.pondPaid;delete next.travel.estate.pondSmoothed;return next;
 }

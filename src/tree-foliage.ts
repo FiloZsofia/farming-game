@@ -9,9 +9,9 @@ export function drawLeafCrown(g:Phaser.GameObjects.Graphics,x:number,y:number,rx
  g.fillStyle(birch?0x4f7951:0x365f40).fillPoints(outline.map(([dx,dy])=>({x:x+dx*rx,y:y+dy*ry})),true);
  // Broad connected facets provide depth, rather than pale rounded patches.
  g.fillStyle(birch?0x60885a:0x48754a).fillPoints([[-.84,-.2],[-.47,-.65],[-.3,-.84],[.12,-.87],[.65,-.62],[.71,-.24],[.35,-.06],[.03,.26],[-.37,.1],[-.63,.41]].map(([dx,dy])=>({x:x+dx*rx,y:y+dy*ry})),true);
- for(let i=0;i<19;i++){
-  const a=i*2.399963,r=Math.sqrt((i+.5)/19)*.78;
+ for(let i=0;i<15;i++){
+  const a=i*2.399963,r=Math.sqrt((i+.5)/15)*.78;
   const xx=x+Math.cos(a)*rx*r,yy=y+Math.sin(a)*ry*r;
-  drawShrubLeaf(g,xx,yy,-.8+random()*1.6,yy<y,Math.max(.45,rx/23)*1.1);
+  drawShrubLeaf(g,xx,yy,-.8+random()*1.6,yy<y,Math.max(.45,rx/29)*1.35);
  }
 }

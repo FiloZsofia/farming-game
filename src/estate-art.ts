@@ -10,11 +10,9 @@ export function drawEstate(scene:Phaser.Scene,estate:Estate,day:number){
  for(const t of estate.trees){const growth=orchardGrowth(t.planted,day),grown=growth.mature,s=growth.scale,x=t.x,y=t.y;
   g.fillStyle(0x345737,.25).fillEllipse(x+7,y+5,61*s,22*s);g.lineStyle(7*s,0x785738).lineBetween(x,y,x,y-49*s);g.lineStyle(3*s,0x96714b).lineBetween(x-1,y,x-1,y-48*s);
   if(growth.progress>=1/3){g.lineStyle(3*s,0x785738).lineBetween(x,y-25*s,x-13*s,y-43*s).lineBetween(x,y-32*s,x+12*s,y-49*s);}
-  const crown=growth.canopies===1?[[0,-49]]:growth.canopies===2?[[-10,-43],[9,-56]]:[[-13,-43],[12,-49],[0,-64]];
-  for(const [dx,dy]of crown){
-   const cx=x+dx*s,cy=y+dy*s;
-   drawLeafCrown(g,cx,cy,23*s,18.5*s,false,Math.abs(Math.round(x*31+y*17+dx*13+dy*7)));
-  }
+  // One continuous crown replaces the three overlapping round canopy puffs.
+  const matureCrown=growth.canopies===3;
+  drawLeafCrown(g,x,y-(matureCrown?53:growth.canopies===2?51:49)*s,(matureCrown?37:growth.canopies===2?30:23)*s,(matureCrown?31:growth.canopies===2?26:18.5)*s,false,Math.abs(Math.round(x*31+y*17)));
   g.lineStyle(.9*s,0x493e30,.7).lineBetween(x+2*s,y-3*s,x+2*s,y-29*s);
   g.lineStyle(.7*s,0xb09463,.8).lineBetween(x-2*s,y-8*s,x-2*s,y-24*s);
   if(grown)drawTreeBlossomGaps(g,x,y,s,t.fruit>0,t.bloomState);

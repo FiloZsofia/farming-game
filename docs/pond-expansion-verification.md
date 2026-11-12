@@ -16,3 +16,14 @@ Képek: `concepts/production-natural-pond-lily-nest-ducks.png`, `concepts/produc
 Valódi böngészős egérkattintás az Elkészítem gombon: az ablak bezárult, a 112 gold / 16 kő egyszer levonódott, a mentett bővítés megmaradt és a táj gyorsítótára újraépült. A látható víz követi az új partot. A gyümölcsfák és az ugró hal közeli képen ellenőrizve. A teljes tesztsor 522 tesztje és a production build sikeres.
 
 Képek: `concepts/production-pond-expanded-orchard-refined.png`, `concepts/production-orchard-sparse-pointed-leaves.png`, `concepts/production-pond-fish-ripples.png`.
+
+## Automatikus partsimítás és visszatérítés
+
+- A sarkos kijelölés kisimul, területe numerikus pontossággal megmarad; az előnézet és az ár ugyanazon a geometrián alapul.
+- Régi part betöltéskori rendezése díjmentes, idempotens, tárgy- és játékosvédett. Adatbázisos mentés/betöltés megőrzi a rendezést és a visszatérítést.
+- Többlépcsős új vásárlások pontos gold/kőösszege mentődik. Visszabontás után az eredeti egyenleg helyreáll, második visszatérítés nincs. Régi vásárlásoknál területarányos visszatérítés.
+- Valódi böngészős kattintás a Tervrajzok visszabontó gombján, majd a megerősítésen: 4888 gold / 484 kő → 5000 gold / 500 kő, bővítés törölve, panel bezárva.
+- Mozgó hullámrajz két időpillanatban eltér, halaktól függetlenül. A gyümölcsfák egyetlen koronája közeli képen ellenőrizve.
+- 530 sikeres teszt és sikeres production build.
+
+Képek: `concepts/production-automatic-pond-smoothing.png`, `concepts/production-orchard-single-crown.png`, `concepts/production-pond-removal-refund.png`.
