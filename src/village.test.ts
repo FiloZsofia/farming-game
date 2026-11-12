@@ -96,3 +96,9 @@ it('keeps the entrance flowerpot and its flowers beside the path',async()=>{cons
 it('adds woodland on both sides of the eastern delivery road without obstructing it',async()=>{const {marketEasternTrees,woodlandTreeClear}=await import('./village-layout');expect(marketEasternTrees.filter(t=>t.y<740).length).toBeGreaterThan(4);expect(marketEasternTrees.filter(t=>t.y>740).length).toBeGreaterThan(4);for(const t of marketEasternTrees)expect(woodlandTreeClear(t.x,t.y,t.scale??1,t.kind)).toBe(true);});
 
 it('keeps the complete sapling displays off paths and away from the square benches',async()=>{const {nurseryDisplays,nurseryDisplayBounds,villagePaths,benchContains}=await import('./village-layout'),{boundsOffPaths}=await import('./path-clearance');for(const d of nurseryDisplays){const b=nurseryDisplayBounds(d);expect(boundsOffPaths(b,villagePaths)).toBe(true);for(let x=b.left;x<=b.right;x+=2)for(let y=b.bottom-20;y<=b.bottom;y+=2)for(const bench of villageLayout.benches)expect(benchContains(benchPose(bench.angle),x,y)).toBe(false);}});
+it('keeps the path above the forest sign level before gently bending west',async()=>{
+ const {villagePaths}=await import('./village-layout');
+ const branch=villagePaths[1],forest=villagePaths[5];expect(branch.width).toBe(forest.width);
+ expect(branch.points[0][1]).toBe(930);expect(branch.points.at(-1)).toEqual(forest.points[0]);expect(forest.points.slice(0,2)).toEqual([[107,930],[-100,930]]);
+ for(let i=2;i<=9;i++){expect(forest.points[i][0]).toBeLessThan(forest.points[i-1][0]);expect(forest.points[i][1]).toBeGreaterThanOrEqual(forest.points[i-1][1]);}
+});

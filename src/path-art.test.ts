@@ -7,3 +7,8 @@ it('does not add scalloped circular bumps along a gently curving path',()=>{
  drawPathNetwork(g,[{width:32,points:[[170,930],[185,933],[200,937],[215,942],[230,948]]}]);
  expect(caps).toHaveLength(3);expect(caps.every(c=>c[0]===230&&c[1]===948)).toBe(true);
 });
+it('keeps a straight edge continuous where two equal-width paths meet',()=>{
+ const caps:number[][]=[];const g=new Proxy({},{get:(_,method:string)=>(...args:unknown[])=>{if(method==='fillEllipse')caps.push(args as number[]);return g;}}) as Phaser.GameObjects.Graphics;
+ drawPathNetwork(g,[{width:20,points:[[170,930],[107,930]]},{width:20,points:[[107,930],[-100,930]]}]);
+ expect(caps.some(c=>c[0]===107)).toBe(false);expect(caps.every(c=>c[0]===-100)).toBe(true);
+});
