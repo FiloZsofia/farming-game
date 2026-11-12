@@ -22,7 +22,26 @@ export function drawPathNetwork(g:Phaser.GameObjects.Graphics,paths:readonly Pai
    return !d||(ux*vx+uy*vy)/d<.95;
   }))g.fillStyle(mapColor(color)).fillEllipse(x,y,width,width);
  }
+ // Soft nested bands suggest a compacted centre, following the same path curve.
+ for(const [factor,alpha]of [[.62,.035],[.42,.045],[.22,.055]])for(const path of paths){
+  g.lineStyle(path.width*factor,mapColor(0xe0cda5),alpha).beginPath();
+  path.points.forEach(([x,y],i)=>i?g.lineTo(x,y):g.moveTo(x,y));g.strokePath();
+ }
  for(const mark of pathTextureMarks(paths)){
-  g.fillStyle(mapColor([0x9d8b68,0xd8c6a1,0xb3a17c][mark.kind]),mark.kind===1?.5:.42).fillRect(mark.x,mark.y,mark.kind===2?3:2,mark.kind===0?1.2:1);
+  const hash=(Math.imul(Math.round(mark.x)+311,374761393)^Math.imul(Math.round(mark.y)+701,668265263))>>>0;
+  const cos=Math.cos(mark.angle),sin=Math.sin(mark.angle);
+  const point=(x:number,y:number)=>({x:mark.x+x*cos-y*sin,y:mark.y+x*sin+y*cos});
+  if(mark.kind===0){
+   // Fine earth grains remain subdued; the compacted middle is less stony.
+   g.fillStyle(mapColor(0x9b8966),.3+mark.edge*.15).fillRect(mark.x,mark.y,1+(hash%3)*.35,.7);
+  }else if(mark.kind===1){
+   if(mark.edge<.35&&hash%3!==0)continue;
+   const size=.7+(hash%4)*.23;
+   g.fillStyle(mapColor(0x9e9478),.42).fillPoints([point(-size,0),point(-size*.6,-.6),point(size*.65,-.5),point(size,.1),point(size*.3,.65),point(-size*.7,.55)],true);
+   g.fillStyle(mapColor(hash%2?0xd5c8aa:0xc9bda0),.65).fillPoints([point(-size*.8,-.2),point(-size*.4,-.65),point(size*.65,-.5),point(size*.5,.1),point(-size*.4,.1)],true);
+  }else{
+   const length=1.6+(hash%3)*.5;
+   g.fillStyle(mapColor(0xa59270),.23).fillPoints([point(-length,-.25),point(length,-.25),point(length*.7,.3),point(-length,.3)],true);
+  }
  }
 }
