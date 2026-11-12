@@ -1577,3 +1577,7 @@ Az általános gondozás továbbra is egész ágyásra vonatkozna; a szüret és
 A meglévő fák és a hirdetőtábla a részletesebbé vált környezethez igazodó finomítást kapnak: tagoltabb kéreg, elágazások, kisebb levélcsoportok, szabálytalanabb fenyőágak; a gyümölcsfák lombjában is finomabb fények és levelek. A fák helye, mérete, ütközése, növekedése és termése nem változik. A hirdetőtábla fa kerete, deszkázata, papírlapjai és rögzítései részletesebbek; a közlemény és az interakció változatlan. Külön tesztmód nem készül.
 
 A lomb finomításának felhasználói visszajelzése: a nagy, egymásra rajzolt világos koronafoltok túl pacásak. Ezek helyett sok kisebb, szabálytalan levélcsoport, keskeny levélfény és helyi árnyék tagolja az erdei lombos fák és a gyümölcsfák koronáját. A helyadatok és a megosztott véletlensorozat továbbra sem változik.
+
+### Három erdei fafajta a felhasználó képi referenciája alapján
+
+A túl pacás, majd túl szemcsés lomb helyett a felhasználó csatolt képe adja az irányt: határozott pixelkontúr, összefüggő szabálytalan levéltömegek, mély lombközi árnyékok, látható elágazások és részletes törzs. A nyír világos kérgű és lazább koronájú, a lombos fa tömöttebb, a fenyő lefelé hajló, szabálytalan ágszintekkel készül. Saját procedurális rajz, nem a külső kép kivágása vagy assetként történő felhasználása. A helyek, az ütközések és a megosztott véletlenszám-fogyasztás megmaradnak. Ez a három erdei fafajta korábbi lombfinomítását felülírja; a gyümölcsfák külön rajzolása most nem változik.
