@@ -1603,3 +1603,5 @@ Az erdei tábla bal oldala fölötti útrészhez a felhasználó fényképes pon
 ### Jóváhagyott ösvényfelület-finomítás
 
 A felhasználó jóváhagyta a következőket: enyhén világosabb, taposott közép; változatos méretű és árnyalatú apró lapos kavicsok; az út irányát követő rövid, halvány kopásnyomok. A közép kevésbé kavicsos, a széleken több szemcse marad. A frissen kijavított egyenes szegély és nyugati kanyar változatlan. A felület továbbra is közös a farmon, a faluban és az erdőben, beleértve a csatlakozó játékos-földutakat.
+
+A második fényképes visszajelzés az erdei pihenőpad előtti ferde szakaszt és a jobb oldali szögletes kanyart mutatja. A nyugati erdei út köztes törései a régi folyosón belül lekerekítést kapnak, a közös szegélyrajzolás keskeny, finom áttűnéssel csökkenti a hosszú átlók lépcsőzetes hatását. A kavicsok és a rövid kopásnyomok valamivel részletesebbek. A fák, bokrok és szedési feltételek változatlanok; a térkép ugyanazt a közös nyomvonalat követi.
