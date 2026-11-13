@@ -1,10 +1,12 @@
 import type Phaser from 'phaser';
 import type {LivingBedArea} from './living-bed-layout';
 type Point={x:number;y:number};
+export const BED_SPRAY_DURATION=5500;
+export function irrigationSpraysToday(bed:{irrigation:Point|null;state:{weather:string;wateredDay?:number;day:number}},weather:string){return !!bed.irrigation&&weather!=='rain'&&bed.state.weather!=='rain'&&bed.state.wateredDay===bed.state.day;}
 /** Layered water arcs, travelling highlights and small splashes inside the bed. */
 export function drawBedSpray(g:Phaser.GameObjects.Graphics,source:Point,area:LivingBedArea,elapsed:number){
- const age=elapsed-600;if(age<0||elapsed>=2500)return;
- const pressure=Math.min(1,age/220,(2500-elapsed)/180),phase=age/1000;
+ const age=elapsed-600;if(age<0||elapsed>=BED_SPRAY_DURATION)return;
+ const pressure=Math.min(1,age/220,(BED_SPRAY_DURATION-elapsed)/180),phase=age/1000;
  const start={x:source.x,y:source.y-16};
  g.fillStyle(0xd2e9d8,pressure*.6).fillEllipse(start.x,start.y,6,2.5);
  for(let i=0;i<5;i++){

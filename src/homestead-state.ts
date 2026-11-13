@@ -1,3 +1,4 @@
+import {gardenObservationIds} from './garden-observations';
 import {MAX_GARDEN_LEVEL} from './garden-progression';
 import {extras} from './estate';
 import {bedKinds,bedMixes,emptyBedSeeds,type BedKind} from './living-bed';
@@ -32,7 +33,7 @@ export function validHomestead(v:unknown,day:number):v is Homestead{
  }
  if(g.packedMarkers.some(id=>!Number.isSafeInteger(id)||!ids.has(id)))return false;
  if(!Array.isArray(g.paths)||g.paths.length>10000||new Set(g.paths.map(p=>p.id)).size!==g.paths.length||g.paths.some(p=>!point(p)||!count(p.id)||p.id<1||!['stone','wood','dirt'].includes(String(p.material))||!Number.isFinite(p.angle)||!(p.previous===null||count(p.previous))||p.baseJoin!==undefined&&!point(p.baseJoin)))return false;
- if(!Array.isArray(g.observations)||g.observations.length>2||g.observations.some(n=>!object(n)||!['water-recovery','fruit-set'].includes(String(n.id))||typeof n.title!=='string'||typeof n.text!=='string'||!dayAt(n.day,day)||!dayAt(n.earlierDay,day)||!count(n.bedId))||!object(g.memory))return false;
+ if(!Array.isArray(g.observations)||g.observations.length>gardenObservationIds.length||new Set(g.observations.map(n=>object(n)?n.id:undefined)).size!==g.observations.length||g.observations.some(n=>!object(n)||!(gardenObservationIds as readonly string[]).includes(String(n.id))||typeof n.title!=='string'||typeof n.text!=='string'||!dayAt(n.day,day)||!dayAt(n.earlierDay,day)||!count(n.bedId))||!object(g.memory))return false;
  for(const value of Object.values(g.memory)){if(!object(value)||value.dryDay!==undefined&&!dayAt(value.dryDay,day)||value.waterDay!==undefined&&!dayAt(value.waterDay,day)||!object(value.blossoms)||Object.entries(value.blossoms).some(([key,b])=>!/^\d$/.test(key)||!object(b)||!dayAt(b.day,day)||!count(b.cycle)))return false;}
  if(!object(m)||typeof m.metMara!=='boolean'||!Array.isArray(m.crates)||m.crates.length!==9||m.crates.some(c=>c!==null&&!validCrate(c))||!(m.pendingDay===null||dayAt(m.pendingDay,day))||!(m.lastPickupDay===null||dayAt(m.lastPickupDay,day))||m.pendingDay!==null&&m.pendingDay===m.lastPickupDay)return false;
  if(m.lastReceipt!==null){const r=m.lastReceipt;if(!object(r)||!dayAt(r.day,day)||!Array.isArray(r.items)||!r.items.every(validReceiptItem)||!count(r.total,Number.MAX_SAFE_INTEGER)||r.total!==r.items.reduce((n,c)=>n+c.count*c.unitPrice,0)||r.day!==m.lastPickupDay)return false;}

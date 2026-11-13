@@ -121,3 +121,13 @@
 
 .gold-line:has(#market-income:not([hidden])){display:block;margin-bottom:41px}
 .season:has(#market-income:not([hidden])) #save-state{display:none}
+
+/* Every current/future blueprint card uses the same recipe scale. */
+#blueprints-page>.inventory-card{max-width:none!important;width:100%;box-sizing:border-box;margin:0;padding:14px;gap:8px!important;font-size:13px;line-height:1.4}
+#blueprints-page>.inventory-card>strong{font-size:17px;line-height:1.25}
+#blueprints-page>.inventory-card>.item-icon{width:36px;height:36px;max-width:36px;max-height:36px}
+#blueprints-page>.inventory-card p,#blueprints-page>.inventory-card label{font-size:13px;line-height:1.4}
+#blueprints-page>.inventory-card .recipe-costs{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
+#blueprints-page>.inventory-card .recipe-cost{margin:4px 0!important;height:26px;font-size:13px;line-height:1.2}
+#blueprints-page>.inventory-card .recipe-cost .item-icon{width:24px;height:24px;max-width:24px;max-height:24px;flex:none}
+#blueprints-page>.inventory-card button:disabled{opacity:.4;cursor:not-allowed}

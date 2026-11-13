@@ -76,3 +76,6 @@ A kertészeti próba frissítésismertetője a közös beszélgetésablakban jel
 Az üvegedény, lenszövet és műhelykulcs mellett a későbbi tárgyak is a közös `showItemGift(scene, actor, icon, name, count)` átadást használják. A hat vadvirágmag és a madárodú átvételekor is ez jelenik meg. Csak sikeres mentés után látható az átadó mondat; annak Tovább/Esc bezárása indítja a tárgy animációját. Átvétel után ne térjen vissza automatikusan a szereplő alapmondata vagy a vásárlóablak. Más ablakra váltás és jelenetlezárás ne hagyjon később előugró animációt.
 
 Az Esti napló bejegyzéseit a közös `addEntry` készíti: félkövér fejléc, sortörés, normál szöveg. Az első faliméh-megfigyelés sem lehet egyetlen, formázatlan bekezdés. A közös tárgyátadási animáció finom csilingelését a meglévő Menühangok kapcsoló szabályozza; háttérben és némítva nincs hang.
+
+### Tervrajzkártyák egységes méretei
+A `#blueprints-page` minden közvetlen `.inventory-card` eleme automatikusan a közös receptstílust kapja, az új kártyák is. Cím: valódi `strong`, 17 px; fejlécikon: 36×36 px; szöveg és alapanyagsor: 13 px; alapanyagikon: 24×24 px; belső térköz: 14 px. Az alapanyagokat `.recipe-costs` / `.recipe-cost` elemekkel jelenítsük meg. Ne kártyánként soroljuk fel a stílus kivételeit. Asztali és keskeny mobilnézetben is ellenőrizzük.

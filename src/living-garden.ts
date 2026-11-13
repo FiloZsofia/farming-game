@@ -1,4 +1,5 @@
-import {GARDEN_LEVEL_POINTS,MAX_GARDEN_LEVEL,normalizeGardenProgress,gardenProgress,gardenLevelTarget} from './garden-progression';
+import type {GardenObservationId} from './garden-observations';
+import {GARDEN_LEVEL_POINTS,MAX_GARDEN_LEVEL,normalizeGardenProgress,gardenProgress,gardenLevelTarget,creditGardenPoint} from './garden-progression';
 import {weatherOnDay} from './weather';
 import {extraBedKinds,sharedBedCrops,savedBedCopy,type SavedGarden} from './homestead-state';
 import type {GardenPathPiece} from './garden-path';
@@ -10,10 +11,10 @@ import type {Snapshot} from './storage';
 import {createCrafting,compostAction,advanceCrafting} from './crafting';
 import {gainGardening,createGardenSkill} from './gardening-skill';
 import {purchaseSeedOrder} from './orders';
-import {bedKinds,bedMixes,emptyBedSeeds,createLivingBed,advanceLivingBed,waterLivingBed,bedWaterSatisfied,type BedKind,type LivingBed} from './living-bed';
+import {bedKinds,bedMixes,emptyBedSeeds,createLivingBed,advanceLivingBed,waterLivingBed,bedWaterSatisfied,livingFlowers,type BedKind,type LivingBed} from './living-bed';
 import {livingBedArea,livingPlantPoint,type LivingBedArea} from './living-bed-layout';
 export type GardenPoint={x:number;y:number};
-export type GardenObservation={id:'water-recovery'|'fruit-set';title:string;text:string;day:number;earlierDay:number;bedId:number};
+export type GardenObservation={id:GardenObservationId;title:string;text:string;day:number;earlierDay:number;bedId:number};
 export type TrialBed={id:number;area:LivingBedArea;state:LivingBed;marker:GardenPoint|null;irrigation:GardenPoint|null;completed:number[];watered:boolean};
 export const trialSeedPrices:Record<BedKind,number>={radish:5,lettuce:5,pea:15,thyme:5,wildflower:5,oregano:5,sage:5,tomato:15,pepper:15,cucumber:15,strawberry:20,carrot:10,calendula:5,borage:5,chamomile:5,lemonBalm:5,onion:15,potato:10,basil:5,raspberry:20,mint:5,blackberry:20,marigold:5};
 export const TRIAL_GARDEN_LEVEL_POINTS=GARDEN_LEVEL_POINTS;
@@ -27,7 +28,7 @@ export class LivingGarden{
  availableSeeds(){return [...new Set(Object.values(bedMixes).filter(m=>m.level<=this.level).flatMap(m=>m.plants))];}
  addBed(area:LivingBedArea={...livingBedArea}){const bed:TrialBed={id:this.nextId++,area:{...area},state:createLivingBed(this.snapshot.clock.day),marker:null,irrigation:null,completed:[],watered:false};bed.state.seedStock=this.seeds;bed.state.weather=this.weather;this.beds.push(bed);return bed;}
  sync(bed:TrialBed){bed.state.seedStock=this.seeds;return bed.state;}
- credit(keys:string[]){for(const key of keys){if(this.xp>=gardenLevelTarget(MAX_GARDEN_LEVEL))break;if(this.persistent){if(!this.saved!.credited.includes(key)){this.saved!.credited.push(key);this.saved!.points++;}}else if(!this.snapshot.skill.credited.includes(key)){this.snapshot.skill.credited.push(key);this.snapshot.skill.xp++;}}}
+ credit(keys:string[]){for(const key of keys){if(this.xp>=gardenLevelTarget(MAX_GARDEN_LEVEL))break;if(this.persistent){creditGardenPoint(this.saved!,key);}else if(!this.snapshot.skill.credited.includes(key)){this.snapshot.skill.credited.push(key);this.snapshot.skill.xp++;}}}
  accept(bed:TrialBed,next:LivingBed,action:string,index=0){
   const old=bed.state;this.seeds={...next.seedStock};
   for(const kind of Object.keys(bedKinds) as BedKind[]){const count=Math.max(0,(next.basket[kind]??0)-(old.basket[kind]??0));this.basket[kind]+=count;if(isFood(kind)&&kind in this.snapshot.produce)this.snapshot.produce[kind as Crop]+=count;}
@@ -51,7 +52,7 @@ export class LivingGarden{
   this.growBeds(weather);
  }
  private growBeds(weather:'sunny'|'rain'){
-  for(const bed of this.beds){if(weather==='rain'&&bed.state.mix)bed.watered=true;if(bed.irrigation&&!bedWaterSatisfied(bed.state)){bed.state=waterLivingBed(bed.state)??bed.state;bed.watered=true;}bed.state=advanceLivingBed(this.sync(bed),weather,{seed:this.snapshot.travel.weatherSeed??0},`bed:${bed.area.x},${bed.area.y}`);if(bed.irrigation&&!bedWaterSatisfied(bed.state)){bed.state=waterLivingBed(bed.state)??bed.state;bed.watered=true;}for(const [i,p]of bed.state.plants.entries())if(p.aftermath==='overripe'){const point=livingPlantPoint(i,bed.area);addFruitFall(this.snapshot.travel,point.x,point.y,1);}}
+  for(const bed of this.beds){if(weather==='rain'&&bed.state.mix)bed.watered=true;if(weather!=='rain'&&bed.irrigation&&!bedWaterSatisfied(bed.state)){bed.state=waterLivingBed(bed.state)??bed.state;bed.watered=true;}bed.state=advanceLivingBed(this.sync(bed),weather,{seed:this.snapshot.travel.weatherSeed??0},`bed:${bed.area.x},${bed.area.y}`);if(weather!=='rain'&&bed.irrigation&&!bedWaterSatisfied(bed.state)){bed.state=waterLivingBed(bed.state)??bed.state;bed.watered=true;}for(const [i,p]of bed.state.plants.entries())if(p.aftermath==='overripe'){const point=livingPlantPoint(i,bed.area);addFruitFall(this.snapshot.travel,point.x,point.y,1);}}
   this.syncQuestFlowers();
  }
  compost(index:number,input:'weed'|'fallenFruit'='weed'){const next=compostAction(this.snapshot,index,input);if(!next)return false;this.snapshot=next;return true;}
@@ -59,15 +60,22 @@ export class LivingGarden{
  eat(kind:BedKind){if(!this.basket[kind])return false;const next=consumeFood(this.persistent?this.writePersistent():this.snapshot,kind);if(!next)return false;this.snapshot=next;this.basket[kind]--;return true;}
  private memory(bed:TrialBed){let memory=this.observationMemory.get(bed.id);if(!memory){memory={blossoms:{}};this.observationMemory.set(bed.id,memory);}return memory;}
  observe(bed:TrialBed):{text:string;discovery:GardenObservation|null}{
-  const s=bed.state,memory=this.memory(bed);let discovery:GardenObservation|null=null,text='';
-  if(s.plants.length&&s.moisture===0){memory.dryDay??=s.day;text='A levelek lankadnak, a föld felszíne kivilágosodott.';}
-  if(memory.waterDay!==undefined&&s.day>memory.waterDay&&s.moisture>0&&!this.observations.some(o=>o.id==='water-recovery'))discovery={id:'water-recovery',title:'A levelek újra feszesek',text:'Öntözés után újra feszesek a korábban lankadt levelek.',day:s.day,earlierDay:memory.dryDay!,bedId:bed.id};
+  const s=bed.state,memory=this.memory(bed),known=(id:GardenObservationId)=>this.observations.some(o=>o.id===id);let discovery:GardenObservation|null=null;
+  const note=(id:GardenObservationId,title:string,text:string,earlierDay=s.day)=>{if(!discovery&&!known(id))discovery={id,title,text,day:s.day,earlierDay,bedId:bed.id};};
+  if(s.plants.length&&s.moisture===0)memory.dryDay??=s.day;
+  if(memory.waterDay!==undefined&&s.day>memory.waterDay&&s.moisture>0)note('water-recovery','A levelek újra feszesek','Öntözés után újra feszesek a korábban lankadt levelek.',memory.dryDay!);
   for(const [i,p]of s.plants.entries())if(['strawberry','raspberry','blackberry'].includes(p.kind)){
-   const seen=memory.blossoms[i];if(!discovery&&!this.observations.some(o=>o.id==='fruit-set')&&p.aftermath==='empty'&&seen&&seen.cycle===(p.cycle??0)-1)discovery={id:'fruit-set',title:'Virágok gyümölcs nélkül',text:'A korábban megfigyelt virágok egy részéből nem fejlődött gyümölcs.',day:s.day,earlierDay:seen.day,bedId:bed.id};
-   if(p.growth>=2&&p.growth<bedKinds.strawberry.days){memory.blossoms[i]={day:s.day,cycle:p.cycle??0};text||='Az eper virágai már kinyíltak.';}
+   const seen=memory.blossoms[i];if(p.aftermath==='empty'&&seen&&seen.cycle===(p.cycle??0)-1)note('fruit-set','Virágok gyümölcs nélkül','A korábban megfigyelt virágok egy részéből nem fejlődött gyümölcs.',seen.day);
+   if(p.growth>=2&&p.growth<bedKinds[p.kind].days){memory.blossoms[i]={day:s.day,cycle:p.cycle??0};note('berry-blossoms','Virágba borult bogyósok',`A ${bedKinds[p.kind].name.toLocaleLowerCase('hu-HU')} virágai már kinyíltak. A terméshez a beporzóknak is dolguk lesz.`);}
   }
-  if(discovery){text=discovery.text;if(this.observations.some(o=>o.id===discovery!.id))discovery=null;else{this.observations.push(discovery);this.credit([`observation:${discovery.id}`]);}}
-  return {text,discovery};
+  if(s.plants.length&&s.moisture===0)note('dry-stress','Száraz föld, lankadó levelek','A levelek lankadnak, a föld felszíne kivilágosodott.');
+  if(s.plants.some(p=>p.kind==='pea'&&!p.removed&&p.growth>=bedKinds.pea.days))note('pea-pods','Kirajzolódó borsószemek','A telt hüvelyeken már a borsószemek domborulatai is látszanak.');
+  if(s.plants.some(p=>p.regrowing&&p.growth>0&&!p.removed))note('regrowth','A tő tovább él','A szüret után megmaradt tövön újabb termés fejlődik.');
+  if(s.trellis||s.plants.some(p=>p.supported))note('supported-stems','Támaszt kapott hajtások','A rögzített hajtások a támasz mentén fejlődhetnek tovább.');
+  if((s.mulched||s.cover==='gravel')&&s.wateredDay!==undefined&&s.day>s.wateredDay&&bedWaterSatisfied(s))note('cover-water','A takarás őrzi a nedvességet','A takart föld még megfelelően nedves, pedig ma nem kellett öntözni.',s.wateredDay);
+  if(livingFlowers(s)>=2&&s.weather!=='rain')note('pollinator-visits','Élet a virágok között','A nyitott virágok körül apró beporzók mozognak.');
+  if(discovery){const found=discovery as GardenObservation;this.observations.push(found);this.credit([`observation:${found.id}`]);return {text:found.text,discovery:found};}
+  return {text:'',discovery:null};
  }
  readPersistent(snapshot:Snapshot){
   const data=snapshot.travel.homestead?.garden;if(!data)throw Error('Hiányzó kertállapot.');this.snapshot=structuredClone(snapshot);this.saved=normalizeGardenProgress(structuredClone(data));this.seeds=emptyBedSeeds();this.basket=emptyBedSeeds();this.pending=emptyBedSeeds();this.mailbox=emptyBedSeeds();

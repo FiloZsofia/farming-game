@@ -25,3 +25,9 @@ export function gardenProgress(points:number,levelFloor=0){
  const required=gardenLevelCost(level+1);
  return {level,current:level>=MAX_GARDEN_LEVEL?required:Math.max(0,Math.min(required,points-gardenLevelTarget(level))),required};
 }
+
+export function creditGardenPoint(state:Progress,key:string){
+ normalizeGardenProgress(state);
+ if(state.points>=gardenLevelTarget(MAX_GARDEN_LEVEL)||state.credited.includes(key))return false;
+ state.points++;state.credited.push(key);return true;
+}

@@ -1,4 +1,4 @@
-import {drawBedSpray} from './irrigation-spray-art';
+import {drawBedSpray,BED_SPRAY_DURATION,irrigationSpraysToday} from './irrigation-spray-art';
 import {MAX_GARDEN_LEVEL} from './garden-progression';
 import {activeDebris} from './cleanup';
 import {junkSites,junkPoint,junkPlacementRadius} from './junk-sites';
@@ -25,7 +25,7 @@ import {farmLayout} from './layout';
 import {buyBlueprint,craftMachine,canCraft,blueprintNames,recipes,materialKeys,heldMaterial,materialNames,type Blueprint} from './crafting';
 import {craftChest} from './chests';
 import type {Snapshot} from './storage';
-type Host={production?:boolean;commit?:(next:Snapshot)=>Promise<boolean>;progress?:(xp:number,previous:number,level:number,current:number,required:number)=>void;actor:()=>GardenPoint;ready:()=>boolean;day:number;snapshot:()=>Snapshot;gain:(kind:BedKind|'stone'|'wood'|'mulch',count:number,point:GardenPoint,label:string,seed?:boolean)=>void;goals:()=>QuestEntry[];rest:()=>void;showWindow:(title:string,label:string)=>void;uiReady:()=>boolean;equip:(tool:'hoe'|'water'|'harvest'|'crowbar'|'stick'|'hand')=>void;thought:(text:string)=>void;celebrate:(level:number,mix:{name:string;detail:string;composition:string})=>void;work:(point:GardenPoint,tool:'hoe'|'hand'|'water'|'harvest'|'crowbar')=>void;advanceDay:(day:number)=>void;panelChanged:()=>void};
+type Host={production?:boolean;commit?:(next:Snapshot)=>Promise<boolean>;progress?:(xp:number,previous:number,level:number,current:number,required:number)=>void;actor:()=>GardenPoint;ready:()=>boolean;day:number;snapshot:()=>Snapshot;gain:(kind:BedKind|'stone'|'wood'|'mulch',count:number,point:GardenPoint,label:string,seed?:boolean)=>void;goals:()=>QuestEntry[];rest:()=>void;showWindow:(title:string,label:string)=>void;uiReady:()=>boolean;equip:(tool:'hoe'|'water'|'harvest'|'crowbar'|'stick'|'hand')=>void;thought:(text:string)=>void;celebrate:(level:number,mix:{name:string;detail:string;composition:string})=>void;work:(point:GardenPoint,tool:'hoe'|'hand'|'water'|'harvest'|'crowbar')=>void;advanceDay:(day:number)=>void;panelChanged:()=>void;notice?:(text:string)=>void};
 type PanelMode='bed'|GardenWindowMode;
 type Tool='stick'|'inspect'|'hoe'|'water'|'harvest'|'mulch'|'crowbar'|'path'|'marker'|'irrigation'|'composter'|'chest'|BedKind;
 const intersect=(a:LivingBedArea,b:LivingBedArea,pad=0)=>a.x-pad<b.x+b.w&&a.x+a.w+pad>b.x&&a.y-pad<b.y+b.h&&a.y+a.h+pad>b.y;
@@ -68,7 +68,7 @@ export class LivingBedController{
  private canUse(){return (this.modal.isOpen||this.host.production&&document.querySelector<HTMLDialogElement>('#dialogue')!.open)?this.host.uiReady():this.host.ready();}
  private open(mode:PanelMode){if(mode==='catalog'&&(!this.modal.isOpen||this.mode!=='catalog')){this.orderedInCatalog=false;this.catalogMix=null;}if(mode!==this.mode&&mode!=='bed')this.message='';if(mode!=='bed')this.closePanel();else this.modal.close();this.mode=mode;this.isOpen=mode==='bed';this.render();this.panel.hidden=!this.isOpen;this.host.panelChanged();}
  setTool(tool:Tool){if(this.placing)this.cancelPlacement();if(this.markerBed!==null&&tool!=='marker')return;if(tool in bedKinds&&(!this.isOpen||this.mode!=='bed'||!this.state.mix||!bedMixes[this.state.mix].plants.includes(tool as BedKind)||!this.garden.seeds[tool as BedKind]))return;this.modal.close();this.tool=tool;this.stroke=[];this.drawing=false;this.host.equip(['hoe','water','crowbar','stick','harvest'].includes(tool)?tool as 'hoe'|'water'|'crowbar'|'stick'|'harvest':'hand');this.renderToolbar();this.paintPreview();}
- advanceDay(weather:'sunny'|'rain'){if(!this.host.uiReady())return;this.garden.nextDay(weather);for(const bed of this.garden.beds)if(bed.irrigation&&bed.state.wateredDay===bed.state.day)this.sprayRemaining.set(bed.id,2500);this.host.advanceDay(this.garden.snapshot.clock.day);this.message='';this.paint();if(this.isOpen)this.render();}
+ advanceDay(weather:'sunny'|'rain'){if(!this.host.uiReady())return;this.garden.nextDay(weather);this.morningSpray();this.host.advanceDay(this.garden.snapshot.clock.day);this.message='';this.paint();if(this.isOpen)this.render();}
 
  private serviceAt(point:GardenPoint,byKeyboard=false){
   if(this.host.production)return false;
@@ -90,7 +90,7 @@ export class LivingBedController{
   const bed=this.committed().find(b=>this.distance(point,b.area)<8);if(!bed){this.closePanel();return false;}if(this.active!==bed){this.mixDraft=null;if(this.tool in bedKinds){this.tool='harvest';this.host.equip('harvest');}}this.active=bed;if(!this.near()){this.message='Lépj közelebb az ágyáshoz.';return true;}
   if(this.state.plants.length){this.selected=this.state.plants.map((_,i)=>{const p=livingPlantPoint(i,this.area);return {i,d:Math.hypot(p.x-point.x,p.y-point.y)};}).sort((a,b)=>a.d-b.d)[0].i;}
   if(this.tool==='hoe')this.apply(prepareLivingBed(this.state),'hoe','prepare');
-  else if(this.tool==='water')this.apply(waterLivingBed(this.state),'water','water');
+  else if(this.tool==='water'){const next=waterLivingBed(this.state);if(next)this.apply(next,'water','water');else if(this.state.prepared){const interval=bedWaterInterval(this.state),why=this.state.weather==='rain'?'Esik az eső, most nem kell öntözni.':this.state.mix==='herbs'?`A szárazságtűrő növényeket csak ${interval} naponta kell öntözni.`:`Ez az ágyás ${interval} naponta igényel öntözést; most még megfelelő a vízellátása.`;this.host.notice?.(why);this.message=why;}}
   else if(this.tool==='mulch')this.mulch();
   else if(this.tool==='harvest'){const p=this.state.plants[this.selected];const next=p?(bedPlantStage(p)==='seed'?collectLivingSeeds(this.state,this.selected):harvestLivingPlant(this.state,this.selected)):null;if(next)this.apply(next,'harvest',bedPlantStage(p)==='seed'?'seeds':'harvest');else this.inspectBed(bed);}
   else if(this.tool in bedKinds)this.apply(replantLivingSpot(this.state,this.selected,this.tool as BedKind),'hand','replant');
@@ -214,7 +214,7 @@ export class LivingBedController{
   if(!this.host.production){run();return;}if(this.saving)return;const before=this.host.snapshot();this.refresh(before);run();const next=this.garden.writePersistent(this.pathCredits);next.travel.homestead!.garden=this.persistedState();if(JSON.stringify(next)===JSON.stringify(before))return;
   this.saving=true;void this.host.commit!(next).then(ok=>{this.saving=false;if(!ok){this.gains=[];this.pendingProgress=null;this.pendingCelebrations=[];this.refresh(before);}else{this.refresh(next);const p=this.pendingProgress;if(p)this.host.progress?.(p.xp,p.previous,p.level,p.current,p.required);this.pendingProgress=null;for(const reward of this.pendingCelebrations.splice(0))this.host.celebrate(reward.level,reward.mix);}this.paint();if(this.isOpen||this.modal.isOpen)this.render();});
  }
- morningSpray(){for(const bed of this.garden.beds)if(bed.irrigation&&bed.state.wateredDay===bed.state.day)this.sprayRemaining.set(bed.id,2500);this.paint();}
+ morningSpray(){this.sprayRemaining.clear();for(const bed of this.garden.beds)if(irrigationSpraysToday(bed,this.garden.weather))this.sprayRemaining.set(bed.id,BED_SPRAY_DURATION);this.paint();}
  openCatalog(){if(this.host.production)this.refresh(this.host.snapshot());this.open('catalog');}
  openObservations(){if(this.host.production)this.refresh(this.host.snapshot());this.open('notebook');}
  appendPlans(content:HTMLElement){if(this.host.production)this.refresh(this.host.snapshot());this.renderPathPlan(content);}
@@ -295,7 +295,7 @@ export class LivingBedController{
   for(const id of ['composter','basketMaker','beeHabitat','irrigation','chest'] as const){
    const chest=id==='chest',owned=chest?!!snapshot.skill.chestBlueprint:!!snapshot.travel.crafting?.blueprints.includes(id as Blueprint),name=chest?'Tárolóláda':blueprintNames[id];if(!buy&&!owned)continue;
    const card=document.createElement('article');card.className=buy?'shop-card':'inventory-card craft-recipe';const heading=document.createElement('strong');heading.textContent=buy?`${name} tervrajza`:name;const description=document.createElement('div');description.append(heading);card.append(itemIcon(chest?'chest':id),description);
-   if(id==='irrigation')this.text(description,'Egy teljes ágyást öntöz meg minden reggel.');
+   if(id==='irrigation')this.text(description,'A saját ágyását szükség szerint öntözi; esőben nem kapcsol be.');
    if(buy){const price=chest?160:recipes[id].price;this.button(card,id==='beeHabitat'?'Nem kapható':owned?'Megvásárolva':`${price} gold · Megveszem`,`buy-${id}`,()=>{const next=chest?null:buyBlueprint(snapshot,id);if(chest){if(snapshot.economy.gold<160||snapshot.skill.chestBlueprint)return;snapshot.economy.gold-=160;snapshot.skill.chestBlueprint=true;}else if(next)this.garden.snapshot=next;this.message='A tervrajz a Tervrajzok fülre került.';this.render();},false,id==='beeHabitat'||owned||snapshot.economy.gold<price);if(owned)this.button(description,'Megnyitom a Tervrajzokat',`view-plan-${id}`,()=>this.open('plans'),false);
    }else{
     const costs=document.createElement('div');costs.className='recipe-costs';if(chest)this.text(costs,`Fa: ${snapshot.clearing.wood} / 20 · Ócskavas: ${snapshot.travel.research.materials.scrap} / 5`);else for(const key of materialKeys)if(recipes[id][key])this.text(costs,`${materialNames[key]}: ${heldMaterial(snapshot,key)} / ${recipes[id][key]}`);card.append(costs);
@@ -314,7 +314,7 @@ export class LivingBedController{
   for(const b of Array.from(document.querySelectorAll<HTMLButtonElement>('#living-bed-panel button,#living-garden-window button')))b.disabled=b.dataset.bedUnavailable==='true'||!this.canUse()||(this.mode==='bed'&&b.dataset.bedCare==='true'&&!this.near());
   const seedTool=this.seedControl,base=this.toolbarState[0]?.button.getBoundingClientRect();if(seedTool&&base?.width){seedTool.style.width=`${base.width}px`;seedTool.style.height=`${base.height}px`;}
   const dt=Math.min(100,Math.max(0,time-this.lastSprayTime));this.lastSprayTime=time;this.sprayArt.clear();
-  if(!dialogueOpen)for(const bed of this.garden.beds){const remaining=this.sprayRemaining.get(bed.id)??0,p=bed.irrigation,a=bed.area,view=this.scene.cameras.main.worldView;if(!p||remaining<=0)continue;this.sprayRemaining.set(bed.id,Math.max(0,remaining-dt));if(remaining-dt<=0)this.paint();if(a.x+a.w<view.x||a.x>view.right||a.y+a.h<view.y||a.y>view.bottom)continue;drawBedSpray(this.sprayArt,p,a,2500-remaining);}
+  if(!dialogueOpen)for(const bed of this.garden.beds){const remaining=this.sprayRemaining.get(bed.id)??0,p=bed.irrigation,a=bed.area,view=this.scene.cameras.main.worldView;if(!p||remaining<=0)continue;if(this.garden.weather==='rain'||bed.state.weather==='rain'){this.sprayRemaining.delete(bed.id);continue;}this.sprayRemaining.set(bed.id,Math.max(0,remaining-dt));if(remaining-dt<=0)this.paint();if(a.x+a.w<view.x||a.x>view.right||a.y+a.h<view.y||a.y>view.bottom)continue;drawBedSpray(this.sprayArt,p,a,BED_SPRAY_DURATION-remaining);}
 
   this.visitors.clear();for(const bed of this.committed())if(livingFlowers(bed.state))paintBedVisitors(this.visitors,bed.state,time,bed.area,false);
  }

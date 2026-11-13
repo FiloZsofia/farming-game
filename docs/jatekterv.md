@@ -1698,3 +1698,11 @@ A felhasználó pontosította: a **30 pont csak a három új társításra vonat
 | 5 | Illatos piroskert | 30 | 190 |
 
 A műveletenkénti 1 pont és a tartalmi szinthatár feletti pontgyűjtés tiltása változatlan. Az eredeti 50 pontos mentésből az első két szint és annak folyamatban lévő pontjai közvetlenül megmaradnak, a 2. szint feletti régi többlet nem számít új munkának. Az átmeneti, mindenütt 30 pontos rendszer alatt szerzett szinteket és a szinten belüli arányos előrehaladást megőrizzük: nem veszít senki már megszerzett társítást. A mentett kertészeti fejlődés 3. belső szabályváltozata kezeli ezt; a játék és a teljes mentés verziószáma nem változik. A kezelő és az animáció ugyanazokat a változó küszöböket használja.
+
+### Kertészeti visszajelzések és magforgás (2026-11-13)
+- A gyümölcsfa sikeres elültetése és egy fa termésének begyűjtése egy-egy kertészkedési művelet, 1 ponttal. A termés darabszáma nem szorozza a pontot; a meglévő szinthatár és a többletpontok kizárása változatlan.
+- Esőben nincs öntözőrendszer-vízsugár. A száraz nap szükséges automatikus öntözésének animációja 5,5 másodpercig tart (a korábbihoz képest +3 másodperc).
+- A vízzel még megfelelően ellátott ágyás kézi öntözési kísérlete az eszköztár felett magyarázatot ad; a szárazságtűrő társításnál a tényleges, takarást is figyelembe vevő öntözési időközt írja ki.
+- A megfigyelés ugyanazzal az azonosítóval csak egyszer fedezhető fel, mentésbetöltés és másik ágyás esetén is. Új megfigyelések feltételei: virágzás, szárazság és helyreállás, beporzók, terméskötés, látható borsóhüvelyek, újraszedés, támrendszer és talajtakarás. Ismétlés nem ad pontot vagy új naplóbejegyzést.
+- Jóváhagyott próba: a borágó, körömvirág, bársonyvirág és kamilla egyszeri növény. Szüret vagy maggyűjtés után felszabadul a helyük, újra kell vetni őket. A már készletben tárolt magokat és meglévő ültetéseket nem vesszük el.
+- A Tervrajzok elnevezés egyelőre megmarad. Minden jelenlegi és későbbi tervrajzkártya közös receptstílust használjon.

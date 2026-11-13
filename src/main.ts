@@ -1,3 +1,4 @@
+import {creditOrchardWork} from './orchard-gardening';
 import {readFarmImport} from './save-import';
 import {MAX_GARDEN_LEVEL,GARDEN_LEVEL_POINTS,gardenProgress,normalizeGardenProgress,ORIGINAL_GARDEN_LEVEL_POINTS} from './garden-progression';
 import {PondExpansionController} from './pond-expansion-controller';
@@ -808,7 +809,7 @@ class Farm extends Phaser.Scene {
   this.gardenController?.appendPlans(recipes);
   this.pondBuilder?.appendPlan(recipes);
   if(!this.skill.chestBlueprint&&!this.travel.homestead?.garden.chestBlueprint)return;
-  const card=document.createElement('div');card.className='inventory-card';card.textContent='Tárolóláda · 24 rekesz';card.prepend(itemIcon('chest'));
+  const card=document.createElement('div');card.className='inventory-card craft-recipe';const title=document.createElement('strong');title.textContent='Tárolóláda · 24 rekesz';card.append(itemIcon('chest'),title);
   const costs=document.createElement('div');costs.className='recipe-costs';
   for(const [name,held,required,icon]of [['Fa',this.clearing.wood,20,'wood'],['Ócskavas',this.travel.research.materials.scrap,5,'scrap']] as const){const row=document.createElement('p');row.className=held<required?'recipe-cost missing':'recipe-cost ready';row.append(itemIcon(icon),document.createTextNode(`${name}: ${held} / ${required}`));costs.append(row);}card.append(costs);
   const craft=document.createElement('button');craft.type='button';craft.id='craft-chest';craft.textContent='Elkészítem';craft.disabled=this.clearing.wood<20||this.travel.research.materials.scrap<5||this.transitioning||(this.skill.chests?.packed??0)>=999;
@@ -1033,7 +1034,8 @@ class Farm extends Phaser.Scene {
  }
  private async commitEstate(estate:Estate,message:string){
   this.transitioning=true;this.saveRevision++;const travel=structuredClone(this.travel);travel.estate=estate;
-  try{await this.saveChecked(snapshot(this.actor,this.clock,this.garden,this.economy,this.orders,this.farmName,this.clearing,this.story,this.skill,this.farmerName,travel));this.adoptTravel(travel);this.redrawScenery();this.notice(message);return true;}
+  const next=snapshot(this.actor,this.clock,this.garden,this.economy,this.orders,this.farmName,this.clearing,this.story,this.skill,this.farmerName,travel),beforePoints=this.travel.homestead?.garden.points??0,beforeLevel=gardenProgress(beforePoints).level,credited=creditOrchardWork(this.travel.estate,next);
+  try{await this.saveChecked(next);this.adoptTravel(next.travel);this.gardenController?.refresh(next);this.redrawScenery();this.notice(message);if(credited){this.showGardening(beforePoints);const level=gardenProgress(next.travel.homestead!.garden.points).level;if(level>beforeLevel){const id=(Object.keys(bedMixes) as BedMix[]).find(id=>bedMixes[id].level===level);if(id)this.queueGardenReward(level,{...bedMixes[id],composition:recommendedComposition(id)});}}return true;}
   catch{this.notice('Nem sikerült menteni. A készleted változatlan maradt.');return false;}
   finally{this.transitioning=false;this.lastTick=performance.now();}
  }
@@ -1376,7 +1378,7 @@ class Farm extends Phaser.Scene {
   if(!this.travel.homestead||this.store.testMode||this.gardenController)return;this.scenery?.destroy();this.scenery=null;this.redrawScenery();
   document.querySelector<HTMLElement>('#game')!.dataset.homestead='true';
   const active=()=>this.ready&&!this.choosingFarm&&!this.transitioning&&!this.store.testMode;
-  this.gardenController=new LivingBedController(this,{production:true,commit:next=>this.commitChest(next,()=>{}),progress:(xp,previous,level,current,required)=>this.showGardening(previous,{xp,level,current,required}),actor:()=>this.actor,ready:()=>active()&&this.canInteract()&&this.actor.y<600&&this.actor.y>=-360,uiReady:()=>active()&&!this.avatar.isWorking(),day:this.clock.day,snapshot:()=>this.currentSnapshot(),gain:(kind,count,p,label,seed)=>this.harvestPop(kind,p.x,p.y,count,label,seed),goals:()=>questEntries(this.travel.research,this.garden,this.clock.day,this.clock.elapsed,this.travel.forest,this.travel.homestead?.garden.beds),rest:()=>void this.finishDay(false),equip:tool=>this.avatar.equip(tool==='harvest'?'none':tool),showWindow:(title,label)=>showDialogue(title,'',label),thought:text=>{this.thought.setText(text);this.thoughtRemaining=8;},celebrate:(level,mix)=>this.queueGardenReward(level,mix),work:(p,tool)=>this.avatar.use(p.x-this.actor.x,p.y-this.actor.y,tool),panelChanged:()=>this.fitCamera(),advanceDay:()=>{}});
+  this.gardenController=new LivingBedController(this,{production:true,commit:next=>this.commitChest(next,()=>{}),progress:(xp,previous,level,current,required)=>this.showGardening(previous,{xp,level,current,required}),actor:()=>this.actor,ready:()=>active()&&this.canInteract()&&this.actor.y<600&&this.actor.y>=-360,uiReady:()=>active()&&!this.avatar.isWorking(),day:this.clock.day,snapshot:()=>this.currentSnapshot(),gain:(kind,count,p,label,seed)=>this.harvestPop(kind,p.x,p.y,count,label,seed),goals:()=>questEntries(this.travel.research,this.garden,this.clock.day,this.clock.elapsed,this.travel.forest,this.travel.homestead?.garden.beds),rest:()=>void this.finishDay(false),equip:tool=>this.avatar.equip(tool==='harvest'?'none':tool),showWindow:(title,label)=>showDialogue(title,'',label),thought:text=>{this.thought.setText(text);this.thoughtRemaining=8;},celebrate:(level,mix)=>this.queueGardenReward(level,mix),work:(p,tool)=>this.avatar.use(p.x-this.actor.x,p.y-this.actor.y,tool),panelChanged:()=>this.fitCamera(),notice:text=>this.notice(text),advanceDay:()=>{}});
   if(this.clock.elapsed<3)this.gardenController.morningSpray();
   for(let level=this.travel.homestead.garden.rewardedLevel+1;level<=Math.min(MAX_GARDEN_LEVEL,this.gardenController.garden.level);level++){const id=(Object.keys(bedMixes) as BedMix[]).find(id=>bedMixes[id].level===level);if(id)this.queueGardenReward(level,{...bedMixes[id],composition:recommendedComposition(id)});}
   this.farmMarket=new FarmMarketController(this,{actor:()=>this.actor,snapshot:()=>this.currentSnapshot(),state:()=>this.travel.homestead!.stand,clock:()=>this.clock,commit:next=>this.commitChest(next,()=>{}),playing:()=>active()&&!dialogue.open&&!this.avatar.isWorking(),uiReady:()=>active(),show:(title,text,label)=>showDialogue(title,text,label??''),notice:text=>this.notice(text),income:amount=>this.showMarketIncome(amount)});

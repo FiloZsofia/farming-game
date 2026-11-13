@@ -27,7 +27,13 @@ export function paintLivingPlant(g:Phaser.GameObjects.Graphics,p:BedPlant,x:numb
  case 'radish': if(ready)g.fillStyle(0xc16c83).fillEllipse(x,y-2,10,9);for(let i=0;i<5;i++)leaf(0,-2,-2.7+i*.57,15+i%2*2,8,i%2?0x8ca658:0x62874d);break;
  case 'carrot': if(ready)g.fillStyle(0xcf8c48).fillTriangle(x-4,y-3,x+4,y-3,x,y+6);for(let i=0;i<5;i++){const dx=(i-2)*5,dy=-22-Math.abs(i-2)*-3;stem(0,0,dx,dy);for(let j=1;j<5;j++){const xx=dx*j/5,yy=dy*j/5;leaf(xx,yy,-2.8,6,2,0x7ba157);leaf(xx,yy,-.6,6,2,0x93b467);}}break;
  case 'lettuce': for(let i=0;i<10;i++){const a=i*2.4;leaf(Math.cos(a)*2,-3+Math.sin(a)*2,a,13-i*.55,13-i*.5,[0x73974e,0x92af60,0xb4c57c][i%3]);}break;
- case 'pea': stem(-8,1,-5,-34,0xa48c61);stem(0,0,-2,-30,0x729353,1.5);for(let i=0;i<4;i++){leaf(-1,-8-i*5,Math.PI+(i%2?-.4:.3),11,6,0x7d9e5a);leaf(-1,-8-i*5,-.4,10,5,0x91ae64);}if(ready||p.flowering)for(let i=0;i<3;i++)g.fillStyle(p.flowering?stage==='seed'?0x9c8452:0xb0a26b:0x9fb968).fillEllipse(x+(-5+i*5)*s,y+(-16-i%2*6)*s,4*s,11*s);break;
+ case 'pea': stem(-8,1,-5,-34,0xa48c61);stem(0,0,-2,-30,0x729353,1.5);for(let i=0;i<4;i++){leaf(-1,-8-i*5,Math.PI+(i%2?-.4:.3),11,6,0x7d9e5a);leaf(-1,-8-i*5,-.4,10,5,0x91ae64);}if(ready||p.flowering)for(let i=0;i<3;i++){
+  const xx=x+(-5+i*6)*s,yy=y+(-16-i%2*7)*s,dried=p.flowering,body=dried?0xb49b64:0xacc767,shade=dried?0x8b774f:0x729748;
+  g.lineStyle(.7,0x6b8a4c).lineBetween(xx,yy-8*s,xx+2*s,yy-11*s);
+  g.fillStyle(shade).fillPoints([[-2,-7],[1,-8],[3,-4],[3,4],[0,8],[-2,4]].map(([a,b])=>({x:xx+a*s,y:yy+b*s})),true);
+  g.fillStyle(body).fillEllipse(xx,yy,4.4*s,13*s);g.lineStyle(.6,dried?0xddc997:0xe0e8a3).lineBetween(xx-s,yy-5*s,xx-s,yy+5*s);
+  for(let j=0;j<3;j++){g.fillStyle(dried?0xc9b17a:0xc6d987).fillCircle(xx+.4*s,yy+(-4+j*4)*s,1.5*s);g.lineStyle(.4,shade,.65).lineBetween(xx+1.7*s,yy+(-5+j*4)*s,xx+2*s,yy+(-3+j*4)*s);}
+ }break;
  case 'thyme': for(let i=0;i<6;i++){const dx=(i-2.5)*4;stem(0,0,dx,-10-Math.abs(dx)*.3,0x8c8052);for(let j=1;j<4;j++){leaf(dx*j/4,-j*3,Math.PI+.2,4,3,0x91a578);leaf(dx*j/4,-j*3,-.3,4,3,0x748f67);}}break;
  case 'oregano': for(let i=0;i<3;i++){const dx=(i-1)*7;stem(dx,0,dx,-24);for(let j=1;j<4;j++){leaf(dx,-j*6,Math.PI+.2,8,6,0x789657);leaf(dx,-j*6,-.3,8,6,0x91ac68);}}break;
  case 'sage': for(let i=0;i<7;i++)leaf((i%2?1:-1)*2,-i%3*4,-2.8+i*.43,20,8,i%2?0x93a58e:0xaab69e);break;
