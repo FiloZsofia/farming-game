@@ -29,9 +29,11 @@ export const bedWateredToday=(s:LivingBed)=>s.wateredDay===s.day||s.weather==='r
 export function waterLivingBed(s:LivingBed):LivingBed|null{if(!s.prepared||bedWaterSatisfied(s))return null;return {...structuredClone(s),moisture:BED_WATER_CAPACITY,evaporation:0,unwateredDays:0,wateredDay:s.day};}
 export const bedWaterInterval=(s:LivingBed)=>(s.mix==='herbs'?2:1)+(s.mulched||s.cover==='gravel'?1:0);
 export const bedWaterSatisfied=(s:LivingBed)=>bedWateredToday(s)||s.wateredDay!==undefined&&s.day-s.wateredDay<bedWaterInterval(s);
+export const bedShowsDryCracks=(s:LivingBed)=>!bedWaterSatisfied(s)&&!s.mulched&&(s.unwateredDays??0)>=2&&s.moisture<=1;
 export const bedRegrowsFruit=(kind:BedKind)=>['strawberry','raspberry','blackberry','pepper','tomato'].includes(kind);
 export const bedPlantDays=(p:BedPlant)=>p.regrowing&&bedRegrowsFruit(p.kind)?2:bedKinds[p.kind].days;
 export const plantSupport=(s:LivingBed,index:number)=>{const p=s.plants[index];return !p||p.removed?null:p.kind==='tomato'&&!p.supported?'stake':['raspberry','blackberry'].includes(p.kind)&&!s.trellis?'trellis':null;};
+export const supportBlocksGrowth=(s:LivingBed,index:number)=>!!plantSupport(s,index)&&s.plants[index].growth>=Math.min(2,bedPlantDays(s.plants[index])-1);
 export function supportLivingBed(s:LivingBed,index:number){const type=plantSupport(s,index);if(!s.prepared||!type)return null;const next=structuredClone(s);if(type==='stake')next.plants[index].supported=true;else next.trellis=true;return next;}
 export function mulchLivingBed(s:LivingBed):LivingBed|null{if(!s.prepared||s.mulched||s.cover==='mulch')return null;return {...structuredClone(s),mulched:true,cover:'mulch' as const,coverAppliedDay:s.day,coverExpired:undefined};}
 export function gravelLivingBed(s:LivingBed):LivingBed|null{if(!s.prepared||s.mix!=='herbs'||s.cover==='gravel')return null;return {...structuredClone(s),mulched:false,cover:'gravel' as const,coverAppliedDay:s.day,coverExpired:undefined};}
@@ -51,7 +53,7 @@ export function advanceLivingBed(s:LivingBed,weather:'sunny'|'rain',ecology?:Pol
   delete p.aftermath;
   if(!moist)continue;
   if(p.flowering){p.flowerDays++;continue;}
-  if(plantSupport(next,i)&&p.growth>=2)continue;
+  if(supportBlocksGrowth(next,i))continue;
   p.growth++;
   if(p.kind==='wildflower'&&p.growth>=bedKinds.wildflower.days){p.flowering=true;p.flowerDays=0;}
   if(berry&&p.growth>=bedPlantDays(p)&&p.fruitSet===undefined){p.fruitSet=setsFruit(ecology!.seed,`${identity}:${i}:${p.kind}`,p.cycle??0);if(!p.fruitSet){p.growth=0;p.cycle=(p.cycle??0)+1;p.aftermath='empty';}}

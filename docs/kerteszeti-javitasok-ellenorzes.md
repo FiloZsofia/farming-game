@@ -19,3 +19,10 @@ Képek:
 - Elkülönített böngészőben a Komposztáló közepétől 20 egységre, egy szintén elérhető tárolóláda mellett E-interakció: a Komposztáló ablaka nyílt meg.
 - Faösvény az alapválasztás; az ösvény ára faikont, a tó ára gold- és kőikont használ.
 - [Fűszernövények és terményikonok](concepts/production-herbs-and-produce-refined.png), [tervrajz-alapanyagikonok](concepts/production-blueprints-material-icons.png), [karózási guggoló póz](concepts/production-staking-crouch.png).
+
+## Túlérett bogyók, támasz és talajjelzés
+
+- A távoli növényhely hullott gyümölcse az ágyás széléről is egyszer gyűjthető, kizárólag komposztálási alapanyagként. A termő tő és a mentés megmarad. Elkülönített böngészőben a gyűjtőgomb sikeresen 1 hullott gyümölcsöt adott és eltávolította a kupacot.
+- Málna, szeder és paradicsom rövid újratermési ciklusa is megáll támasz nélkül; megfelelő támasz után beérik. A közös `support` mozdulat megmarad, a jövőbeli támaszokra vonatkozó szabály az AGENTS.md-be is bekerült.
+- Kavicstakart Száraz fűszerszegély két nap után: a nedvességszám már 1 lehet, de a vízellátás még megfelelő, repedés nincs. A szükséges következő öntözésnél a rendszer vizet ad, repedés nincs.
+- [Túlérett gyümölcs gyűjtése](concepts/production-overripe-berry-collection.png), [körte és facsemeteikon](concepts/production-pear-shape.png).

@@ -1716,3 +1716,10 @@ A műveletenkénti 1 pont és a tartalmi szinthatár feletti pontgyűjtés tilt�
 - Az Ösvény alapértelmezett burkolata Faösvény. A kártyán az alapanyag ikonja is látható; a tó bővítésének áránál külön gold- és kőikon szerepel.
 - Közeli gép és tárolóláda esetén az E a közelebbi tárgyat nyitja meg, egyező távolságnál a gépet. A láda nem kaphat feltétlen elsőbbséget egy közvetlenül megközelített Komposztálóval szemben.
 - A bazsalikom szélesebb, sima levelű alacsony bokor; a menta karcsúbb, fogazott páros levelekkel; a citromfű világosabb, széles levelű szétterülő növény. A leszedett ikonok is ugyanezeket a különbségeket követik. Paprika: hosszúkás, piros kápiajelleg; alma: piros, kétvállú forma; burgonya: szabálytalan, szemekkel jelölt gumó. A közös terményikon az eladóhelyen is érvényes.
+
+### Bogyósok gyűjtése és támaszigénye
+- A túlérett bogyó hullott gyümölcs, komposztálási alapanyag, nem ehető termés. A saját ágyása elérhető széléről is gyűjthető: a távoli növényhely miatti kisebb tárgyelérés nem akadályozhatja az ágyáskezelőből vagy Gyűjtéssel végzett felvételt. Egy kupac egyszer vehető fel; a növény megmarad, a már felvett kupac túlérett állapotjelzése megszűnik.
+- Málna és szeder egyaránt ágyásszintű támrendszert igényel. A paradicsom karót igényel. Az újraszedési ciklusban is a beérés előtt állnak meg támasz hiányában; a rövidebb két nap nem kerülheti meg ezt. A már megtermelt gyümölcsöt a javítás nem veszi el.
+- Minden jelenlegi és későbbi támaszépítés a közös, guggoló `support` animációt használja.
+- A körte ikonja és a fán látható termése is keskeny felső, telt alsó formát kapjon. A közös ikon a Készletben és az eladóhelyen is érvényes.
+- A talaj repedezésjelzése is a közös `bedWaterSatisfied()` szabályát követi: ha az ágyásnak a szárazságtűrés vagy takarás miatt még megfelelő a vízellátása, nem mutathat kiszáradásra utaló repedéseket. Az öntözőrendszer ugyanennél a szükségleti határnál kapcsol be.
