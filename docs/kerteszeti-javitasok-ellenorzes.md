@@ -11,3 +11,11 @@ Képek:
 - [Egységes tervrajzkártyák](concepts/production-blueprints-unified.png)
 - [Mobilnézet](concepts/production-blueprints-unified-mobile.png)
 - [Kidolgozott borsóhüvelyek](concepts/production-pea-pods-refined.png)
+
+## Második javítási kör
+
+- Határos takarási tesztek: mulcs 6 nap, kavics 5 nap; előző napon teljes takarás, határnap reggelén teljes eltűnés, alap vízigény és újratakarás helyreállása.
+- A vízigényről szóló két felismerés és a két takaráseltűnés mentésen át is egyszeri. A takaráseltűnés a vezérlő közelségi ellenőrzéséből, ablak nélkül észlelhető; az egyéb felismerésekhez megvizsgálás kell.
+- Elkülönített böngészőben a Komposztáló közepétől 20 egységre, egy szintén elérhető tárolóláda mellett E-interakció: a Komposztáló ablaka nyílt meg.
+- Faösvény az alapválasztás; az ösvény ára faikont, a tó ára gold- és kőikont használ.
+- [Fűszernövények és terményikonok](concepts/production-herbs-and-produce-refined.png), [tervrajz-alapanyagikonok](concepts/production-blueprints-material-icons.png), [karózási guggoló póz](concepts/production-staking-crouch.png).

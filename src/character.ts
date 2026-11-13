@@ -90,11 +90,12 @@ export class FarmerArt{
  setStickReinforced(value:boolean){if(this.reinforcedStick!==value){this.reinforcedStick=value;this.drawTool();}}
  isWorking(){return this.action>0;}
  cancelWork(){this.action=0;this.contact=null;this.leftArm.setAngle(0);this.rightArm.setAngle(0).setPosition(this.armX,this.armY).setScale(1);this.tool.setScale(1).setY(0);this.root.setPosition(0,0).setRotation(0).setScale(1);this.head.y=-40;this.pony.angle=0;if(this.style==='refined')this.pony.y=-39;this.leftLeg.angle=0;this.rightLeg.angle=0;this.drawTool();}
- use(dx=0,dy=1,tool=this.equipped,onContact?:()=>void){this.actionTool=tool;this.action=WORK_SECONDS;this.aim={x:dx,y:dy};this.contact=onContact??null;}
+ use(dx=0,dy=1,tool=this.equipped,onContact?:()=>void){this.actionTool=tool;this.action=tool==='support'?1.3:WORK_SECONDS;this.aim={x:dx,y:dy};this.contact=onContact??null;}
  workFrame(){if(!this.isWorking())return null;const tip=this.tool.getWorldTransformMatrix().transformPoint(0,this.toolEnd);return {tool:this.actionTool,progress:workProgress(this.action),phase:workPose(1,1,this.action).phase,tip:{x:tip.x,y:tip.y}};}
  private drawTool(){
   const g=this.tool;g.clear();const r=(x:number,y:number,w:number,h:number,c:number)=>{g.fillStyle(c);g.fillRect(x,y,w,h);};
   const name=this.action>0?this.actionTool:this.equipped;
+  if(name==='support'){r(-1,5,3,22,0x9a7950);r(-1,5,1,20,0xc8a979);g.lineStyle(.8,0xcbb98b).strokeEllipse(0,15,6,3);}
   if(name==='stick'){this.toolEnd=36;g.lineStyle(3,0x785537).strokePoints([{x:0,y:5},{x:1,y:31},{x:5,y:37}]);g.lineStyle(1,0xcfad77).lineBetween(-1,7,0,30);if(this.reinforcedStick){r(-1,26,5,8,0x80988c);r(-1,26,1,8,0xc9d3b9);for(let i=0;i<4;i++)r(-1,10+i*3,4,1,0xbd9d6c);}}
   else if(name==='crowbar'){this.toolEnd=34;g.lineStyle(3.5,0x556e61).strokePoints([{x:0,y:7},{x:0,y:29},{x:4,y:35},{x:9,y:34},{x:10,y:29}]);g.lineStyle(1.1,0xc8d4b8).lineBetween(-1,8,-1,28).lineBetween(4,33,8,32);}
   else if(heavyTool(name)){const length=this.action>0?29+11*workPose(1,1,this.action).extension:29;this.toolEnd=length;
@@ -125,12 +126,13 @@ export class FarmerArt{
   this.root.x=heavy?pose.weight*2:0;this.root.rotation=heavy?pose.weight*.045:refined&&walking&&!working&&!jumping?Math.sin(this.phase)*.008:0;
   if(heavy&&!walking){this.leftLeg.angle=-4*pose.weight;this.rightLeg.angle=4*pose.weight;}
   if(this.throwing>0){const t=1-this.throwing/.85;this.rightArm.setPosition(this.armX,this.armY).setScale(1);this.rightArm.rotation=-Math.sin(t*Math.PI)*2.8;this.leftArm.rotation=Math.sin(t*Math.PI)*.35;}
-  if(working&&['harvest','restore','search'].includes(this.actionTool)){
+  if(working&&['harvest','restore','search','support'].includes(this.actionTool)){
    const t=workProgress(this.action),gather=this.actionTool==='harvest',bend=Math.sin(Math.min(1,t/.6)*Math.PI/2)*(t<.6?1:1-(t-.6)/.4),pull=gather?Math.sin(Math.max(0,(t-.45)/.55)*Math.PI):0;
    this.root.y=4*bend-3*pull;this.root.rotation=(mirror?-.07:.07)*bend;this.leftLeg.angle=-9*bend;this.rightLeg.angle=9*bend;this.leftArm.rotation=gentleWorkAngle(shoulderDx,shoulderDy,this.action,mirror)*.7-.28*bend;this.rightArm.rotation=gentleWorkAngle(shoulderDx,shoulderDy,this.action,mirror)-pull*.7;
   }
+  if(working&&this.actionTool==='support'){const t=1-this.action/1.3,bend=Math.sin(Math.min(1,t/.3)*Math.PI/2)*(t<.75?1:Math.max(0,(1-t)/.25));this.root.y=13*bend;this.leftLeg.angle=-48*bend;this.rightLeg.angle=42*bend;this.leftLeg.y=-16-5*bend;this.rightLeg.y=-16-5*bend;this.root.rotation=(mirror?-.12:.12)*bend;this.leftArm.rotation=-.65*bend;this.rightArm.rotation=(-.8+Math.sin(t*22)*.22)*bend;}
   this.head.y=-40+(heavy?pose.weight*1.5:0)+(walking?(refined?Math.sin(this.phase)**2*-.3:Math.abs(Math.sin(this.phase))*-.7):0);this.pony.angle=heavy?-pose.weight*(this.style==='refined'?5:9):walking?Math.sin(this.phase)*(this.style==='refined'?6:12):0;this.pony.x=3;if(this.style==='refined')this.pony.y=this.head.y+1;
-  this.root.scaleX=look.x<0?-.98:1;this.root.scaleY=1;this.root.y=jumping||working&&['harvest','restore','search'].includes(this.actionTool)?this.root.y:heavy?Math.max(0,pose.weight)*1.5:refined&&walking?-.4*Math.sin(this.phase)**2:0;
+  this.root.scaleX=look.x<0?-.98:1;this.root.scaleY=1;this.root.y=jumping||working&&['harvest','restore','search','support'].includes(this.actionTool)?this.root.y:heavy?Math.max(0,pose.weight)*1.5:refined&&walking?-.4*Math.sin(this.phase)**2:0;
   this.drawTool();if(this.carrying){this.leftArm.setAngle(-65);this.rightArm.setAngle(65);this.tool.clear();}if(contact)contact();
  }
 }

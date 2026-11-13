@@ -16,7 +16,7 @@ export function drawEstate(scene:Phaser.Scene,estate:Estate,day:number){
   g.lineStyle(.9*s,0x493e30,.7).lineBetween(x+2*s,y-3*s,x+2*s,y-29*s);
   g.lineStyle(.7*s,0xb09463,.8).lineBetween(x-2*s,y-8*s,x-2*s,y-24*s);
   if(grown)drawTreeBlossomGaps(g,x,y,s,t.fruit>0,t.bloomState);
-  if(t.fruit)for(let i=0;i<t.fruit;i++){const xx=x+Math.cos(i*2.4)*19,yy=y-48+Math.sin(i*2.4)*14;g.fillStyle(t.fruitDay!==undefined&&day-t.fruitDay>=2?(t.kind==='cherry'?0xa26b59:t.kind==='plum'?0x81738a:0xa99a6f):t.kind==='cherry'?0xb94f49:t.kind==='plum'?0x776187:t.kind==='apple'?0xcf9450:0xc1b566).fillEllipse(xx,yy,6,t.kind==='pear'?9:6);g.lineStyle(1,0x65583a).lineBetween(xx,yy-3,xx+1,yy-6);}
+  if(t.fruit)for(let i=0;i<t.fruit;i++){const xx=x+Math.cos(i*2.4)*19,yy=y-48+Math.sin(i*2.4)*14;g.fillStyle(t.fruitDay!==undefined&&day-t.fruitDay>=2?(t.kind==='cherry'?0xa26b59:t.kind==='plum'?0x81738a:0xa99a6f):t.kind==='cherry'?0xb94f49:t.kind==='plum'?0x776187:t.kind==='apple'?0xbe5146:0xc1b566).fillEllipse(xx,yy,6,t.kind==='pear'?9:6);g.lineStyle(1,0x65583a).lineBetween(xx,yy-3,xx+1,yy-6);}
   if(t.fruit)drawRipeMarker(g,x+25*s,y-65*s);
  }
  for(const p of estate.pond){if(p.kind==='lily'){drawLily(g,p.x,p.y);}

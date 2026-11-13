@@ -59,10 +59,18 @@ export class LivingGarden{
  collectOverripe(index:number,actor:GardenPoint){const pile=this.snapshot.travel.fallenFruit?.[index];if(!pile||Math.hypot(pile.x-actor.x,pile.y-actor.y)>48)return false;const next=pickFallenFruit(this.snapshot,index);if(!next)return false;this.snapshot=next;return true;}
  eat(kind:BedKind){if(!this.basket[kind])return false;const next=consumeFood(this.persistent?this.writePersistent():this.snapshot,kind);if(!next)return false;this.snapshot=next;this.basket[kind]--;return true;}
  private memory(bed:TrialBed){let memory=this.observationMemory.get(bed.id);if(!memory){memory={blossoms:{}};this.observationMemory.set(bed.id,memory);}return memory;}
- observe(bed:TrialBed):{text:string;discovery:GardenObservation|null}{
+ observe(bed:TrialBed,only?:readonly GardenObservationId[]):{text:string;discovery:GardenObservation|null}{
   const s=bed.state,memory=this.memory(bed),known=(id:GardenObservationId)=>this.observations.some(o=>o.id===id);let discovery:GardenObservation|null=null;
-  const note=(id:GardenObservationId,title:string,text:string,earlierDay=s.day)=>{if(!discovery&&!known(id))discovery={id,title,text,day:s.day,earlierDay,bedId:bed.id};};
+  const note=(id:GardenObservationId,title:string,text:string,earlierDay=s.day)=>{if(!discovery&&!known(id)&&(!only||only.includes(id)))discovery={id,title,text,day:s.day,earlierDay,bedId:bed.id};};
   if(s.plants.length&&s.moisture===0)memory.dryDay??=s.day;
+  if(s.coverExpired==='mulch')note('mulch-gone','Eltűnt a mulcstakarás','A mulcs már eltűnt a földről. Újra takarhatom az ágyást; addig az alap öntözési időközzel számolok.');
+  if(s.coverExpired==='gravel')note('gravel-gone','Újra látszik a csupasz föld','A kavicstakarás már eltűnt. Újat teríthetek a fűszerek alá; addig ismét kétnaponta kell öntöznöm.');
+  const living=s.plants.filter(p=>!p.removed),since=s.wateredDay===undefined?0:s.day-s.wateredDay;
+  if(living.length&&s.mix==='herbs'&&s.weather!=='rain'&&since>=1&&bedWaterSatisfied(s)){
+   if(s.mulched&&since>=2)note('herb-mulch','Egy nappal tovább őrzött víz','A mulcs alatt ma is nedves maradt a föld. Így a Száraz fűszerszegély öntözése között már három nap is eltelhet.');
+   else note('herb-water','A fűszerek jól bírják','A Száraz fűszerszegély növényei ma sem száradtak ki. Ezeknek elég kétnaponta vizet adnom.');
+  }
+
   if(memory.waterDay!==undefined&&s.day>memory.waterDay&&s.moisture>0)note('water-recovery','A levelek újra feszesek','Öntözés után újra feszesek a korábban lankadt levelek.',memory.dryDay!);
   for(const [i,p]of s.plants.entries())if(['strawberry','raspberry','blackberry'].includes(p.kind)){
    const seen=memory.blossoms[i];if(p.aftermath==='empty'&&seen&&seen.cycle===(p.cycle??0)-1)note('fruit-set','Virágok gyümölcs nélkül','A korábban megfigyelt virágok egy részéből nem fejlődött gyümölcs.',seen.day);
