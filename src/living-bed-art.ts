@@ -1,7 +1,7 @@
 import {bedMarkerLayout,bedMarkerCenter} from './bed-marker-layout';
 import {paintLivingPlant} from './living-plant-art';
 import Phaser from 'phaser';
-import {livingFlowers,bedShowsDryCracks,type LivingBed} from './living-bed';
+import {livingFlowers,bedShowsDryCracks,hasBerrySupport,type LivingBed} from './living-bed';
 import {livingBedArea,livingPlantPoint,type LivingBedArea} from './living-bed-layout';
 export {livingBedArea,livingPlantPoint} from './living-bed-layout';
 export function paintMarker(g:Phaser.GameObjects.Graphics,b:LivingBedArea){paintBedMarker(g,{x:b.x+35,y:b.y+b.h+17});}
@@ -28,8 +28,10 @@ export function paintLivingBed(g:Phaser.GameObjects.Graphics,s:LivingBed,selecte
 
  if(s.mulched)for(let i=0;i<80;i++){const xx=x+7+i*47%(w-14),yy=y+6+i*31%(h-12);g.lineStyle(1,i%3?0xb79a61:0xd0b87d,.8).lineBetween(xx,yy,xx+4+i%4,yy+(i%3-1)*2);}
  if(s.cover==='gravel')for(let i=0;i<140;i++){const xx=x+7+(i*47%(w-14)),yy=y+6+(i*31%(h-12));g.fillStyle([0xb4ac93,0x8e9580,0xc8bda3][i%3]).fillEllipse(xx,yy,3+i%3,2+i%2);}
- if(s.trellis)for(const row of [.25,.65]){const yy=y+h*row;for(const xx of [x+7,x+w-7]){g.lineStyle(2.3,0x82613f).lineBetween(xx,yy+5,xx,yy-48);g.lineStyle(.7,0xb49665).lineBetween(xx-1,yy+3,xx-1,yy-47);}for(const dy of [-18,-34])g.lineStyle(.7,0xb0a98b,.8).lineBetween(x+8,yy+dy,x+w-8,yy+dy);}
+ for(const kind of ['raspberry','blackberry'] as const)if(hasBerrySupport(s,kind))for(let row=0;row<3;row++){const points=s.plants.flatMap((p,i)=>!p.removed&&Math.floor(i/3)===row&&p.kind===kind?[livingPlantPoint(i,area)]:[]);if(!points.length)continue;const left=Math.min(...points.map(p=>p.x))-17,right=Math.max(...points.map(p=>p.x))+17,base=Math.max(...points.map(p=>p.y))+3;for(const xx of [left,right]){g.lineStyle(3,0x735738).lineBetween(xx,base,xx,base-59);g.lineStyle(1,0xc3a170).lineBetween(xx-.8,base-2,xx-.8,base-58);g.lineStyle(3.5,0xb89968).lineBetween(xx-2,base-59,xx+2,base-59);}for(const dy of [-20,-40]){g.lineStyle(1,0x777e69).lineBetween(left,base+dy,right,base+dy);g.lineStyle(.45,0xd4ceb1).lineBetween(left,base+dy-.8,right,base+dy-.8);}}
+
  for(let i=0;i<s.plants.length;i++){const point=livingPlantPoint(i,area);paintLivingPlant(g,s.plants[i],point.x,point.y,s.moisture,i===selected);}
+ for(const [i,p]of s.plants.entries())if(!p.removed&&hasBerrySupport(s,p.kind)){const point=livingPlantPoint(i,area);for(const dy of [-17,-31]){g.lineStyle(.85,0xd5bf8b,.95).strokeEllipse(point.x,point.y+dy,5,2.5);g.lineStyle(.65,0x836949).lineBetween(point.x+2,point.y+dy,point.x+4,point.y+dy+3);}}
  if(marker)paintMarker(g,area);
 }
 export function paintBedVisitors(g:Phaser.GameObjects.Graphics,s:LivingBed,time:number,area:LivingBedArea=livingBedArea,clear=true){if(clear)g.clear();const flowers=livingFlowers(s);if(!flowers||s.weather==='rain')return;for(let i=0;i<Math.min(3,flowers);i++){const point=livingPlantPoint((i*3+2)%9,area),t=time*.001+i*2.4,x=point.x+Math.cos(t)*14,y=point.y-22+Math.sin(t*1.6)*8;g.fillStyle(0xe9e2be,.8).fillEllipse(x-1,y-3,5,3).fillEllipse(x+3,y-3,5,3);g.fillStyle(0xc7a45e).fillEllipse(x,y,6,3);g.lineStyle(1,0x4e5037).lineBetween(x,y-1,x,y+1);}}

@@ -26,3 +26,8 @@ Képek:
 - Málna, szeder és paradicsom rövid újratermési ciklusa is megáll támasz nélkül; megfelelő támasz után beérik. A közös `support` mozdulat megmarad, a jövőbeli támaszokra vonatkozó szabály az AGENTS.md-be is bekerült.
 - Kavicstakart Száraz fűszerszegély két nap után: a nedvességszám már 1 lehet, de a vízellátás még megfelelő, repedés nincs. A szükséges következő öntözésnél a rendszer vizet ad, repedés nincs.
 - [Túlérett gyümölcs gyűjtése](concepts/production-overripe-berry-collection.png), [körte és facsemeteikon](concepts/production-pear-shape.png).
+
+## Fajtánkénti bogyós támrendszer
+- Menta kiválasztása mellett is megjelenik a málna és a szeder külön építőgombja. Málna építése: fa 20 → 14, csak a málna támasza kész, mozdulat `support`. Szeder építése: fa 14 → 8, külön szedertámasz kész, mozdulat `support`.
+- A mentésteszt a két faj külön állapotát és a régi közös támasz kizárólag szedertámaszként történő, ismételhető betöltését ellenőrzi.
+- [A külön támaszok oszlopai, huzalai és kötözései](concepts/production-separate-berry-supports.png).
