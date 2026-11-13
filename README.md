@@ -79,7 +79,7 @@ Ugrás: **Space**. Futás: **Shift** nyomva tartásával. Mozgás közben rövid
 
 6 perc aktív nappal után éjszaka lesz. Az éjszaka 2. és 3. percében figyelmeztetés érkezik; 3:30–4:00 között az elfáradt főhős összeesik, majd másnap reggel a háznál ébred, készletveszteség nélkül. A verandán a naplóra kattintás vagy közelről **E → Pihenés reggelig** korábban is lezárja a napot. Párbeszéd, háttérbe tett lap és bezárt játék alatt az idő megáll. Az öntözött növények reggel fejlődnek; az öntözést minden új napon ismételni kell.
 
-A kert, magmennyiség, helyzet és idő IndexedDB-be mentődik. A jobb felső sarok mutatja az írás állapotát. A naplóból JSON-másolat tölthető le; importálás még nincs. A mentés helyi, nem szinkronizál más böngészővel vagy eszközzel. Részletek: [mentés és helyreállítás](docs/mentes.md).
+A kert, magmennyiség, helyzet és idő IndexedDB-be mentődik. A jobb felső sarok mutatja az írás állapotát. A naplóból JSON-másolat tölthető le; A Főmenü → Mentés betöltése fájlból gombbal a JSON külön farmként betölthető, a meglévő farmok megőrzésével. A mentés helyi, nem szinkronizál más böngészővel vagy eszközzel. Részletek: [mentés és helyreállítás](docs/mentes.md).
 
 - [Ugrás képernyőképe](docs/concepts/farm-jump-prototype.png)
 - [Éjszakai figyelmeztetés](docs/concepts/farm-night-prototype.png)

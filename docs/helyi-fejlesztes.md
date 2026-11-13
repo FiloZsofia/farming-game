@@ -20,7 +20,7 @@ npm run dev:local
 
 A szerver kizárólag a saját gép 127.0.0.1 címén figyel, nem a teljes helyi hálózaton. A fix port foglaltságakor leáll, nem választ csendben másik portot és új, üres böngészős tárhelyet. Ilyenkor a korábban nyitott helyi szervert állítsd le. A helyi cím protokollját, nevét és portját tartsd állandóan; a `localhost` és a `127.0.0.1` mentései külön tárhelyhez tartoznak.
 
-**Fontos a meglévő farmhoz:** a GitHub Pages és a helyi játék böngészős mentése különálló. A letöltött JSON-fájl biztonsági másolat, de jelenleg nincs a normál játékban fájlból importáló gomb. Ezért a meglévő farm helyi átvitelét külön kell előkészíteni; ne töröld a régi böngészős mentést. Új helyi tesztfarm rögtön indítható. A nyilvános címen tárolt böngészős farm önmagában a repó láthatóságától nem törlődik.
+**Fontos a meglévő farmhoz:** a GitHub Pages és a helyi játék böngészős mentése különálló. A letöltött JSON-fájl a helyi játék Főmenüjének **Mentés betöltése fájlból** gombjával betölthető. Külön farmként jelenik meg, az esetleges helyi tesztfarmot nem írja felül. A régi online mentést is őrizd meg. Új helyi tesztfarm rögtön indítható. A nyilvános címen tárolt böngészős farm önmagában a repó láthatóságától nem törlődik.
 
 ## 2. A repó átmenetileg privát
 
@@ -42,7 +42,7 @@ Ha inkább közvetlenül a saját gépeden, helyi szerkesztővel/Codexszel fejle
 
 ## 4. Visszaállítás a mostani működésre
 
-1. Ha a helyi farmot később az online játékban is folytatnád, előbb töltsd le a JSON-mentését. A két cím között nincs automatikus szinkronizálás vagy visszaimportálás.
+1. Ha a helyi farmot később az online játékban is folytatnád, előbb töltsd le a JSON-mentését. A két cím között nincs automatikus szinkronizálás: a letöltött JSON-t az online Főmenü **Mentés betöltése fájlból** gombjával tudod külön farmként átvenni.
 2. GitHubon **Settings → General → Danger Zone → Change repository visibility → Change to public**.
 3. Ha kikapcsoltad: **Actions → Deploy game → Enable workflow**.
 4. **Settings → Pages → Build and deployment → Source: GitHub Actions**.

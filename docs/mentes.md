@@ -36,7 +36,7 @@ A „Mentve ebben a böngészőben” jelzés csak a legutolsó kért mentés si
 - Ismeretlen verziót vagy helyreállíthatatlan mentést nem írunk felül üres farmmal. Ilyenkor a játék nem indul el a mentésre.
 - Web Locks biztosítja, hogy ugyanazt a farmot egyszerre egy böngészőlap módosíthassa. A második lap figyelmeztet; az első bezárása után frissíthető.
 
-A napló párbeszédében a **Mentés letöltése** gomb JSON-másolatot készít. Fájlból importálás még nincs megvalósítva. Az 1 → 3 migráció megőrzi a helyzetet, időt, magokat, növényeket és vizet; a korábban nem létező növekedési számláló nulláról indul, a terménykészlet üres. Az eredeti érvényes régi mentés biztonsági példány marad az új formátum első sikeres írásáig. Az ismeretlen verziókat továbbra sem írjuk felül. A böngészőadatok törlése a helyi mentést és a helyi biztonsági példányt is eltávolítja.
+A napló párbeszédében a **Mentés letöltése** gomb JSON-másolatot készít. A Főmenü **Mentés betöltése fájlból** gombjával ez a JSON betölthető. Ellenőrzés után külön, új azonosítójú farm készül, és azt nyitjuk meg; az azonos nevű meglévő farm sem íródik felül. Hibás, túl nagy vagy nem támogatott fájlnál nem hozunk létre farmot. Az 1 → 3 migráció megőrzi a helyzetet, időt, magokat, növényeket és vizet; a korábban nem létező növekedési számláló nulláról indul, a terménykészlet üres. Az eredeti érvényes régi mentés biztonsági példány marad az új formátum első sikeres írásáig. Az ismeretlen verziókat továbbra sem írjuk felül. A böngészőadatok törlése a helyi mentést és a helyi biztonsági példányt is eltávolítja.
 
 Bezáráskor, háttérben, másik ablakra váltáskor és párbeszéd alatt nem halad a játékidő; betöltéskor nincs offline előreszámítás.
 

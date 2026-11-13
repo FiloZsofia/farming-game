@@ -1,3 +1,4 @@
+import {readFarmImport} from './save-import';
 import {MAX_GARDEN_LEVEL,GARDEN_LEVEL_POINTS} from './garden-progression';
 import {PondExpansionController} from './pond-expansion-controller';
 import {bindPondExpansion} from './pond-shape';
@@ -338,7 +339,7 @@ class Farm extends Phaser.Scene {
   this.choosingFarm=true;showDialogue('Főmenü','','');menuPresentation.home();
   document.querySelector<HTMLElement>('#start-panel')!.hidden=false;
   document.querySelector('#farm-list')!.replaceChildren();document.querySelector('#farm-list-error')!.textContent='A mentés nem tölthető be. Az eredeti mentést letöltheted a javításhoz.';
-  for(const id of ['continue-farm','new-farm','retry-farms'])document.querySelector<HTMLButtonElement>('#'+id)!.hidden=true;
+  for(const id of ['continue-farm','new-farm','retry-farms','import-save'])document.querySelector<HTMLButtonElement>('#'+id)!.hidden=true;
   const button=document.querySelector<HTMLButtonElement>('#export-save')!;button.hidden=false;button.textContent='Eredeti mentés letöltése';
   document.querySelector<HTMLButtonElement>('#dialogue-close')!.hidden=true;
  }
@@ -413,6 +414,14 @@ class Farm extends Phaser.Scene {
   const input=document.querySelector<HTMLInputElement>('#farm-name')!,name=normalizeFarmName(input.value);
   document.querySelector<HTMLButtonElement>('#start-farm')!.disabled=!name||this.transitioning;
   document.querySelector('#farm-name-error')!.textContent=!input.value.trim()?'':!name?'A farm neve legfeljebb 40 karakter lehet.':'';
+ }
+ private async importFarmFile(file:File){
+  if(!this.ready||this.transitioning||!this.choosingFarm)return;
+  this.transitioning=true;this.saveRevision++;const error=document.querySelector<HTMLElement>('#farm-list-error')!;
+  error.textContent='Mentés ellenőrzése…';const button=document.querySelector<HTMLButtonElement>('#import-save')!;button.disabled=true;
+  try{const data=await readFarmImport(file);if(this.hasFarm)await this.saveChecked(this.currentSnapshot());const id=await this.store.createFarm(data);this.reloadFarm(id);}
+  catch(cause){error.textContent=cause instanceof Error?cause.message:'A mentés betöltése nem sikerült. A meglévő farmjaid megmaradtak.';}
+  finally{this.transitioning=false;button.disabled=false;this.lastTick=performance.now();}
  }
  private async confirmFarmName(){
   if(!this.naming||!this.ready||this.transitioning)return;
@@ -1648,6 +1657,8 @@ class Farm extends Phaser.Scene {
   document.querySelector('#dialogue form')!.addEventListener('submit',event=>{if(this.naming){event.preventDefault();void this.confirmFarmName();}else if(dialogue.dataset.presentation==='development-end'){event.preventDefault();void this.acknowledgeStoryEnd();}else if(this.choosingFarm)event.preventDefault();});
   document.querySelector('#farm-name')!.addEventListener('input',()=>this.validateFarmName());
   document.querySelector('#start-farm')!.addEventListener('click',()=>void this.confirmFarmName());
+  document.querySelector('#import-save')!.addEventListener('click',()=>{if(this.ready&&!this.transitioning&&this.choosingFarm)document.querySelector<HTMLInputElement>('#import-save-file')!.click();});
+  document.querySelector<HTMLInputElement>('#import-save-file')!.addEventListener('change',event=>{const input=event.target as HTMLInputElement,file=input.files?.[0];input.value='';if(file)void this.importFarmFile(file);});
   document.querySelector('#new-farm')!.addEventListener('click',()=>{if(this.ready&&!this.transitioning)this.openFarmNaming(true);});
   document.querySelector('#cancel-farm-name')!.addEventListener('click',()=>{if(!this.transitioning){this.naming=false;void this.openStartMenu(false);}});
   document.querySelector('#continue-farm')!.addEventListener('click',()=>{if(this.ready&&!this.transitioning&&this.hasFarm)this.resumeCurrentFarm();});
