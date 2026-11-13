@@ -6,6 +6,8 @@ Az aktuális játékverzió a Főmenüben és a Menüben látható. [Változáso
 
 ## Futtatás
 
+Windowsos, csak a saját gépen elérhető indítás: **[helyi fejlesztés és visszaállítás](docs/helyi-fejlesztes.md)**. A projekt gyökerében a `jatek-inditasa.bat` indítja a helyi játékot.
+
 Node.js 22.12+ vagy 24, npm szükséges.
 
 ```sh
