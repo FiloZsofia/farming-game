@@ -1,4 +1,4 @@
-import {GARDEN_LEVEL_POINTS,MAX_GARDEN_LEVEL,normalizeGardenProgress,gardenProgress} from './garden-progression';
+import {GARDEN_LEVEL_POINTS,MAX_GARDEN_LEVEL,normalizeGardenProgress,gardenProgress,gardenLevelTarget} from './garden-progression';
 import {weatherOnDay} from './weather';
 import {extraBedKinds,sharedBedCrops,savedBedCopy,type SavedGarden} from './homestead-state';
 import type {GardenPathPiece} from './garden-path';
@@ -22,12 +22,12 @@ export class LivingGarden{
  snapshot:Snapshot;seeds=emptyBedSeeds();pending=emptyBedSeeds();mailbox=emptyBedSeeds();basket=emptyBedSeeds();beds:TrialBed[]=[];paths:GardenPathPiece[]=[];packedMarkers:number[]=[];nextId=1;completedCycles=0;weather:'sunny'|'rain'='sunny';observations:GardenObservation[]=[];observationMemory=new Map<number,{dryDay?:number;waterDay?:number;blossoms:Record<number,{day:number;cycle:number}>}>();
  constructor(snapshot:Snapshot,persistent=false){this.snapshot=structuredClone(snapshot);this.persistent=persistent;if(persistent)this.readPersistent(snapshot);else this.snapshot.skill=createGardenSkill();this.snapshot.travel.crafting??=createCrafting();}
  get xp(){return this.persistent?this.saved!.points:this.snapshot.skill.xp;}
- get level(){return Math.min(MAX_GARDEN_LEVEL,Math.max(this.persistent?this.saved!.levelFloor:0,Math.floor(this.xp/TRIAL_GARDEN_LEVEL_POINTS)));}
+ get level(){return this.progress.level;}
  get progress(){return gardenProgress(this.xp,this.persistent?this.saved!.levelFloor:0);}
  availableSeeds(){return [...new Set(Object.values(bedMixes).filter(m=>m.level<=this.level).flatMap(m=>m.plants))];}
  addBed(area:LivingBedArea={...livingBedArea}){const bed:TrialBed={id:this.nextId++,area:{...area},state:createLivingBed(this.snapshot.clock.day),marker:null,irrigation:null,completed:[],watered:false};bed.state.seedStock=this.seeds;bed.state.weather=this.weather;this.beds.push(bed);return bed;}
  sync(bed:TrialBed){bed.state.seedStock=this.seeds;return bed.state;}
- credit(keys:string[]){for(const key of keys){if(this.xp>=MAX_GARDEN_LEVEL*TRIAL_GARDEN_LEVEL_POINTS)break;if(this.persistent){if(!this.saved!.credited.includes(key)){this.saved!.credited.push(key);this.saved!.points++;}}else if(!this.snapshot.skill.credited.includes(key)){this.snapshot.skill.credited.push(key);this.snapshot.skill.xp++;}}}
+ credit(keys:string[]){for(const key of keys){if(this.xp>=gardenLevelTarget(MAX_GARDEN_LEVEL))break;if(this.persistent){if(!this.saved!.credited.includes(key)){this.saved!.credited.push(key);this.saved!.points++;}}else if(!this.snapshot.skill.credited.includes(key)){this.snapshot.skill.credited.push(key);this.snapshot.skill.xp++;}}}
  accept(bed:TrialBed,next:LivingBed,action:string,index=0){
   const old=bed.state;this.seeds={...next.seedStock};
   for(const kind of Object.keys(bedKinds) as BedKind[]){const count=Math.max(0,(next.basket[kind]??0)-(old.basket[kind]??0));this.basket[kind]+=count;if(isFood(kind)&&kind in this.snapshot.produce)this.snapshot.produce[kind as Crop]+=count;}

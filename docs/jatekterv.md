@@ -1656,7 +1656,7 @@ A korábbi, még csak tervezett társításlista helyett most ezek kerülnek a m
 
 Ajánlott induló arány fajonként 3 növény. Ez ajánlás: a 9 ültetési helyet a társítás növényei között szabadon lehet felosztani. A bogyósok hátul, a menta előttük jelenik meg. Ha a természetes bokros rajz zsúfolt, a Bogyós menedék nagyobb ágyást is kaphat; ez nem jelenti a többi ágyás méretének kötelező megváltoztatását. A felhasználó kifejezetten kidolgozott, egymástól jól megkülönböztethető növény- és termésrajzot kért.
 
-**Pontozás:** minden sikeres, pontot adó kertészeti művelet 1 pont. Egy egész ágyás felkapálása, beültetése, utánvetése, öntözése vagy mulcsozása egy művelet. A növényenként végzett szüret, magérlelési döntés, maggyűjtés és utánültetés egyenként 1 pont; egy új, egyszer megszerezhető megfigyelés is 1 pont. Ugyanazon állapot eredménytelen ismétlése nem ad pontot. Szintenként 30 új pont kell; egy szint egy új társítást ad. A szintlépés ünneplőablaka és a bal oldali eredeti jártasságanimáció megmarad.
+**Pontozás:** minden sikeres, pontot adó kertészeti művelet 1 pont. Egy egész ágyás felkapálása, beültetése, utánvetése, öntözése vagy mulcsozása egy művelet. A növényenként végzett szüret, magérlelési döntés, maggyűjtés és utánültetés egyenként 1 pont; egy új, egyszer megszerezhető megfigyelés is 1 pont. Ugyanazon állapot eredménytelen ismétlése nem ad pontot. Az első két szinthez 50–50 új pont, a három újabb szinthez 30–30 új pont kell; egy szint egy új társítást ad. A szintlépés ünneplőablaka és a bal oldali eredeti jártasságanimáció megmarad.
 
 **Tartalmi szinthatár:** az utolsó elérhető szint felett nem gyűlhet rejtett többletpont. Új társítások későbbi bevezetésekor a játékos megtartja a megszerzett szintjét, de a régi szinthatár után végzett műveletek nem oldhatják fel automatikusan az új jutalmakat. Ezt a jelenlegi és minden későbbi tartalombővítésnél is alkalmazni kell. A régi, 50 pontos rendszerből a megszerzett szint megmarad; a még folyamatban lévő szint arányos előrehaladása megőrizhető, a régi 2. szint feletti pontok eldobandók. Nem indul újra nulláról a kertészkedés.
 
@@ -1684,3 +1684,17 @@ A helyi futtatás külön böngészős tárhelye miatt a felhasználó a letölt
 Az ágyás öntözőjének permete réteges, folyamatosan követhető vízíveket, mozgó fényeket és cseppeket, valamint apró becsapódási hullámokat kap. A fúvókánál indul, a cseppek az ágyáson belül érnek földet. A rövid indulási késleltetés és a befejezéskor megjelenő nedves föld megmarad; az öntözési szükségletet és időközt ez a látványváltozás nem módosítja.
 
 A normál ágyásrendszerben a jártasságanimáció minden híváskor közvetlenül a mentett kertészeti állapotból és a közös `gardenProgress()` függvényből veszi a szintet és a 30 pontos célt. A régi animációhívó által átadott eltérő küszöb nem írhatja felül ezt. A Jártasságok és a bal oldali eredeti animáció ugyanazt a számítást használja. Szintlépéskor az új szint 0/30-ról indul; csak a tényleges jelenlegi maximumon jelenhet meg 30/30. A feltöltődés, +1, számkiemelés és eredeti elhelyezés megmarad.
+
+### Pontküszöbök pontosítása — 2026-11-13
+
+A felhasználó pontosította: a **30 pont csak a három új társításra vonatkozik**. Az első két, korábban elfogadott szintnél az 50–50 pont megmarad. Az átmenetileg minden szintre alkalmazott 30 pontos értelmezés téves volt, ezt felülírja ez a döntés.
+
+| Elért szint | Jutalom | Szükséges új művelet | Összpont |
+| --- | --- | --- | --- |
+| 1 | Epres méhlegelő | 50 | 50 |
+| 2 | Esti teakert | 50 | 100 |
+| 3 | Paprikás konyhakert | 30 | 130 |
+| 4 | Bogyós menedék | 30 | 160 |
+| 5 | Illatos piroskert | 30 | 190 |
+
+A műveletenkénti 1 pont és a tartalmi szinthatár feletti pontgyűjtés tiltása változatlan. Az eredeti 50 pontos mentésből az első két szint és annak folyamatban lévő pontjai közvetlenül megmaradnak, a 2. szint feletti régi többlet nem számít új munkának. Az átmeneti, mindenütt 30 pontos rendszer alatt szerzett szinteket és a szinten belüli arányos előrehaladást megőrizzük: nem veszít senki már megszerzett társítást. A mentett kertészeti fejlődés 3. belső szabályváltozata kezeli ezt; a játék és a teljes mentés verziószáma nem változik. A kezelő és az animáció ugyanazokat a változó küszöböket használja.

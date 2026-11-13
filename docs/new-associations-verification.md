@@ -3,11 +3,11 @@
 A rendes játék elkülönített Chromium-példányában, mentési védelemmel ellenőrizve; nem készült új játékbeli próbamód.
 
 - 3. szint: Paprikás konyhakert; 4. szint: Bogyós menedék; 5. szint: Illatos piroskert. Magkatalógus, ajánlott/szabad arányok és szintenként külön jutalomlista.
-- A teljes ágyás előkészítése, vetése és öntözése műveletenként 1 pont; egyedi növénykezelés és új felismerés szintén 1. Harminc új pont/szint; az elérhető maximum felett nem gyűlik további pont vagy hitelesítési kulcs.
+- A teljes ágyás előkészítése, vetése és öntözése műveletenként 1 pont; egyedi növénykezelés és új felismerés szintén 1. Az első két szint 50–50, a három új szint 30–30 új pont; az elérhető maximum felett nem gyűlik további pont vagy hitelesítési kulcs.
 - Régi 2. szint és 5000 korábbi pont → 2. szint, nulla előrehaladás a következő szinthez. A következő jutalomhoz 30 új művelet szükséges. A még folyamatban lévő régi szint arányos előrehaladása megmarad.
 - Új magfajták hiánya régi mentésből nulla készletként kezelhető, a meglévő mennyiségek megmaradnak. Rendelés, átvétel, ültetés és valódi IndexedDB mentés/betöltés automatikus ellenőrzése.
 - Új zöldségek és bogyósok ehetősége a közös útvonalon működik (egy darab, egy szív); eladásuk Mara terményátadóján a helyes készletet és elfogadott árakat használja.
-- Böngészős szüret a valódi ágyásvezérlővel: 89 → 90 pont, 3. szint, az eredeti bal oldali jártasságjelzőn +1 és 0/30. Mobil Magkatalógus 390 × 844 méretben ellenőrizve.
+- Böngészős szüret a valódi ágyásvezérlővel: 129 → 130 pont, 3. szint, az eredeti bal oldali jártasságjelzőn +1 és 0/30. Mobil Magkatalógus 390 × 844 méretben ellenőrizve.
 - Külön növekvő és kifejlett növényformák, valamint málna/szeder/menta/bazsalikom/bársonyvirág ikonok. Bogyós ágyás kilenc növénye a jelenlegi méretben elkülönül.
 
 Képek: `concepts/production-three-new-associations.png`, `concepts/production-berry-refuge-detail.png`, `concepts/production-new-associations-catalog.png`, `concepts/production-new-associations-skills.png`, `concepts/production-new-associations-mobile.png`.
