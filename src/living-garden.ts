@@ -1,4 +1,4 @@
-import {GARDEN_LEVEL_POINTS,MAX_GARDEN_LEVEL,normalizeGardenProgress} from './garden-progression';
+import {GARDEN_LEVEL_POINTS,MAX_GARDEN_LEVEL,normalizeGardenProgress,gardenProgress} from './garden-progression';
 import {weatherOnDay} from './weather';
 import {extraBedKinds,sharedBedCrops,savedBedCopy,type SavedGarden} from './homestead-state';
 import type {GardenPathPiece} from './garden-path';
@@ -23,7 +23,7 @@ export class LivingGarden{
  constructor(snapshot:Snapshot,persistent=false){this.snapshot=structuredClone(snapshot);this.persistent=persistent;if(persistent)this.readPersistent(snapshot);else this.snapshot.skill=createGardenSkill();this.snapshot.travel.crafting??=createCrafting();}
  get xp(){return this.persistent?this.saved!.points:this.snapshot.skill.xp;}
  get level(){return Math.min(MAX_GARDEN_LEVEL,Math.max(this.persistent?this.saved!.levelFloor:0,Math.floor(this.xp/TRIAL_GARDEN_LEVEL_POINTS)));}
- get progress(){const level=this.level;return {level,current:level>=MAX_GARDEN_LEVEL?TRIAL_GARDEN_LEVEL_POINTS:this.xp-level*TRIAL_GARDEN_LEVEL_POINTS,required:TRIAL_GARDEN_LEVEL_POINTS};}
+ get progress(){return gardenProgress(this.xp,this.persistent?this.saved!.levelFloor:0);}
  availableSeeds(){return [...new Set(Object.values(bedMixes).filter(m=>m.level<=this.level).flatMap(m=>m.plants))];}
  addBed(area:LivingBedArea={...livingBedArea}){const bed:TrialBed={id:this.nextId++,area:{...area},state:createLivingBed(this.snapshot.clock.day),marker:null,irrigation:null,completed:[],watered:false};bed.state.seedStock=this.seeds;bed.state.weather=this.weather;this.beds.push(bed);return bed;}
  sync(bed:TrialBed){bed.state.seedStock=this.seeds;return bed.state;}

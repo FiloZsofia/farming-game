@@ -1,3 +1,4 @@
+import {drawBedSpray} from './irrigation-spray-art';
 import {MAX_GARDEN_LEVEL} from './garden-progression';
 import {activeDebris} from './cleanup';
 import {junkSites,junkPoint,junkPlacementRadius} from './junk-sites';
@@ -313,7 +314,8 @@ export class LivingBedController{
   for(const b of Array.from(document.querySelectorAll<HTMLButtonElement>('#living-bed-panel button,#living-garden-window button')))b.disabled=b.dataset.bedUnavailable==='true'||!this.canUse()||(this.mode==='bed'&&b.dataset.bedCare==='true'&&!this.near());
   const seedTool=this.seedControl,base=this.toolbarState[0]?.button.getBoundingClientRect();if(seedTool&&base?.width){seedTool.style.width=`${base.width}px`;seedTool.style.height=`${base.height}px`;}
   const dt=Math.min(100,Math.max(0,time-this.lastSprayTime));this.lastSprayTime=time;this.sprayArt.clear();
-  if(!dialogueOpen)for(const bed of this.garden.beds){const remaining=this.sprayRemaining.get(bed.id)??0,p=bed.irrigation,a=bed.area,view=this.scene.cameras.main.worldView;if(!p||remaining<=0)continue;this.sprayRemaining.set(bed.id,Math.max(0,remaining-dt));if(remaining-dt<=0)this.paint();if(a.x+a.w<view.x||a.x>view.right||a.y+a.h<view.y||a.y>view.bottom||remaining>1750)continue;for(let i=0;i<16;i++){const t=(time/950+i/16)%1,end={x:a.x+12+(i*37%(a.w-24)),y:a.y+10+(i*23%(a.h-20))},x=p.x+(end.x-p.x)*t,y=p.y-16+(end.y-p.y+16)*t-Math.sin(t*Math.PI)*28;this.sprayArt.fillStyle(i%2?0xb5e2df:0x77c3d3,.8).fillEllipse(x,y,1.5,3);if(t>.84)this.sprayArt.lineStyle(1,0xaad8d6,.6).strokeEllipse(end.x,end.y,6*t,3*t);}}
+  if(!dialogueOpen)for(const bed of this.garden.beds){const remaining=this.sprayRemaining.get(bed.id)??0,p=bed.irrigation,a=bed.area,view=this.scene.cameras.main.worldView;if(!p||remaining<=0)continue;this.sprayRemaining.set(bed.id,Math.max(0,remaining-dt));if(remaining-dt<=0)this.paint();if(a.x+a.w<view.x||a.x>view.right||a.y+a.h<view.y||a.y>view.bottom)continue;drawBedSpray(this.sprayArt,p,a,2500-remaining);}
+
   this.visitors.clear();for(const bed of this.committed())if(livingFlowers(bed.state))paintBedVisitors(this.visitors,bed.state,time,bed.area,false);
  }
 

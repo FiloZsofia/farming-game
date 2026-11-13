@@ -1678,3 +1678,9 @@ A fenti paraméterkérdésekre a felhasználó jóváhagyása megérkezett; a ko
 ### Mentés átvitele a helyi és online játék között — 2026-11-13
 
 A helyi futtatás külön böngészős tárhelye miatt a felhasználó a letöltött online mentését szeretné helyben folytatni. A Főmenüben **Mentés betöltése fájlból** gomb nyitja a JSON-fájlválasztót. Csak a közös sémavizsgálaton és meglévő migráción átmenő mentést fogadjuk el. Betöltéskor új farmrekord és önálló biztonsági példány készül; a meglévő, akár azonos nevű farmok nem íródnak felül. Az importált farmot automatikusan megnyitjuk. Fájlválasztás megszakításakor vagy hibás fájlnál nem hozunk létre farmot. Az átvitel mindkét irányban használható; nincs automatikus szinkronizálás. A művelet a normál játék része, közös főmenüstílussal, új tesztmód nélkül.
+
+### Öntözőpermet és jártasságjelző javítása — 2026-11-13
+
+Az ágyás öntözőjének permete réteges, folyamatosan követhető vízíveket, mozgó fényeket és cseppeket, valamint apró becsapódási hullámokat kap. A fúvókánál indul, a cseppek az ágyáson belül érnek földet. A rövid indulási késleltetés és a befejezéskor megjelenő nedves föld megmarad; az öntözési szükségletet és időközt ez a látványváltozás nem módosítja.
+
+A normál ágyásrendszerben a jártasságanimáció minden híváskor közvetlenül a mentett kertészeti állapotból és a közös `gardenProgress()` függvényből veszi a szintet és a 30 pontos célt. A régi animációhívó által átadott eltérő küszöb nem írhatja felül ezt. A Jártasságok és a bal oldali eredeti animáció ugyanazt a számítást használja. Szintlépéskor az új szint 0/30-ról indul; csak a tényleges jelenlegi maximumon jelenhet meg 30/30. A feltöltődés, +1, számkiemelés és eredeti elhelyezés megmarad.

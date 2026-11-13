@@ -13,3 +13,9 @@ export function normalizeGardenProgress<T extends Progress>(g:T):T{
  }
  g.points=Math.min(g.points,MAX_GARDEN_LEVEL*30);return g;
 }
+
+/** Shared values for the saved skill, its sidebar and the animated HUD. */
+export function gardenProgress(points:number,levelFloor=0){
+ const level=Math.min(MAX_GARDEN_LEVEL,Math.max(levelFloor,Math.floor(points/GARDEN_LEVEL_POINTS)));
+ return {level,current:level>=MAX_GARDEN_LEVEL?GARDEN_LEVEL_POINTS:Math.max(0,points-level*GARDEN_LEVEL_POINTS),required:GARDEN_LEVEL_POINTS};
+}

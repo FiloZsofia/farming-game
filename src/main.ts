@@ -1,5 +1,5 @@
 import {readFarmImport} from './save-import';
-import {MAX_GARDEN_LEVEL,GARDEN_LEVEL_POINTS} from './garden-progression';
+import {MAX_GARDEN_LEVEL,GARDEN_LEVEL_POINTS,gardenProgress,normalizeGardenProgress} from './garden-progression';
 import {PondExpansionController} from './pond-expansion-controller';
 import {bindPondExpansion} from './pond-shape';
 import {BrookCurrent} from './brook-art';
@@ -1210,6 +1210,7 @@ class Farm extends Phaser.Scene {
   this.warningAnimation=animation;void animation.finished.then(()=>{if(this.warningAnimation===animation){el.hidden=true;animation.cancel();this.warningAnimation=null;}}).catch(()=>{});
  }
  private showGardening(previous:number,values?:{xp:number;level:number;current:number;required:number}){
+  if(this.travel.homestead){const saved=normalizeGardenProgress({...this.travel.homestead.garden});values={xp:saved.points,...gardenProgress(saved.points,saved.levelFloor)};}
   this.skillUntil=performance.now()+5000;document.querySelector<HTMLElement>('#gardening-skill')!.hidden=false;
   const {current,required}=values??gardeningProgress(this.skill);const xp=values?.xp??this.skill.xp,level=values?.level??gardeningLevel(this.skill);
   const fill=document.querySelector<HTMLElement>('#skill-fill')!,track=document.querySelector<HTMLElement>('.skill-track')!,count=document.querySelector<HTMLElement>('#skill-xp')!,gain=document.querySelector<HTMLElement>('#skill-gain')!;
