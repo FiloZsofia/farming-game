@@ -1747,3 +1747,5 @@ Sam és a többi szereplő a korábbi 20%-os nagyításon felül további 5%-kal
 - Noah szőke, kékszemű, fiatal, borotvált arcú.
 
 Az avatárok a teljes alakokkal azonos közös rajzból, 256×256-os fej–váll kivágással készülnek. Az Ismerősök fülön csak a már megismert szereplők jelennek meg, egymás mellett, kis képernyőn több sorban. Rámutatás, billentyűzetfókusz vagy érintés választ karaktert: a portré felemelkedik/nagyobb lesz, arany gyűrűt és fényudvart kap, neve arany és félkövér, alatta a korábbi leírás jelenik meg. A csökkentett mozgás beállítást tiszteletben tartja.
+
+A letöltött JSON-mentés fájlneve a saját farm nevét és a napot használja (például Gabi farmja → gabi-farmja-62.json), ékezet és fájlrendszerben nem használható jel nélkül. A fájl tartalmában megmarad az eredeti farmnév. Az eredeti hibás mentés helyreállítási exportjának neve változatlan.

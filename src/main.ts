@@ -107,7 +107,7 @@ import { createGarden, targetTile, cultivable, reachable, work, TILE, type Tile,
 import { createClock, calendarDay, advanceClock, clockLabel, nightOpacity, type Clock } from './clock';
 import { JUMP_DURATION, JUMP_COOLDOWN, jumpHeight, movementSpeed } from './jump';
 import {itemIcon,seedIcon,goodIcon,type IconName} from './item-icons';
-import {normalizeFarmName} from './farm-name';
+import {normalizeFarmName,farmSaveFilename} from './farm-name';
 import { SaveStore, snapshot,type Snapshot } from './storage';
 import {createOrders,seedPrices,orderCost,quantityTotal,purchaseSeeds,deliverOrders, type Orders} from './orders';
 import { createEconomy, crops, emptyQuantities, salePrices, shippingValue, settleSales, transferProduce, type Economy } from './economy';
@@ -1682,7 +1682,7 @@ class Farm extends Phaser.Scene {
   document.querySelector('#export-save')!.addEventListener('click',async()=>{
    const content=this.loadFailed?await this.store.exportOriginal():JSON.stringify(this.currentSnapshot(),null,2);
    const blob=new Blob([content],{type:'application/json'});
-   const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download=this.loadFailed?'eredeti-farmmentes.json':`erdoszeli-birtok-${this.clock.day}.json`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+   const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download=this.loadFailed?'eredeti-farmmentes.json':farmSaveFilename(this.farmName,this.clock.day);link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
   });
  }
  private weatherCache:{seed:number;day:number;value:ReturnType<typeof weatherOnDay>}|null=null;
