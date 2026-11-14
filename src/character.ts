@@ -1,5 +1,7 @@
 import {drawHeldTool,heldToolLayout,heldToolTip,waterToolAngle} from './held-tool-art';
 import {drawSamStudy} from './sam-study-art';
+// Visual scale belongs on Sam's parent so animation cannot reset it.
+export const SAM_DISPLAY_SCALE=1.2;
 export type SamStyle='original'|'refined';
 import Phaser from 'phaser';
 import {WORK_SECONDS,WORK_CONTACT,workPose,workProgress,heavyTool,gentleWorkAngle,gentleWorkEnvelope} from './tool-motion';
