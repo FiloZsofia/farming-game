@@ -85,7 +85,7 @@ export class LivingBedController{
   if(this.tool==='marker'&&touch){this.movePreview(point);return true;}
   if(this.tool==='marker'||this.tool==='irrigation'||this.tool==='composter'||this.tool==='chest'){this.placeItem(point);return true;}
   if(this.tool==='path'){this.closePanel();this.drawing=true;this.extendPath(point);this.paintPreview();return true;}
-  if(this.tool==='harvest'){const i=this.garden.snapshot.travel.fallenFruit?.findIndex(p=>Math.hypot(p.x-point.x,p.y-point.y)<14)??-1;if(i>=0&&this.garden.collectOverripe(i,this.host.actor())){this.host.work(point,'hand');this.paint();this.render();return true;}}
+  if(this.tool==='harvest'){const i=this.garden.snapshot.travel.fallenFruit?.findIndex(p=>Math.hypot(p.x-point.x,p.y-point.y)<14)??-1;if(i>=0&&this.garden.collectOverripe(i,this.host.actor())){this.host.work(point,'harvest');this.paint();this.render();return true;}}
   if(this.serviceAt(point))return true;
   const bed=this.committed().find(b=>this.distance(point,b.area)<8);if(!bed){this.closePanel();return false;}if(this.active!==bed){this.mixDraft=null;if(this.tool in bedKinds){this.tool='harvest';this.host.equip('harvest');}}this.active=bed;if(!this.near()){this.message='Lépj közelebb az ágyáshoz.';return true;}
   if(this.state.plants.length){this.selected=this.state.plants.map((_,i)=>{const p=livingPlantPoint(i,this.area);return {i,d:Math.hypot(p.x-point.x,p.y-point.y)};}).sort((a,b)=>a.d-b.d)[0].i;}

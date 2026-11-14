@@ -16,7 +16,8 @@ export function workPose(dx:number,dy:number,remaining:number,mirrored=false){
  return {angle,reach,extension,weight,progress:t,phase:t<.43?'lift':t<WORK_CONTACT?'strike':'recover'};
 }
 export function workAngle(dx:number,dy:number,remaining:number,mirrored=false){return workPose(dx,dy,remaining,mirrored).angle;}
+export function gentleWorkEnvelope(remaining:number){const t=workProgress(remaining);return t<=WORK_CONTACT?ease(t/WORK_CONTACT):ease((1-t)/(1-WORK_CONTACT));}
 export function gentleWorkAngle(dx:number,dy:number,remaining:number,mirrored=false){
- const t=workProgress(remaining),aim=Math.atan2(dy,mirrored?-dx:dx)-Math.PI/2;
- return aim*Math.sin(Math.PI*t)*.65;
+ const aim=Math.atan2(dy,mirrored?-dx:dx)-Math.PI/2;
+ return aim*gentleWorkEnvelope(remaining);
 }
