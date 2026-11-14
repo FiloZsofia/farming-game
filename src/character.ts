@@ -1,7 +1,9 @@
+import {drawModernVillager,VILLAGER_SCALE} from './modern-npc-art';
+import {characterPortrait} from './character-portrait';
 import {drawHeldTool,heldToolLayout,heldToolTip,waterToolAngle} from './held-tool-art';
 import {drawSamStudy} from './sam-study-art';
 // Visual scale belongs on Sam's parent so animation cannot reset it.
-export const SAM_DISPLAY_SCALE=1.2;
+export const SAM_DISPLAY_SCALE=1.26;
 export type SamStyle='original'|'refined';
 import Phaser from 'phaser';
 import {WORK_SECONDS,WORK_CONTACT,workPose,workProgress,heavyTool,gentleWorkAngle,gentleWorkEnvelope} from './tool-motion';
@@ -17,6 +19,10 @@ export class FarmerArt{
  private tool:Phaser.GameObjects.Graphics;private action=0;private throwing=0;private phase=0;private equipped='';private actionTool='hoe';private aim={x:0,y:1};
  constructor(private scene:Phaser.Scene,neighbor=false,readonly style:SamStyle='original'){
   this.root=scene.add.container(0,0);
+  if(neighbor){
+   const drawing=scene.add.container(0,0).setScale(VILLAGER_SCALE);this.root.add(drawing);
+   const parts=drawModernVillager(scene,drawing,'annie');this.leftLeg=parts.leftLeg;this.rightLeg=parts.rightLeg;this.leftArm=parts.leftArm;this.rightArm=parts.rightArm;this.head=parts.head;this.pony=parts.pony;this.tool=parts.tool;this.armX=parts.armX;this.armY=parts.armY;this.equip('none');return;
+  }
   if(!neighbor&&style==='refined'){
    const parts=drawSamStudy(scene,this.root);this.leftLeg=parts.leftLeg;this.rightLeg=parts.rightLeg;this.leftArm=parts.leftArm;this.rightArm=parts.rightArm;this.head=parts.head;this.pony=parts.pony;this.tool=parts.tool;this.armX=parts.armX;this.armY=parts.armY;this.equip('hoe');return;
   }
@@ -133,11 +139,4 @@ export class FarmerArt{
 }
 
 // The contact portrait is rendered from the same character, including her outfit and hat.
-export function anniePortrait(scene:Phaser.Scene){
- const image=document.createElement('img');image.className='item-icon';image.alt='Annie arcképe hosszú, szőke hajjal';
- const art=new FarmerArt(scene,true);art.equip('none');art.root.setPosition(40,200).setScale(4);
- const portrait=scene.add.renderTexture(0,0,80,80).setVisible(false);
- portrait.draw(art.root);art.root.destroy();
- portrait.snapshot(result=>{if(result instanceof HTMLImageElement)image.src=result.src;portrait.destroy();});
- return image;
-}
+export function anniePortrait(scene:Phaser.Scene){return characterPortrait(scene,'annie');}

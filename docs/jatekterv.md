@@ -1735,3 +1735,15 @@ A kapa, öntözőkanna, bontóvas, túrabot és kosár arányosabb, részleteseb
 Gyűjtéskor a kosár kötelező: gaz, erdei gyógynövény, áfonya, hullott gyümölcs, ágyásbeli termény/mag és gyümölcsfák termése is a `harvest` munkamozdulatot használja. Az üres kéz nem a gyűjtés alapértelmezett rajza. A Gyűjtés eszköz kiválasztásakor a kosár már kézben látszik; a vetés, talajtakarás, evés és más tényleges kézi munka továbbra is külön mozdulat.
 
 - Sam teljes megjelenése 20%-kal nagyobb a laptopos olvashatóságért; az eszközök vele együtt méreteződnek. A gondolatok és jelzések a nagyobb fej fölött maradnak. Ellenőrzés: 1366×768 nézet, `docs/concepts/sam-larger-laptop.png`; 569 teszt és build sikeres.
+
+### Fiatalos falusi karakterek és közös avatárok – elfogadott megjelenés
+
+Sam és a többi szereplő a korábbi 20%-os nagyításon felül további 5%-kal nagyobb (1,26-os rajzméret). Mindenki fiatal felnőtt. A ruhák, cipők saját varrásokat, hajtásokat, zsebeket, talpat és fűzőket kapnak.
+
+- Annie világos bőrű, világosszőke, kiengedett hajú; a haj külső ívein lágy fény látszik. A fény közvetlenül a hátsó hajgrafikába kerül, a fej és a ruha mögé. Nincs barna arckontúr, napégette bőrszín vagy a blúzra lógó árnyék. Szemöldöke Noah-éval azonos színű (0xb79453), a szemkihúzás a szemhéjhoz kapcsolódik. Blúza a magas derekú nadrágba van tűrve, bakancsa takarja a bokáját. Kalapja a hajára ül.
+- Leo barna hajú, rendezett barna szakállal, zöld kertészköténnyel.
+- Simon fiatal, sötétbarna hajú és szakállas, nem őszül. Nincs szürke borostafátyol vagy anyajegyszerű pötty; állvonala szögletesebb. Fakókék inget és barna munkakötényt visel, ceruzával és mérőléccel.
+- Mara vállig érő, kiengedett, tépett végű barna hajú, nem fonott vagy kontyos. Munkamellénye és kesztyűje megmarad; a rajz sétál, rakodik és metsz. Az autóban ülő alakjának sincs fonata.
+- Noah szőke, kékszemű, fiatal, borotvált arcú.
+
+Az avatárok a teljes alakokkal azonos közös rajzból, 256×256-os fej–váll kivágással készülnek. Az Ismerősök fülön csak a már megismert szereplők jelennek meg, egymás mellett, kis képernyőn több sorban. Rámutatás, billentyűzetfókusz vagy érintés választ karaktert: a portré felemelkedik/nagyobb lesz, arany gyűrűt és fényudvart kap, neve arany és félkövér, alatta a korábbi leírás jelenik meg. A csökkentett mozgás beállítást tiszteletben tartja.

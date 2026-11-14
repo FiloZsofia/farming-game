@@ -79,3 +79,6 @@ Az Esti napló bejegyzéseit a közös `addEntry` készíti: félkövér fejléc
 
 ### Tervrajzkártyák egységes méretei
 A `#blueprints-page` minden közvetlen `.inventory-card` eleme automatikusan a közös receptstílust kapja, az új kártyák is. Cím: valódi `strong`, 17 px; fejlécikon: 36×36 px; szöveg és alapanyagsor: 13 px; alapanyagikon: 24×24 px; belső térköz: 14 px. Az alapanyagokat `.recipe-costs` / `.recipe-cost` elemekkel jelenítsük meg. Ne kártyánként soroljuk fel a stílus kivételeit. Asztali és keskeny mobilnézetben is ellenőrizzük.
+
+### Ismerősök portrésora
+Az Ismerősök közös portrésora kör alakú avatárokat és neveket használ, külön négyszögletes gombkeret nélkül. A kijelölt portré nagyobb, arany gyűrűt és fényudvart kap; a név arany, félkövér és aláhúzott. Alatta egy közös helyen a meglévő karakterleírás látszik. Egér, fókusz és érintés azonos tartalmat tesz elérhetővé; mobilon a sor törhet. A közös beszélgetésablak és a Tovább gomb stílusa megmarad.

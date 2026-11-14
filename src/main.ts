@@ -1,3 +1,4 @@
+import {renderPeopleGallery,type PersonEntry} from './people-gallery';
 import {creditOrchardWork} from './orchard-gardening';
 import {readFarmImport} from './save-import';
 import {MAX_GARDEN_LEVEL,GARDEN_LEVEL_POINTS,gardenProgress,normalizeGardenProgress,ORIGINAL_GARDEN_LEVEL_POINTS} from './garden-progression';
@@ -880,13 +881,13 @@ class Farm extends Phaser.Scene {
   showDialogue('Készlet','','NÁLAD VAN');
   this.renderBackpack();this.appendChestInventory(document.querySelector<HTMLElement>('#inventory-extra-actions')!);if(this.noahChapter)this.noahChapter.statusPanel(document.querySelector<HTMLElement>('#inventory-extra-actions')!);
   this.drawSkills();this.drawGoals();this.inventoryTab(tab);
-  const people=document.querySelector<HTMLElement>('#people-page')!;people.replaceChildren();
-  if(this.story.giftReceived||this.travel.metAnnie){const card=document.createElement('article');card.className='person-card';card.dataset.person='annie';const text=document.createElement('div');const name=document.createElement('h3');name.textContent='Annie';const description=document.createElement('p');description.textContent=this.story.giftReceived?'A kedves szomszéd, akitől a madárodút kaptad. A Kertitó Szaküzletben is találkozhatsz vele.':'Annie a Kertitó Szaküzletben dolgozik.';text.append(name,description);card.append(anniePortrait(this),text);people.append(card);}
-  if(this.travel.metSimon){const card=document.createElement('article');card.className='person-card';card.dataset.person='simon';const text=document.createElement('div'),name=document.createElement('h3'),description=document.createElement('p');name.textContent='Simon';description.textContent='Kézműves, a falusi műhelybolt gazdája.';text.append(name,description);card.append(simonPortrait(this),text);people.append(card);}
-  if(this.travel.metLeo){const card=document.createElement('article');card.className='person-card';card.dataset.person='leo';const text=document.createElement('div'),name=document.createElement('h3'),description=document.createElement('p');name.textContent='Leo';description.textContent='A faiskola barátságos kertésze. Facsemetéket gondoz, és szívesen mesél róluk.';text.append(name,description);card.append(leoPortrait(this),text);people.append(card);}
-  if(this.travel.forest?.sent){const card=document.createElement('article');card.className='person-card';card.dataset.person='noah';const text=document.createElement('div'),name=document.createElement('h3'),description=document.createElement('p');name.textContent='Noah';description.textContent='Biológus, Sam korábbi munkatársa a laborból.';text.append(name,description);card.append(noahPortrait(this),text);people.append(card);}
-  if(this.travel.homestead?.stand.metMara){const card=document.createElement('article');card.className='person-card';card.dataset.person='mara';const text=document.createElement('div'),name=document.createElement('h3'),description=document.createElement('p');name.textContent='Mara';description.textContent='A terményeidet szállító sofőr. Határozott, és a csípős megjegyzéseit sem hagyja otthon.';text.append(name,description);card.append(maraPortrait(),text);people.append(card);}
-  if(!people.children.length)people.textContent='Hamarosan megismered a szomszédaidat.';
+  const people=document.querySelector<HTMLElement>('#people-page')!,entries:PersonEntry[]=[];
+  if(this.story.giftReceived||this.travel.metAnnie)entries.push({id:'annie',name:'Annie',portrait:anniePortrait(this),description:this.story.giftReceived?'A kedves szomszéd, akitől a madárodút kaptad. A Kertitó Szaküzletben is találkozhatsz vele.':'Annie a Kertitó Szaküzletben dolgozik.'});
+  if(this.travel.metLeo)entries.push({id:'leo',name:'Leo',portrait:leoPortrait(this),description:'A faiskola barátságos kertésze. Facsemetéket gondoz, és szívesen mesél róluk.'});
+  if(this.travel.metSimon)entries.push({id:'simon',name:'Simon',portrait:simonPortrait(this),description:'Kézműves, a falusi műhelybolt gazdája.'});
+  if(this.travel.homestead?.stand.metMara)entries.push({id:'mara',name:'Mara',portrait:maraPortrait(this),description:'A terményeidet szállító sofőr. Határozott, és a csípős megjegyzéseit sem hagyja otthon.'});
+  if(this.travel.forest?.sent)entries.push({id:'noah',name:'Noah',portrait:noahPortrait(this),description:'Biológus, Sam korábbi munkatársa a laborból.'});
+  renderPeopleGallery(people,entries);
   document.querySelector<HTMLElement>('#inventory-panel')!.hidden=false;document.querySelector('#dialogue-close')!.textContent='Tovább';
  }
  private openTestMap(){
