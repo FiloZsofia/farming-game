@@ -331,6 +331,7 @@ class Farm extends Phaser.Scene {
  private openPauseMenu(){
   if(!this.ready||this.transitioning||this.morningPlaying||this.microscopeDeliveryPlaying)return;
   showDialogue('Menü','','');document.querySelector<HTMLElement>('#menu-panel')!.hidden=false;
+  const exportButton=document.querySelector<HTMLButtonElement>('#export-save')!;exportButton.hidden=false;exportButton.textContent='Mentés letöltése';
   document.querySelector<HTMLButtonElement>('#resume-game')!.focus();
  }
  private openSettings(origin:'start'|'pause'){
