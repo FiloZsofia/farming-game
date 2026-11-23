@@ -2,7 +2,7 @@ import {foundationOffsets} from './pond-foundation';
 import type {Snapshot} from './storage';
 import {farmLayout,farmBounds} from './layout';
 import {ORIGINAL_POND_AREA,pondArea,pondOutline,pondWaterAt,pondShoreAt,validPondExpansion,smoothPondExpansion} from './pond-shape';
-import {activeDebris} from './cleanup';
+import {placementDebris} from './cleanup';
 import {createGarden} from './gardening';
 import {junkSites,junkPoint,junkPlacementRadius} from './junk-sites';
 export const pondExpansionPrice={gold:950,stone:160};
@@ -22,7 +22,7 @@ export function pondExpansionError(s:Snapshot,after:readonly number[],reshaping=
  if(s.story.birdhouse)circles.push({...s.story.birdhouse,r:25});
  circles.push({...s.player,r:14});
  const garden={...createGarden(),plots:new Map(s.plots)};
- for(const d of activeDebris(s.clearing,garden))circles.push({x:d.x,y:d.y,r:d.kind==='weed'?16:26});
+ for(const d of placementDebris(s.clearing,garden))circles.push({x:d.x,y:d.y,r:d.kind==='weed'?16:26});
  for(const j of junkSites)circles.push({...junkPoint(s.clearing,j.id),r:junkPlacementRadius(j.id)});
  const protectedPoint=(x:number,y:number)=>boxes.some(b=>x>=b.x-7&&x<=b.x+b.w+7&&y>=b.y-7&&y<=b.y+b.h+7)||circles.some(p=>Math.hypot(x-p.x,y-p.y)<p.r)||farmLayout.paths.some(path=>path.points.slice(1).some((b,i)=>{const a=path.points[i],dx=b[0]-a[0],dy=b[1]-a[1],t=Math.max(0,Math.min(1,((x-a[0])*dx+(y-a[1])*dy)/(dx*dx+dy*dy||1)));return Math.hypot(x-a[0]-t*dx,y-a[1]-t*dy)<path.width/2+10;}));
  const outline=pondOutline(after,8),minX=Math.min(...outline.map(p=>p.x)),maxX=Math.max(...outline.map(p=>p.x)),minY=Math.min(...outline.map(p=>p.y)),maxY=Math.max(...outline.map(p=>p.y));

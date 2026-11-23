@@ -66,7 +66,7 @@ export function drawVillage(scene:Phaser.Scene){
  rect(680,1025,56,6,0x638776);line(680,1025,736,1025,0xb8c4a2,2);label(780,987,shopNames.fishShop,12);
  // The former meadow flower patch is now the spring; flowers remain around the mossy rim.
 
- flowers(889,1088);rect(904,1044,2,27,0x827258);line(898,1044,911,1044,0xa39374);for(let i=0;i<3;i++){line(900+i*4,1045,900+i*4,1055+i%2*4,0xb9b393);oval(900+i*4,1057+i%2*4,3,5,0xd5c9a7);}
+ flowers(904,1088);rect(904,1044,2,27,0x827258);line(898,1044,911,1044,0xa39374);for(let i=0;i<3;i++){line(900+i*4,1045,900+i*4,1055+i%2*4,0xb9b393);oval(900+i*4,1057+i%2*4,3,5,0xd5c9a7);}
  // A second village lantern frames the southern edge of the square.
 
  // Diverse forest silhouettes: broad oak, silver birch and fir.

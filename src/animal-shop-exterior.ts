@@ -12,7 +12,10 @@ export function drawAnimalShopFront(scene:Phaser.Scene,g:Phaser.GameObjects.Grap
  for(const xx of [804,930]){r(xx-4,y+30,36,43,0x8e7653);r(xx-2,y+32,32,39,0xf0dfb9);r(xx+1,y+35,26,33,0x71968a);poly([xx+3,y+37,xx+24,y+37,xx+3,y+61],0xb6cbb7);line(xx+14,y+35,xx+14,y+69,0xf0dfbb,2);line(xx+1,y+51,xx+27,y+51,0xf0dfbb,2);r(xx-5,y+73,38,5,0x7b7051);}
  // A deep doorway, joinery and striped shop awning give the entrance its own silhouette.
  r(864,y+78,36,62,0x5b634e);r(868,y+81,28,58,0x8e7958);r(871,y+84,22,29,0x93b4a4);line(873,y+86,880,y+97,0xd8dfbd,1.5);r(871,y+117,22,18,0xa58b62);r(889,y+113,2,5,0xe8cb80);r(857,y+139,51,6,0xb8ad91);r(853,y+145,59,5,0xd4c8a7);
- poly([851,y+73,910,y+73,917,y+87,844,y+87],0x748d72);for(let i=0;i<6;i++){const xx=847+i*12;r(xx,y+84,10,7,i%2?0x758c71:0xd7cfaa);}line(845,y+91,916,y+91,0x546d54);
+ // A small pitched wooden porch roof, with shingle rows and shaped brackets.
+ poly([846,y+86,855,y+67,909,y+67,920,y+86],0x4e5b4e);poly([848,y+82,857,y+68,907,y+68,917,y+82],0x758773);line(857,y+68,907,y+68,0xb0b698,1.1);
+ for(let row=0;row<3;row++){const yy=y+72+row*4,left=855-row*2.4,right=909+row*2.4;line(left,yy,right,yy,0x536a58,.8);line(left,yy+1,right,yy+1,0x9ca98b,.45);for(let xx=left+7+(row%2)*5;xx<right-4;xx+=10)line(xx,yy,xx-1,yy+3,0x60745e,.7);}
+ r(846,y+84,74,4,0x6d775d);line(847,y+84,919,y+84,0xb9b58e,.9);for(const xx of [851,911]){line(xx,y+88,xx,y+100,0x817354,2.5);line(xx,y+99,xx+(xx<880?8:-8),y+88,0x9a8762,1.8);line(xx-.5,y+89,xx-.5,y+97,0xc3b086,.6);}
  // Carved hen emblem: bracket, paired hangers, wood grain and individual feathers.
  r(960,y+79,2,11,0x655941);line(947,y+79,976,y+79,0x71684c,2);g.save().translateCanvas(962,y+104);g.lineStyle(.9,0x6c7059).lineBetween(-1,-24,-8,-11).lineBetween(0,-24,8,-11);g.fillStyle(0x79694b).fillEllipse(.7,1.2,34,29);g.fillStyle(0xd2bd8e).fillEllipse(0,0,32,27);g.lineStyle(.8,0xb09a70).strokeEllipse(0,0,30,25);
  for(const yy of [-7,0,7])g.lineStyle(.45,0xb49b70,.5).lineBetween(-12,yy,12,yy);for(const xx of [-8,8])g.fillStyle(0x766848).fillCircle(xx,-10,.8);

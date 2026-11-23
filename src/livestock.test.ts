@@ -47,7 +47,7 @@ describe('living paddock safeguards',()=>{
 
 describe('paddock placement explanations',()=>{
  it('explains why drawing the front fence in front of the coop does not enclose it',()=>{const s=home();s.travel.livestock!.pens[0].boundary=[];s.travel.livestock!.packed.paddock=1;const poly=[{x:-320,y:-180},{x:-20,y:-180},{x:-20,y:20},{x:-320,y:20}];expect(paddockPlacementIssue(s,1,poly,2)).toContain('Az ól kívül maradna');expect(placePaddock(s,1,poly,2)).toBeNull();});
- it('names an accidental tiny side instead of silently disabling construction',()=>{const s=home();expect(paddockPlacementIssue(s,1,[{x:-320,y:-280},{x:-310,y:-280},{x:-20,y:-280},{x:-20,y:-80},{x:-320,y:-80}],2)).toContain('túl közel');});
+ it('allows short sections beside a coop without imposing a corner spacing limit',()=>{const s=home();expect(paddockPlacementIssue(s,1,[{x:-320,y:-280},{x:-310,y:-280},{x:-20,y:-280},{x:-20,y:-80},{x:-320,y:-80}],2)).toBeNull();});
  it('identifies a crossing fence before reporting its collapsed area',()=>{const s=home();expect(paddockPlacementIssue(s,1,[{x:-320,y:-280},{x:-20,y:-80},{x:-20,y:-280},{x:-320,y:-80}],2)).toContain('keresztezi');});
  it('uses the same result for valid construction and its feedback',()=>{const s=home();expect(paddockPlacementIssue(s,1,polygon,2)).toBeNull();expect(placePaddock(s,1,polygon,2)).not.toBeNull();});
 });

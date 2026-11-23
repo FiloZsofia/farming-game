@@ -1,7 +1,7 @@
 import {animalAreaOccupied} from './livestock-geometry';
 import {drawBedSpray,BED_SPRAY_DURATION,irrigationSpraysToday} from './irrigation-spray-art';
 import {MAX_GARDEN_LEVEL} from './garden-progression';
-import {activeDebris} from './cleanup';
+import {placementDebris} from './cleanup';
 import {junkSites,junkPoint,junkPlacementRadius} from './junk-sites';
 import {savedBedCopy,type SavedGarden} from './homestead-state';
 import {bedMarkerLayout,bedMarkerCenter,bedMarkerLines} from './bed-marker-layout';
@@ -58,7 +58,7 @@ export class LivingBedController{
  private distance(p:GardenPoint,b:LivingBedArea){return Math.hypot(p.x-Math.max(b.x,Math.min(b.x+b.w,p.x)),p.y-Math.max(b.y,Math.min(b.y+b.h,p.y)));}
  near(){return this.distance(this.host.actor(),this.area)<55;}
  blocks(x:number,y:number,before:GardenPoint){if(this.garden.snapshot.travel.crafting?.machines.some(m=>Math.hypot(m.x-x,m.y-y)<15&&Math.hypot(m.x-before.x,m.y-before.y)>=15)||this.garden.snapshot.skill.chests?.placed.some(m=>Math.hypot(m.x-x,m.y-y)<18&&Math.hypot(m.x-before.x,m.y-before.y)>=18))return true;return this.committed().some(b=>{if(!b.state.prepared)return false;const a=b.area,inside=(p:GardenPoint)=>p.x>a.x+4&&p.x<a.x+a.w-4&&p.y>a.y+2&&p.y<a.y+a.h-2;return inside({x,y})&&(!inside(before)||Math.hypot(x-a.x-a.w/2,y-a.y-a.h/2)<Math.hypot(before.x-a.x-a.w/2,before.y-a.y-a.h/2));});}
- private existingObjects(includeTrees=true){const s=this.garden.snapshot;return [...[...(includeTrees?s.travel.estate.trees:[]),...s.travel.estate.pond,...(s.story.birdhouse?[s.story.birdhouse]:[]),...activeDebris(s.clearing,{seeds:s.seeds,produce:s.produce,plots:new Map(s.plots)})].map(p=>({x:p.x,y:p.y,large:false,radius:20})),...junkSites.map(j=>({...junkPoint(s.clearing,j.id),large:true,radius:junkPlacementRadius(j.id)}))];}
+ private existingObjects(includeTrees=true){const s=this.garden.snapshot;return [...[...(includeTrees?s.travel.estate.trees:[]),...s.travel.estate.pond,...(s.story.birdhouse?[s.story.birdhouse]:[]),...placementDebris(s.clearing,{seeds:s.seeds,produce:s.produce,plots:new Map(s.plots)})].map(p=>({x:p.x,y:p.y,large:false,radius:20})),...junkSites.map(j=>({...junkPoint(s.clearing,j.id),large:true,radius:junkPlacementRadius(j.id)}))];}
  private fits(){return !animalAreaOccupied(this.garden.snapshot,this.area)&&!this.garden.snapshot.travel.estate.trees.some(t=>orchardTreeBlocksBed(t,this.area))&&!this.existingObjects(false).some(p=>this.distance(p,this.area)<(p.large?p.radius:20))&&livingBedFits(this.area,this.host.actor())&&!this.committed().some(b=>intersect(this.area,b.area,BED_SPACING))&&!this.garden.paths.some(p=>this.distance(p,this.area)<12)&&!this.garden.snapshot.travel.crafting?.machines.some(m=>this.distance(m,this.area)<25)&&!this.garden.snapshot.skill.chests?.placed.some(m=>this.distance(m,this.area)<25)&&!this.runtimeItems().items.some(m=>m.kind==='bedMarker'?intersect(this.area,bedMarkerBounds(m),4):this.distance(m,this.area)<15);}
  movePreview(point:GardenPoint){this.point=point;if(this.placing)this.area=bedAreaAt(point);if(this.drawing)this.extendPath(point);this.paintPreview();if(this.placing)this.paint();}
  confirmPlace(){if(!this.placing||!this.host.ready()||!this.fits())return;this.placing=false;if(this.host.production)this.garden.snapshot.travel.research.bedPrepared=true;this.markerBed=this.active.id;if(!this.garden.packedMarkers.includes(this.active.id))this.garden.packedMarkers.push(this.active.id);this.tool='marker';this.message='';this.host.equip('hand');this.resetPlacementUI();this.paint();this.render();}
