@@ -1761,3 +1761,5 @@ Elfogadott és a rendes játékba kért rendszer: [Tyúktartás](allattartas.md)
 Az állatosbolt elfogadott neve **Gazdaudvar**, boltosának neve **Ruby**. A bolt felirata, menüje, helycímkéje és térképi neve ezt kövesse.
 
 Újratöltéskor a mentés ellenőrzéséig semleges betöltőképernyő takarja a játék kezdeti állapotát. A Sam laboros múltjáról szóló bevezető csak új farm létrehozásakor vagy a Történet tudatos megnyitásakor jelenjen meg, mentett játék betöltése előtt ne villanjon fel.
+
+A Kertitó Szaküzlethez megszűnik a térről induló külön bekötés: a Gazdaudvar felől érkező közös ösvényből egyenes északi ág vezet az ajtóhoz. A bolti ösvényhálózat szélessége egységes; az út mellett elhelyezett hordót, kosarat és cserepeket az út változásakor maguktól is hozzá kell igazítani. A Gazdaudvar épületét ezért nem mozgatjuk lejjebb.

@@ -1,3 +1,4 @@
+import {villageShopDecor} from './village-shop-decor';
 import {drawAnimalShopFront} from './animal-shop-exterior';
 import {drawShrubLeaf} from './foliage-leaf';
 import {drawMaraBay} from './nursery-art';
@@ -37,7 +38,7 @@ export function drawVillage(scene:Phaser.Scene){
  oval(479,1089,374,240,0x83915d);drawPathNetwork(g,[...villagePaths,...marketRoads]);oval(476,1080,360,230,0xc3b697);
  for(let y=977;y<1183;y+=10)for(let x=298+(y%20?0:8);x<655;x+=17){if(((x-476)/176)**2+((y-1080)/109)**2>1)continue;rect(x,y,14,7,(x+y)%3?0xcabb9a:0xaeaa8e);line(x+2,y+1,x+12,y+1,0xdfcdae);}
  const flowers=(x:number,y:number)=>{oval(x+3,y+4,22,9,0x385d3d,.25);poly([x-9,y-7,x+9,y-7,x+6,y+7,x-6,y+7],0xa8744e);rect(x-10,y-9,20,4,0xc49764);for(let i=0;i<9;i++){const xx=x+(random()-.5)*22,yy=y-10-random()*8;line(xx,yy+5,xx,yy,0x496b3a);oval(xx,yy,4,3,[0xe7bf8e,0xc37c85,0xd6d4a1][i%3]);}};
- flowers(villageEntrancePot.x,villageEntrancePot.y);flowers(666,1130);flowers(627,1128);
+ flowers(villageEntrancePot.x,villageEntrancePot.y);for(const p of villageShopDecor.pots)flowers(p.x,p.y);
  const house=(x:number,y:number,w:number,h:number,roof:number,wall:number)=>{
   poly([x,y+h-3,x+w,y+h-3,x+w+23,y+h+18,x+13,y+h+21],0x33583b,.28);
   rect(x,y,w,h,wall);rect(x,y+h-10,w,10,0x9c967b);for(let xx=x+2;xx<x+w-10;xx+=15){rect(xx,y+h-9,13,5,0xb9af90);}

@@ -1,3 +1,4 @@
+import {villageShopDecor} from './village-shop-decor';
 import {drawBrookSpring} from './brook-art';
 import {brookSource} from './brook-layout';
 import Phaser from 'phaser';
@@ -56,7 +57,8 @@ function nurseryDecor(g:Phaser.GameObjects.Graphics){
  for(const d of nurseryDisplays)saplingDisplay(g,d.left,d.plants,d.width);
 }
 function fishBarrel(g:Phaser.GameObjects.Graphics){
- const {oval,poly,line}=brush(g);oval(742,1084,39,12,0x3e5844,.18);poly([[724,1060],[756,1060],[759,1072],[756,1083],[726,1083],[722,1072]],0x9d8965);for(let i=0;i<8;i++){const x=725+i*4;line(x,1062,x+(i<4?-1:1),1080,0x786e53,.65);line(x+1,1063,x+1,1080,0xb3a17b,.5);}oval(741,1082,30,6,0x897b5d);for(const y of [1067,1078]){g.lineStyle(2,0x6d8073).beginPath().moveTo(724,y).lineTo(729,y+1.7).lineTo(753,y+1.7).lineTo(758,y).strokePath();line(727,y-.6,754,y-.6,0xa4b09a,.65);oval(728,y,.8,.8,0x50695e);oval(754,y,.8,.8,0x50695e);}oval(740,1060,35,15,0xb7a47d);oval(740,1060,30,11,0x746f52);oval(740,1059.5,27,8.5,0x6a9d92);oval(737,1058,19,4,0xa4c1ab,.7);leaf(g,747,1060,6,-.35,0x85a475);g.lineStyle(.5,0xc5d6bc).strokeEllipse(736,1059,9,2.3);
+ g.save().translateCanvas(villageShopDecor.fishBarrel.x-740,villageShopDecor.fishBarrel.y-1083);
+ const {oval,poly,line}=brush(g);oval(742,1084,39,12,0x3e5844,.18);poly([[724,1060],[756,1060],[759,1072],[756,1083],[726,1083],[722,1072]],0x9d8965);for(let i=0;i<8;i++){const x=725+i*4;line(x,1062,x+(i<4?-1:1),1080,0x786e53,.65);line(x+1,1063,x+1,1080,0xb3a17b,.5);}oval(741,1082,30,6,0x897b5d);for(const y of [1067,1078]){g.lineStyle(2,0x6d8073).beginPath().moveTo(724,y).lineTo(729,y+1.7).lineTo(753,y+1.7).lineTo(758,y).strokePath();line(727,y-.6,754,y-.6,0xa4b09a,.65);oval(728,y,.8,.8,0x50695e);oval(754,y,.8,.8,0x50695e);}oval(740,1060,35,15,0xb7a47d);oval(740,1060,30,11,0x746f52);oval(740,1059.5,27,8.5,0x6a9d92);oval(737,1058,19,4,0xa4c1ab,.7);leaf(g,747,1060,6,-.35,0x85a475);g.lineStyle(.5,0xc5d6bc).strokeEllipse(736,1059,9,2.3);g.restore();
 }
 function workshopDecor(g:Phaser.GameObjects.Graphics){
  const {rect,line,poly,oval}=brush(g);
@@ -65,8 +67,11 @@ function workshopDecor(g:Phaser.GameObjects.Graphics){
  for(let i=0;i<4;i++){const x=576+i*11;line(x,1307,x-1,1320,0x9f8762,1.6);if(i===0){rect(x-5,1319,9,3,0x8b9b8e);line(x-5,1319,x+4,1319,0xc5cbb6,.6);}else if(i===1){poly([[x-3,1318],[x+3,1318],[x+2,1325],[x-2,1325]],0x9aa99a);line(x,1319,x,1324,0xd0d5be,.6);}else if(i===2){g.lineStyle(1.2,0x8e9e91).strokeEllipse(x,1321,5,6);}else{line(x-3,1318,x-3,1324,0x9ca99b);line(x,1318,x,1324,0x9ca99b);line(x+3,1318,x+3,1324,0x9ca99b);line(x-3,1318,x+3,1318,0x9ca99b);}}
  // Stacked boards have individual end grain; a woven basket stands beside them.
  for(let i=0;i<5;i++){const y=1325-i*4;poly([[705,y],[746,y-2],[752,y+1],[710,y+3]],i%2?0xaf9870:0xbba57e);line(710,y+2,750,y,0x8f7b5b,.6);line(710,y,744,y-1.5,0xd1bd96,.45);}
- g.lineStyle(2,0x9b8961).strokeEllipse(759,1317,17,23);g.lineStyle(.6,0xc8b58b).strokeEllipse(759,1317,14,21);poly([[746,1320],[772,1320],[769,1336],[749,1336]],0xae9366);oval(759,1320,27,9,0xc5ac7b);oval(759,1320,22,5.5,0x7c6d4a);for(let i=0;i<5;i++)line(748,1323+i*2.6,771,1323+i*2.6,0xd0b98b,.65);for(let i=0;i<7;i++)line(749+i*3.2,1322,750+i*3,1334,0x8c7955,.55);
+
  for(const p of workshopWallLamps){line(p.x-5,p.y-8,p.x,p.y-8,0x65705a,1.5);rect(p.x-5,p.y-6,10,13,0x6b775e);rect(p.x-3,p.y-4,6,8,0xc5c5a0);line(p.x,p.y-4,p.x,p.y+4,0x8b9678,.7);poly([[p.x-7,p.y-6],[p.x,p.y-12],[p.x+7,p.y-6]],0x7b856b);line(p.x-6,p.y-6,p.x,p.y-11,0xb2b497,.7);rect(p.x-6,p.y+6,12,2,0x7b846a);}
+}
+function workshopBasket(g:Phaser.GameObjects.Graphics){const {line,poly,oval}=brush(g);
+ g.save().translateCanvas(villageShopDecor.workshopBasket.x-759,villageShopDecor.workshopBasket.y-1336);g.lineStyle(2,0x9b8961).strokeEllipse(759,1317,17,23);g.lineStyle(.6,0xc8b58b).strokeEllipse(759,1317,14,21);poly([[746,1320],[772,1320],[769,1336],[749,1336]],0xae9366);oval(759,1320,27,9,0xc5ac7b);oval(759,1320,22,5.5,0x7c6d4a);for(let i=0;i<5;i++)line(748,1323+i*2.6,771,1323+i*2.6,0xd0b98b,.65);for(let i=0;i<7;i++)line(749+i*3.2,1322,750+i*3,1334,0x8c7955,.55);g.restore();
 }
 function streetLamp(g:Phaser.GameObjects.Graphics,p:{x:number;y:number}){
  const {rect,line,poly,oval}=brush(g),{x,y}=p;oval(x+2,y+3,17,7,0x3d513b,.18);poly([[x-6,y],[x+6,y],[x+7,y+3],[x-7,y+3]],0x8e9076);rect(x-4,y-4,8,5,0x7f856d);line(x,y-29,x,y-4,0x65725c,3);line(x-.7,y-28,x-.7,y-5,0xa7ac8d,.8);rect(x-3,y-29,6,3,0x7b866b);
@@ -75,5 +80,5 @@ function streetLamp(g:Phaser.GameObjects.Graphics,p:{x:number;y:number}){
 export function drawVillageDetails(scene:Phaser.Scene){
  detail(scene,brookSource.x-56,brookSource.y-54,112,90,drawBrookSpring);for(const lamp of villageLamps)detail(scene,lamp.x-17,lamp.y-65,34,73,g=>streetLamp(g,lamp));
  for(const b of villageLayout.benches){const p=benchPose(b.angle);detail(scene,p.x-42,p.y-43,84,60,g=>bench(g,p));}
- detail(scene,440,1039,76,69,fountain);detail(scene,474,866,218,165,nurseryDecor);detail(scene,677,798,88,121,drawGreenhouse);detail(scene,718,1050,46,42,fishBarrel);detail(scene,558,1278,223,68,workshopDecor);
+ detail(scene,440,1039,76,69,fountain);detail(scene,474,866,218,165,nurseryDecor);detail(scene,677,798,88,121,drawGreenhouse);detail(scene,villageShopDecor.fishBarrel.x-22,villageShopDecor.fishBarrel.y-33,46,42,fishBarrel);detail(scene,558,1278,223,68,workshopDecor);const b=villageShopDecor.workshopBasket;detail(scene,b.x-16,b.y-34,34,40,workshopBasket);
 }

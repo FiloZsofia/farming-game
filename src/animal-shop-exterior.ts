@@ -13,8 +13,12 @@ export function drawAnimalShopFront(scene:Phaser.Scene,g:Phaser.GameObjects.Grap
  // A deep doorway, joinery and striped shop awning give the entrance its own silhouette.
  r(864,y+78,36,62,0x5b634e);r(868,y+81,28,58,0x8e7958);r(871,y+84,22,29,0x93b4a4);line(873,y+86,880,y+97,0xd8dfbd,1.5);r(871,y+117,22,18,0xa58b62);r(889,y+113,2,5,0xe8cb80);r(857,y+139,51,6,0xb8ad91);r(853,y+145,59,5,0xd4c8a7);
  poly([851,y+73,910,y+73,917,y+87,844,y+87],0x748d72);for(let i=0;i<6;i++){const xx=847+i*12;r(xx,y+84,10,7,i%2?0x758c71:0xd7cfaa);}line(845,y+91,916,y+91,0x546d54);
- // Hanging emblem: a hen rather than another generic rectangular board.
- r(960,y+79,2,16,0x765f42);line(947,y+79,976,y+79,0x765f42,2);g.fillStyle(0xd9c79d).fillEllipse(962,y+104,29,23);g.lineStyle(1,0x8c7754).strokeEllipse(962,y+104,29,23);g.fillStyle(0x8a6244).fillEllipse(960,y+105,14,10).fillCircle(967,y+99,4);g.fillStyle(0xb7654e).fillCircle(966,y+95,1.5);g.fillStyle(0x443e30).fillCircle(968,y+98,1);
+ // Carved hen emblem: bracket, paired hangers, wood grain and individual feathers.
+ r(960,y+79,2,11,0x655941);line(947,y+79,976,y+79,0x71684c,2);g.save().translateCanvas(962,y+104);g.lineStyle(.9,0x6c7059).lineBetween(-1,-24,-8,-11).lineBetween(0,-24,8,-11);g.fillStyle(0x79694b).fillEllipse(.7,1.2,34,29);g.fillStyle(0xd2bd8e).fillEllipse(0,0,32,27);g.lineStyle(.8,0xb09a70).strokeEllipse(0,0,30,25);
+ for(const yy of [-7,0,7])g.lineStyle(.45,0xb49b70,.5).lineBetween(-12,yy,12,yy);for(const xx of [-8,8])g.fillStyle(0x766848).fillCircle(xx,-10,.8);
+ g.fillStyle(0xb99f6d).fillPoints([{x:-5,y:2},{x:-13,y:-5},{x:-12,y:2},{x:-15,y:-1},{x:-12,y:6},{x:-6,y:7}],true);g.fillStyle(0xf0e1b7).fillEllipse(-1,3,19,13).fillEllipse(6,-2,8,12).fillCircle(7,-6,4.3);g.fillStyle(0xd5bd8b).fillEllipse(-2,4,11,9);g.fillStyle(0xf7eccb).fillEllipse(-2,2,8,6);for(let i=0;i<3;i++)g.lineStyle(.65,0xb99e6c).lineBetween(-6+i*2,5,-3+i*2,7);
+ g.fillStyle(0xb65b47).fillCircle(4.7,-10,1.5).fillCircle(7,-11,1.7).fillCircle(9,-9.7,1.3).fillEllipse(9,-1,2.2,3.5);g.fillStyle(0xc59a48).fillTriangle(10.5,-6,14,-4.5,10.5,-3);g.fillStyle(0x384537).fillCircle(8.4,-6.2,.85);g.fillStyle(0xfff6da).fillCircle(8.15,-6.45,.25);
+ for(const xx of [-3,2]){g.lineStyle(.85,0xa48042).lineBetween(xx,8,xx+1,11).lineBetween(xx+1,11,xx-1,12).lineBetween(xx+1,11,xx+3,12);}g.restore();
  // Match the courtyard surface to its shared L-shaped boundary.
  g.restore();g.fillStyle(0x9ba16a,.38).fillPoints(animalShopYard.boundary,true);g.fillStyle(0xb7a67b,.22).fillEllipse(a.x+a.w+21,a.y+a.h+21,43,70);
  const t=worldText(scene,a.x+w/2,a.y+30,'GAZDAUDVAR',{fontFamily:'Georgia,serif',fontSize:'11px',color:'#f9ebc6',backgroundColor:'#4a5e4b',padding:{x:8,y:5}}).setOrigin(.5).setDepth(5);scene.events.once('shutdown',()=>t.destroy());

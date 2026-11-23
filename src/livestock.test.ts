@@ -4,7 +4,7 @@ import {createClock} from './clock';
 import {createGarden} from './gardening';
 import {enableHomestead} from './homestead-migration';
 import {debris} from './cleanup';
-import {createLivestock,animalItems,fixtureKinds,penMissing,buyAnimalItem,orderHen,deliverHen,advanceLivestock,tendPen,packAnimalItem,validLivestock,renameHen} from './livestock';
+import {createLivestock,animalItems,fixtureKinds,penMissing,buyAnimalItem,orderHen,deliverHen,advanceLivestock,tendPen,packAnimalItem,validLivestock,renameHen,packEmptyPaddock} from './livestock';
 import {placeCoop,placePaddock,placeAnimalFixture,penWalkRoute,gatePoint,animalApproach,canDrawPaddock,paddockPlacementIssue} from './livestock-geometry';
 import {farmProductPrice,farmProductAccount} from './farm-products';
 import {transferStand} from './farm-market';
@@ -46,8 +46,18 @@ describe('living paddock safeguards',()=>{
 
 
 describe('paddock placement explanations',()=>{
- it('explains why drawing the front fence in front of the coop does not enclose it',()=>{const s=home();s.travel.livestock!.pens[0].boundary=[];s.travel.livestock!.packed.paddock=1;const poly=[{x:-320,y:-180},{x:-20,y:-180},{x:-20,y:20},{x:-320,y:20}];expect(paddockPlacementIssue(s,1,poly,2)).toContain('Az ól nincs teljesen');expect(placePaddock(s,1,poly,2)).toBeNull();});
+ it('explains why drawing the front fence in front of the coop does not enclose it',()=>{const s=home();s.travel.livestock!.pens[0].boundary=[];s.travel.livestock!.packed.paddock=1;const poly=[{x:-320,y:-180},{x:-20,y:-180},{x:-20,y:20},{x:-320,y:20}];expect(paddockPlacementIssue(s,1,poly,2)).toContain('Az ól kívül maradna');expect(placePaddock(s,1,poly,2)).toBeNull();});
  it('names an accidental tiny side instead of silently disabling construction',()=>{const s=home();expect(paddockPlacementIssue(s,1,[{x:-320,y:-280},{x:-310,y:-280},{x:-20,y:-280},{x:-20,y:-80},{x:-320,y:-80}],2)).toContain('túl közel');});
  it('identifies a crossing fence before reporting its collapsed area',()=>{const s=home();expect(paddockPlacementIssue(s,1,[{x:-320,y:-280},{x:-20,y:-80},{x:-20,y:-280},{x:-320,y:-80}],2)).toContain('keresztezi');});
  it('uses the same result for valid construction and its feedback',()=>{const s=home();expect(paddockPlacementIssue(s,1,polygon,2)).toBeNull();expect(placePaddock(s,1,polygon,2)).not.toBeNull();});
+});
+
+
+describe('coop wall as a paddock boundary',()=>{
+ const attached=[{x:-236,y:-186},{x:-320,y:-186},{x:-320,y:14},{x:-20,y:14},{x:-20,y:-186},{x:-164,y:-186}];
+ function plot(){let s=fresh();s=buyAnimalItem(s,'coop')!;s=buyAnimalItem(s,'paddock')!;return placeCoop(s,{x:-200,y:-190})!;}
+ it('lets the coop close the back of the living space without fencing across its door',()=>{const s=plot(),n=placePaddock(s,1,attached,2);expect(n).not.toBeNull();expect(n!.travel.livestock!.pens[0].coopWall).toBe(5);expect(validSnapshot(n)).toBe(true);expect(decodeSnapshot(n)?.travel.livestock!.pens[0].coopWall).toBe(5);});
+ it('clears the wall marker when an empty attached enclosure is packed',()=>{const s=placePaddock(plot(),1,attached,2)!;const n=packEmptyPaddock(s,1)!;expect(n.travel.livestock!.pens[0].coopWall).toBeUndefined();expect(validSnapshot(n)).toBe(true);});
+ it('does not allow a gate through the coop wall',()=>{expect(paddockPlacementIssue(plot(),1,attached,5)).toContain('szabad kerítésszakaszra');});
+ it('rejects an imported wall marker on another edge',()=>{const s=placePaddock(plot(),1,attached,2)!;s.travel.livestock!.pens[0].coopWall=2;expect(validSnapshot(s)).toBe(false);});
 });

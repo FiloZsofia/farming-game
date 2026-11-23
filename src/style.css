@@ -151,3 +151,5 @@
 #app #dialogue #speaker-portrait>.character-portrait{width:100%!important;height:100%!important;max-width:none;max-height:none;object-fit:contain}
 
 .animal-placement .animal-placement-reason{margin:10px 0;padding:9px 11px;border-left:3px solid #e69c8d;background:#563f354d;color:#ffe3d6;font-size:13px;line-height:1.45}.animal-placement .animal-placement-reason[hidden]{display:none}
+
+.animal-placement .animal-placement-reason[data-invalid="false"]{border-color:#ece3c8;color:#f2ebd5;background:#e1d5a712}
