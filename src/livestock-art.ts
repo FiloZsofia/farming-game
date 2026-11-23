@@ -55,21 +55,25 @@ export function drawAnimalItem(g:Phaser.GameObjects.Graphics,item:Exclude<Animal
 }
 export function drawHen(g:Phaser.GameObjects.Graphics,variety:HenVariety,time:number,activity='stand',look=1){
  g.clear();const white=variety==='cream',speckled=variety==='speckled',base=white?0xe5dcc0:speckled?0x939f90:0xb67e50,shade=white?0xb4ae91:speckled?0x596b61:0x805538,light=white?0xf4edcf:speckled?0xc0c7b0:0xd8a66c;
- const walking=activity==='walk',peck=activity==='peck'?Math.max(0,Math.sin(time*5))*5:0,step=walking?Math.sin(time*13)*2:0;
+ const walking=activity==='walk',peck=activity==='peck'?Math.max(0,Math.sin(time*5))*5:activity==='eat'?Math.sin(time*9)*3:activity==='drink'?Math.sin(time*4)*4:0,step=walking?Math.sin(time*13)*2:0;
+ const dusting=activity==='dust';if(dusting){g.save();g.translateCanvas(0,-5).rotateCanvas(Math.sin(time*8)*.24).translateCanvas(0,5);}
  const bob=walking?Math.abs(Math.sin(time*6.5))*.6:Math.sin(time*1.8)*.15;
  g.fillStyle(0x354a31,.18).fillEllipse(0,0,17,5);g.lineStyle(1.1,0xb29959).lineBetween(-3,-3,-3+step,1).lineBetween(3,-3,3-step,1);g.lineStyle(.75,0x9c844d).lineBetween(-5+step,1,-1+step,1).lineBetween(1-step,1,5-step,1);
  // A soft, rounded silhouette with three short tail feathers and a tucked wing.
  for(let i=0;i<3;i++){g.fillStyle(i===1?light:shade).fillEllipse((-7-i*.7)*look,-11-i*1.8+bob,4,7-i);}
+ const neckY=(activity==='eat'?-20:activity==='drink'?-13:-16)+peck+bob;g.fillStyle(base).fillEllipse(4*look,(-9+bob+neckY)/2,7,Math.abs(neckY+9-bob)+6);
  g.fillStyle(shade).fillEllipse(0,-8+bob,19,14);g.fillStyle(base).fillEllipse(-.5,-9+bob,18,13);g.fillStyle(light,.7).fillEllipse(-1,-10+bob,12,9);
  g.fillStyle(base).fillEllipse(-2*look,-7.5+bob,11,8);g.lineStyle(.6,shade,.65).beginPath().arc(-2*look,-8+bob,4.3,.15,Math.PI*.85).strokePath();for(let i=0;i<3;i++)g.lineStyle(.45,shade,.45).lineBetween((-4+i*2)*look,-7+bob,(-3+i*2)*look,-5.5+bob);
  if(speckled)for(let i=0;i<7;i++){g.fillStyle(i%2?light:shade,.8).fillEllipse(-6+(i*3)%12,-12+(i*5)%8+bob,1.4,1);}
- const hx=5.7*look,hy=-16+peck+bob;g.fillStyle(shade).fillEllipse(hx,hy+1,10,11);g.fillStyle(base).fillEllipse(hx-.3*look,hy,10.5,11);g.fillStyle(light,.8).fillEllipse(hx-.6*look,hy+.3,8,8);
+ const hx=5.7*look,hy=(activity==='eat'?-20:activity==='drink'?-13:-16)+peck+bob;g.fillStyle(shade).fillEllipse(hx,hy+1,10,11);g.fillStyle(base).fillEllipse(hx-.3*look,hy,10.5,11);g.fillStyle(light,.8).fillEllipse(hx-.6*look,hy+.3,8,8);
  g.fillStyle(0xb9604f).fillCircle(hx-2*look,hy-5,1.5).fillCircle(hx,hy-6,1.9).fillCircle(hx+2*look,hy-5,1.5).fillEllipse(hx+look,hy+4,2,2.5);g.fillStyle(0xd6866c,.6).fillCircle(hx-.5*look,hy-6.4,.8);
  g.fillStyle(0xa87c3d).fillTriangle(hx+3.7*look,hy+.3,hx+7*look,hy+1.3,hx+3.7*look,hy+2.5);g.fillStyle(0xe2bb65).fillTriangle(hx+3.6*look,hy,hx+6.6*look,hy+1,hx+3.6*look,hy+1.4);
  const eyeX=hx+1.5*look,eyeY=hy-.6,blink=activity==='rest'||Math.sin(time*.8)>.996;
  if(blink)g.lineStyle(.8,0x3d4333).lineBetween(eyeX-1,eyeY,eyeX+1,eyeY);else{g.fillStyle(0x765840,.4).fillEllipse(eyeX,eyeY,3.1,3.2);g.fillStyle(0x293d30).fillEllipse(eyeX,eyeY,2.3,2.7);g.fillStyle(0xfff4d7).fillCircle(eyeX-.35,eyeY-.6,.65);}
  g.fillStyle(0xd79070,.35).fillEllipse(hx-.5*look,hy+2,2.5,1.5);
- if(activity==='dust'){g.fillStyle(0xc8b58d,.5);for(let i=0;i<4;i++)g.fillCircle(Math.sin(time*3+i)*13,-3-Math.abs(Math.cos(time*2+i))*8,1.2);}
+ if(dusting){g.restore();g.fillStyle(0xc8b58d,.55);for(let i=0;i<8;i++)g.fillCircle(Math.sin(time*5+i)*14,-2-Math.abs(Math.cos(time*3+i))*10,1+i%2*.5);}
+ if(activity==='eat'){for(let i=0;i<3;i++)g.fillStyle(0xddbd69,.8).fillEllipse(9*look+Math.sin(time*7+i)*3,-8-Math.abs(Math.sin(time*6+i))*4,1.2,.8);}
+ if(activity==='drink'&&Math.sin(time*4)>0){for(let i=0;i<2;i++)g.fillStyle(0xb7d8cd,.8).fillEllipse(10*look+i,-7-i*3,1,1.7);}
  if(activity==='rest')g.fillStyle(base).fillEllipse(0,-5,17,9);
 }
 export function drawAnimalFence(g:Phaser.GameObjects.Graphics,pen:Pick<AnimalPen,'boundary'|'gate'|'coopWall'>,gateOpen:boolean|number=false,edge?:number,preview?:{color:number;closed?:boolean}){

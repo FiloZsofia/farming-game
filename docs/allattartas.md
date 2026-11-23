@@ -87,3 +87,8 @@ Az etető 12 adagos kapacitásáig a teljes kiürülés előtt is utánatölthet
 Mara közös stílusú beszélgetőmenüjében működik a Vásárlás gomb, a vásárlóablakból Visszával térünk vissza. Takarmányból 10 adag rendelhető 20 goldért, a rendeléskor fizetve. A másnapi fuvarnál Mara az alap- és a játékos által rajzolt ösvényeket előnyben részesítve a postaláda melletti szabad füves helyhez sétál, és összekötött tetejű zsákot tesz le. Ha ott nincs megközelíthető szabad hely, a kifizetett rendelés megmarad a következő fuvarra.
 
 A zsák E/F-fel vagy kattintással felvehető. A tartalom csak ekkor kerül a Készletbe; onnan az Etető feltöltése művelettel, illetve az Állatgondozóból használható. Teli Készlet vagy mentési hiba esetén a zsák és a tartalma megmarad. A rendelés, a kézbesítés, a zsák helye, a felvétel és az egyszeri segítség visszatöltés után is érvényes, nem duplázódhat. Az új mezők opcionálisak, a régi mentések érvényesek maradnak.
+
+
+### Berendezések tényleges használata – 2026-11-23
+A nappali tevékenységváltást nem globális, 11 másodperces időzítő vezérli. A tyúk végigjárja az útvonalát, utána legalább 8 másodpercig eszik, iszik vagy porfürdőzik; az árnyékban 12 másodpercig pihen. Csak ezután választ új tevékenységet. Az éjszaka megszakíthatja a nappali feladatot: a tyúk az ülőrúdhoz megy, annak elforgatását is figyelembe véve. Szüneteltetett játéknál a séta és a tevékenység ideje is megáll. Üres etetőnél/itatónál nem játsszuk el az evést/ivást.
+Az evést csipegető fejmozdulat és morzsák, az ivást merítő/kortyoló fejmozdulat és vízcseppek, a porfürdőt hempergő mozgás és por jelzi. Teljes nappalos szimuláció ellenőrzi mind a négy berendezés használatát és az éjszakai megérkezést; hosszú séta közben nem szabad felülírni a célpontot.
