@@ -28,7 +28,7 @@ A vörös, krémfehér és kendermagos változat azonos gondozást igényel. Ér
 
 ## Mara kiszállítása
 
-A megrendelt tyúk azonnal lefoglal egy férőhelyet, az árát egyszer fizetjük ki. Mara a másnapi szokásos fuvarral érkezik, és egyenként, ölben viszi a tyúkokat a kapun át az ólhoz. Az átadás sikeres mentés után válik véglegessé; újratöltés nem ad másodszor állatot. Ha közben elzárjuk a kapuhoz vezető utat, a rendelés megmarad, Mara jelzi a problémát és egy későbbi fuvarral újrapróbálja.
+A megrendelt tyúk azonnal lefoglal egy férőhelyet, az árát egyszer fizetjük ki. Mara a másnapi szokásos fuvarral érkezik, és közös szállítókosárban viszi az egy kifutóhoz tartozó tyúkokat a kapuhoz. A kosárból egyenként besétálnak az ólhoz. Az átadás sikeres mentés után válik véglegessé; újratöltés nem ad másodszor állatot. Ha közben elzárjuk a kapuhoz vezető utat, a rendelés megmarad, Mara jelzi a problémát és egy későbbi fuvarral újrapróbálja.
 
 ## Gondozás és termelés
 
@@ -36,7 +36,7 @@ A megrendelt tyúk azonnal lefoglal egy férőhelyet, az árát egyszer fizetjü
 - A közös itatót naponta újra feltöltjük; mind a négy állatot ellátja.
 - Háromnaponta takarítjuk az ólat. A harmadik napra látható szennyeződés jelenik meg; takarítás után eltűnik.
 - Két megfelelően gondozott nap után tyúkonként egy tojás keletkezik a fészekben. Az érkezés előtti napok nem számítanak.
-- Elmaradó gondozáskor szünetel a tojásrakás, az állat nem pusztul el.
+- Eleségelfogyás után egy nap áll rendelkezésre a pótlásra; utána szünetel a tojásrakás. Három egymást követő, vízfeltöltés nélkül eltelt nap után szintén szünetel. A gondozási napok ilyenkor megmaradnak, nem nullázódnak; az állat nem pusztul el.
 - A begyűjtött tojás a Készletbe kerül, az átadóban Marának 12 gold/db áron eladható.
 
 A tyúkok sétálnak, csipegetnek, használják a porfürdőt és az árnyékos pihenőt, este az ülőrúdra húzódnak. A bátor, félénk és kíváncsi viselkedés egyedi mozgásukban is megjelenik. A gondozás az ólnál nyitható ablakban végezhető, a megfelelő berendezés közeléből.
@@ -76,3 +76,14 @@ A karám és az ülőrúd ugyanazt a részletes faanyag-megjelenést követi: vi
 
 ### Kerítés megjelenítési terhelése – 2026-11-23
 A kerítés álló szakaszai csak a karám adatainak változásakor rajzolódnak újra. Képkockánként kizárólag a ténylegesen nyíló/csukódó kapuszárny frissül; az erezet és rögzítések változatlan képkockán nem készülnek újra. Mozgásos böngészős ellenőrzésben 600 frissítés alatt 2400 helyett 123 kerítésszakasz-újrarajzolás történt, a vezérlő CPU-ideje 158 ms-ról 30,1 ms-ra csökkent. Ez részrendszermérés, nem a teljes játék képkockasebessége. A bolti kifutóleírás mindkét kialakítási módot ismerteti.
+
+
+## Első eleségelfogyás, türelmi idők és Marától rendelt takarmány
+
+Az első üres etetőnél, lakott ól esetén egyetlen felugró ablak ismerteti a pótlást, a Gazdaudvar és Mara kínálatát, valamint a napi vízfeltöltést. A megjelenés megtörténtét mentjük; ablakok és más animációk alatt nem nyitjuk meg. Az Állatgondozó üres etetőnél és aznap még fel nem töltött itatónál külön is kiírja a szabályokat.
+
+Az etető 12 adagos kapacitásáig a teljes kiürülés előtt is utánatölthető. Az a reggel, amikor az etető kiürül, a türelmi nap kezdete; ha a következő reggelig nincs pótlás, nem gyűlik gondozási nap. A víznél az egymást követő kimaradt napokat számoljuk: a harmadik kimaradáskor áll meg a gondozási napok gyűjtése. A vízfeltöltés nullázza a számlálót. Lakók nélkül nem gyűlnek vízhiányos napok. Régi mentésben a hiányzó új számlálók nulláról indulnak.
+
+Mara közös stílusú beszélgetőmenüjében működik a Vásárlás gomb, a vásárlóablakból Visszával térünk vissza. Takarmányból 10 adag rendelhető 20 goldért, a rendeléskor fizetve. A másnapi fuvarnál Mara az alap- és a játékos által rajzolt ösvényeket előnyben részesítve a postaláda melletti szabad füves helyhez sétál, és összekötött tetejű zsákot tesz le. Ha ott nincs megközelíthető szabad hely, a kifizetett rendelés megmarad a következő fuvarra.
+
+A zsák E/F-fel vagy kattintással felvehető. A tartalom csak ekkor kerül a Készletbe; onnan az Etető feltöltése művelettel, illetve az Állatgondozóból használható. Teli Készlet vagy mentési hiba esetén a zsák és a tartalma megmarad. A rendelés, a kézbesítés, a zsák helye, a felvétel és az egyszeri segítség visszatöltés után is érvényes, nem duplázódhat. Az új mezők opcionálisak, a régi mentések érvényesek maradnak.
