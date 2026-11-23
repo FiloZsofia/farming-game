@@ -25,7 +25,7 @@ export function drawAnimalShop(scene:Phaser.Scene){
  g.fillStyle(0xb78f5f).fillEllipse(507,y0+223,35,12);for(const [dx,dy]of [[-10,-3],[-2,-5],[7,-4],[12,0]]){g.fillStyle(0xe8dec1).fillEllipse(507+dx,y0+219+dy,8,11);g.lineStyle(.5,0xb8ac8e).strokeEllipse(507+dx,y0+219+dy,8,11);}g.lineStyle(1.4,0x8e6d46).lineBetween(490,y0+226,524,y0+226);g.fillStyle(0xd2b579).fillEllipse(365,y0+222,13,5).fillEllipse(365,y0+218,9,9).fillCircle(365,y0+212,1.5);
  rect(373,494,54,19,0x675c41);line(376,499,424,499,0xc0a575);line(376,505,424,505,0xc0a575);
  const title=worldText(scene,400,y0+145,'Állatosbolt',{fontFamily:'Georgia',fontSize:'17px',color:'#fff0c6'}).setOrigin(.5).setDepth(3);const sign=worldText(scene,400,y0+168,'Otthon, gondozás, apró lakók',{fontFamily:'Georgia',fontSize:'9px',color:'#625c41'}).setOrigin(.5).setDepth(3);
- const art=scene.add.container(0,0).setScale(VILLAGER_SCALE);drawModernVillager(scene,art,'roza');const person=scene.add.container(423,y0+268,[art]).setDepth(0).setName('shop-roza');
+ const art=scene.add.container(0,0).setScale(VILLAGER_SCALE);drawModernVillager(scene,art,'roza');const person=scene.add.container(423,y0+252,[art]).setDepth(0).setName('shop-roza');
  const front=scene.add.graphics().setDepth(1);front.fillStyle(0x7b6042).fillRect(338,y0+235,224,53);front.fillStyle(0xc0a377).fillRect(333,y0+227,234,14);front.lineStyle(1,0xe4c997).lineBetween(337,y0+230,561,y0+230);for(let x=346;x<560;x+=24)front.lineStyle(1,0xa2865c).lineBetween(x,y0+244,x,y0+284);
  const background=scene.add.renderTexture(0,y0,800,600).setOrigin(0).setDepth(-1);background.draw(g,0,-y0);g.destroy();background.once('destroy',()=>{title.destroy();sign.destroy();});return{person,background,front};
 }
