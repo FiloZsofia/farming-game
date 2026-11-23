@@ -1,3 +1,4 @@
+import {animalItems,createLivestock} from './livestock';
 import {extraBedKinds} from './homestead-state';
 import type {BedKind} from './living-bed';
 import {craftItems,createCrafting} from './crafting';
@@ -9,7 +10,7 @@ import {researchMaterials} from './research';
 export type Chest={x:number;y:number;items:Record<string,number>};
 export type ChestStorage={packed:number;placed:Chest[]};
 export const emptyChests=():ChestStorage=>({packed:0,placed:[]});
-export const chestKeys=[...extraBedKinds.flatMap(k=>[`bedSeed:${k}`,`bedCrop:${k}`]),...craftItems.map(k=>`craft:${k}`),...crops.map(k=>`seed:${k}`),...crops.map(k=>`crop:${k}`),...goods.map(k=>`good:${k}`),...extras.map(k=>`extra:${k}`),...researchMaterials.map(k=>`research:${k}`),'material:wood','material:stone','material:weed','special:birdhouse'];
+export const chestKeys=[...animalItems.map(k=>`animal:${k}`),'animalFeed:feed','animalEgg:egg',...extraBedKinds.flatMap(k=>[`bedSeed:${k}`,`bedCrop:${k}`]),...craftItems.map(k=>`craft:${k}`),...crops.map(k=>`seed:${k}`),...crops.map(k=>`crop:${k}`),...goods.map(k=>`good:${k}`),...extras.map(k=>`extra:${k}`),...researchMaterials.map(k=>`research:${k}`),'material:wood','material:stone','material:weed','special:birdhouse'];
 export const occupiedSlots=(items:Record<string,number>)=>Object.values(items).reduce((sum,n)=>sum+Math.ceil(n/99),0);
 export function validChests(v:unknown):v is ChestStorage{
  if(!v||typeof v!=='object')return false;const s=v as ChestStorage;
@@ -17,7 +18,7 @@ export function validChests(v:unknown):v is ChestStorage{
 }
 export function inventoryCounts(s:Snapshot):Record<string,number>{return Object.fromEntries(chestKeys.map(k=>[k,itemAccount(s,k).value]));}
 function itemAccount(s:Snapshot,key:string){
- const [group,id]=key.split(':');if(group==='bedSeed'||group==='bedCrop'){const counts=s.travel.homestead?.garden[group==='bedSeed'?'extraSeeds':'extraProduce'];return{value:counts?.[id as BedKind]??0,set:(n:number)=>{if(counts)counts[id as BedKind]=n;}};}if(group==='craft')return {value:s.travel.crafting?.items[id as typeof craftItems[number]]??0,set:(n:number)=>{s.travel.crafting??=createCrafting();s.travel.crafting.items[id as typeof craftItems[number]]=n;}};if(group==='special')return {value:s.story.giftReceived&&!s.story.birdhouse&&!s.skill.birdhouseStored?1:0,set:(n:number)=>{s.skill.birdhouseStored=n===0;}};const account:Record<string,number>=group==='seed'?s.seeds:group==='crop'?s.produce:group==='good'?s.travel.estate.goods:group==='extra'?s.travel.estate.produce:group==='research'?s.travel.research.materials:group==='material'?s.clearing as unknown as Record<string,number>:s.travel.research as unknown as Record<string,number>;
+ const [group,id]=key.split(':');if(group==='animal'||group==='animalFeed'||group==='animalEgg'){const s0=s.travel.livestock;return{value:group==='animal'?(s0?.packed[id as typeof animalItems[number]]??0):group==='animalFeed'?(s0?.feed??0):(s0?.eggs??0),set:(n:number)=>{const state=s.travel.livestock??=createLivestock(s.clock.day);if(group==='animal')state.packed[id as typeof animalItems[number]]=n;else if(group==='animalFeed')state.feed=n;else state.eggs=n;}};}if(group==='bedSeed'||group==='bedCrop'){const counts=s.travel.homestead?.garden[group==='bedSeed'?'extraSeeds':'extraProduce'];return{value:counts?.[id as BedKind]??0,set:(n:number)=>{if(counts)counts[id as BedKind]=n;}};}if(group==='craft')return {value:s.travel.crafting?.items[id as typeof craftItems[number]]??0,set:(n:number)=>{s.travel.crafting??=createCrafting();s.travel.crafting.items[id as typeof craftItems[number]]=n;}};if(group==='special')return {value:s.story.giftReceived&&!s.story.birdhouse&&!s.skill.birdhouseStored?1:0,set:(n:number)=>{s.skill.birdhouseStored=n===0;}};const account:Record<string,number>=group==='seed'?s.seeds:group==='crop'?s.produce:group==='good'?s.travel.estate.goods:group==='extra'?s.travel.estate.produce:group==='research'?s.travel.research.materials:group==='material'?s.clearing as unknown as Record<string,number>:s.travel.research as unknown as Record<string,number>;
  return {value:account[id],set:(n:number)=>{account[id]=n;}};
 }
 export function craftChest(s:Snapshot):Snapshot|null{

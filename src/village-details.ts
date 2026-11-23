@@ -56,7 +56,7 @@ function nurseryDecor(g:Phaser.GameObjects.Graphics){
  for(const d of nurseryDisplays)saplingDisplay(g,d.left,d.plants,d.width);
 }
 function fishBarrel(g:Phaser.GameObjects.Graphics){
- const {oval,poly,line}=brush(g);oval(867,1109,39,12,0x3e5844,.18);poly([[849,1085],[881,1085],[884,1097],[881,1108],[851,1108],[847,1097]],0x9d8965);for(let i=0;i<8;i++){const x=850+i*4;line(x,1087,x+(i<4?-1:1),1105,0x786e53,.65);line(x+1,1088,x+1,1105,0xb3a17b,.5);}oval(866,1107,30,6,0x897b5d);for(const y of [1092,1103]){g.lineStyle(2,0x6d8073).beginPath().moveTo(849,y).lineTo(854,y+1.7).lineTo(878,y+1.7).lineTo(883,y).strokePath();line(852,y-.6,879,y-.6,0xa4b09a,.65);oval(853,y,.8,.8,0x50695e);oval(879,y,.8,.8,0x50695e);}oval(865,1085,35,15,0xb7a47d);oval(865,1085,30,11,0x746f52);oval(865,1084.5,27,8.5,0x6a9d92);oval(862,1083,19,4,0xa4c1ab,.7);leaf(g,872,1085,6,-.35,0x85a475);g.lineStyle(.5,0xc5d6bc).strokeEllipse(861,1084,9,2.3);
+ const {oval,poly,line}=brush(g);oval(742,1084,39,12,0x3e5844,.18);poly([[724,1060],[756,1060],[759,1072],[756,1083],[726,1083],[722,1072]],0x9d8965);for(let i=0;i<8;i++){const x=725+i*4;line(x,1062,x+(i<4?-1:1),1080,0x786e53,.65);line(x+1,1063,x+1,1080,0xb3a17b,.5);}oval(741,1082,30,6,0x897b5d);for(const y of [1067,1078]){g.lineStyle(2,0x6d8073).beginPath().moveTo(724,y).lineTo(729,y+1.7).lineTo(753,y+1.7).lineTo(758,y).strokePath();line(727,y-.6,754,y-.6,0xa4b09a,.65);oval(728,y,.8,.8,0x50695e);oval(754,y,.8,.8,0x50695e);}oval(740,1060,35,15,0xb7a47d);oval(740,1060,30,11,0x746f52);oval(740,1059.5,27,8.5,0x6a9d92);oval(737,1058,19,4,0xa4c1ab,.7);leaf(g,747,1060,6,-.35,0x85a475);g.lineStyle(.5,0xc5d6bc).strokeEllipse(736,1059,9,2.3);
 }
 function workshopDecor(g:Phaser.GameObjects.Graphics){
  const {rect,line,poly,oval}=brush(g);
@@ -75,5 +75,5 @@ function streetLamp(g:Phaser.GameObjects.Graphics,p:{x:number;y:number}){
 export function drawVillageDetails(scene:Phaser.Scene){
  detail(scene,brookSource.x-56,brookSource.y-54,112,90,drawBrookSpring);for(const lamp of villageLamps)detail(scene,lamp.x-17,lamp.y-65,34,73,g=>streetLamp(g,lamp));
  for(const b of villageLayout.benches){const p=benchPose(b.angle);detail(scene,p.x-42,p.y-43,84,60,g=>bench(g,p));}
- detail(scene,440,1039,76,69,fountain);detail(scene,474,866,218,165,nurseryDecor);detail(scene,677,798,88,121,drawGreenhouse);detail(scene,843,1075,46,42,fishBarrel);detail(scene,558,1278,223,68,workshopDecor);
+ detail(scene,440,1039,76,69,fountain);detail(scene,474,866,218,165,nurseryDecor);detail(scene,677,798,88,121,drawGreenhouse);detail(scene,718,1050,46,42,fishBarrel);detail(scene,558,1278,223,68,workshopDecor);
 }

@@ -1,19 +1,19 @@
 import type Phaser from 'phaser';
-export type Villager='annie'|'leo'|'simon'|'mara'|'noah';
+export type Villager='annie'|'leo'|'simon'|'mara'|'noah'|'roza';
 // One scale and face language for the village; outfits and silhouettes remain individual.
 export const VILLAGER_SCALE=1.26;
 export function drawModernVillager(scene:Phaser.Scene,root:Phaser.GameObjects.Container,who:Villager){
- const female=who==='annie'||who==='mara',annie=who==='annie',mara=who==='mara',leo=who==='leo',simon=who==='simon';
+ const female=who==='annie'||who==='mara'||who==='roza',annie=who==='annie',mara=who==='mara',leo=who==='leo',simon=who==='simon';
  // Local limb pivots also support walking, carrying and pruning.
  const g=(p=root)=>{const a=scene.add.graphics();p.add(a);return a;};
  const path=(a:Phaser.GameObjects.Graphics,c:number,points:number[])=>{a.fillStyle(c).fillPoints(Array.from({length:points.length/2},(_,i)=>({x:points[i*2],y:points[i*2+1]})),true);};
  const round=(a:Phaser.GameObjects.Graphics,c:number,x:number,y:number,w:number,h:number,r=1)=>a.fillStyle(c).fillRoundedRect(x,y,w,h,r);
  const line=(a:Phaser.GameObjects.Graphics,c:number,w:number,pts:number[])=>a.lineStyle(w,c).strokePoints(Array.from({length:pts.length/2},(_,i)=>({x:pts[i*2],y:pts[i*2+1]})));
  const curve=(a:Phaser.GameObjects.Graphics,color:number,start:number[],segments:number[][],alpha=1)=>{const pts=[{x:start[0],y:start[1]}];let [x,y]=start;for(const [ax,ay,bx,by,cx,cy]of segments){for(let i=1;i<=10;i++){const t=i/10,u=1-t;pts.push({x:u*u*u*x+3*u*u*t*ax+3*u*t*t*bx+t*t*t*cx,y:u*u*u*y+3*u*u*t*ay+3*u*t*t*by+t*t*t*cy});}x=cx;y=cy;}a.fillStyle(color,alpha).fillPoints(pts,true);};
- const shirt=annie?0xc8ad86:mara?0xd8cdb2:leo?0xc4b08b:simon?0x7999a8:0x7d9aa1;
+ const shirt=who==='roza'?0x9aafa4:annie?0xc8ad86:mara?0xd8cdb2:leo?0xc4b08b:simon?0x7999a8:0x7d9aa1;
  const trousers=annie?0x536c80:mara?0x56685e:leo?0x5b7055:0x4e5960;
- const hair=annie?0xe8cd91:mara?0x65452f:leo?0x67452f:simon?0x49382e:0xb79453;
- const lightHair=annie?0xe8cd91:mara?0x997047:leo?0x92704d:simon?0x73594a:0xe1c17e;
+ const hair=who==='roza'?0x965a3b:annie?0xe8cd91:mara?0x65452f:leo?0x67452f:simon?0x49382e:0xb79453;
+ const lightHair=who==='roza'?0xc28b59:annie?0xe8cd91:mara?0x997047:leo?0x92704d:simon?0x73594a:0xe1c17e;
  const skin=0xf0bf99,shade=0xd59c78,skinLight=0xffd7b3;
  // Mara's loose shoulder-length hair sits behind the shoulders and arms.
  if(mara){const back=g();curve(back,hair,[-6,-44],[[-9,-40,-7,-35,-8,-31],[-6,-32,-6,-30,-4.8,-30.5],[-4,-34,4,-34,5,-30.3],[6,-31,7,-30.5,8.3,-32],[6.7,-34,8.4,-42,5.7,-45], [2,-50,-4,-49,-6,-44]]);for(const side of [-1,1])line(back,lightHair,.55,[side*6,-41,side*6.6,-37,side*6.1,-33]);}
@@ -41,6 +41,7 @@ export function drawModernVillager(scene:Phaser.Scene,root:Phaser.GameObjects.Co
  path(body,0xe7ddc4,[-2,-33,-3.5,-31,-1,-28,0,-30]);path(body,0xb6bba9,[2,-33,3.5,-31,1,-28,0,-30]);
  line(body,0x666a5a,.4,[0,-29,0,-17]);for(const y of [-27,-24,-21])body.fillStyle(0xc6b58d).fillCircle(.6,y,.35);
  round(body,trousers,-5.3,-17,10.6,3,1);line(body,0x344c52,.5,[0,-16,0,-13.5]);
+ if(who==='roza'){path(body,0xa78158,[-3.6,-29,3.6,-29,5,-14,-5,-14]);round(body,0xc3a577,-3,-23,6,4,.5);line(body,0xdfc59a,.6,[-3,-32,-2.6,-28,2.6,-28,3,-32]);}
  if(mara){for(const sign of [-1,1]){path(body,0x426c63,[sign*1.5,-32.5,sign*5,-31,sign*5.7,-17,sign*.8,-17]);round(body,0x72958a,sign<0?-4.8:1.7,-23,3,3.8,.4);line(body,0xb8c2a0,.4,[sign*1.5,-31,sign*.8,-18]);}}
  if(leo||simon){const apron=leo?0x668257:0x98734f;path(body,apron,[-3.5,-29,3.5,-29,5.4,-12,-5.4,-12]);line(body,0xc1b28b,.9,[-3,-32,-3,-28]);line(body,0xc1b28b,.9,[3,-32,3,-28]);round(body,leo?0x879869:0xad895f,-3.8,-21,7.6,5,.6);line(body,0xd4c09a,.4,[-3.2,-20.3,3.2,-20.3]);if(simon){round(body,0xe1b36b,1.5,-24,.7,7,.2);round(body,0xc8c5ac,-1.5,-22,1.4,5,.2);line(body,0x716a58,.35,[-1.5,-20,-.1,-20,-.1,-18]);}}
  if(annie){

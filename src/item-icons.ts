@@ -1,9 +1,11 @@
+import {livestockIcons,type LivestockIcon} from './livestock-icons';
 import type {BedKind} from './living-bed';
 import {goods,extras,type Good,type Extra} from './estate';
 import type {Crop} from './gardening';
-export type IconName='gold'|BedKind|'larchCone'|'fallenFruit'|'cutReed'|'composter'|'basketMaker'|'beeHabitat'|'irrigation'|'mulch'|'gear'|'clay'|Good|Extra|Crop|'nestSample'|'chest'|'walkingStick'|'reinforcedStick'|'scrap'|'workshopKey'|'copperPipe'|'linenCloth'|'glassJar'|'hoe'|'water'|'harvest'|'axe'|'pickaxe'|'crowbar'|'hand'|'wood'|'stone'|'weed'|'birdhouse'|'annie'|'strawberry'|'honeyberry'|'blueberry';
+export type IconName=LivestockIcon|'gold'|BedKind|'larchCone'|'fallenFruit'|'cutReed'|'composter'|'basketMaker'|'beeHabitat'|'irrigation'|'mulch'|'gear'|'clay'|Good|Extra|Crop|'nestSample'|'chest'|'walkingStick'|'reinforcedStick'|'scrap'|'workshopKey'|'copperPipe'|'linenCloth'|'glassJar'|'hoe'|'water'|'harvest'|'axe'|'pickaxe'|'crowbar'|'hand'|'wood'|'stone'|'weed'|'birdhouse'|'annie'|'strawberry'|'honeyberry'|'blueberry';
 // Original, locally drawn interface icons; no external asset dependency.
 const artwork:Partial<Record<IconName,string>>={
+ ...livestockIcons,
  gold:'<ellipse cx="18" cy="20" rx="13" ry="14" fill="#9e773d"/><ellipse cx="17" cy="18" rx="12" ry="13" fill="#d7b45e" stroke="#eed58b" stroke-width="1.5"/><path d="M20 10h-5v15h6m-9-10h9m-9 5h8" fill="none" stroke="#9b7838" stroke-width="2"/>',
  basil:'<path d="M18 35V7m0 14L8 13m10 8 10-8" fill="none" stroke="#668047" stroke-width="2"/><path d="M18 22C1 23 0 5 8 5c9 0 12 11 10 17m0-5C19 1 34 1 34 11c0 9-10 12-16 11m0 7C3 20 1 29 8 33q9 5 10-6m0 0c12-10 18-2 12 4-5 5-10 1-12-4" fill="#86a34c" stroke="#536f38"/><path d="m7 9 11 14 11-14M9 29l9-2 9 2" stroke="#b6c87b" fill="none"/>',
  mint:'<path d="M18 35V3" stroke="#6c7663" stroke-width="2"/><path d="m18 14-6-11-2 3-3-1 1 4-3 1 4 3-1 3 5 1zm0 0 6-11 2 3 3-1-1 4 3 1-4 3 1 3-5 1zm0 12-9-9-1 4-4-1 2 4-2 2 5 2 1 3 5-1zm0 0 9-9 1 4 4-1-2 4 2 2-5 2-1 3-5-1" fill="#5c9982" stroke="#3e7165"/><path d="m10 7 8 9 8-9m-17 16 9 6 9-6" fill="none" stroke="#a1c4ad"/>',
