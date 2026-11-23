@@ -1,3 +1,4 @@
+import {drawMailboxFlag} from './mailbox-art';
 import {clearWeedsUnderPlacedObjects} from './placement-weeds';
 import {showShopNotice,clearShopNotice,FULL_SHOP_NOTICE} from './shop-feedback';
 import {AnimalShopDisplayArt} from './animal-shop-exterior';
@@ -258,7 +259,7 @@ class Farm extends Phaser.Scene {
  private scenery:ReturnType<typeof drawFarm>|null=null;
  private sceneryPondKey='';
  private target:Tile|null=null;
- private mailFlag!:Phaser.GameObjects.Graphics;
+ private mailFlag!:Phaser.GameObjects.Graphics;private mailFlagRaised:boolean|null=null;
  private noticeBoard:Phaser.GameObjects.Graphics|null=null;
  private planted!:Phaser.GameObjects.Graphics;
  private selection!:Phaser.GameObjects.Graphics;
@@ -921,9 +922,9 @@ class Farm extends Phaser.Scene {
   for(const [index,chapter]of chapters.entries()){const entry=document.createElement('details');entry.className='story-chapter';entry.open=index===chapters.length-1;const title=document.createElement('summary');title.textContent=chapter.title;const text=document.createElement('p');text.textContent=chapter.text;entry.append(title,text);panel.append(entry);}
  }
  private drawMailFlag(){
-  if(!this.mailFlag)return;this.mailFlag.clear();const m=farmLayout.mailbox;
+  if(!this.mailFlag)return;
   const unread=Boolean(this.noahChapter?.hasUnreadLetter(this.clock.day));document.querySelector<HTMLElement>('#game')!.dataset.noahUnreadMail=String(unread);
-  if(quantityTotal(this.orders.mailbox)>0||Object.values(this.travel.homestead?.garden.mailbox??{}).some(n=>(n??0)>0)||unread){this.mailFlag.fillStyle(0xe7b55a);this.mailFlag.fillRect(m.x+m.w-3,m.y-10,3,13);this.mailFlag.fillRect(m.x+m.w,m.y-10,8,5);}
+  const raised=quantityTotal(this.orders.mailbox)>0||Object.values(this.travel.homestead?.garden.mailbox??{}).some(n=>(n??0)>0)||unread;if(raised===this.mailFlagRaised)return;this.mailFlagRaised=raised;this.mailFlag.clear();if(raised)drawMailboxFlag(this.mailFlag,farmLayout.mailbox);
  }
  private nearObject(area:{x:number;y:number;w:number;h:number},distance=55){return Math.hypot(this.actor.x-area.x-area.w/2,this.actor.y-area.y-area.h/2)<=distance;}
  private async gatherForage(id:string){

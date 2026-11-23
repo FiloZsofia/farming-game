@@ -1,3 +1,4 @@
+import {drawMailbox} from './mailbox-art';
 import {drawNaturalPond} from './pond-art';
 import {drawPathNetwork} from './path-art';
 import {studyColor,drawStudyGrass,drawStudyTree,drawStudyBorders} from './art-study-art';
@@ -98,7 +99,7 @@ export function drawFarm(scene:Phaser.Scene,clearing:Clearing=createClearing(),g
  line(c.x+11,c.y+5,c.x+10,c.y,0x597847);
  oval(c.x+8,c.y+1,4,2,0x6c9651);oval(c.x+12,c.y,4,2,0x81a75a);
  rect(c.x+7,c.y+8,6,1,0xe4cb88);
- const m=layout.mailbox;rect(m.x+10,m.y+m.h,5,20,0x80613e);rect(m.x,m.y,m.w,m.h,0x536e72);rect(m.x+2,m.y+2,m.w-4,4,0x94a7a2);rect(m.x+8,m.y+9,8,2,0x273f40);
+ drawMailbox(g,layout.mailbox);
  g=ground;
  // One shared shoreline drives the original pond and every saved expansion.
  drawNaturalPond(g);
