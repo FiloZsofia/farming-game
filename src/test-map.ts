@@ -41,7 +41,7 @@ export function createTestMap(player:{x:number;y:number},unlocked:boolean,farmNa
  building(239,100,'Otthon',490,203);building(632,105,'Műhely',668,203);
  const pond=mapPoint(farmLayout.pond),pondPoints=pondOutline().map(mapPoint);element('path',{d:pondPoints.map((p,i)=>`${i?'L':'M'}${p.x} ${p.y}`).join(' ')+'Z','data-map-feature':'pond',fill:'#8da69a',stroke:'#6e8c7b','stroke-width':2});for(let i=0;i<4;i++)element('path',{d:`M${pond.x-25+i*15} ${pond.y+i%2*9}h9`,stroke:'#d1d9bd','stroke-width':1});
  const square=mapPoint(villageLayout.square);element('ellipse',{cx:square.x,cy:square.y,rx:62,ry:29,fill:'#decea3',stroke:'#b09c74','stroke-width':3});
- building(villageLayout.animalShop.x+villageLayout.animalShop.w/2,villageLayout.animalShop.y+30,'Állatosbolt',818,455);
+ building(villageLayout.animalShop.x+villageLayout.animalShop.w/2,villageLayout.animalShop.y+30,'Gazdaudvar',818,455);
  building(villageLayout.nursery.x+villageLayout.nursery.w/2,villageLayout.nursery.y+35,'Faiskola',660,361);building(villageLayout.fishShop.x+villageLayout.fishShop.w/2,villageLayout.fishShop.y+40,'Kertitó Szaküzlet',714,420);building(villageLayout.craftShop.x+villageLayout.craftShop.w/2,villageLayout.craftShop.y+40,'Műhelybolt',694,491);
  label(farmName.length>27?farmName.slice(0,26)+'…':farmName,570,82,27,true);label('Falu',522,344,29,true);label(mapNames.north,235,307,27,true);
  const brookPath=mapBrookPoints.map((p,i)=>`${i?'L':'M'}${p.x},${p.y}`).join(' ');element('path',{d:brookPath,'data-map-feature':'brook',stroke:'#91aa9d','stroke-width':8,fill:'none','stroke-linecap':'round'});element('path',{d:brookPath,stroke:'#d0dabe','stroke-width':1.2,fill:'none',opacity:.85});

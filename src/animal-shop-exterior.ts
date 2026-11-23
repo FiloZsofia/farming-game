@@ -15,7 +15,7 @@ export function drawAnimalShopFront(scene:Phaser.Scene,g:Phaser.GameObjects.Grap
  poly([851,y+73,910,y+73,917,y+87,844,y+87],0x748d72);for(let i=0;i<6;i++){const xx=847+i*12;r(xx,y+84,10,7,i%2?0x758c71:0xd7cfaa);}line(845,y+91,916,y+91,0x546d54);
  // Hanging emblem: a hen rather than another generic rectangular board.
  r(960,y+79,2,16,0x765f42);line(947,y+79,976,y+79,0x765f42,2);g.fillStyle(0xd9c79d).fillEllipse(962,y+104,29,23);g.lineStyle(1,0x8c7754).strokeEllipse(962,y+104,29,23);g.fillStyle(0x8a6244).fillEllipse(960,y+105,14,10).fillCircle(967,y+99,4);g.fillStyle(0xb7654e).fillCircle(966,y+95,1.5);g.fillStyle(0x443e30).fillCircle(968,y+98,1);
- const t=worldText(scene,x+w/2,y+30,'ÁLLATOSBOLT',{fontFamily:'Georgia,serif',fontSize:'11px',color:'#f9ebc6',backgroundColor:'#4a5e4b',padding:{x:8,y:5}}).setOrigin(.5).setDepth(5);scene.events.once('shutdown',()=>t.destroy());
+ const t=worldText(scene,x+w/2,y+30,'GAZDAUDVAR',{fontFamily:'Georgia,serif',fontSize:'11px',color:'#f9ebc6',backgroundColor:'#4a5e4b',padding:{x:8,y:5}}).setOrigin(.5).setDepth(5);scene.events.once('shutdown',()=>t.destroy());
 }
 export class AnimalShopDisplayArt{
  private arts:{g:Phaser.GameObjects.Graphics;y:number}[]=[];

@@ -896,7 +896,7 @@ class Farm extends Phaser.Scene {
   if(this.travel.metSimon)entries.push({id:'simon',name:'Simon',portrait:simonPortrait(this),description:'Kézműves, a falusi műhelybolt gazdája.'});
   if(this.travel.homestead?.stand.metMara)entries.push({id:'mara',name:'Mara',portrait:maraPortrait(this),description:'A terményeidet szállító sofőr. Határozott, és a csípős megjegyzéseit sem hagyja otthon.'});
   if(this.travel.forest?.sent)entries.push({id:'noah',name:'Noah',portrait:noahPortrait(this),description:'Biológus, Sam korábbi munkatársa a laborból.'});
-  if(this.travel.metRoza)entries.push({id:'roza',name:'Ruby',portrait:characterPortrait(this,'roza'),description:'Az állatosbolt gazdája. A gondosan berendezett otthonokat és a kíváncsi kis lakókat szereti.'});
+  if(this.travel.metRoza)entries.push({id:'roza',name:'Ruby',portrait:characterPortrait(this,'roza'),description:'A Gazdaudvar gazdája. A gondosan berendezett otthonokat és a kíváncsi kis lakókat szereti.'});
   renderPeopleGallery(people,entries);
   document.querySelector<HTMLElement>('#inventory-panel')!.hidden=false;document.querySelector('#dialogue-close')!.textContent='Tovább';
  }
@@ -945,7 +945,7 @@ class Farm extends Phaser.Scene {
  private updateLocation(){
   if(this.noahChapter&&inNoahSouth(this.actor.x,this.actor.y)){document.querySelector<HTMLElement>('#game')!.dataset.region='south-forest';document.querySelector('#location-label')!.textContent='DÉLI ERDŐ';return;}
   const {x,y}=this.actor,shop=shopAt(y),region=inHome(y)?'home':inWorkshop(y)?'workshop':shop??(outsideFarm(y)?(inForest(x,y)||x<315&&y<1200?'forest':'village'):'farm');document.querySelector<HTMLElement>('#game')!.dataset.region=region;
-  document.querySelector('#location-label')!.textContent=region==='home'?'AZ OTTHONOD':region==='workshop'?'MŰHELY':region==='farm'?'AZ OTTHONOD':region==='forest'?'ÖREGFÁK LIGETE':shop==='nursery'?'FAISKOLA':shop==='fishShop'?'KERTITÓ SZAKÜZLET':shop==='craftShop'?'MŰHELYBOLT':shop==='animalShop'?'ÁLLATOSBOLT':'A FALU';
+  document.querySelector('#location-label')!.textContent=region==='home'?'AZ OTTHONOD':region==='workshop'?'MŰHELY':region==='farm'?'AZ OTTHONOD':region==='forest'?'ÖREGFÁK LIGETE':shop==='nursery'?'FAISKOLA':shop==='fishShop'?'KERTITÓ SZAKÜZLET':shop==='craftShop'?'MŰHELYBOLT':shop==='animalShop'?'GAZDAUDVAR':'A FALU';
  }
  private fitCamera(laboratory=this.noahChapter?.labActive??false){
   this.cameras.main.setViewport(0,0,this.scale.width,this.scale.height);

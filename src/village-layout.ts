@@ -159,7 +159,7 @@ export function shopBlocked(x:number,y:number){
  return false;
 }
 
-export const shopNames={nursery:'Faiskola',fishShop:'Kertitó Szaküzlet',craftShop:'Műhelybolt',animalShop:'Állatosbolt'} as const;
+export const shopNames={nursery:'Faiskola',fishShop:'Kertitó Szaküzlet',craftShop:'Műhelybolt',animalShop:'Gazdaudvar'} as const;
 export const shopsOpen=(elapsed:number)=>elapsed<360;
 export type BenchPose={x:number;y:number;inX:number;inY:number;sideX:number;sideY:number};
 export function benchPose(angle:number):BenchPose{
