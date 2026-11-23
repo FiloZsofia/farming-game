@@ -12,7 +12,7 @@ import {inHome,homeBlocked} from './home';
 import {inWorkshop,WORKSHOP_ORIGIN} from './research';
 import {blocked,type Box} from './movement';
 export const WORLD_HEIGHT=1520;
-export const WORLD_WIDTH=1000;
+export const WORLD_WIDTH=1030;
 export const villageLayout={
  animalShop:animalShopSite,
  craftShop:{x:560,y:1220,w:200,h:112,door:{x:660,y:1341},entrance:{x:645,y:1290,w:34,h:57}},
@@ -35,7 +35,9 @@ export const villagePaths=[
  {width:23,points:[[493,1320],[493,1364],[660,1364],[660,1341]]},
  {width:20,points:[[107,930],[-100,930],...quadraticPath([-100,930],[-135,930],[-165,944],8).slice(1),...roundedPath([[-165,944],[-270,1000],[-450,995],[-570,962],[-660,978],[-780,984],[-940,1010]]).slice(1)]},
  {width:32,points:[[170,740],[170,860],[170,930],...quadraticPath([170,930],[265,945],[350,1000]).slice(1),[476,1060],[493,1320],[493,WORLD_HEIGHT-6]]},
- {width:16,points:[[605,1145],[730,1145],[774,1206],[774,1348],[882,1348],[882,1324]]},
+ {width:16,points:[[605,1145],[730,1145],[784,1206],[784,1323],[902,1323],[902,1299]]},
+ {width:16,points:[[730,1145],[730,1115],[708,1115],[708,1100]]},
+ {width:16,points:[[784,1323],[784,1364],[660,1364],[660,1341]]},
 ];
 // The whole harvestable crown stays off paving, with a clear margin around its leaves.
 export const forageBushBounds=(b:{x:number;y:number})=>({left:b.x-20,right:b.x+20,top:b.y-22,bottom:b.y+8});
@@ -57,7 +59,7 @@ export const villageEntrancePot={x:225,y:1000};
 export const villageLamps=[{id:'fork',x:460,y:942},{id:'square',x:450,y:1240}] as const;
 export const workshopWallLamps=[{x:577,y:1297},{x:748,y:1297}] as const;
 export const villageLampLights=[...villageLamps.map(p=>({x:p.x,y:p.y-38,scale:1})),...workshopWallLamps.map(p=>({...p,scale:.6}))];
-export const villageWindows=[[528,873,28,29],[627,873,28,29],[753,1009,41,43],[825,1009,41,43],[578,1253,28,29],[712,1253,28,29],[805,1210,26,33],[931,1210,26,33]] as const;
+export const villageWindows=[[528,873,28,29],[627,873,28,29],[753,1009,41,43],[825,1009,41,43],[578,1253,28,29],[712,1253,28,29],[825,1185,26,33],[951,1185,26,33]] as const;
 export const lampBounds=(p:{x:number;y:number})=>({left:p.x-12,right:p.x+12,top:p.y-59,bottom:p.y+3});
 export type WoodlandTree={x:number;y:number;kind:number;scale?:number};
 // Preserve the actual trees affected by the new eastern road and the grass pull-off.

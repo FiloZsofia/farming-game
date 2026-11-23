@@ -47,8 +47,10 @@ A világ és a térkép ugyanazokat a kifutóhatárokat használja. A kerítés,
 
 ## Bolt és gondozófelület
 
-A megnövelt üzlet lejjebb áll, így a Kertitó Szaküzlet homlokzata szabad marad. A kihelyezett bemutató ól, etető, itató és zsákos eleség külön, közös helyadatból rajzolt és ütköző elemek; nem kerülhetnek ösvényre vagy a bejárat elé. A kirakat és az ablakfények ugyanazokat az ablakkoordinátákat követik. Belül bemutató ól, berendezett polcok, varrott eleséges zsákok és tojáskosár ad karaktert az üzletnek.
+A megnövelt üzlet a Műhelybolttól távolabb, kissé északkeletre áll; a Kertitó Szaküzlet homlokzata szabad marad. Az udvar, kapu, szalmabálák és ablakfények együtt követik az épület helyét. A korábbi, bolt elé kihelyezett bemutató ól, etető, itató és eleséges zsákok a felhasználó kérésére megszűntek. A Gazdaudvar udvarjellegét szalmabálák és egy kis, kapun át bejárható, elkerített bemutatóudvar adja. Ezek közös helyadatból rajzolt és ütköző elemek; nem kerülhetnek ösvényre vagy a bejárat elé. A kirakat és az ablakfények ugyanazokat az ablakkoordinátákat követik. Belül bemutató ól, berendezett polcok, varrott eleséges zsákok és tojáskosár ad karaktert az üzletnek.
 
 Az ól kezelése az Ágyáskezelő stílusát megosztó, jobb oldali Állatgondozó panelen történik. A megnyitás mindig lecseréli a korábbi tartalmat; sem szöveg, sem gomb nem halmozódhat. A panel Tovább gombbal vagy Escape-pel zárható, eltávolodáskor és más ablak megnyitásakor eltűnik.
 
 A boltos gyakorlatias, türelmes és finom humorú állatbarát: észreveszi az állatok eltérő szokásait, a félénkek bizalmát nem sürgeti. A bemutatkozást és a váltakozó napi mondatokat ez a személyiség vezeti. A boltos elfogadott neve Ruby. A bolt jelenleg elfogadott neve Gazdaudvar.
+
+A Gazdaudvarhoz vezető ösvényből közvetlen leágazás vezet a Kertitó Szaküzlethez és a Műhelybolthoz is. A teljes hálózat közös külső és belső rajzrétegekkel készül, és ugyanebből az adatból kerül a térképre.

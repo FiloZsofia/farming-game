@@ -42,7 +42,7 @@ export function drawHen(g:Phaser.GameObjects.Graphics,variety:HenVariety,time:nu
  if(activity==='dust'){g.fillStyle(0xc8b58d,.5);for(let i=0;i<4;i++)g.fillCircle(Math.sin(time*3+i)*13,-3-Math.abs(Math.cos(time*2+i))*8,1.2);}
  if(activity==='rest')g.fillStyle(base).fillEllipse(0,-5,17,9);
 }
-export function drawAnimalFence(g:Phaser.GameObjects.Graphics,pen:AnimalPen,gateOpen=false,edge?:number){
+export function drawAnimalFence(g:Phaser.GameObjects.Graphics,pen:Pick<AnimalPen,'boundary'|'gate'>,gateOpen=false,edge?:number){
  g.clear();const points=pen.boundary;if(!points.length)return;
  for(let i=0;i<points.length;i++){if(edge!==undefined&&i!==edge)continue;const a=points[i],b=points[(i+1)%points.length],length=Math.hypot(b.x-a.x,b.y-a.y),dx=(b.x-a.x)/length,dy=(b.y-a.y)/length,n=Math.max(1,Math.ceil(length/34));
   const rail=(from:number,to:number)=>{for(const h of [9,20]){g.lineStyle(3.5,0x70573c).lineBetween(a.x+dx*from,a.y+dy*from-h,b.x-dx*(length-to),b.y-dy*(length-to)-h);g.lineStyle(1,0xc3a170).lineBetween(a.x+dx*from,a.y+dy*from-h-1,b.x-dx*(length-to),b.y-dy*(length-to)-h-1);}};
