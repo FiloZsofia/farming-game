@@ -896,7 +896,7 @@ class Farm extends Phaser.Scene {
   if(this.travel.metSimon)entries.push({id:'simon',name:'Simon',portrait:simonPortrait(this),description:'Kézműves, a falusi műhelybolt gazdája.'});
   if(this.travel.homestead?.stand.metMara)entries.push({id:'mara',name:'Mara',portrait:maraPortrait(this),description:'A terményeidet szállító sofőr. Határozott, és a csípős megjegyzéseit sem hagyja otthon.'});
   if(this.travel.forest?.sent)entries.push({id:'noah',name:'Noah',portrait:noahPortrait(this),description:'Biológus, Sam korábbi munkatársa a laborból.'});
-  if(this.travel.metRoza)entries.push({id:'roza',name:'Róza',portrait:characterPortrait(this,'roza'),description:'Az állatosbolt gazdája. A gondosan berendezett otthonokat és a kíváncsi kis lakókat szereti.'});
+  if(this.travel.metRoza)entries.push({id:'roza',name:'Ruby',portrait:characterPortrait(this,'roza'),description:'Az állatosbolt gazdája. A gondosan berendezett otthonokat és a kíváncsi kis lakókat szereti.'});
   renderPeopleGallery(people,entries);
   document.querySelector<HTMLElement>('#inventory-panel')!.hidden=false;document.querySelector('#dialogue-close')!.textContent='Tovább';
  }
@@ -1012,7 +1012,7 @@ class Farm extends Phaser.Scene {
   },()=>this.openShop(shop),()=>dialogue.close());
  }
  private showSpeaker(shop:Shop){
-  if(shop==='animalShop'){dialogue.dataset.speaker='roza';document.querySelector<HTMLElement>('#speaker')!.hidden=false;document.querySelector('#speaker-name')!.textContent='Róza';document.querySelector('#speaker-portrait')!.replaceChildren(characterPortrait(this,'roza'));return;}
+  if(shop==='animalShop'){dialogue.dataset.speaker='roza';document.querySelector<HTMLElement>('#speaker')!.hidden=false;document.querySelector('#speaker-name')!.textContent='Ruby';document.querySelector('#speaker-portrait')!.replaceChildren(characterPortrait(this,'roza'));return;}
   if(shop==='craftShop'){dialogue.dataset.speaker='simon';document.querySelector<HTMLElement>('#speaker')!.hidden=false;document.querySelector('#speaker-name')!.textContent='Simon';document.querySelector('#speaker-portrait')!.replaceChildren(simonPortrait(this));return;}
   dialogue.dataset.speaker=shop==='nursery'?'leo':'annie';document.querySelector<HTMLElement>('#speaker')!.hidden=false;document.querySelector('#speaker-name')!.textContent=shop==='nursery'?'Leo':'Annie';document.querySelector('#speaker-portrait')!.replaceChildren(shop==='nursery'?leoPortrait(this):anniePortrait(this));
  }

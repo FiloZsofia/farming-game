@@ -1,6 +1,6 @@
 # Tyúktartás
 
-Az állatosbolt a Kertitó Szaküzlet és a Műhelybolt közötti területen áll, saját bekötőösvénnyel. Rózával a pultnál beszélgethetünk; a vásárlás a többi bolttal közös menüből indul.
+Az állatosbolt a Kertitó Szaküzlet és a Műhelybolt közötti területen áll, saját bekötőösvénnyel. Rubyval a pultnál beszélgethetünk; a vásárlás a többi bolttal közös menüből indul.
 
 ## Otthon kialakítása
 
@@ -51,4 +51,4 @@ A megnövelt üzlet lejjebb áll, így a Kertitó Szaküzlet homlokzata szabad m
 
 Az ól kezelése az Ágyáskezelő stílusát megosztó, jobb oldali Állatgondozó panelen történik. A megnyitás mindig lecseréli a korábbi tartalmat; sem szöveg, sem gomb nem halmozódhat. A panel Tovább gombbal vagy Escape-pel zárható, eltávolodáskor és más ablak megnyitásakor eltűnik.
 
-A boltos gyakorlatias, türelmes és finom humorú állatbarát: észreveszi az állatok eltérő szokásait, a félénkek bizalmát nem sürgeti. A bemutatkozást és a váltakozó napi mondatokat ez a személyiség vezeti. A bolt és a szereplő végleges új neve külön névválasztásra vár; az ötletek nem automatikusan elfogadott nevek.
+A boltos gyakorlatias, türelmes és finom humorú állatbarát: észreveszi az állatok eltérő szokásait, a félénkek bizalmát nem sürgeti. A bemutatkozást és a váltakozó napi mondatokat ez a személyiség vezeti. A boltos elfogadott neve Ruby. A bolt végleges új neve külön névválasztásra vár; az ötletek nem automatikusan elfogadott nevek.

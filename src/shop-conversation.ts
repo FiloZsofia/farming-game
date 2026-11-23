@@ -1,7 +1,7 @@
 import {grantKey,supplyMaterial,machineInspected,type Research} from './research';
 import type {Shop} from './village-layout';
 import type {NoahTestState} from './noah-story';
-export const shopkeepers:Record<Shop,{name:string;met:'metLeo'|'metAnnie'|'metSimon'|'metRoza';material?:'leo'|'annie'}>={animalShop:{name:'Róza',met:'metRoza'},nursery:{name:'Leo',met:'metLeo',material:'leo'},fishShop:{name:'Annie',met:'metAnnie',material:'annie'},craftShop:{name:'Simon',met:'metSimon'}};
+export const shopkeepers:Record<Shop,{name:string;met:'metLeo'|'metAnnie'|'metSimon'|'metRoza';material?:'leo'|'annie'}>={animalShop:{name:'Ruby',met:'metRoza'},nursery:{name:'Leo',met:'metLeo',material:'leo'},fishShop:{name:'Annie',met:'metAnnie',material:'annie'},craftShop:{name:'Simon',met:'metSimon'}};
 export function merchantTopics(shop:Shop,research:Research,noah?:NoahTestState){
  const topics:{id:'bee'|'material'|'binder';label:string}[]=[];
  if(shop==='nursery'&&research.observation&&!research.key&&grantKey(research))topics.push({id:'bee',label:'Mesélek a szarvas faliméhről'});
