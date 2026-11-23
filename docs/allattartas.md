@@ -68,3 +68,6 @@ A Kifutó kialakítása ablak kifejezetten jelzi: a kerítés csatlakozhat az ó
 - A kapuszárny látható zsanér körül nyílik és csukódik, nem tűnik el.
 - Mara az eredeti és a játékos által épített ösvényeket előnyben részesítő, akadályokat kerülő útvonalat használja. Az ösvény nélküli utolsó megközelítés továbbra is lehetséges.
 - Egy vagy több tyúk is fedeles szállítókosárban érkezik, Mara arca szabadon marad. Az egy kifutóba rendelt tyúkok egy közös fuvarral a kapuhoz kerülnek: Mara leteszi és kinyitja a kosarat, a tyúkok egymás után az ólhoz sétálnak. Az átadást egyedenként mentjük, a már átadott tyúk nem duplázódhat.
+
+### Berendezések részletei – 2026-11-23
+Az ól harmadik napra poros, kikopott talajjal, szétszórt alommal és kitépett fűszálakkal jelzi a takarítás szükségességét; takarításkor ezek egyszerre eltűnnek. Az etető elkülönülő, fényes kukoricaszemeket, a porfürdő homokrétegeket és kaparásnyomokat, az árnyékoló merevítéseket és tagolt tetőt kapott. Az itató feltöltésekor a vízsugár mindig Sam aktuális kanna-kifolyójának világkoordinátájából indul a tál felé, nem a berendezéshez rögzített oldalról. A működést mindkét oldalról ellenőrizzük.
