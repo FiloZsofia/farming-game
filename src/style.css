@@ -149,3 +149,5 @@
 .animal-placement[hidden]{display:none}.animal-placement strong{display:block;font-size:19px}.animal-placement p{font-size:14px;line-height:1.5}.animal-placement button{margin:5px 6px 0 0;background:var(--button-surface);color:var(--button-ink);border:1px solid var(--button-border);padding:10px 13px;border-radius:3px;font:inherit}.animal-placement button:disabled{opacity:.5}.animal-placement select,#shop-panel>select{max-width:100%;padding:8px;background:#334b39;color:#f4edd7;border:1px solid #a6a47c;font:inherit}.animal-shop-status{padding:12px;background:#283f30;line-height:1.5}
 @media(max-width:540px){.animal-placement{right:8px;left:8px;max-width:none;bottom:125px;padding:12px;max-height:45dvh;overflow:auto}.animal-placement p{margin:8px 0}}
 #app #dialogue #speaker-portrait>.character-portrait{width:100%!important;height:100%!important;max-width:none;max-height:none;object-fit:contain}
+
+.animal-placement .animal-placement-reason{margin:10px 0;padding:9px 11px;border-left:3px solid #e69c8d;background:#563f354d;color:#ffe3d6;font-size:13px;line-height:1.45}.animal-placement .animal-placement-reason[hidden]{display:none}

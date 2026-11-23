@@ -123,6 +123,7 @@ const menuPresentation=new MenuPresentation(dialogue);
 let workshopIsKnown=false;
 const story="Sam egy kutatólaborban dolgozott, ahol rovarokon élősködő gombákat vizsgáltak.\n\nAz utolsó hónapokban egy szokatlan minta érkezett a laborba. Az eredmények nem illettek ahhoz, amit addig tudtak. Sam még azelőtt eljött, hogy kiderült volna, mit találtak.\n\n„Szeretném megtudni, képes vagyok-e a saját kezemmel otthont teremteni ezen a helyen.”";
 function showDialogue(title:string,text:string,label='A BIRTOKON'){
+ document.querySelector('#boot-loading')?.remove();
  clearShopNotice();
  if(materialHandoffOnClose){dialogue.removeEventListener('close',materialHandoffOnClose);materialHandoffOnClose=null;}
  if(['IRÁNYÍTÁS','A RÉGI MŰHELY','EGY KEDVES SZÓ'].includes(label))text=workshopText(text,workshopIsKnown);label=workshopText(label,workshopIsKnown);
@@ -299,6 +300,7 @@ class Farm extends Phaser.Scene {
     let resume:string|null=null;try{resume=sessionStorage.getItem('farm-resume-once');sessionStorage.removeItem('farm-resume-once');}catch{}
     if(resume&&resume===this.store.selectedFarmId&&this.hasFarm)this.resumeCurrentFarm();
     else await this.openStartMenu(false);
+    document.querySelector('#boot-loading')?.remove();
    }catch(error){
     this.loadFailed=true;document.querySelector('#save-state')!.textContent='A mentés nem tölthető be';
     showDialogue('A mentésedet megőriztem.',error instanceof Error?error.message:'A böngésző tárhelye nem érhető el. A játékot nem indítom el mentés nélkül.','MENTÉSI HIBA');
@@ -1647,7 +1649,6 @@ class Farm extends Phaser.Scene {
   this.events.once('shutdown',()=>this.scale.off('resize',resize));
   this.game.canvas.tabIndex=-1;
   dialogue.addEventListener('close',()=>{this.microscopeUI?.destroy();this.microscopeUI=null;this.input.keyboard?.resetKeys();release();queueMicrotask(()=>{if(this.ready&&this.hasFarm&&!this.choosingFarm&&!this.naming&&!dialogue.open&&!this.transitioning)this.game.canvas.focus({preventScroll:true});});});
-  showDialogue('',story,'');
   this.pondBuilder=new PondExpansionController(this,{read:()=>this.currentSnapshot(),ready:()=>this.canInteract(),commit:next=>this.commitChest(next,()=>{}),begin:()=>{this.selectTool('harvest');this.gardenController?.cancelPlacement();this.gardenController?.closePanel();},changed:()=>{this.redrawScenery();this.drawGarden();this.avatar.use(1,0,'restore');},notice:text=>this.notice(text)});
   void this.initStorage();
   this.keys=this.input.keyboard!.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT,SHIFT',false) as Record<string,Phaser.Input.Keyboard.Key>;

@@ -54,3 +54,7 @@ Az ól kezelése az Ágyáskezelő stílusát megosztó, jobb oldali Állatgondo
 A boltos gyakorlatias, türelmes és finom humorú állatbarát: észreveszi az állatok eltérő szokásait, a félénkek bizalmát nem sürgeti. A bemutatkozást és a váltakozó napi mondatokat ez a személyiség vezeti. A boltos elfogadott neve Ruby. A bolt jelenleg elfogadott neve Gazdaudvar.
 
 A Gazdaudvarhoz vezető ösvényből közvetlen leágazás vezet a Kertitó Szaküzlethez és a Műhelybolthoz is. A teljes hálózat közös külső és belső rajzrétegekkel készül, és ugyanebből az adatból kerül a térképre.
+
+Az udvar a bolt jobb oldali és elülső falához kapcsolódó L alakot követi; a fal mellé nem rajzolunk még egy kerítést. A szalmabálák teljes körvonala a bekerített részen belül marad.
+
+Kerítésrajzoláskor a terv jól látható, fehér kerítésként jelenik meg. A lezárt, érvénytelen terv piros; az Elkészítem gomb mellett a közös elhelyezési ellenőrzés konkrét oka olvasható (például túl közeli sarkok, kívül maradó ól, akadály vagy megközelíthetetlen kapu). A rajzolás és a tényleges elkészítés ugyanazt az ellenőrzést használja.

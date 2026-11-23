@@ -15,9 +15,9 @@ export function drawAnimalShopFront(scene:Phaser.Scene,g:Phaser.GameObjects.Grap
  poly([851,y+73,910,y+73,917,y+87,844,y+87],0x748d72);for(let i=0;i<6;i++){const xx=847+i*12;r(xx,y+84,10,7,i%2?0x758c71:0xd7cfaa);}line(845,y+91,916,y+91,0x546d54);
  // Hanging emblem: a hen rather than another generic rectangular board.
  r(960,y+79,2,16,0x765f42);line(947,y+79,976,y+79,0x765f42,2);g.fillStyle(0xd9c79d).fillEllipse(962,y+104,29,23);g.lineStyle(1,0x8c7754).strokeEllipse(962,y+104,29,23);g.fillStyle(0x8a6244).fillEllipse(960,y+105,14,10).fillCircle(967,y+99,4);g.fillStyle(0xb7654e).fillCircle(966,y+95,1.5);g.fillStyle(0x443e30).fillCircle(968,y+98,1);
- // A worn grassy surface stays entirely within the little yard.
- g.fillStyle(0x9ba16a,.45).fillRoundedRect(904,1346,68,107,9);g.fillStyle(0xb7a67b,.32).fillEllipse(938,1404,52,77);for(let i=0;i<19;i++){const xx=910+(i*17)%56,yy=1353+(i*23)%92;line(xx,yy,xx+2,yy,0xc3b38a,.8);}
- g.restore();const t=worldText(scene,a.x+w/2,a.y+30,'GAZDAUDVAR',{fontFamily:'Georgia,serif',fontSize:'11px',color:'#f9ebc6',backgroundColor:'#4a5e4b',padding:{x:8,y:5}}).setOrigin(.5).setDepth(5);scene.events.once('shutdown',()=>t.destroy());
+ // Match the courtyard surface to its shared L-shaped boundary.
+ g.restore();g.fillStyle(0x9ba16a,.38).fillPoints(animalShopYard.boundary,true);g.fillStyle(0xb7a67b,.22).fillEllipse(a.x+a.w+21,a.y+a.h+21,43,70);
+ const t=worldText(scene,a.x+w/2,a.y+30,'GAZDAUDVAR',{fontFamily:'Georgia,serif',fontSize:'11px',color:'#f9ebc6',backgroundColor:'#4a5e4b',padding:{x:8,y:5}}).setOrigin(.5).setDepth(5);scene.events.once('shutdown',()=>t.destroy());
 }
 export class AnimalShopDisplayArt{
  private arts:{g:Phaser.GameObjects.Graphics;y:number}[]=[];
@@ -28,7 +28,7 @@ export class AnimalShopDisplayArt{
     for(let i=0;i<12;i++){const xx=x-15+i*2.6;g.lineStyle(.65,i%3?0xdec286:0x9e7a43).lineBetween(xx,y-14,xx+3,y-2);g.lineStyle(.65,0xf0d798).lineBetween(xx,y-19,xx+5,y-22);}for(const xx of [x-8,x+9]){g.lineStyle(1.3,0x716b4d).lineBetween(xx,y-16,xx,y+2).lineBetween(xx,y-17,xx+5,y-24);g.lineStyle(.4,0xb3ac7c).lineBetween(xx+1,y-15,xx+1,y+1);}}
    this.arts.push({g,y:p.y+10});
   }
-  for(let i=0;i<animalShopYard.boundary.length;i++)this.fences.push(scene.add.graphics());scene.events.once('shutdown',()=>{this.arts.forEach(a=>a.g.destroy());this.fences.forEach(g=>g.destroy());});
+  for(let i=0;i<animalShopYard.fenceEdges.length;i++)this.fences.push(scene.add.graphics());scene.events.once('shutdown',()=>{this.arts.forEach(a=>a.g.destroy());this.fences.forEach(g=>g.destroy());});
  }
- update(actor:{x:number;y:number}){for(const a of this.arts)a.g.setDepth(actor.y<a.y?101:3);const poly=animalShopYard.boundary,gate={x:poly[3].x,y:(poly[3].y+poly[0].y)/2},open=Math.hypot(actor.x-gate.x,actor.y-gate.y)<30;for(let i=0;i<this.fences.length;i++){const g=this.fences[i],a=poly[i],b=poly[(i+1)%poly.length];drawAnimalFence(g,animalShopYard,open,i);g.setDepth(actor.y<(a.y+b.y)/2?101:3);}}
+ update(actor:{x:number;y:number}){for(const a of this.arts)a.g.setDepth(actor.y<a.y?101:3);const poly=animalShopYard.boundary,gate={x:(poly[animalShopYard.gate].x+poly[animalShopYard.gate+1].x)/2,y:(poly[animalShopYard.gate].y+poly[animalShopYard.gate+1].y)/2},open=Math.hypot(actor.x-gate.x,actor.y-gate.y)<30;for(let i=0;i<this.fences.length;i++){const edge=animalShopYard.fenceEdges[i],g=this.fences[i],a=poly[edge],b=poly[(edge+1)%poly.length];drawAnimalFence(g,animalShopYard,open,edge);g.setDepth(actor.y<(a.y+b.y)/2?101:3);}}
 }

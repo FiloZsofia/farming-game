@@ -5,7 +5,7 @@ import {createGarden} from './gardening';
 import {enableHomestead} from './homestead-migration';
 import {debris} from './cleanup';
 import {createLivestock,animalItems,fixtureKinds,penMissing,buyAnimalItem,orderHen,deliverHen,advanceLivestock,tendPen,packAnimalItem,validLivestock,renameHen} from './livestock';
-import {placeCoop,placePaddock,placeAnimalFixture,penWalkRoute,gatePoint,animalApproach,canDrawPaddock} from './livestock-geometry';
+import {placeCoop,placePaddock,placeAnimalFixture,penWalkRoute,gatePoint,animalApproach,canDrawPaddock,paddockPlacementIssue} from './livestock-geometry';
 import {farmProductPrice,farmProductAccount} from './farm-products';
 import {transferStand} from './farm-market';
 import {inventoryCounts,canCarryChange} from './chests';
@@ -42,4 +42,12 @@ describe('living paddock safeguards',()=>{
  it('pauses egg production in a dirty coop despite food and fresh water',()=>{let s=buyAnimalItem(arrived(),'feed')!;s=tendPen(s,1,'feed')!;const state=s.travel.livestock!;state.lastDay=4;state.pens[0].wateredDay=4;state.hens[0].careDays=1;const n=advanceLivestock(state,5);expect(n.pens[0].eggs).toBe(0);expect(n.hens[0].careDays).toBe(1);s.clock=createClock(5,()=>.5);s.travel.livestock=n;s=tendPen(s,1,'clean')!;s=tendPen(s,1,'water')!;expect(advanceLivestock(s.travel.livestock!,6).pens[0].eggs).toBe(1);});
  it('keeps a delayed order and its reserved place through save reload',()=>{const s=orderHen(home(),1,'chestnut')!;s.clock=createClock(6,()=>.5);const reloaded=decodeSnapshot(s)!;expect(reloaded).not.toBeNull();const delivered=deliverHen(reloaded,2)!;expect(delivered.travel.livestock!.hens[0].arrivedDay).toBe(6);expect(delivered.economy.gold).toBe(s.economy.gold);});
  it('rejects a save whose reserved animal no longer has a furnished home',()=>{const s=orderHen(home(),1,'cream')!;delete s.travel.livestock!.pens[0].fixtures.shade;expect(validSnapshot(s)).toBe(false);});
+});
+
+
+describe('paddock placement explanations',()=>{
+ it('explains why drawing the front fence in front of the coop does not enclose it',()=>{const s=home();s.travel.livestock!.pens[0].boundary=[];s.travel.livestock!.packed.paddock=1;const poly=[{x:-320,y:-180},{x:-20,y:-180},{x:-20,y:20},{x:-320,y:20}];expect(paddockPlacementIssue(s,1,poly,2)).toContain('Az ól nincs teljesen');expect(placePaddock(s,1,poly,2)).toBeNull();});
+ it('names an accidental tiny side instead of silently disabling construction',()=>{const s=home();expect(paddockPlacementIssue(s,1,[{x:-320,y:-280},{x:-310,y:-280},{x:-20,y:-280},{x:-20,y:-80},{x:-320,y:-80}],2)).toContain('túl közel');});
+ it('identifies a crossing fence before reporting its collapsed area',()=>{const s=home();expect(paddockPlacementIssue(s,1,[{x:-320,y:-280},{x:-20,y:-80},{x:-20,y:-280},{x:-320,y:-80}],2)).toContain('keresztezi');});
+ it('uses the same result for valid construction and its feedback',()=>{const s=home();expect(paddockPlacementIssue(s,1,polygon,2)).toBeNull();expect(placePaddock(s,1,polygon,2)).not.toBeNull();});
 });

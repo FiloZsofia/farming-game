@@ -12,7 +12,7 @@ import {inHome,homeBlocked} from './home';
 import {inWorkshop,WORKSHOP_ORIGIN} from './research';
 import {blocked,type Box} from './movement';
 export const WORLD_HEIGHT=1520;
-export const WORLD_WIDTH=1030;
+export const WORLD_WIDTH=1100;
 export const villageLayout={
  animalShop:animalShopSite,
  craftShop:{x:560,y:1220,w:200,h:112,door:{x:660,y:1341},entrance:{x:645,y:1290,w:34,h:57}},

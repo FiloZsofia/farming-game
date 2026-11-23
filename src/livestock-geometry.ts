@@ -27,17 +27,22 @@ function offStatic(s:Snapshot,poly:P[]){if(poly.some(p=>p.x<farmBounds.left+60||
  return !(s.travel.homestead?.garden.paths??[]).some(p=>animalPolygonsOverlap(poly,pathFootprint(p)));
 }
 export function canPlaceCoop(s:Snapshot,p:P){const poly=boxCorners(movedAnimalBox('coop',p));return offStatic(s,poly)&&!(s.travel.livestock?.pens??[]).some(pen=>animalBoxOverlap(movedAnimalBox('coop',p),movedAnimalBox('coop',pen.coop),12)||pen.boundary.length&&animalPolygonsOverlap(poly,pen.boundary));}
-export function canDrawPaddock(s:Snapshot,pen:AnimalPen,poly:P[]){
- if(poly.some((p,i)=>Math.hypot(p.x-poly[(i+1)%poly.length].x,p.y-poly[(i+1)%poly.length].y)<24))return false;
- if(poly.length<3||poly.length>16||animalPolygonArea(poly)<14000||animalPolygonArea(poly)>70000)return false;
- if(Math.max(...poly.map(p=>p.x))-Math.min(...poly.map(p=>p.x))>320||Math.max(...poly.map(p=>p.y))-Math.min(...poly.map(p=>p.y))>280)return false;
- for(let i=0;i<poly.length;i++)for(let j=i+2;j<poly.length;j++){if(i===0&&j===poly.length-1)continue;if(segmentsCross(poly[i],poly[(i+1)%poly.length],poly[j],poly[(j+1)%poly.length])||onSegment(poly[i],poly[j],poly[(j+1)%poly.length])||onSegment(poly[j],poly[i],poly[(i+1)%poly.length]))return false;}
- if(!boxCorners(movedAnimalBox('coop',pen.coop)).every(p=>inAnimalPolygon(p,poly))||!offStatic(s,poly))return false;
- if((s.travel.livestock?.pens??[]).some(other=>other.id!==pen.id&&(other.boundary.length?animalPolygonsOverlap(poly,other.boundary):animalPolygonsOverlap(poly,boxCorners(movedAnimalBox('coop',other.coop))))))return false;
- // Expanding a stocked paddock may never remove its existing living space or equipment.
- if(pen.boundary.length&&pen.boundary.some((a,i)=>{const b=pen.boundary[(i+1)%pen.boundary.length];return !inOrOn(a,poly)||!inOrOn({x:(a.x+b.x)/2,y:(a.y+b.y)/2},poly)||poly.some((c,j)=>segmentsCross(a,b,c,poly[(j+1)%poly.length]));}))return false;
- return Object.entries(pen.fixtures).every(([k,p])=>boxCorners(movedAnimalBox(k as AnimalFixture,p!,pen.rotations?.[k as AnimalFixture])).every(q=>inAnimalPolygon(q,poly)));
+export function paddockShapeIssue(s:Snapshot,pen:AnimalPen,poly:P[]):string|null{
+ if(poly.length<3)return 'Legalább három sarkot jelölj ki.';
+ if(poly.length>16)return 'Legfeljebb 16 sarka lehet a kifutónak.';
+ if(poly.some((p,i)=>Math.hypot(p.x-poly[(i+1)%poly.length].x,p.y-poly[(i+1)%poly.length].y)<24))return 'Két sarok túl közel van egymáshoz. Az Utolsó pont vissza gombbal javíthatsz.';
+ for(let i=0;i<poly.length;i++)for(let j=i+2;j<poly.length;j++){if(i===0&&j===poly.length-1)continue;if(segmentsCross(poly[i],poly[(i+1)%poly.length],poly[j],poly[(j+1)%poly.length])||onSegment(poly[i],poly[j],poly[(j+1)%poly.length])||onSegment(poly[j],poly[i],poly[(i+1)%poly.length]))return 'A kerítésvonal keresztezi vagy visszahajtja önmagát.';}
+ const area=animalPolygonArea(poly);if(area<14000)return 'A kifutó túl kicsi. Hagyj több helyet az ól és a berendezések körül.';
+ if(area>70000)return 'A kifutó túl nagy. Húzd közelebb a sarkait.';
+ if(Math.max(...poly.map(p=>p.x))-Math.min(...poly.map(p=>p.x))>320||Math.max(...poly.map(p=>p.y))-Math.min(...poly.map(p=>p.y))>280)return 'A kifutó túl hosszan nyúlik el. Jelölj ki rövidebb oldalakat.';
+ if(!boxCorners(movedAnimalBox('coop',pen.coop)).every(p=>inAnimalPolygon(p,poly)))return 'Az ól nincs teljesen a kifutón belül. A hátsó kerítésvonalat az ól mögé húzd.';
+ if(!offStatic(s,poly))return 'A kifutó útba, vízbe vagy egy meglévő tárgy helyére ér. Válassz szabad területet.';
+ if((s.travel.livestock?.pens??[]).some(other=>other.id!==pen.id&&(other.boundary.length?animalPolygonsOverlap(poly,other.boundary):animalPolygonsOverlap(poly,boxCorners(movedAnimalBox('coop',other.coop))))))return 'A kifutó egy másik ól vagy kifutó helyére ér.';
+ if(pen.boundary.length&&pen.boundary.some((a,i)=>{const b=pen.boundary[(i+1)%pen.boundary.length];return !inOrOn(a,poly)||!inOrOn({x:(a.x+b.x)/2,y:(a.y+b.y)/2},poly)||poly.some((c,j)=>segmentsCross(a,b,c,poly[(j+1)%poly.length]));}))return 'Bővítéskor a régi kifutó teljes területének bent kell maradnia.';
+ if(!Object.entries(pen.fixtures).every(([k,p])=>boxCorners(movedAnimalBox(k as AnimalFixture,p!,pen.rotations?.[k as AnimalFixture])).every(q=>inAnimalPolygon(q,poly))))return 'Egy berendezés kívül maradna a kifutón.';
+ return null;
 }
+export function canDrawPaddock(s:Snapshot,pen:AnimalPen,poly:P[]){return paddockShapeIssue(s,pen,poly)===null;}
 export function animalApproach(kind:Exclude<AnimalItem,'paddock'>,p:P,rotation=0){const b=movedAnimalBox(kind,p,rotation);return {x:p.x,y:b.y+b.h+10};}
 export function canPlaceAnimalFixture(s:Snapshot,pen:AnimalPen,kind:AnimalFixture,p:P,rotation=0){
  const box=movedAnimalBox(kind,p,rotation);if(!pen.boundary.length||!boxCorners(box).every(q=>inAnimalPolygon(q,pen.boundary))||!inAnimalPolygon(animalApproach(kind,p,rotation),pen.boundary)||animalBoxOverlap(box,movedAnimalBox('coop',pen.coop),8))return false;
@@ -54,7 +59,17 @@ export function penWalkRoute(pen:AnimalPen,start:P,end:P):P[]|null{
  if(!found)return null;const route=[end];let p:P|null=found;while(p){route.unshift(p);p=seen.get(key(p))??null;}route.unshift(start);return route;
 }
 export function placeCoop(source:Snapshot,p:P):Snapshot|null{if(!source.travel.livestock?.packed.coop||!canPlaceCoop(source,p))return null;const next=structuredClone(source),s=next.travel.livestock!;if(s.pens.length>=20)return null;s.packed.coop--;s.pens.push({id:s.nextId++,name:`Tyúkól ${s.pens.length+1}`,coop:{...p},boundary:[],gate:0,fixtures:{},feed:0,wateredDay:null,cleanedDay:source.clock.day,eggs:0});return next;}
-export function placePaddock(source:Snapshot,id:number,poly:P[],gate:number):Snapshot|null{const old=source.travel.livestock?.pens.find(p=>p.id===id);if(!old||!old.boundary.length&&!source.travel.livestock?.packed.paddock||!Number.isInteger(gate)||gate<0||gate>=poly.length||Math.hypot(poly[gate].x-poly[(gate+1)%poly.length].x,poly[gate].y-poly[(gate+1)%poly.length].y)<42||!canDrawPaddock(source,old,poly))return null;const next=structuredClone(source),s=next.travel.livestock!,pen=s.pens.find(p=>p.id===id)!;if(!old.boundary.length)s.packed.paddock--;pen.boundary=structuredClone(poly);pen.gate=gate;return penWalkRoute(pen,gatePoint(pen)!,animalApproach('coop',pen.coop))&&farmAnimalWalk(next,{x:170,y:620},gatePoint(pen)!,(x,y)=>worldBlocked(x,y,next.travel.estate.pondExpansion),pen)?next:null;}
+export function paddockPlacementIssue(source:Snapshot,id:number,poly:P[],gate:number):string|null{
+ const old=source.travel.livestock?.pens.find(p=>p.id===id);if(!old)return 'Válaszd ki a kifutóhoz tartozó ólat.';
+ if(!old.boundary.length&&!source.travel.livestock?.packed.paddock)return 'Előbb vegyél kifutócsomagot a Gazdaudvarban.';
+ const shape=paddockShapeIssue(source,old,poly);if(shape)return shape;
+ if(!Number.isInteger(gate)||gate<0||gate>=poly.length||Math.hypot(poly[gate].x-poly[(gate+1)%poly.length].x,poly[gate].y-poly[(gate+1)%poly.length].y)<42)return 'Válassz hosszabb oldalt, hogy elférjen a kapu.';
+ const pen={...old,boundary:poly,gate},livestock=source.travel.livestock!,next={...source,travel:{...source.travel,livestock:{...livestock,pens:livestock.pens.map(p=>p.id===id?pen:p)}}};
+ if(!penWalkRoute(pen,gatePoint(pen)!,animalApproach('coop',pen.coop)))return 'A kaputól nem lehet eljutni az ólhoz. Válassz másik kapuoldalt.';
+ if(!farmAnimalWalk(next,{x:170,y:620},gatePoint(pen)!,(x,y)=>worldBlocked(x,y,next.travel.estate.pondExpansion),pen))return 'A kapu kívülről nem közelíthető meg. Hagyj szabad átjárót a farm felől.';
+ return null;
+}
+export function placePaddock(source:Snapshot,id:number,poly:P[],gate:number):Snapshot|null{if(paddockPlacementIssue(source,id,poly,gate))return null;const next=structuredClone(source),s=next.travel.livestock!,pen=s.pens.find(p=>p.id===id)!;if(!pen.boundary.length)s.packed.paddock--;pen.boundary=structuredClone(poly);pen.gate=gate;return next;}
 export function placeAnimalFixture(source:Snapshot,id:number,kind:AnimalFixture,p:P,rotation=0):Snapshot|null{const old=source.travel.livestock?.pens.find(p=>p.id===id);if(!old||old.fixtures[kind]||!source.travel.livestock?.packed[kind]||(rotation!==0&&rotation!==1)||rotation===1&&!['dustBath','perch'].includes(kind)||!canPlaceAnimalFixture(source,old,kind,p,rotation))return null;const next=structuredClone(source),s=next.travel.livestock!,pen=s.pens.find(p=>p.id===id)!;s.packed[kind]--;pen.fixtures[kind]={...p};if(rotation)pen.rotations={...pen.rotations,[kind]:1};return next;}
 export function animalAreaOccupied(s:Snapshot,box:AnimalBox){const poly=boxCorners(box);return (s.travel.livestock?.pens??[]).some(pen=>animalBoxOverlap(box,movedAnimalBox('coop',pen.coop))||pen.boundary.length&&animalPolygonsOverlap(poly,pen.boundary));}
 // A real route through the farm gate, around existing beds and furniture.
