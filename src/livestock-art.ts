@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import {animalItemNames,type AnimalItem,type AnimalPen,type HenVariety} from './livestock';
 import {gatePoint} from './livestock-geometry';
-export function drawAnimalItem(g:Phaser.GameObjects.Graphics,item:Exclude<AnimalItem,'paddock'>,x=0,y=0,day=1,pen?:AnimalPen,rotation=0){
+export function drawAnimalItem(g:Phaser.GameObjects.Graphics,item:Exclude<AnimalItem,'paddock'>,x=0,y=0,day=1,pen?:AnimalPen,rotation=0,fillProgress=1){
  const rect=(xx:number,yy:number,w:number,h:number,c:number)=>g.fillStyle(c).fillRoundedRect(x+xx,y+yy,w,h,.8);
  const line=(xx:number,yy:number,xxx:number,yyy:number,c:number,w=1)=>g.lineStyle(w,c).lineBetween(x+xx,y+yy,x+xxx,y+yyy);
  const oval=(xx:number,yy:number,w:number,h:number,c:number,a=1)=>g.fillStyle(c,a).fillEllipse(x+xx,y+yy,w,h);
@@ -17,9 +17,17 @@ export function drawAnimalItem(g:Phaser.GameObjects.Graphics,item:Exclude<Animal
   g.fillStyle(0x9c8459).fillPoints([{x:x+5,y:y+1},{x:x+23,y:y+1},{x:x+31,y:y+9},{x:x+10,y:y+9}],true);for(let i=0;i<3;i++)line(8+i*3,3+i*2,25+i*2,3+i*2,0xd9bc83,.8);
   if(pen&&day-pen.cleanedDay>=3){for(let i=0;i<13;i++){const xx=-31+(i*19)%61,yy=-5+(i*7)%15;oval(xx,yy,3+i%3,1.8,0x665c40,.75);if(i%3===0)line(xx-2,yy-1,xx+2,yy+1,0xb3a074,.8);}rect(-33,-7,18,3,0x776345);}
  }else if(item==='feeder'){
-  oval(0,7,37,13,0x45543b,.22);rect(-15,-7,30,15,0x92754a);oval(0,-6,32,10,0xbd9f66);oval(0,-7,27,7,0xd9c184);for(let i=0;i<12;i++)oval(-11+(i*7)%23,-8+(i%3),1.6,1,pen&&pen.feed>0?0xa58a4b:0xb69b6b);line(-14,2,14,2,0xceb486,.8);
+  const filled=!!pen&&pen.feed>0,level=filled?fillProgress:0;
+  oval(1,8,37,12,0x354a34,.24);rect(-14,-5,28,12,0x806548);oval(0,-5,32,12,0xc6a775);oval(0,-5,27,8,0x695338);
+  for(let xx=-11;xx<=11;xx+=5)line(xx,0,xx,6,0xb59563,.8);oval(0,0,31,8,0xa78859);oval(0,-5,27,8,0x695338);
+  for(let i=0;i<Math.floor(40*level);i++){const xx=-11+(i*17%23),yy=-7+(i*7%6);oval(xx,yy,2.8,1.8,i%3?0xd6b354:0xefd080);line(xx-.3,yy-.7,xx+.3,yy+.4,0xa7833f,.35);}
+  g.lineStyle(1.2,0xe0c18c).strokeEllipse(x,y-5,31,11);line(-14,3,14,3,0xc5a575);
+  if(filled&&fillProgress<1)for(let i=0;i<8;i++){const t=(fillProgress*3+i/8)%1;oval(-9+i*2.5,-24+t*18,2,2.7,0xe7c362);}
  }else if(item==='drinker'){
-  oval(0,7,29,11,0x5d776b);oval(0,5,25,8,pen?.wateredDay===day?0x9bc2b9:0x8c9b82);rect(-7,-17,14,21,0xa7b5a2);oval(0,-17,14,5,0xd3d8bd);line(-4,-14,-4,-3,0xe0e3ca,1.5);line(6,-14,6,1,0x6f8a7a,.6);
+  const wet=pen?.wateredDay===day,level=wet?fillProgress:0;
+  oval(0,7,29,11,0x5d776b);oval(0,5,25,8,0x687c68);if(level>0){oval(0,5,24*level,7*level,0x81b7b4);g.lineStyle(.8,0xd5e4cc,.8).strokeEllipse(x-1,y+4,17*level,4*level);}
+  rect(-7,-17,14,21,0xa7b5a2);oval(0,-17,14,5,0xd3d8bd);line(-4,-14,-4,-3,0xe0e3ca,1.5);line(6,-14,6,1,0x6f8a7a,.6);
+  if(wet&&fillProgress<1){line(-13,-24,-8,4,0xa8d4cf,2);for(let i=0;i<4;i++)oval(-9+i*5,3-Math.sin(fillProgress*15+i)*2,1.4,1,0xe0ebd5);}
  }else if(item==='dustBath'){
   if(rotation){oval(0,5,30,46,0x8a7e5c);oval(-1,3,25,40,0xc6b68d);oval(-1,2,20,34,0xd6c59d);for(let i=0;i<16;i++)oval(-8+(i*7)%17,-12+(i*11)%33,1.4,1,0xa8986e,.7);return;}
   oval(0,6,48,23,0x8a7e5c);oval(-1,3,42,19,0xc6b68d);oval(-2,2,34,12,0xd6c59d);for(let i=0;i<18;i++)oval(-17+(i*13)%34,-3+(i*7)%12,1.4,1,0xa8986e,.7);
@@ -42,11 +50,14 @@ export function drawHen(g:Phaser.GameObjects.Graphics,variety:HenVariety,time:nu
  if(activity==='dust'){g.fillStyle(0xc8b58d,.5);for(let i=0;i<4;i++)g.fillCircle(Math.sin(time*3+i)*13,-3-Math.abs(Math.cos(time*2+i))*8,1.2);}
  if(activity==='rest')g.fillStyle(base).fillEllipse(0,-5,17,9);
 }
-export function drawAnimalFence(g:Phaser.GameObjects.Graphics,pen:Pick<AnimalPen,'boundary'|'gate'|'coopWall'>,gateOpen=false,edge?:number,preview?:{color:number;closed?:boolean}){
+export function drawAnimalFence(g:Phaser.GameObjects.Graphics,pen:Pick<AnimalPen,'boundary'|'gate'|'coopWall'>,gateOpen:boolean|number=false,edge?:number,preview?:{color:number;closed?:boolean}){
  g.clear();const points=pen.boundary,dark=preview?.color??0x70573c,light=preview?.color??0xc3a170,brace=preview?.color??0xa88b5c,post=preview?.color??0xb28d5b,cap=preview?.color??0xd3b078;if(!points.length)return;
  for(let i=0;i<points.length-(preview?.closed===false?1:0);i++){if(i===pen.coopWall||edge!==undefined&&i!==edge)continue;const a=points[i],b=points[(i+1)%points.length],length=Math.hypot(b.x-a.x,b.y-a.y),dx=(b.x-a.x)/length,dy=(b.y-a.y)/length,n=Math.max(1,Math.ceil(length/34));if(length<.001)continue;
   const rail=(from:number,to:number)=>{for(const h of [9,20]){g.lineStyle(3.5,dark).lineBetween(a.x+dx*from,a.y+dy*from-h,b.x-dx*(length-to),b.y-dy*(length-to)-h);g.lineStyle(1,light).lineBetween(a.x+dx*from,a.y+dy*from-h-1,b.x-dx*(length-to),b.y-dy*(length-to)-h-1);}};
-  if(i===pen.gate){rail(0,Math.max(0,length/2-18));rail(Math.min(length,length/2+18),length);if(!gateOpen){rail(length/2-18,length/2+18);g.lineStyle(1.5,brace).lineBetween(a.x+dx*(length/2-17),a.y+dy*(length/2-17)-8,a.x+dx*(length/2+17),a.y+dy*(length/2+17)-22);}}
+  if(i===pen.gate){rail(0,Math.max(0,length/2-18));rail(Math.min(length,length/2+18),length);const t=typeof gateOpen==='number'?gateOpen:gateOpen?1:0,hinge={x:a.x+dx*(length/2-18),y:a.y+dy*(length/2-18)},angle=t*Math.PI*.46,ux=dx*Math.cos(angle)-dy*Math.sin(angle),uy=dy*Math.cos(angle)+dx*Math.sin(angle);
+   for(const h of [9,20]){g.lineStyle(3.5,dark).lineBetween(hinge.x,hinge.y-h,hinge.x+ux*36,hinge.y+uy*36-h);g.lineStyle(1,light).lineBetween(hinge.x,hinge.y-h-1,hinge.x+ux*36,hinge.y+uy*36-h-1);}g.lineStyle(1.5,brace).lineBetween(hinge.x,hinge.y-8,hinge.x+ux*36,hinge.y+uy*36-22);
+   for(const d of [0,36]){g.lineStyle(3,dark).lineBetween(hinge.x+ux*d,hinge.y+uy*d-24,hinge.x+ux*d,hinge.y+uy*d-5);}for(const d of [length/2-19,length/2+19]){g.fillStyle(dark).fillRect(a.x+dx*d-2,a.y+dy*d-27,4,29);g.fillStyle(cap).fillRect(a.x+dx*d-3,a.y+dy*d-28,6,2);}}
+
   else rail(0,length);
   for(let j=0;j<=n;j++){const d=length*j/n;if(i===pen.gate&&Math.abs(d-length/2)<16)continue;const x=a.x+dx*d,y=a.y+dy*d;g.fillStyle(dark).fillRect(x-2.5,y-26,5,28);g.fillStyle(post).fillRect(x-2,y-25,2,24);g.fillStyle(cap).fillRect(x-3,y-27,6,2);}
  }

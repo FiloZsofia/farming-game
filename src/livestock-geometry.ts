@@ -5,6 +5,7 @@ import {pondOutline} from './pond-shape';
 import {placementDebris} from './cleanup';
 import {junkSites,junkPoint,junkPlacementRadius} from './junk-sites';
 import {marketStand} from './market-site';
+import {nearestBasePath} from './garden-path';
 import {pathFootprint} from './garden-path-footprint';
 import type {Snapshot} from './storage';
 import {createLivestock,animalItems,coopWallForBoundary,type AnimalPoint as P,type AnimalItem,type AnimalPen,type AnimalFixture} from './livestock';
@@ -83,7 +84,13 @@ export function farmAnimalWalk(s:Snapshot,start:P,end:P,blockedWorld:(x:number,y
   return !pens.some(old=>{const pen=targetPen?.id===old.id?targetPen:old;if(!pen.boundary.length)return false;const gate=gatePoint(pen);if(gate&&Math.hypot(p.x-gate.x,p.y-gate.y)<20&&pen.id===targetPen?.id)return false;return inAnimalPolygon(p,pen.boundary);});
  };
  const nearest=(p:P)=>{const list:P[]=[];for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++){const q={x:minX+Math.round((p.x-minX)/step)*step+dx*step,y:minY+Math.round((p.y-minY)/step)*step+dy*step};if(free(q))list.push(q);}return list.sort((a,b)=>Math.hypot(a.x-p.x,a.y-p.y)-Math.hypot(b.x-p.x,b.y-p.y))[0];};
- const a=nearest(start),b=nearest(end);if(!a||!b)return null;const key=(p:P)=>`${p.x},${p.y}`,queue=[a],seen=new Map<string,P|null>([[key(a),null]]);let found:P|null=null;
- for(let i=0;i<queue.length&&i<12000;i++){const p=queue[i];if(key(p)===key(b)){found=p;break;}for(const [dx,dy]of [[step,0],[-step,0],[0,step],[0,-step]]){const q={x:p.x+dx,y:p.y+dy};if(!seen.has(key(q))&&free(q)&&free({x:(p.x+q.x)/2,y:(p.y+q.y)/2})){seen.set(key(q),p);queue.push(q);}}}
+ const a=nearest(start),b=nearest(end);if(!a||!b)return null;
+ const key=(p:P)=>`${p.x},${p.y}`,paths=s.travel.homestead?.garden.paths??[],costCache=new Map<string,number>();
+ const cost=(p:P)=>{const k=key(p),known=costCache.get(k);if(known!==undefined)return known;const base=nearestBasePath(p,farmLayout.paths),onPath=!!base&&base.distance<=base.width/2||paths.some(q=>Math.hypot(p.x-q.x,p.y-q.y)<13),value=onPath?1:5;costCache.set(k,value);return value;};
+ type Node={p:P;score:number;cost:number};const heap:Node[]=[];
+ const push=(n:Node)=>{heap.push(n);let i=heap.length-1;while(i){const j=(i-1)>>1;if(heap[j].score<=n.score)break;heap[i]=heap[j];i=j;}heap[i]=n;};
+ const pop=()=>{const first=heap[0],last=heap.pop()!;if(heap.length){let i=0;while(i*2+1<heap.length){let j=i*2+1;if(j+1<heap.length&&heap[j+1].score<heap[j].score)j++;if(heap[j].score>=last.score)break;heap[i]=heap[j];i=j;}heap[i]=last;}return first;};
+ const seen=new Map<string,P|null>([[key(a),null]]),dist=new Map<string,number>([[key(a),0]]);push({p:a,score:0,cost:0});let found:P|null=null;
+ for(let i=0;heap.length&&i<40000;i++){const n=pop(),p=n.p;if(n.cost!==dist.get(key(p)))continue;if(key(p)===key(b)){found=p;break;}for(const [dx,dy]of [[step,0],[-step,0],[0,step],[0,-step]]){const q={x:p.x+dx,y:p.y+dy};if(!free(q)||!free({x:(p.x+q.x)/2,y:(p.y+q.y)/2}))continue;const next=n.cost+cost(q);if(next<(dist.get(key(q))??Infinity)){dist.set(key(q),next);seen.set(key(q),p);push({p:q,cost:next,score:next+(Math.abs(q.x-b.x)+Math.abs(q.y-b.y))/step});}}}
  if(!found)return null;const result=[end];let p:P|null=found;while(p){result.unshift(p);p=seen.get(key(p))??null;}result.unshift(start);return result;
 }

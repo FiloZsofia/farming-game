@@ -62,3 +62,9 @@ Kerítésrajzoláskor a terv jól látható, fehér kerítésként jelenik meg. 
 A kifutó kerítése az ól két első, jelölt sarkához csatlakoztatható. Ilyenkor az ól fala zárja a területet: nem kell a teljes épületet körbekeríteni, és nem rajzolunk kerítést az ajtó elé. A sarkok közelében a végpont automatikusan a csatlakozási pontra illeszkedik. Ha a rajz az egyik saroktól indul és a másikhoz ér, automatikusan lezárul; ezután a kapu választható ki, és érvényes területnél aktív az Elkészítem. A nyitott rajz állapotát külön üzenet jelzi, és legalább három sarok után külön Rajz lezárása gomb is használható. A fal jelölése a mentésben megmarad, üres kifutó felvételekor törlődik; a régi, teljesen körbekerített kifutók is működnek.
 
 A Kifutó kialakítása ablak kifejezetten jelzi: a kerítés csatlakozhat az ól két oldalához, vagy teljesen körbeveheti az ólat. A pontok közé egyenes szakaszokat rajzolunk; az egyenes szakasz közbenső kattintásait összevonjuk. A gaz sem itt, sem más építésnél nem akadály: a lerakott tárgy, illetve a kész kifutó területén levő gaz jutalom nélkül eltűnik, a kívül maradó gaz nem zavarja az építést.
+
+### Etetés, kapu és szállítás – 2026-11-23
+- Az etetőben felismerhető kukoricaszemek látszanak; feltöltéskor rövid szórás, az itatónál vízsugár és terjedő víztükör jelzi a tartalmat.
+- A kapuszárny látható zsanér körül nyílik és csukódik, nem tűnik el.
+- Mara az eredeti és a játékos által épített ösvényeket előnyben részesítő, akadályokat kerülő útvonalat használja. Az ösvény nélküli utolsó megközelítés továbbra is lehetséges.
+- Egy vagy több tyúk is fedeles szállítókosárban érkezik, Mara arca szabadon marad. Az egy kifutóba rendelt tyúkok egy közös fuvarral a kapuhoz kerülnek: Mara leteszi és kinyitja a kosarat, a tyúkok egymás után az ólhoz sétálnak. Az átadást egyedenként mentjük, a már átadott tyúk nem duplázódhat.

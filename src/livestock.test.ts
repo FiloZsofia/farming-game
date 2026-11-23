@@ -5,7 +5,7 @@ import {createGarden} from './gardening';
 import {enableHomestead} from './homestead-migration';
 import {debris} from './cleanup';
 import {createLivestock,animalItems,fixtureKinds,penMissing,buyAnimalItem,orderHen,deliverHen,advanceLivestock,tendPen,packAnimalItem,validLivestock,renameHen,packEmptyPaddock} from './livestock';
-import {placeCoop,placePaddock,placeAnimalFixture,penWalkRoute,gatePoint,animalApproach,canDrawPaddock,paddockPlacementIssue} from './livestock-geometry';
+import {farmAnimalWalk,placeCoop,placePaddock,placeAnimalFixture,penWalkRoute,gatePoint,animalApproach,canDrawPaddock,paddockPlacementIssue} from './livestock-geometry';
 import {farmProductPrice,farmProductAccount} from './farm-products';
 import {transferStand} from './farm-market';
 import {inventoryCounts,canCarryChange} from './chests';
@@ -60,4 +60,9 @@ describe('coop wall as a paddock boundary',()=>{
  it('clears the wall marker when an empty attached enclosure is packed',()=>{const s=placePaddock(plot(),1,attached,2)!;const n=packEmptyPaddock(s,1)!;expect(n.travel.livestock!.pens[0].coopWall).toBeUndefined();expect(validSnapshot(n)).toBe(true);});
  it('does not allow a gate through the coop wall',()=>{expect(paddockPlacementIssue(plot(),1,attached,5)).toContain('szabad kerítésszakaszra');});
  it('rejects an imported wall marker on another edge',()=>{const s=placePaddock(plot(),1,attached,2)!;s.travel.livestock!.pens[0].coopWall=2;expect(validSnapshot(s)).toBe(false);});
+});
+
+describe('Mara follows farm paths',()=>{
+ it('prefers a player-built detour over cutting across the grass',()=>{const s=fresh();s.travel.estate.trees=[];s.travel.homestead!.garden.beds=[];const points=[];for(let y=-300;y<=-216;y+=12)points.push({x:-336,y});for(let x=-324;x<=-96;x+=12)points.push({x,y:-216});for(let y=-228;y>=-300;y-=12)points.push({x:-96,y});s.travel.homestead!.garden.paths=points.map((p,i)=>({...p,id:i+1,material:'wood' as const,angle:0,previous:i||null}));const route=farmAnimalWalk(s,points[0],points.at(-1)!,()=>false);expect(route).not.toBeNull();expect(route!.some(p=>p.y>=-228)).toBe(true);});
+ it('uses the original farm entrance path',()=>{const s=fresh();const route=farmAnimalWalk(s,{x:170,y:620},{x:249,y:328},()=>false);expect(route).not.toBeNull();expect(route!.some(p=>Math.hypot(p.x-168,p.y-500)<24)).toBe(true);});
 });
