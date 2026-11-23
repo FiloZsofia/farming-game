@@ -71,3 +71,5 @@ A Kifutó kialakítása ablak kifejezetten jelzi: a kerítés csatlakozhat az ó
 
 ### Berendezések részletei – 2026-11-23
 Az ól harmadik napra poros, kikopott talajjal, szétszórt alommal és kitépett fűszálakkal jelzi a takarítás szükségességét; takarításkor ezek egyszerre eltűnnek. Az etető elkülönülő, fényes kukoricaszemeket, a porfürdő homokrétegeket és kaparásnyomokat, az árnyékoló merevítéseket és tagolt tetőt kapott. Az itató feltöltésekor a vízsugár mindig Sam aktuális kanna-kifolyójának világkoordinátájából indul a tál felé, nem a berendezéshez rögzített oldalról. A működést mindkét oldalról ellenőrizzük.
+
+A karám és az ülőrúd ugyanazt a részletes faanyag-megjelenést követi: világos élek, finom erezet, csomók, csavarok, megerősített illesztések, talajárnyékok. A kapu zsanérjai és retesze is látható; a rajzolási előnézet továbbra is fehér/piros. Az ülőrúd mindkét elforgatásban talpakat, támaszokat és lekerekített végeket kapott. A tyúkok változatlan méretben kerekebb testtel, puhább tollformákkal, kisebb csőrrel és fényes szemmel jelennek meg. A kosz az ól előtti területet és a feljáró környékét szélesebb körben érinti.
