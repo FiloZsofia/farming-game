@@ -1,3 +1,4 @@
+import {showShopNotice,FULL_SHOP_NOTICE} from './shop-feedback';
 import Phaser from 'phaser';
 import {itemIcon} from './item-icons';
 import {worldText} from './world-text';
@@ -17,9 +18,9 @@ export class LivestockController{
  get active(){return this.placing!==null;}
  get hint(){return this.hintText;}
  private button(parent:HTMLElement,text:string,action:()=>void,disabled=false){const b=document.createElement('button');b.type='button';b.textContent=text;b.disabled=disabled;b.onclick=()=>{if(!this.saving)action();};parent.append(b);return b;}
- private async commit(next:Snapshot|null,after?:()=>void){if(!next||this.saving)return false;if(!canCarryChange(this.host.read(),next)){this.host.notice('Nincs elég hely a Készletben.');return false;}this.saving=true;let ok=false;try{ok=await this.host.commit(next);}finally{this.saving=false;}if(ok){this.signature='';after?.();}return ok;}
+ private async commit(next:Snapshot|null,after?:()=>void){if(!next||this.saving)return false;if(!canCarryChange(this.host.read(),next)){if(!showShopNotice(FULL_SHOP_NOTICE))this.host.notice('Nincs elég hely a Készletben.');return false;}this.saving=true;let ok=false;try{ok=await this.host.commit(next);}finally{this.saving=false;}if(ok){this.signature='';after?.();}return ok;}
  openShop(){
-  this.host.show('Gazdaudvar','A tyúkokat csak elkészült, berendezett kifutóba rendelheted. A Készletben maradt felszerelés még nem számít. Mara a másnapi fuvarral hozza őket, és a helyükre viszi.');this.host.shopPresentation?.();
+  this.host.show('Gazdaudvar','Mielőtt tyúkokat rendelsz, készítsd elő az otthonukat: helyezd le az ólat, alakítsd ki körülötte a kifutót, és tedd a helyükre a berendezéseket. Mara másnap elhozza az új lakókat.');this.host.shopPresentation?.();
   const panel=document.querySelector<HTMLElement>('#shop-panel')!;panel.replaceChildren();panel.hidden=false;const s=this.host.state()??createLivestock(this.host.day());
   const heading=document.createElement('h3');heading.textContent='Otthon és berendezések';panel.append(heading);
   for(const kind of [...animalItems,'feed'] as const){const card=document.createElement('article');card.className='shop-card';const icon=itemIcon(kind==='feed'?'animalFeed':`animal:${kind}`),text=document.createElement('div'),name=document.createElement('strong'),info=document.createElement('p');name.textContent=kind==='feed'?'Eleség · 10 adag':animalItemNames[kind];info.textContent=descriptions[kind];text.append(name,info);card.append(icon,text);const price=kind==='feed'?FEED_PRICE:animalItemPrices[kind];this.button(card,`${price} gold · Megveszem`,()=>void this.commit(buyAnimalItem(this.host.read(),kind),()=>this.openShop()),this.host.read().economy.gold<price);panel.append(card);}

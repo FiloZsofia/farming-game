@@ -1,3 +1,4 @@
+import {showShopNotice,clearShopNotice,FULL_SHOP_NOTICE} from './shop-feedback';
 import {AnimalShopDisplayArt} from './animal-shop-exterior';
 import {LivestockController} from './livestock-controller';
 import {advanceLivestock,animalItemNames,animalItems,type AnimalItem} from './livestock';
@@ -122,6 +123,7 @@ const menuPresentation=new MenuPresentation(dialogue);
 let workshopIsKnown=false;
 const story="Sam egy kutatólaborban dolgozott, ahol rovarokon élősködő gombákat vizsgáltak.\n\nAz utolsó hónapokban egy szokatlan minta érkezett a laborba. Az eredmények nem illettek ahhoz, amit addig tudtak. Sam még azelőtt eljött, hogy kiderült volna, mit találtak.\n\n„Szeretném megtudni, képes vagyok-e a saját kezemmel otthont teremteni ezen a helyen.”";
 function showDialogue(title:string,text:string,label='A BIRTOKON'){
+ clearShopNotice();
  if(materialHandoffOnClose){dialogue.removeEventListener('close',materialHandoffOnClose);materialHandoffOnClose=null;}
  if(['IRÁNYÍTÁS','A RÉGI MŰHELY','EGY KEDVES SZÓ'].includes(label))text=workshopText(text,workshopIsKnown);label=workshopText(label,workshopIsKnown);
  delete dialogue.dataset.window;
@@ -275,6 +277,7 @@ class Farm extends Phaser.Scene {
  private saveRevision=0;
  private lockRelease:(()=>void)|null=null;
  private notice(text:string){
+  if(showShopNotice(text))return;
   const el=document.querySelector<HTMLElement>('#feedback')!;el.classList.add('notice');el.textContent=text;this.feedbackUntil=this.time.now+5000;
  }
  private async persist(){
@@ -315,7 +318,7 @@ class Farm extends Phaser.Scene {
  }
  private async saveChecked(next:Snapshot){
   if(this.hasFarm&&!canCarryChange(this.currentSnapshot(),next)){
-   showDialogue('Megtelt a hátizsákod.','16 rekesz áll rendelkezésedre. Adj el vagy tegyél ládába néhány tárgyat, hogy legyen hely az újaknak. A fel nem vett tárgy megmarad.','HÁTIZSÁK');
+   if(!showShopNotice(FULL_SHOP_NOTICE))showDialogue('Megtelt a hátizsákod.','16 rekesz áll rendelkezésedre. Adj el vagy tegyél ládába néhány tárgyat, hogy legyen hely az újaknak. A fel nem vett tárgy megmarad.','HÁTIZSÁK');
    throw new Error('A hátizsák megtelt.');
   }
   recordStoryProgress(next.travel,next.clock.day);
@@ -1036,7 +1039,7 @@ class Farm extends Phaser.Scene {
   this.transitioning=true;this.saveRevision++;document.querySelectorAll<HTMLButtonElement>('[data-buy-good]').forEach(b=>b.disabled=true);
   const travel=structuredClone(this.travel),economy={...this.economy,gold:purchase.gold};travel.estate=purchase.estate;
   try{await this.saveChecked(snapshot(this.actor,this.clock,this.garden,economy,this.orders,this.farmName,this.clearing,this.story,this.skill,this.farmerName,travel));this.adoptTravel(travel);this.economy=economy;this.transitioning=false;this.openShop(shop,`${goodNames[good]} a készletedbe került. Tab → Készlet → Elhelyezem.`);}
-  catch(error){this.transitioning=false;if(!(error instanceof Error&&error.message==='A hátizsák megtelt.'))this.openShop(shop,'Nem sikerült menteni. Az aranyad és a készleted változatlan maradt.');}
+  catch(error){this.transitioning=false;if(error instanceof Error&&error.message==='A hátizsák megtelt.'){this.openShop(shop);showShopNotice(FULL_SHOP_NOTICE);}else this.openShop(shop,'Nem sikerült menteni. Az aranyad és a készleted változatlan maradt.');}
   finally{this.transitioning=false;this.lastTick=performance.now();}
  }
  private estateLand(x:number,y:number){

@@ -84,3 +84,5 @@ A `#blueprints-page` minden közvetlen `.inventory-card` eleme automatikusan a k
 Az Ismerősök közös portrésora kör alakú avatárokat és neveket használ, külön négyszögletes gombkeret nélkül. A kijelölt portré nagyobb, arany gyűrűt és fényudvart kap; a név arany, félkövér és aláhúzott. Alatta egy közös helyen a meglévő karakterleírás látszik. Egér, fókusz és érintés azonos tartalmat tesz elérhetővé; mobilon a sor törhet. A közös beszélgetésablak és a Tovább gomb stílusa megmarad.
 
 - Az Állatgondozó az Ágyáskezelővel közös oldalsó panelstílust használja: jobb oldali elhelyezés, azonos méret, tipográfia, görgetés és gombok; mobilon alul igazodik a képernyőhöz. Minden megnyitás lecseréli a panel tartalmát, soha nem fűzi a korábbi nézethez.
+
+- Vásárlás közbeni visszajelzés a nyitott bolt ablakán belül, a `shop-feedback.ts` közös útvonalán jelenjen meg. A vásárlás elutasítását nem jelezhetjük a modális ablak mögé takart játék-HUD-on. Megtelt Készletnél a vásárlás és a goldlevonás együtt maradjon el; a bolti gombok használhatók maradjanak.

@@ -148,3 +148,5 @@
 .world-text-label{position:absolute;left:0;top:0;transform-origin:0 0;white-space:pre;box-sizing:border-box;paint-order:stroke fill;text-rendering:optimizeLegibility;pointer-events:none}
 .world-text-label[hidden]{display:none}
 .world-text-label[data-kind="thought"]{background:#fff0cc!important;border-radius:4px;box-shadow:0 0 0 2px #fff0cc}
+
+#dialogue #shop-feedback{grid-column:1/-1;flex-shrink:0;padding:12px 14px;margin:12px 0;border:1px solid var(--window-border);border-left:4px solid #e0bc6f;border-radius:3px;background:#51452af0;color:#fff0c7;font:14px/1.5 var(--reading-font)}#dialogue #shop-feedback[hidden]{display:none}
