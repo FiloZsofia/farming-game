@@ -1,3 +1,4 @@
+import {animalShopSite,animalShopSolid,animalShopDisplayBounds} from './animal-shop-site';
 import {brookClearForTree} from './brook-layout';
 import {nurseryTreeClear,nurserySolid,nurseryDoor} from './nursery-grounds';
 import {boundsOffPaths} from './path-clearance';
@@ -13,7 +14,7 @@ import {blocked,type Box} from './movement';
 export const WORLD_HEIGHT=1520;
 export const WORLD_WIDTH=1000;
 export const villageLayout={
- animalShop:{x:790,y:1135,w:180,h:70,door:{x:882,y:1214},entrance:{x:866,y:1155,w:34,h:62}},
+ animalShop:animalShopSite,
  craftShop:{x:560,y:1220,w:200,h:112,door:{x:660,y:1341},entrance:{x:645,y:1290,w:34,h:57}},
  nursery:{x:510,y:840,w:165,h:106,door:nurseryDoor,entrance:{x:580,y:898,w:29,h:65}},
  fishShop:{x:665,y:960,w:230,h:128,door:{x:708,y:1100},entrance:{x:690,y:1030,w:35,h:76}},
@@ -34,7 +35,7 @@ export const villagePaths=[
  {width:23,points:[[493,1320],[493,1364],[660,1364],[660,1341]]},
  {width:20,points:[[107,930],[-100,930],...quadraticPath([-100,930],[-135,930],[-165,944],8).slice(1),...roundedPath([[-165,944],[-270,1000],[-450,995],[-570,962],[-660,978],[-780,984],[-940,1010]]).slice(1)]},
  {width:32,points:[[170,740],[170,860],[170,930],...quadraticPath([170,930],[265,945],[350,1000]).slice(1),[476,1060],[493,1320],[493,WORLD_HEIGHT-6]]},
- {width:20,points:[[605,1145],[730,1145],[775,1218],[882,1218],[882,1214]]},
+ {width:16,points:[[605,1145],[730,1145],[774,1206],[774,1348],[882,1348],[882,1324]]},
 ];
 // The whole harvestable crown stays off paving, with a clear margin around its leaves.
 export const forageBushBounds=(b:{x:number;y:number})=>({left:b.x-20,right:b.x+20,top:b.y-22,bottom:b.y+8});
@@ -44,7 +45,7 @@ export function forageBushOffPaths(b:{x:number;y:number}){
 export function woodlandTreeCoversBush(x:number,y:number,scale=1){return villageLayout.bushes.some(b=>{const box=forageBushBounds(b);return x+42*scale>box.left-5&&x-42*scale<box.right+5&&y+7*scale>box.top-5&&y-105*scale<box.bottom+5;});}
 // Match the crown silhouette, leaving room under/along its tapered edges.
 export function woodlandTreeClear(x:number,y:number,scale=1,kind=0){
- if(!nurseryTreeClear(x,y,scale)||!brookClearForTree(x,y,scale))return false;
+ if(animalShopDisplayBounds.some(b=>x+42*scale>b.left&&x-42*scale<b.right&&y+7*scale>b.top&&y-105*scale<b.bottom)||!nurseryTreeClear(x,y,scale)||!brookClearForTree(x,y,scale))return false;
  if(villageLayout.benches.some(b=>{const p=benchPose(b.angle);return x+42*scale>p.x-40&&x-42*scale<p.x+40&&y+7*scale>p.y-43&&y-105*scale<p.y+12;}))return false;
  if([villageLayout.craftShop,villageLayout.nursery,villageLayout.fishShop,villageLayout.animalShop].some(building=>x+42*scale>building.x-12&&x-42*scale<building.x+building.w+12&&y+12*scale>building.y-40&&y-110*scale<building.y+building.h+12))return false;
  const pot=villageEntrancePot;if(x+42*scale>pot.x-16&&x-42*scale<pot.x+17&&y+7*scale>pot.y-28&&y-105*scale<pot.y+14)return false;
@@ -56,7 +57,7 @@ export const villageEntrancePot={x:225,y:1000};
 export const villageLamps=[{id:'fork',x:460,y:942},{id:'square',x:450,y:1240}] as const;
 export const workshopWallLamps=[{x:577,y:1297},{x:748,y:1297}] as const;
 export const villageLampLights=[...villageLamps.map(p=>({x:p.x,y:p.y-38,scale:1})),...workshopWallLamps.map(p=>({...p,scale:.6}))];
-export const villageWindows=[[528,873,28,29],[627,873,28,29],[753,1009,41,43],[825,1009,41,43],[578,1253,28,29],[712,1253,28,29],[804,1157,28,29],[930,1157,28,29]] as const;
+export const villageWindows=[[528,873,28,29],[627,873,28,29],[753,1009,41,43],[825,1009,41,43],[578,1253,28,29],[712,1253,28,29],[805,1210,26,33],[931,1210,26,33]] as const;
 export const lampBounds=(p:{x:number;y:number})=>({left:p.x-12,right:p.x+12,top:p.y-59,bottom:p.y+3});
 export type WoodlandTree={x:number;y:number;kind:number;scale?:number};
 // Preserve the actual trees affected by the new eastern road and the grass pull-off.
@@ -121,7 +122,7 @@ for(const origin of nurseryTreeOrigins){
 }
 const buildings:Box[]=[villageLayout.nursery,villageLayout.fishShop,villageLayout.craftShop,villageLayout.animalShop];
 export function villageBlocked(x:number,y:number){
- if(nurserySolid(x,y)||noticeBoardBlocked(x,y))return true;
+ if(nurserySolid(x,y)||noticeBoardBlocked(x,y)||animalShopSolid(x,y))return true;
  if([...villageTrees,...forestTrees].some(t=>Math.hypot((x-t.x)/12,(y-t.y)/9)<1))return true;
  if(villageLamps.some(p=>Math.abs(x-p.x)<8&&Math.abs(y-p.y)<5))return true;
  if(x>=-300&&x<=150&&y>=600&&y<=708)return false;
@@ -154,7 +155,7 @@ export function shopBlocked(x:number,y:number){
  if(x<108||x>692||yy<198||yy>510)return true;
  // Counter, side displays and shelving leave a broad central aisle.
  if(x>337&&x<563&&yy>230&&yy<291)return true;
- if((x<201||x>600)&&yy<425)return true;
+ if((x<201||x>600)&&yy<(shop==='animalShop'?485:425))return true;
  return false;
 }
 
@@ -171,7 +172,7 @@ export function benchContains(b:BenchPose,x:number,y:number){const dx=x-b.x,dy=y
 // Move only positions affected by those changes, preserving every possession.
 export function relocateVillagePlayer(player:{x:number;y:number}){
  const {x,y}=player,b=villageLayout.fishShop;
- const changed=nurserySolid(x,y)||villageLamps.some(p=>Math.abs(x-p.x)<8&&Math.abs(y-p.y)<5)||noticeBoardBlocked(x,y)||buildings.some(b=>x+7>b.x&&x-7<b.x+b.w&&y+3>b.y&&y-4<b.y+b.h)||[...villageTrees,...forestTrees].some(t=>Math.hypot((x-t.x)/12,(y-t.y)/9)<1)||(x+7>b.x&&x-7<b.x+b.w&&y+3>b.y&&y-4<b.y+b.h)||villageLayout.benches.some(p=>benchContains(benchPose(p.angle),x,y));
+ const changed=animalShopSolid(x,y)||nurserySolid(x,y)||villageLamps.some(p=>Math.abs(x-p.x)<8&&Math.abs(y-p.y)<5)||noticeBoardBlocked(x,y)||buildings.some(b=>x+7>b.x&&x-7<b.x+b.w&&y+3>b.y&&y-4<b.y+b.h)||[...villageTrees,...forestTrees].some(t=>Math.hypot((x-t.x)/12,(y-t.y)/9)<1)||(x+7>b.x&&x-7<b.x+b.w&&y+3>b.y&&y-4<b.y+b.h)||villageLayout.benches.some(p=>benchContains(benchPose(p.angle),x,y));
  if(!changed||!worldBlocked(x,y))return player;
  for(let distance=8;distance<=160;distance+=8)for(let angle=0;angle<Math.PI*2;angle+=Math.PI/8){const point={x:x+Math.cos(angle)*distance,y:y+Math.sin(angle)*distance};if(!worldBlocked(point.x,point.y))return point;}
  return {x:560,y:1100};

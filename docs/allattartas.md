@@ -44,3 +44,11 @@ A tyúkok sétálnak, csipegetnek, használják a porfürdőt és az árnyékos 
 ## Fejlesztési követelmények
 
 A világ és a térkép ugyanazokat a kifutóhatárokat használja. A kerítés, a berendezés, a karakter és a tyúk a talajon elfoglalt helye szerint takarjon. A vásárlás, rendelés, kiszállítás, gondozás, gyűjtés és tárolás a meglévő mentési és készletkorlátokat tartsa meg. Böngészős ellenőrzés csak elkülönített, `SaveStore.beginTest()` által védett farmon történhet.
+
+## Bolt és gondozófelület
+
+A megnövelt üzlet lejjebb áll, így a Kertitó Szaküzlet homlokzata szabad marad. A kihelyezett bemutató ól, etető, itató és zsákos eleség külön, közös helyadatból rajzolt és ütköző elemek; nem kerülhetnek ösvényre vagy a bejárat elé. A kirakat és az ablakfények ugyanazokat az ablakkoordinátákat követik. Belül bemutató ól, berendezett polcok, varrott eleséges zsákok és tojáskosár ad karaktert az üzletnek.
+
+Az ól kezelése az Ágyáskezelő stílusát megosztó, jobb oldali Állatgondozó panelen történik. A megnyitás mindig lecseréli a korábbi tartalmat; sem szöveg, sem gomb nem halmozódhat. A panel Tovább gombbal vagy Escape-pel zárható, eltávolodáskor és más ablak megnyitásakor eltűnik.
+
+A boltos gyakorlatias, türelmes és finom humorú állatbarát: észreveszi az állatok eltérő szokásait, a félénkek bizalmát nem sürgeti. A bemutatkozást és a váltakozó napi mondatokat ez a személyiség vezeti. A bolt és a szereplő végleges új neve külön névválasztásra vár; az ötletek nem automatikusan elfogadott nevek.

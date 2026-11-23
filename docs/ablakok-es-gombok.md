@@ -12,7 +12,7 @@ Ez az összes jelenlegi és jövőbeli játékablak alapja. Ne ablakonként más
 
 ## Kötelező ellenőrzési kör
 
-Főmenü, Menü és Beállítások; Történet és Irányítás; Postaláda (a laborlevéllel is), Eladóláda, Magkatalógus, Napló; a Készlet valamennyi füle; gépek és tárolóláda; hirdetőtábla mindkét lapja; mindhárom bolt vásárlási ablaka; Annie, Leo és Simon beszélgetései; kutatási ablakok, jutalmak és megerősítések. A speciális tartalmakat ne alakítsd át általános menüvé.
+Főmenü, Menü és Beállítások; Történet és Irányítás; Postaláda (a laborlevéllel is), Eladóláda, Magkatalógus, Napló; a Készlet valamennyi füle; gépek és tárolóláda; hirdetőtábla mindkét lapja; valamennyi bolt vásárlási ablaka és boltosának beszélgetései; kutatási ablakok, jutalmak és megerősítések. A speciális tartalmakat ne alakítsd át általános menüvé.
 
 ## Tárgyak áthelyezése
 
@@ -82,3 +82,5 @@ A `#blueprints-page` minden közvetlen `.inventory-card` eleme automatikusan a k
 
 ### Ismerősök portrésora
 Az Ismerősök közös portrésora kör alakú avatárokat és neveket használ, külön négyszögletes gombkeret nélkül. A kijelölt portré nagyobb, arany gyűrűt és fényudvart kap; a név arany, félkövér és aláhúzott. Alatta egy közös helyen a meglévő karakterleírás látszik. Egér, fókusz és érintés azonos tartalmat tesz elérhetővé; mobilon a sor törhet. A közös beszélgetésablak és a Tovább gomb stílusa megmarad.
+
+- Az Állatgondozó az Ágyáskezelővel közös oldalsó panelstílust használja: jobb oldali elhelyezés, azonos méret, tipográfia, görgetés és gombok; mobilon alul igazodik a képernyőhöz. Minden megnyitás lecseréli a panel tartalmát, soha nem fűzi a korábbi nézethez.

@@ -1,3 +1,4 @@
+import {drawAnimalShopFront} from './animal-shop-exterior';
 import {drawShrubLeaf} from './foliage-leaf';
 import {drawMaraBay} from './nursery-art';
 import {drawVillageDetails} from './village-details';
@@ -47,7 +48,7 @@ export function drawVillage(scene:Phaser.Scene){
   for(const [xx]of villageWindows.filter(([xx,yy])=>xx>=x&&xx<x+w&&yy>=y&&yy<y+h)){rect(xx-3,y+30,34,37,0xe6d7ac);rect(xx,y+33,28,29,0x4d6966);poly([xx+2,y+35,xx+26,y+35,xx+2,y+59],0xa5bcb0,.7);line(xx+14,y+34,xx+14,y+62,0xe5d6ad,2);line(xx+1,y+48,xx+27,y+48,0xe5d6ad,2);rect(xx-4,y+65,36,4,0x7c704f);}
   rect(x+w*.44-4,y+h,34,5,0xb9aa86);rect(x+w*.44-7,y+h+5,40,4,0xd0bf97);
  };
- const a=layout.animalShop;house(a.x,a.y,a.w,a.h,0x6f7c65,0xd7c39b);label(a.x+a.w/2,a.y+17,'ÁLLATOSBOLT',10);rect(866,1157,30,48,0x70553a);rect(870,1161,22,42,0xb19869);rect(873,1164,16,20,0xabc3ab);rect(888,1191,2,3,0xdbc58a);flowers(955,1215);
+ drawAnimalShopFront(scene,g);
  const c=layout.craftShop;house(c.x,c.y,c.w,c.h,0x856449,0xc7b18a);label(660,1242,'MŰHELYBOLT',11);
  // Open workshop doors and detailed wares are painted in a separate detail layer.
  rect(647,1285,27,47,0x394b38);poly([647,1285,633,1290,633,1333,647,1332],0x947047);poly([674,1285,688,1290,688,1333,674,1332],0xa47d4e);line(635,1295,644,1292,0xd0ac73);line(678,1293,685,1296,0xd0ac73);flowers(789,1334);
