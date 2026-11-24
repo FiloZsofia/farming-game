@@ -34,6 +34,7 @@ export class FarmMarketController{
  refresh(){if(!this.ready)return;this.stand.update(this.visibleCrates());}
  private visibleCrates(){const crates=structuredClone(this.state.crates);if(this.state.pendingDay!==null&&this.manifest.length)for(const loaded of this.manifest.slice(0,this.loaded))crates[loaded.index]=null;return crates;}
  actorDepth(person:Point,front=100){const depth=marketPersonDepth({x:this.truck?.root.x??0,y:this.truck?.root.y??0,heading:this.heading},person,!!this.truck?.root.visible,front);return this.host.animalDepth?.(person,depth)??depth;}
+ gateMoved(penId:number){if(this.flow==='animalDelivery'&&this.animals.destinationPenId===penId&&this.animals.pending())this.animals.reset(this.mara);}
  get animalVisitor(){return ['feedDelivery','animalDelivery'].includes(this.flow)?this.mara?.root??null:null;}
  get hint(){return !this.ready?'':this.nearMara()?'Mara · Beszélgetés · E / kattintás':this.nearStand()?'Terményátadó · E / kattintás':'';}
  nearStand(){const p=this.host.actor();return Math.hypot(Math.max(marketStand.left-p.x,0,p.x-marketStand.right),Math.max(marketStand.top-p.y,0,p.y-marketStand.bottom))<85;}

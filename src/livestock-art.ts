@@ -76,20 +76,20 @@ export function drawHen(g:Phaser.GameObjects.Graphics,variety:HenVariety,time:nu
  if(activity==='drink'&&Math.sin(time*4)>0){for(let i=0;i<2;i++)g.fillStyle(0xb7d8cd,.8).fillEllipse(10*look+i,-7-i*3,1,1.7);}
  if(activity==='rest')g.fillStyle(base).fillEllipse(0,-5,17,9);
 }
-export function drawAnimalFence(g:Phaser.GameObjects.Graphics,pen:Pick<AnimalPen,'boundary'|'gate'|'coopWall'>,gateOpen:boolean|number=false,edge?:number,preview?:{color:number;closed?:boolean}){
+export function drawAnimalFence(g:Phaser.GameObjects.Graphics,pen:Pick<AnimalPen,'boundary'|'gate'|'coopWall'|'gateOffset'>,gateOpen:boolean|number=false,edge?:number,preview?:{color:number;closed?:boolean}){
  g.clear();const points=pen.boundary,dark=preview?.color??0x70573c,light=preview?.color??0xc3a170,brace=preview?.color??0xa88b5c,post=preview?.color??0xb28d5b,cap=preview?.color??0xd3b078;if(!points.length)return;
  const wood=(ax:number,ay:number,bx:number,by:number,w=3.5)=>{g.lineStyle(w,dark).lineBetween(ax,ay,bx,by);g.lineStyle(w-1,post).lineBetween(ax,ay-.3,bx,by-.3);g.lineStyle(.7,light).lineBetween(ax,ay-1.1,bx,by-1.1);if(!preview){g.lineStyle(.45,brace).lineBetween(ax,ay+.7,bx,by+.7);const span=Math.hypot(bx-ax,by-ay);for(let d=13;d<span-5;d+=27){const t=d/span,xx=ax+(bx-ax)*t,yy=ay+(by-ay)*t;g.lineStyle(.45,0x846b4c).strokeEllipse(xx,yy,2.8,1);}}};
  const upright=(xx:number,yy:number)=>{if(!preview){g.fillStyle(0x344b34,.16).fillEllipse(xx+3,yy+2,11,4);}g.fillStyle(dark).fillRect(xx-2.5,yy-26,5,28);g.fillStyle(post).fillRect(xx-1.8,yy-25,3,26);g.lineStyle(.65,light).lineBetween(xx-1.5,yy-24,xx-1.5,yy);g.fillStyle(cap).fillPoints([{x:xx-3,y:yy-25},{x:xx-2,y:yy-28},{x:xx+2,y:yy-28},{x:xx+3,y:yy-25}],true);if(!preview){g.lineStyle(.5,0x876c49).lineBetween(xx+.5,yy-22,xx+.9,yy-12);for(const h of [9,20]){g.fillStyle(0x576056).fillCircle(xx+.2,yy-h,.7);g.fillStyle(0xd4c7a5).fillCircle(xx,yy-h-.2,.25);}}};
- for(let i=0;i<points.length-(preview?.closed===false?1:0);i++){if(i===pen.coopWall||edge!==undefined&&i!==edge)continue;const a=points[i],b=points[(i+1)%points.length],length=Math.hypot(b.x-a.x,b.y-a.y),dx=(b.x-a.x)/length,dy=(b.y-a.y)/length,n=Math.max(1,Math.ceil(length/34));if(length<.001)continue;
+ for(let i=0;i<points.length-(preview?.closed===false?1:0);i++){if(i===pen.coopWall||edge!==undefined&&i!==edge)continue;const a=points[i],b=points[(i+1)%points.length],length=Math.hypot(b.x-a.x,b.y-a.y),dx=(b.x-a.x)/length,dy=(b.y-a.y)/length,n=Math.max(1,Math.ceil(length/34)),center=length*(pen.gateOffset??.5);if(length<.001)continue;
   const rail=(from:number,to:number)=>{if(to<=from)return;for(const h of [9,20])wood(a.x+dx*from,a.y+dy*from-h,a.x+dx*to,a.y+dy*to-h);};
-  if(i===pen.gate){rail(0,Math.max(0,length/2-18));rail(Math.min(length,length/2+18),length);const t=typeof gateOpen==='number'?gateOpen:gateOpen?1:0,hinge={x:a.x+dx*(length/2-18),y:a.y+dy*(length/2-18)},angle=t*Math.PI*.46,ux=dx*Math.cos(angle)-dy*Math.sin(angle),uy=dy*Math.cos(angle)+dx*Math.sin(angle);
+  if(i===pen.gate){rail(0,Math.max(0,center-18));rail(Math.min(length,center+18),length);const t=typeof gateOpen==='number'?gateOpen:gateOpen?1:0,hinge={x:a.x+dx*(center-18),y:a.y+dy*(center-18)},angle=t*Math.PI*.46,ux=dx*Math.cos(angle)-dy*Math.sin(angle),uy=dy*Math.cos(angle)+dx*Math.sin(angle);
    for(const h of [9,20])wood(hinge.x,hinge.y-h,hinge.x+ux*36,hinge.y+uy*36-h);wood(hinge.x,hinge.y-8,hinge.x+ux*36,hinge.y+uy*36-22,2.3);
-   for(const d of [0,36])wood(hinge.x+ux*d,hinge.y+uy*d-24,hinge.x+ux*d,hinge.y+uy*d-5,3);for(const d of [length/2-19,length/2+19])upright(a.x+dx*d,a.y+dy*d);
+   for(const d of [0,36])wood(hinge.x+ux*d,hinge.y+uy*d-24,hinge.x+ux*d,hinge.y+uy*d-5,3);for(const d of [center-19,center+19])upright(a.x+dx*d,a.y+dy*d);
    if(!preview){for(const h of [9,20]){g.lineStyle(1.4,0x52635b).lineBetween(hinge.x-ux*2,hinge.y-h,hinge.x+ux*3,hinge.y+uy*3-h);}g.lineStyle(1.2,0x52635b).lineBetween(hinge.x+ux*31,hinge.y+uy*31-18,hinge.x+ux*35,hinge.y+uy*35-18);}}
 
 
   else rail(0,length);
-  for(let j=0;j<=n;j++){const d=length*j/n;if(i===pen.gate&&Math.abs(d-length/2)<23)continue;upright(a.x+dx*d,a.y+dy*d);}
+  for(let j=0;j<=n;j++){const d=length*j/n;if(i===pen.gate&&Math.abs(d-center)<23)continue;upright(a.x+dx*d,a.y+dy*d);}
 
  }
 }

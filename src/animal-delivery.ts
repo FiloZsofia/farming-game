@@ -9,6 +9,7 @@ type Host={read:()=>Snapshot;commit:(s:Snapshot)=>Promise<boolean>;notice:(text:
 export class AnimalDelivery{
  private orders:AnimalOrder[]=[];private route:P[]=[];private returnRoute:P[]=[];private inside:P[]=[];private phase:'walk'|'lower'|'release'|'return'='walk';private basket:Phaser.GameObjects.Container|null=null;private weave:Phaser.GameObjects.Graphics|null=null;private bird:Phaser.GameObjects.Graphics|null=null;private saving=false;private animation=0;private elapsed=0;private release=0;private previousOrder=0;
  constructor(private scene:Phaser.Scene,private host:Host){}
+ get destinationPenId(){return this.orders[0]?.penId??null;}
  get unloadedOrderIds(){return this.orders.map(o=>o.id);}
  get carrying(){return this.orders.length>0&&(this.phase==='walk'||this.phase==='lower');}
  pending(){const s=this.host.read();return !!s.travel.livestock?.orders.some(o=>o.dueDay<=s.clock.day);}
