@@ -38,3 +38,7 @@ export function prepareJunkSites(s:Snapshot):Clearing{
 }
 export const junkAt=(c:Clearing,x:number,y:number)=>junkSites.find(s=>{const p=junkPoint(c,s.id);return Math.abs(p.x-x)<92*junkVisualScale(s.id)/junkScale&&Math.abs(p.y-y)<65*junkVisualScale(s.id)/junkScale;});
 export const junkBlocks=(c:Clearing,x:number,y:number)=>junkSites.some(s=>{const p=junkPoint(c,s.id);return Math.abs(p.x-x)<67*junkVisualScale(s.id)/junkScale&&y>p.y-13*junkVisualScale(s.id)/junkScale&&y<p.y+28*junkVisualScale(s.id)/junkScale;});
+
+/** Visible solid artwork, without treating its ground shadow as an obstacle. */
+export function junkArtworkBounds(c:Clearing,id:JunkId){const p=junkPoint(c,id),scale=junkVisualScale(id),b=id==='trailer'?{x:-64,y:-38,w:148,h:68}:id==='vehicle'?{x:-64,y:-51,w:134,h:81}:{x:-64,y:-43,w:128,h:73};return {x:p.x+b.x*scale,y:p.y+b.y*scale,w:b.w*scale,h:b.h*scale};}
+export function junkAreaOccupied(c:Clearing,area:{x:number;y:number;w:number;h:number},pad=4){return junkSites.some(site=>{const b=junkArtworkBounds(c,site.id);return area.x<b.x+b.w+pad&&area.x+area.w>b.x-pad&&area.y<b.y+b.h+pad&&area.y+area.h>b.y-pad;});}

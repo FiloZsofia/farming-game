@@ -43,3 +43,14 @@ export function smoothPondExpansion(value:readonly number[],floor:readonly numbe
  let lo=0,hi=4;for(let i=0;i<60;i++){const mid=(lo+hi)/2;if(pondArea(scaled(mid))<target)lo=mid;else hi=mid;}
  return scaled((lo+hi)/2);
 }
+
+/** Exact drawn mineral bank against a rectangle, including irregular/concave expansions. */
+export function pondOverlapsArea(area:{x:number;y:number;w:number;h:number},expansion:readonly number[]=activeExpansion(),pad=2){
+ const b={x:area.x-pad,y:area.y-pad,w:area.w+pad*2,h:area.h+pad*2},poly=pondOutline(expansion,8);
+ const insideBox=(p:{x:number;y:number})=>p.x>=b.x&&p.x<=b.x+b.w&&p.y>=b.y&&p.y<=b.y+b.h;
+ if(poly.some(insideBox))return true;
+ const inside=(x:number,y:number)=>{let hit=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const a=poly[i],z=poly[j];if((a.y>y)!==(z.y>y)&&x<(z.x-a.x)*(y-a.y)/(z.y-a.y)+a.x)hit=!hit;}return hit;};
+ if([[b.x,b.y],[b.x+b.w,b.y],[b.x,b.y+b.h],[b.x+b.w,b.y+b.h]].some(([x,y])=>inside(x,y)))return true;
+ for(let i=0;i<poly.length;i++){const a=poly[i],z=poly[(i+1)%poly.length],dx=z.x-a.x,dy=z.y-a.y;let lo=0,hi=1,hit=true;for(const [p,q]of [[-dx,a.x-b.x],[dx,b.x+b.w-a.x],[-dy,a.y-b.y],[dy,b.y+b.h-a.y]]){if(Math.abs(p)<1e-9){if(q<0){hit=false;break;}}else{const t=q/p;if(p<0)lo=Math.max(lo,t);else hi=Math.min(hi,t);if(lo>hi){hit=false;break;}}}if(hit)return true;}
+ return false;
+}
