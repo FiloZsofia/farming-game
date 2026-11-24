@@ -1780,3 +1780,5 @@ A Magkatalógus „Üres helyek az ágyásokban” összefoglalója az egyes be�
 ### Gondozási jelzések és megállási hely — 2026-11-24
 
 A gondozási művelet célpontján nincs ovális jelzés. Ha az etetőben pontosan 0 adag van, fölötte natív szöveges felkiáltójel látható; feltöltéskor, illetve az etető felszedésekor eltűnik. Sam a berendezés mellett keres járható megállási helyet, másik oldalról vagy szükség esetén kellő elülső távolsággal, hogy teste ne takarja a feltöltést/gondozást. A Készletből indított etetőfeltöltés is ezt a közös megközelítést használja. A tyúkok és Mara útvonalpontjai ettől nem változnak.
+
+A katalógus oldalsávja külön ágyáskártyákkal és üreshely-jelvénnyel jelenik meg. Növényenként jelzi, hogy a mag már a Készletben van, úton van vagy postán vár; a fizikai üres hely csak újraültetéskor szűnik meg. A készletet és rendeléseket az ágyások között egyszer osztjuk ki, így ugyanaz a mag nem fedezhet több hiányt. A rendelési visszajelzés a bal oldali katalóguson belül marad, nem külön rácscella. A becsukó nyíl balra, a kinyitó jobbra mutat.
