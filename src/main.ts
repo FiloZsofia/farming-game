@@ -1,3 +1,4 @@
+import {recallUnusedSeeds} from './unused-seed-recall';
 import {drawMailboxFlag} from './mailbox-art';
 import {clearWeedsUnderPlacedObjects} from './placement-weeds';
 import {showShopNotice,clearShopNotice,FULL_SHOP_NOTICE} from './shop-feedback';
@@ -401,6 +402,9 @@ class Farm extends Phaser.Scene {
   finally{this.transitioning=false;this.lastTick=performance.now();}
  }
  private resumeCurrentFarm(){
+  const recall=recallUnusedSeeds(this.currentSnapshot());if(recall){this.choosingFarm=false;void this.commitChest(recall,()=>this.resumeCurrentFarm());return;}
+  if(this.travel.homestead?.seedRecall&&!this.travel.homestead.seedRecall.seen){this.choosingFarm=false;document.querySelector<HTMLElement>('#start-panel')!.hidden=true;this.showSeedRecall();return;}
+
   if(this.travel.homestead&&!this.travel.homestead.updateSeen){this.choosingFarm=false;this.showHomesteadNotice();return;}
   this.choosingFarm=false;document.querySelector<HTMLElement>('#start-panel')!.hidden=true;this.lastTick=performance.now();release();
   if(!this.farmName){this.openFarmNaming();return;}
@@ -409,6 +413,7 @@ class Farm extends Phaser.Scene {
   else if(this.travel.morning||this.travel.sale||this.travel.estate.duckArrivalPending){dialogue.close();void this.presentMorning();}
   else dialogue.close();
  }
+ private showSeedRecall(){const receipt=this.travel.homestead?.seedRecall;if(!receipt)return;showDialogue('Nem használható magok visszaváltása','A jelenlegi játékban nem ültethető magokat kivettük a Készletedből és a tárolóidból. Az árukat goldban jóváírtuk.','FRISSÍTÉS');const panel=document.querySelector<HTMLElement>('#research-panel')!;panel.replaceChildren();panel.hidden=false;for(const item of receipt.items){const row=document.createElement('p');row.textContent=`${(bedKinds as Record<string,{name:string}>)[item.kind]?.name??cropNames[item.kind as Crop]} · ${item.count} db · ${item.gold} gold`;panel.append(row);}const total=document.createElement('strong');total.textContent=`Összesen jóváírva: ${receipt.total} gold`;panel.append(total);dialogue.addEventListener('close',()=>{const next=this.currentSnapshot();if(next.travel.homestead?.seedRecall)next.travel.homestead.seedRecall.seen=true;void this.commitChest(next,()=>this.resumeCurrentFarm());},{once:true});}
  private reloadFarm(id:string){
   try{sessionStorage.removeItem('living-garden-trial-resume');}catch{}
   this.ready=false;try{sessionStorage.setItem('farm-resume-once',id);}catch{}
@@ -1487,7 +1492,7 @@ class Farm extends Phaser.Scene {
   const nextSkill=item.kind==='weed'&&!this.travel.homestead?gainGardening(this.skill,`weed:${this.clock.day}:${item.id}`)??this.skill:this.skill;
   const nextTravel=structuredClone(this.travel);if(item.kind==='branch'&&next.removed[item.id]!==undefined)nextTravel.research.materials.scrap+=2;
   const nextGarden=structuredClone(this.garden);if(!this.travel.homestead)this.giveLevelSeeds(nextGarden,nextSkill);
-  const extraGarden=nextTravel.homestead?.garden,seedCounts=extraGarden?{...emptyBedSeeds(),...nextGarden.seeds,...extraGarden.extraSeeds}:nextGarden.seeds;const found=item.kind==='weed'?findSeeds(seedCounts,{pending:{...this.orders.pending,...extraGarden?.pending},mailbox:{...this.orders.mailbox,...extraGarden?.mailbox}}):null;if(found){if(found.crop in nextGarden.seeds)nextGarden.seeds[found.crop as Crop]+=found.amount;else if(extraGarden)extraGarden.extraSeeds[found.crop]=(extraGarden.extraSeeds[found.crop]??0)+found.amount;}
+  const extraGarden=nextTravel.homestead?.garden,seedCounts=extraGarden?{...emptyBedSeeds(),...nextGarden.seeds,...extraGarden.extraSeeds}:nextGarden.seeds;const found=item.kind==='weed'?findSeeds(seedCounts,{pending:{...this.orders.pending,...extraGarden?.pending},mailbox:{...this.orders.mailbox,...extraGarden?.mailbox}},Math.random,extraGarden?gardenProgress(extraGarden.points,extraGarden.levelFloor).level:0):null;if(found){if(found.crop in nextGarden.seeds)nextGarden.seeds[found.crop as Crop]+=found.amount;else if(extraGarden)extraGarden.extraSeeds[found.crop]=(extraGarden.extraSeeds[found.crop]??0)+found.amount;}
   this.transitioning=true;this.saveRevision++;
   try{
    await this.saveChecked(snapshot(this.actor,this.clock,nextGarden,this.economy,this.orders,this.farmName,next,this.story,nextSkill,this.farmerName,nextTravel));
