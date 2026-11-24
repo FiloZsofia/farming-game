@@ -33,7 +33,8 @@ export const bedShowsDryCracks=(s:LivingBed)=>!bedWaterSatisfied(s)&&!s.mulched&
 export const bedRegrowsFruit=(kind:BedKind)=>['strawberry','raspberry','blackberry','pepper','tomato'].includes(kind);
 export const bedPlantDays=(p:BedPlant)=>p.regrowing&&bedRegrowsFruit(p.kind)?2:bedKinds[p.kind].days;
 export const hasBerrySupport=(s:LivingBed,kind:BedKind)=>['raspberry','blackberry'].includes(kind)&&!!(s.berrySupports?.[kind as 'raspberry'|'blackberry']??(kind==='blackberry'&&s.trellis));
-export const plantSupport=(s:LivingBed,index:number)=>{const p=s.plants[index];return !p||p.removed?null:p.kind==='tomato'&&!p.supported?'stake':['raspberry','blackberry'].includes(p.kind)&&!hasBerrySupport(s,p.kind)?'trellis':null;};
+export const needsPlantStake=(kind:BedKind)=>kind==='tomato'||kind==='pepper';
+export const plantSupport=(s:LivingBed,index:number)=>{const p=s.plants[index];return !p||p.removed?null:needsPlantStake(p.kind)&&!p.supported?'stake':['raspberry','blackberry'].includes(p.kind)&&!hasBerrySupport(s,p.kind)?'trellis':null;};
 export const supportBlocksGrowth=(s:LivingBed,index:number)=>!!plantSupport(s,index)&&s.plants[index].growth>=Math.min(2,bedPlantDays(s.plants[index])-1);
 export function supportLivingBed(s:LivingBed,index:number){const type=plantSupport(s,index);if(!s.prepared||!type)return null;const next=structuredClone(s);if(type==='stake')next.plants[index].supported=true;else{next.berrySupports={...(s.trellis?{blackberry:true}:{}),...s.berrySupports,[s.plants[index].kind]:true};delete next.trellis;}return next;}
 export function mulchLivingBed(s:LivingBed):LivingBed|null{if(!s.prepared||s.mulched||s.cover==='mulch')return null;return {...structuredClone(s),mulched:true,cover:'mulch' as const,coverAppliedDay:s.day,coverExpired:undefined};}
