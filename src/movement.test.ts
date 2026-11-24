@@ -12,3 +12,18 @@ describe('farm movement',()=>{
 });
 
 it('keeps the door and journal independently usable after moving the porch',()=>{expect(porchInteraction(START.x,START.y)).toBe('house');expect(porchInteraction(farmLayout.journal.x+9,farmLayout.journal.y+7)).toBe('journal');expect(porchInteraction(289,179)).toBe('journal');expect(porchInteraction(400,300)).toBe('');});
+
+it('lets an actor escape a saved tree overlap in every direction while blocking entry',async()=>{
+ const {circleBlocksMove}=await import('./movement');
+ const tree={x:400,y:450};
+ for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,-1]]){
+  let p={...tree};
+  for(let frame=0;frame<20;frame++){const before={...p};p=move(p.x,p.y,dx,dy,.04,1,(x,y)=>circleBlocksMove({x,y},before,tree,12),()=>false);}
+  expect(Math.hypot(p.x-tree.x,p.y-tree.y)).toBeGreaterThan(12);
+ }
+ let p={x:370,y:450};
+ for(let frame=0;frame<20;frame++){const before={...p};p=move(p.x,p.y,1,0,.04,1,(x,y)=>circleBlocksMove({x,y},before,tree,12),()=>false);}
+ expect(p.x).toBeLessThanOrEqual(388);
+ const before={x:405,y:450};expect(circleBlocksMove({x:404,y:450},before,tree,12)).toBe(true);
+ expect(circleBlocksMove({x:406,y:450},before,tree,12)).toBe(false);
+});

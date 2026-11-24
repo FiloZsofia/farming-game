@@ -25,3 +25,9 @@ export function move(x:number,y:number,dx:number,dy:number,seconds:number,speedM
   }
   return {x,y};
 }
+
+// A saved actor may already overlap a newly placed obstacle: always allow escape.
+export function circleBlocksMove(next:{x:number;y:number},before:{x:number;y:number},center:{x:number;y:number},radius:number){
+ const distance=Math.hypot(next.x-center.x,next.y-center.y),old=Math.hypot(before.x-center.x,before.y-center.y);
+ return distance<radius&&(old>=radius||distance<=old);
+}

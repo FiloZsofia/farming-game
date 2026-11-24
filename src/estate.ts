@@ -39,7 +39,7 @@ export function validEstate(v:unknown,day:number):v is Estate{
 }
 export const hasDuckNest=(estate:Estate)=>estate.duckPurchaseDay!==null||estate.goods.duckNest>0||estate.pond.some(p=>p.kind==='duckNest');
 export function goodReachable(good:Good,player:{x:number;y:number},x:number,y:number){
- const p=farmLayout.pond;return good==='goldfish'||good==='carp'?(Math.hypot((player.x-p.x)/p.rx,(player.y-p.y)/p.ry)<=1.7||shoreAt(player.x,player.y)):Math.hypot(x-player.x,y-player.y)<=90;
+ const p=farmLayout.pond;return good==='goldfish'||good==='carp'?(Math.hypot((player.x-p.x)/p.rx,(player.y-p.y)/p.ry)<=1.7||shoreAt(player.x,player.y)):(Math.hypot(x-player.x,y-player.y)<=90&&(!treeKinds.includes(good as typeof treeKinds[number])||Math.hypot(x-player.x,y-player.y)>=18));
 }
 export function buyGood(estate:Estate,gold:number,good:Good,amount=1,day=1){
  if(good==='duckNest'&&(amount!==1||hasDuckNest(estate)))return null;

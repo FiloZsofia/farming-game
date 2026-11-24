@@ -4,7 +4,7 @@ import {MAX_GARDEN_LEVEL} from './garden-progression';
 import {placementDebris} from './cleanup';
 import {junkAreaOccupied} from './junk-sites';
 import {savedBedCopy,type SavedGarden} from './homestead-state';
-import {bedMarkerLayout,bedMarkerCenter,bedMarkerLines} from './bed-marker-layout';
+import {bedMarkerLayout,bedMarkerCenter,bedMarkerLines,bedMarkerGroundBounds} from './bed-marker-layout';
 import {pathFootprint,polygonsOverlap,rectanglePolygon,roundedBedPolygon} from './garden-path-footprint';
 import {extendGardenPath,makeGardenPath,pathMaterials,pathSupplies,gardenPathCost,type PathMaterial} from './garden-path';
 import {paintGardenPaths,gardenPathIcon} from './garden-path-art';
@@ -133,7 +133,7 @@ export class LivingBedController{
  private pathValid(){return this.draftPath().every(piece=>{
   const poly=pathFootprint(piece),xs=poly.map(p=>p.x),ys=poly.map(p=>p.y),x=(Math.min(...xs)+Math.max(...xs))/2,y=(Math.min(...ys)+Math.max(...ys))/2,rx=(Math.max(...xs)-Math.min(...xs))/2,ry=(Math.max(...ys)-Math.min(...ys))/2;
   if(animalAreaOccupied(this.garden.snapshot,{x:x-rx,y:y-ry,w:rx*2,h:ry*2})||!gardenDecorationFits({x,y},rx,ry,true)||this.committed().some(b=>polygonsOverlap(poly,roundedBedPolygon(b.area))))return false;
-  for(const item of this.runtimeItems().items){if(item.kind==='gardenPath')continue;const box=item.kind==='bedMarker'?{x:item.x-34,y:item.y-31,w:68,h:36}:item.kind==='bedIrrigation'?{x:item.x-9,y:item.y-19,w:18,h:23}:null;if(box&&polygonsOverlap(poly,rectanglePolygon(box)))return false;}
+  for(const item of this.runtimeItems().items){if(item.kind==='gardenPath')continue;const box=item.kind==='bedMarker'?bedMarkerGroundBounds(item):item.kind==='bedIrrigation'?{x:item.x-9,y:item.y-19,w:18,h:23}:null;if(box&&polygonsOverlap(poly,rectanglePolygon(box)))return false;}
   for(const m of this.garden.snapshot.travel.crafting?.machines??[])if(polygonsOverlap(poly,rectanglePolygon({x:m.x-17,y:m.y-25,w:34,h:30})))return false;
   for(const c of this.garden.snapshot.skill.chests?.placed??[])if(polygonsOverlap(poly,rectanglePolygon({x:c.x-17,y:c.y-19,w:34,h:23})))return false;
   if(this.existingObjects().some(p=>polygonsOverlap(poly,rectanglePolygon({x:p.x-(p.large?p.radius:12),y:p.y-(p.large?p.radius*.65:14),w:p.large?p.radius*2:24,h:p.large?p.radius*.95:26}))))return false;
@@ -144,10 +144,10 @@ export class LivingBedController{
  endPath(){this.stroke=[];this.drawing=false;this.tool='harvest';this.host.equip('harvest');this.paintPreview();this.renderToolbar();}
  private confirmPath(){const pieces=this.draftPath(),supplies=pathSupplies[this.pathMaterial],cost=gardenPathCost(this.pathMaterial,pieces.length,this.pathCredits[this.pathMaterial]);if(!pieces.length||!this.pathValid()||this.garden.snapshot.clearing[supplies.material]<cost)return;this.garden.snapshot.clearing[supplies.material]-=cost;this.pathCredits[this.pathMaterial]+=cost*supplies.batch-pieces.length;this.garden.paths.push(...pieces);this.stroke=[];this.paint();this.renderToolbar();}
  private paintPreview(){this.preview.clear();if(this.tool==='path'&&!this.placing){
-   const pieces=this.draftPath(),supplies=pathSupplies[this.pathMaterial],cost=gardenPathCost(this.pathMaterial,pieces.length,this.pathCredits[this.pathMaterial]),held=this.garden.snapshot.clearing[supplies.material],valid=this.pathValid()&&cost<=held;
-   paintGardenPaths(this.preview,pieces,valid?0xdad2a8:0xc16e60,this.garden.paths);this.placementUI.hidden=false;this.placementUI.replaceChildren();this.placementUI.dataset.mode='path';
+   const pieces=this.draftPath(),supplies=pathSupplies[this.pathMaterial],cost=gardenPathCost(this.pathMaterial,pieces.length,this.pathCredits[this.pathMaterial]),held=this.garden.snapshot.clearing[supplies.material],clear=this.pathValid(),valid=clear&&cost<=held;
+   paintGardenPaths(this.preview,pieces,clear?(cost<=held?0xdad2a8:0xc8ae68):0xc16e60,this.garden.paths);this.placementUI.hidden=false;this.placementUI.replaceChildren();this.placementUI.dataset.mode='path';
    const title=document.createElement('strong');title.textContent=`Ösvényépítés · ${pathMaterials[this.pathMaterial].name}`;this.placementUI.append(title);this.text(this.placementUI,'Húzd a vonalat; visszafelé haladva javíthatsz rajta.');
-   this.button(this.placementUI,`Lerakom · ${cost} ${supplies.material==='stone'?'kő':'fa'} (${pieces.length} útelem)`,'confirm-path',()=>this.confirmPath(),false,!valid||!pieces.length||this.drawing);
+   this.button(this.placementUI,`Lerakom · ${cost} ${supplies.material==='stone'?'kő':'fa'} (${held} van nálad · ${pieces.length} útelem)`,'confirm-path',()=>this.confirmPath(),false,!valid||!pieces.length||this.drawing);
    this.button(this.placementUI,'Utolsó elem visszavonása','undo-path',()=>{this.stroke.pop();this.paintPreview();},false,!this.stroke.length||this.drawing);
    this.button(this.placementUI,'Rajz törlése','cancel-path',()=>{this.stroke=[];this.drawing=false;this.paintPreview();},false,!this.stroke.length);
    this.button(this.placementUI,'Befejezem','finish-path',()=>this.endPath(),false);return;

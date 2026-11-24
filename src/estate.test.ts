@@ -47,3 +47,12 @@ describe('permanent, renewable pond reeds',()=>{
 
 it('permits fish throws across the pond from the shore but keeps planting within reach',()=>{const e=createEstate();e.goods.goldfish=20;for(const [x,y]of [[638,464],[730,464],[540,470],[650,390]]){expect(goodReachable('goldfish',{x:480,y:464},x,y)).toBe(true);expect(placeGood(e,'goldfish',x,y,1,false)?.fish.goldfish).toBe(1);}expect(goodReachable('lily',{x:480,y:464},730,464)).toBe(false);expect(goodReachable('goldfish',{x:100,y:100},638,464)).toBe(false);});
 it('allows only one purchased duck nest, carried or placed, without charging again',()=>{const first=buyGood(createEstate(),200,'duckNest',1,2)!;expect(buyGood(first.estate,120,'duckNest')).toBeNull();const placed=placeGood(first.estate,'duckNest',490,430,2,true)!;expect(buyGood(placed,120,'duckNest')).toBeNull();expect(buyGood(createEstate(),200,'duckNest',2)).toBeNull();expect(first.gold).toBe(120);});
+
+it('keeps all fruit saplings outside Sams feet without reducing normal planting reach',()=>{
+ for(const kind of ['apple','pear','cherry','plum'] as const){
+  expect(goodReachable(kind,{x:400,y:450},400,450)).toBe(false);
+  expect(goodReachable(kind,{x:400,y:450},410,450)).toBe(false);
+  expect(goodReachable(kind,{x:400,y:450},420,450)).toBe(true);
+  expect(goodReachable(kind,{x:400,y:450},491,450)).toBe(false);
+ }
+});

@@ -98,7 +98,7 @@ import Phaser from 'phaser';
 import './style.css';
 import './menu.css';
 import './dialogue-theme.css';
-import { move, START,blocked } from './movement';
+import { move, START,blocked,circleBlocksMove } from './movement';
 import { farmLayout,farmBounds,porchInteraction } from './layout';
 import {findSeeds,unlockedSeeds} from './seed-find';
 import {FarmMusic,musicTracks,type MusicTrack} from './music';
@@ -1063,7 +1063,7 @@ class Farm extends Phaser.Scene {
  }
  private async placeEstateGood(){
   if(!this.target||!this.placing||!this.canInteract())return;const x=this.target.x+TILE/2,y=this.target.y+TILE/2,good=this.placing;
-  if(!goodReachable(good,this.actor,x,y)||this.actor.y>=600){this.notice('Sétálj közelebb a kiválasztott farmbeli helyhez.');return;}
+  if(!goodReachable(good,this.actor,x,y)||this.actor.y>=600){this.notice(treeKinds.includes(good as typeof treeKinds[number])&&Math.hypot(x-this.actor.x,y-this.actor.y)<18?'Lépj egy kicsit arrébb az ültetés helyétől.':'Sétálj közelebb a kiválasztott farmbeli helyhez.');return;}
   const next=placeGood(this.travel.estate,good,x,y,this.clock.day,this.estateLand(x,y),this.farmName);
   if(!next){this.notice(treeKinds.includes(good as typeof treeKinds[number])&&seasonIndex(calendarDay(this.clock.day,this.farmName))!==0?'Facsemetét tavasszal ültethetsz.':'Itt nincs megfelelő szabad hely. A halak és tavi növények a vízbe, a fészek a száraz tópartra kerül.');return;}
   if(good==='goldfish'||good==='carp'){
@@ -1784,7 +1784,7 @@ class Farm extends Phaser.Scene {
   if(this.noahChapter){const t=this.noahChapter;t.forest.update(Math.min(seconds,.05),this.actor,t.state,this.jumpRemaining>0,()=>{this.hurtNoah();},point=>this.sinkNoah(point),this.clock.day,nightOpacity(this.clock),this.currentWeather()==='sunny');if(inNoahSouth(this.actor.x,this.actor.y)){this.avatar.equip('stick');const health=this.travel.forest?.health??5;const hud=document.querySelector<HTMLElement>('#forest-health')!;hud.hidden=false;hud.textContent='♥'.repeat(health)+'♡'.repeat(5-health);}}
   if(this.transitioning||this.actor.x!==before.x||this.actor.y!==before.y)return;
   const logPose=this.noahChapter?.forest.logPose??{sway:0,sink:0};this.body.setX(logPose.sway).setY(-height+logPose.sink);surface.dataset.noahLogSway=String(logPose.sway);surface.dataset.noahLogSink=String(logPose.sink);
-  const next=move(before.x,before.y,dx,dy,seconds,movementSpeed(this.jumpRemaining>0,movementInput.running),(x,y)=>(this.gardenController?.blocks(x,y,before)??false)||(this.livestock?.blocks(x,y,before)??false)||(this.farmMarket?.blocks(x,y)??false)||(!this.noahChapter?.state.upgraded&&closedSouthEntry(x,y,before))||this.skill.chests?.placed.some(c=>{const d=((x-c.x)/23)**2+((y-c.y)/15)**2,old=((before.x-c.x)/23)**2+((before.y-c.y)/15)**2;return d<1&&(old>=1||d<=old);})||this.forestCombat?.blocks(x,y,this.travel.forest??createForest())||(!junkBlocks(this.clearing,before.x,before.y)&&junkBlocks(this.clearing,x,y))||this.travel.crafting?.machines.some(m=>Math.hypot(m.x-x,m.y-y)<11&&Math.hypot(m.x-before.x,m.y-before.y)>=11)||rockBlocked(x,y)||this.travel.estate.trees.some(t=>Math.hypot(x-t.x,y-t.y)<12)||this.travel.estate.pond.some(p=>p.kind==='duckNest'&&Math.hypot(x-p.x,y-p.y)<12),(x,y)=>this.noahChapter?(southBlocked(x,y,this.noahChapter.state)??worldBlocked(x,y)):worldBlocked(x,y));this.actor.setPosition(next.x,next.y);
+  const next=move(before.x,before.y,dx,dy,seconds,movementSpeed(this.jumpRemaining>0,movementInput.running),(x,y)=>(this.gardenController?.blocks(x,y,before)??false)||(this.livestock?.blocks(x,y,before)??false)||(this.farmMarket?.blocks(x,y)??false)||(!this.noahChapter?.state.upgraded&&closedSouthEntry(x,y,before))||this.skill.chests?.placed.some(c=>{const d=((x-c.x)/23)**2+((y-c.y)/15)**2,old=((before.x-c.x)/23)**2+((before.y-c.y)/15)**2;return d<1&&(old>=1||d<=old);})||this.forestCombat?.blocks(x,y,this.travel.forest??createForest())||(!junkBlocks(this.clearing,before.x,before.y)&&junkBlocks(this.clearing,x,y))||this.travel.crafting?.machines.some(m=>Math.hypot(m.x-x,m.y-y)<11&&Math.hypot(m.x-before.x,m.y-before.y)>=11)||rockBlocked(x,y)||this.travel.estate.trees.some(t=>circleBlocksMove({x,y},before,t,12))||this.travel.estate.pond.some(p=>p.kind==='duckNest'&&circleBlocksMove({x,y},before,p,12)),(x,y)=>this.noahChapter?(southBlocked(x,y,this.noahChapter.state)??worldBlocked(x,y)):worldBlocked(x,y));this.actor.setPosition(next.x,next.y);
   surface.dataset.cleared=String(Object.keys(this.clearing.removed).length);surface.dataset.wood=String(this.clearing.wood);surface.dataset.stone=String(this.clearing.stone);surface.dataset.running=String(movementInput.running);surface.dataset.jumpHeight=String(height);
   const insideShop=shopAt(next.y);
   this.actor.setAlpha(inWorkshop(this.actor.y)&&!this.travel.research.shutter&&!entranceShutterOpen(this.travel.research)?.3:1);this.updateLocation();
