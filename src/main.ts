@@ -20,7 +20,7 @@ import {LivingGarden} from './living-garden';
 import {FarmMarketController} from './farm-market-controller';
 import {settleStandCollection} from './farm-market';
 import {extraBedKinds} from './homestead-state';
-import {bedKinds,bedMixes,recommendedComposition,type BedKind,type BedMix} from './living-bed';
+import {emptyBedSeeds,bedKinds,bedMixes,recommendedComposition,type BedKind,type BedMix} from './living-bed';
 import {marketFenceGap} from './market-site';
 import {maraPortrait} from './mara-art';
 import {gardenUpdateNotice,appendGardenUpdateNotice} from './garden-update-notice';
@@ -111,7 +111,7 @@ import {HouseExterior} from './house-exterior';
 import {WorkshopExterior} from './workshop-exterior';
 import {createClearing,activeDebris,clearDebris,debrisAt,placementDebrisAt,debrisNames,regrowDebris,type ClearingTool} from './cleanup';
 import {drawGardenPlots} from './garden-art';
-import { createGarden, targetTile, cultivable, reachable, work, TILE, type Tile, type Tool, type Garden, nextDayGarden, isRipe, growthTarget, cropNames } from './gardening';
+import { createGarden, targetTile, cultivable, reachable, work, TILE, type Tile, type Crop, type Tool, type Garden, nextDayGarden, isRipe, growthTarget, cropNames } from './gardening';
 import { createClock, calendarDay, advanceClock, clockLabel, nightOpacity, type Clock } from './clock';
 import { JUMP_DURATION, JUMP_COOLDOWN, jumpHeight, movementSpeed } from './jump';
 import {itemIcon,seedIcon,goodIcon,type IconName} from './item-icons';
@@ -1277,7 +1277,7 @@ class Farm extends Phaser.Scene {
   if(dialogue.open){dialogue.addEventListener('close',()=>this.showSeedFind(found),{once:true});return;}
   const toast=document.querySelector<HTMLElement>('#seed-find')!;this.seedFindAnimation?.cancel();toast.replaceChildren();toast.hidden=false;
   const petals=document.createElement('div');petals.className='reward-petals';petals.setAttribute('aria-hidden','true');for(let i=0;i<6;i++){const petal=document.createElement('i');petal.style.setProperty('--left',`${i*19}%`);petal.style.setProperty('--delay',`${-i*.7}s`);petal.style.setProperty('--duration','4s');petals.append(petal);}
-  const text=document.createElement('div');const title=document.createElement('strong');title.textContent='Ültetőanyagot találtál!';const detail=document.createElement('span');detail.textContent=`+${found.amount} ${cropNames[found.crop]} · ${this.materialName(found.crop)}`;text.append(title,detail);toast.append(petals,seedIcon(found.crop),text);
+  const text=document.createElement('div');const title=document.createElement('strong');title.textContent='Ültetőanyagot találtál!';const detail=document.createElement('span');detail.textContent=`+${found.amount} ${bedKinds[found.crop].name} · ${this.materialName(found.crop)}`;text.append(title,detail);toast.append(petals,seedIcon(found.crop),text);
   const animation=toast.animate([{opacity:0,transform:'translate(-50%, 8px)',offset:0},{opacity:1,transform:'translate(-50%, 0)',offset:.08},{opacity:1,offset:.85},{opacity:0,transform:'translate(-50%, -8px)',offset:1}],{duration:4800,fill:'forwards'});this.seedFindAnimation=animation;void animation.finished.then(()=>{if(this.seedFindAnimation===animation){toast.hidden=true;animation.cancel();this.seedFindAnimation=null;}}).catch(()=>{});
  }
  private wildflowerIcon(){const icon=document.createElement('span');icon.className='research-icon';icon.setAttribute('aria-hidden','true');icon.textContent='✿';return icon;}
@@ -1487,7 +1487,7 @@ class Farm extends Phaser.Scene {
   const nextSkill=item.kind==='weed'&&!this.travel.homestead?gainGardening(this.skill,`weed:${this.clock.day}:${item.id}`)??this.skill:this.skill;
   const nextTravel=structuredClone(this.travel);if(item.kind==='branch'&&next.removed[item.id]!==undefined)nextTravel.research.materials.scrap+=2;
   const nextGarden=structuredClone(this.garden);if(!this.travel.homestead)this.giveLevelSeeds(nextGarden,nextSkill);
-  const found=item.kind==='weed'?findSeeds(nextSkill,nextGarden.seeds,this.orders):null;if(found)nextGarden.seeds[found.crop]+=found.amount;
+  const extraGarden=nextTravel.homestead?.garden,seedCounts=extraGarden?{...emptyBedSeeds(),...nextGarden.seeds,...extraGarden.extraSeeds}:nextGarden.seeds;const found=item.kind==='weed'?findSeeds(seedCounts,{pending:{...this.orders.pending,...extraGarden?.pending},mailbox:{...this.orders.mailbox,...extraGarden?.mailbox}}):null;if(found){if(found.crop in nextGarden.seeds)nextGarden.seeds[found.crop as Crop]+=found.amount;else if(extraGarden)extraGarden.extraSeeds[found.crop]=(extraGarden.extraSeeds[found.crop]??0)+found.amount;}
   this.transitioning=true;this.saveRevision++;
   try{
    await this.saveChecked(snapshot(this.actor,this.clock,nextGarden,this.economy,this.orders,this.farmName,next,this.story,nextSkill,this.farmerName,nextTravel));
