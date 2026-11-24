@@ -1,5 +1,6 @@
 const wood='#a68052',edge='#594d38',light='#d9bd88';
 export const livestockIcons={
+ animalBroom:'<path d="m25 2-11 22" stroke="#674f35" stroke-width="4"/><path d="m24 2-10 22" stroke="#c6a775" stroke-width="2"/><path d="m10 20 10 5-4 11-14-7z" fill="#c7ae70" stroke="#80663e"/><path d="m10 24-5 7m9-5-5 7m9-5-5 7" stroke="#8f774b"/><path d="m9 22 11 5" stroke="#68794e" stroke-width="2"/>',
  'animal:coop':`<path d="M5 15h26v19H5z" fill="${wood}" stroke="${edge}"/><path d="m2 16 16-14 17 14" fill="#687c63" stroke="${edge}" stroke-width="2"/><path d="M14 22h10v12H14z" fill="#594c38"/><path d="m7 20 23 0m-23 8h6" stroke="${light}"/><path d="m22 34 8 2m-7-6 7 6" stroke="#c7ac79"/>`,
  'animal:paddock':`<path d="M4 11v23m12-24v24m16-23v23M3 16h30M3 26h30" stroke="${edge}" stroke-width="4"/><path d="M4 11v23m12-24v24m16-23v23M3 16h30M3 26h30" stroke="${wood}" stroke-width="2.5"/><path d="m17 24 13-6" stroke="${light}" stroke-width="2"/>`,
  'animal:feeder':'<ellipse cx="18" cy="28" rx="16" ry="6" fill="#6e765a"/><path d="M7 13h23l-2 17H9z" fill="#a58b58" stroke="#665637"/><ellipse cx="18" cy="14" rx="11" ry="4" fill="#d7bd77"/><path d="m10 14 3 1m3-3 2 2m4-1 3 1m-10 4 4 1" stroke="#968143" stroke-width="1.4"/>',

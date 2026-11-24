@@ -38,7 +38,7 @@ export class LivingBedController{
  private bedsArt=new Map<number,Phaser.GameObjects.Graphics>();private signs=new Map<number,Phaser.GameObjects.Text>();
  private decorations:Phaser.GameObjects.Graphics;private visitors:Phaser.GameObjects.Graphics;private preview:Phaser.GameObjects.Graphics;
  private stroke:GardenPoint[]=[];private drawing=false;private markerBed:number|null=null;private point:GardenPoint={x:0,y:0};private closed=false;private message='';private machineIndex=0;
- private onKey=(event:KeyboardEvent)=>{if((event.target as HTMLElement)?.closest('input,select,textarea')){if(!this.host.production)event.stopImmediatePropagation();return;}if(!this.host.ready())return;if(event.code==='Tab'&&!this.host.production){event.preventDefault();event.stopImmediatePropagation();this.open('inventory');}if(event.key>='1'&&event.key<='5')this.setTool((['hoe','water','harvest','crowbar','stick'] as Tool[])[Number(event.key)-1]);};
+ private onKey=(event:KeyboardEvent)=>{if(document.querySelector<HTMLElement>('#animal-care-panel')?.hidden===false)return;if((event.target as HTMLElement)?.closest('input,select,textarea')){if(!this.host.production)event.stopImmediatePropagation();return;}if(!this.host.ready())return;if(event.code==='Tab'&&!this.host.production){event.preventDefault();event.stopImmediatePropagation();this.open('inventory');}if(event.key>='1'&&event.key<='5')this.setTool((['hoe','water','harvest','crowbar','stick'] as Tool[])[Number(event.key)-1]);};
  get state(){return this.garden.sync(this.active);}set state(s:LivingBed){this.active.state=s;}
  get area(){return this.active.area;}set area(b:LivingBedArea){this.active.area=b;}
  get ownsPreview(){return this.placing||['marker','irrigation','composter','chest','path'].includes(this.tool);}

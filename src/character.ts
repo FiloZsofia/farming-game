@@ -123,6 +123,7 @@ export class FarmerArt{
   this.rightArm.setPosition(this.armX+(heavy?pose.weight*3:0),this.armY+(heavy?Math.max(0,pose.weight)*5:0)).setScale(1);
   this.toolReach=heavy?pose.reach:1;this.positionTool(working?this.actionTool:this.equipped);
   if(heavy&&this.actionTool==='crowbar'&&workProgress(this.action)>.6){this.rightArm.rotation-=Math.sin((workProgress(this.action)-.6)/.4*Math.PI)*.28;}
+  if(working&&this.actionTool==='broom')this.rightArm.rotation+=Math.sin(workProgress(this.action)*Math.PI*4)*.18;
   if(refined&&heavy){const angle=this.rightArm.rotation,held=heldToolLayout(this.actionTool,this.toolReach,true),localX=held.x-Math.sin(held.angle)*8*held.sy,localY=held.y+Math.cos(held.angle)*8*held.sy,targetX=this.rightArm.x+Math.cos(angle)*localX-Math.sin(angle)*localY,targetY=this.rightArm.y+Math.sin(angle)*localX+Math.cos(angle)*localY;this.leftArm.rotation=Math.atan2(-(targetX+this.armX),targetY-this.armY);this.leftArm.setScale(1,Math.min(1.15,Math.hypot(targetX+this.armX,targetY-this.armY)/14));}else this.leftArm.setScale(1);
   this.root.x=heavy?pose.weight*2:0;this.root.rotation=heavy?pose.weight*.045:refined&&walking&&!working&&!jumping?Math.sin(this.phase)*.008:0;
   if(heavy&&!walking){this.leftLeg.angle=-4*pose.weight;this.rightLeg.angle=4*pose.weight;}

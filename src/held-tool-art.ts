@@ -2,7 +2,7 @@ import type Phaser from 'phaser';
 export const HAND_GRIP={x:0,y:14};
 /** Resize around the actual handle contact, never around the wrist/graphics origin. */
 export function heldToolLayout(name:string,reach=1,working=false,angleOverride?:number){
- const size=name==='water'?.52:name==='harvest'?.65:name==='stick'?.68:name==='crowbar'?.66:name==='hoe'?.68:['axe','pickaxe','support'].includes(name)?.7:1;
+ const size=name==='water'?.52:name==='harvest'?.65:name==='stick'?.68:name==='crowbar'?.66:name==='hoe'?.68:name==='broom'?.72:['axe','pickaxe','support'].includes(name)?.7:1;
  const origin=name==='water'?{x:-2.625,y:18.625}:name==='harvest'?{x:5,y:7.5}:HAND_GRIP;
  const angle=angleOverride??(name==='hoe'&&!working?-.2:0),sx=size,sy=size*reach,c=Math.cos(angle),s=Math.sin(angle);
  return {sx,sy,angle,x:HAND_GRIP.x-c*origin.x*sx+s*origin.y*sy,y:HAND_GRIP.y-s*origin.x*sx-c*origin.y*sy,origin};
@@ -19,6 +19,11 @@ export function drawHeldTool(g:Phaser.GameObjects.Graphics,name:string,length:nu
   else if(name==='axe'){poly([0,length-6,6,length-8,11,length-7,10,length+3,6,length+2,1,length-2],0x627d77);poly([7,length-7,11,length-7,10,length+3,7,length+1],0xc2cec0);g.lineStyle(.6,0xe1e3ce).lineBetween(10,length-6,9.4,length+2);}
   else{poly([-10,length-1,-8,length-6,-3,length-7,3,length-7,8,length-5,11,length,-1,length-4,-6,length-4],0x6e8881);g.lineStyle(.8,0xc5d1c0).lineBetween(-8,length-5,-3,length-6).lineBetween(3,length-6,8,length-4);}
   g.fillStyle(0xa9b9a5).fillCircle(1,length-4,.65);return length;
+ }
+ if(name==='broom'){
+  g.lineStyle(2.6,0x79583b).lineBetween(0,6,0,29);g.lineStyle(.8,0xc5a371).lineBetween(-.5,7,-.5,28);
+  poly([-4,27,4,27,8,37,-8,37],0xb89b5f);poly([-3,29,3,29,5,36,-5,36],0xd8bc7b);
+  g.lineStyle(.6,0x8f7747);for(let i=-5;i<=5;i+=2)g.lineBetween(i*.5,29,i,37);g.lineStyle(2,0x697b55).lineBetween(-4,28,4,28);return 37;
  }
  if(name==='crowbar'){
   g.lineStyle(2.7,0x4e6860).strokePoints([{x:1,y:7},{x:-.5,y:9},{x:-.5,y:27},{x:.8,y:30},{x:3.4,y:31},{x:5.3,y:29.6},{x:5.5,y:27.3}]);
