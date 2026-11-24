@@ -34,7 +34,7 @@ A megrendelt tyúk azonnal lefoglal egy férőhelyet, az árát egyszer fizetjü
 
 - Tyúkonként napi egy adag eleség fogy. Az etető tizenkét adagot tárolhat.
 - A közös itatót naponta újra feltöltjük; mind a négy állatot ellátja.
-- Háromnaponta takarítjuk az ólat. A harmadik napra látható szennyeződés jelenik meg; takarítás után eltűnik.
+- Kétnaponta takarítjuk az ólat. A második napra látható szennyeződés jelenik meg; takarítás után eltűnik.
 - Két megfelelően gondozott nap után tyúkonként egy tojás keletkezik a fészekben. Az érkezés előtti napok nem számítanak.
 - Eleségelfogyás után egy nap áll rendelkezésre a pótlásra; utána szünetel a tojásrakás. Három egymást követő, vízfeltöltés nélkül eltelt nap után szintén szünetel. A gondozási napok ilyenkor megmaradnak, nem nullázódnak; az állat nem pusztul el.
 - A begyűjtött tojás a Készletbe kerül, az átadóban Marának 12 gold/db áron eladható.
@@ -107,3 +107,5 @@ A lomb és az árnyék nem akadály. A kerítés csak a fa törzsének kis, tala
 ### Kerítéstervezés teljesítménye és mozgatható kapu – 2026-11-24
 A lezárt kerítésterv ellenőrzése nem függ Sam pillanatnyi helyétől. Az útvonalkeresés csak a terv, a kapu vagy a tényleges akadályok megváltozásakor fut újra; a változatlan előnézet rajzát is megtartjuk. Nyitott kerítésvonalhoz nem másoljuk le a farm teljes mentését. Mozgásos böngészős mérésben 60 frissítés 4025 ms-ról 0,7 ms-ra csökkent; a teljesmentés-olvasások száma 59-ről nullára, az előnézet törlései 120-ról nullára estek. Ez a vezérlő mérése, nem általános FPS-ígéret.
 A kaput a játékos kattintással helyezi a kerítés kiválasztott szakaszának kiválasztott részére; nem kötelező az oldal közepére tennie. A sarkoknál annyi hely marad, hogy a kapuszárny elférjen. Az egér mozgatása önmagában nem helyezi át a kaput. Az Állatgondozó Karámkapu áthelyezése műveletével a kész, lakott kifutón is ingyen módosítható, az állatok, felszerelések és kerítésvonal megtartásával. A Mégsem nem változtat a meglévő kapun. A kiválasztott kapuhely mentődik; régi mentésben a korábbi oldalközép marad. A kapu kívülről, közvetlen közelről is megnyitja az Állatgondozót. Ha Mara az érintett kifutóhoz szállít, az új kapu alapján újratervezi a még át nem adott állatok útját.
+
+2026-11-24: az óltakarítás időköze 2 nap. A poros-szennyezett terület az ól teljes eleje előtt szélesebb és mélyebb sávot fed le (kb. 140 × 50 játékegység), több szétszórt piszokkal és kitépett fűcsomóval. A takaríthatóság, tisztaságjelző, látvány és tojásrakási feltétel közös időközt használ.

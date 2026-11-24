@@ -1,13 +1,13 @@
 import Phaser from 'phaser';
-import {animalItemNames,type AnimalItem,type AnimalPen,type HenVariety} from './livestock';
+import {COOP_CLEAN_INTERVAL,animalItemNames,type AnimalItem,type AnimalPen,type HenVariety} from './livestock';
 import {gatePoint} from './livestock-geometry';
 export function drawAnimalItem(g:Phaser.GameObjects.Graphics,item:Exclude<AnimalItem,'paddock'>,x=0,y=0,day=1,pen?:AnimalPen,rotation=0,fillProgress=1,waterSource?:{x:number;y:number}){
  const rect=(xx:number,yy:number,w:number,h:number,c:number)=>g.fillStyle(c).fillRoundedRect(x+xx,y+yy,w,h,.8);
  const line=(xx:number,yy:number,xxx:number,yyy:number,c:number,w=1)=>g.lineStyle(w,c).lineBetween(x+xx,y+yy,x+xxx,y+yyy);
  const oval=(xx:number,yy:number,w:number,h:number,c:number,a=1)=>g.fillStyle(c,a).fillEllipse(x+xx,y+yy,w,h);
  if(item==='coop'){
-  const dirty=!!pen&&day-pen.cleanedDay>=3;
-  if(dirty){oval(-5,17,98,34,0x817451,.45);oval(30,21,43,21,0xb29a6d,.5);oval(-37,15,32,19,0xa58d60,.6);for(let i=0;i<36;i++){const xx=-48+(i*17)%96,yy=6+(i*11)%28;oval(xx,yy,2+i%3,1,0x665d40,.65);if(i%4===0){line(xx-2,yy,xx+2,yy-2,0xc4ae77,.8);line(xx,yy,xx+3,yy+1,0x7a8447,.9);}}for(const [xx,yy]of [[-40,25],[39,17],[-8,31]]){oval(xx,yy,7,3,0x675c3d);for(let j=0;j<4;j++)line(xx-3+j*2,yy,xx-5+j*3,yy-3-j%2*2,0x889450,.8);}}
+  const dirty=!!pen&&day-pen.cleanedDay>=COOP_CLEAN_INTERVAL;
+  if(dirty){oval(-5,23,138,50,0x817451,.45);oval(43,28,58,30,0xb29a6d,.5);oval(-51,20,45,28,0xa58d60,.6);for(let i=0;i<60;i++){const xx=-68+(i*17)%136,yy=4+(i*11)%44;oval(xx,yy,2+i%3,1,0x665d40,.65);if(i%4===0){line(xx-2,yy,xx+2,yy-2,0xc4ae77,.8);line(xx,yy,xx+3,yy+1,0x7a8447,.9);}}for(const [xx,yy]of [[-57,30],[53,23],[-8,42],[-30,37],[28,39]]){oval(xx,yy,7,3,0x675c3d);for(let j=0;j<4;j++)line(xx-3+j*2,yy,xx-5+j*3,yy-3-j%2*2,0x889450,.8);}}
   oval(3,5,98,24,0x374d33,.2);rect(-35,-43,70,46,0xb89d70);rect(-35,-8,70,10,0x81735a);
   for(let yy=-38;yy<-9;yy+=7){line(-33,yy,33,yy,0x806b4e,.8);line(-33,yy+1,33,yy+1,0xd0b78a,.6);for(let xx=-29;xx<30;xx+=19){line(xx,yy+3,xx+10,yy+3,0xa78b61,.4);oval(xx+3,yy+4,2.5,.8,0x90744f);}}
   for(const xx of [-34,31]){rect(xx,-40,3,42,0x75654c);line(xx+1,-39,xx+1,-2,0xd6bb8b,.8);}
@@ -19,7 +19,7 @@ export function drawAnimalItem(g:Phaser.GameObjects.Graphics,item:Exclude<Animal
   rect(-32,-12,22,14,0x8c704b);oval(-21,-11,21,6,0xd3ba7f);for(let i=0;i<7;i++)line(-30+i*3,-11,-27+i*3,-7,0xa48e5a,.6);
   for(let i=0;i<Math.min(5,pen?.eggs??0);i++){oval(-27+i*3,-10+(i%2)*2,3.5,5,0xe9d7ad);}
   g.fillStyle(0x9c8459).fillPoints([{x:x+5,y:y+1},{x:x+23,y:y+1},{x:x+31,y:y+9},{x:x+10,y:y+9}],true);for(let i=0;i<4;i++){line(7+i*2,2+i*2,24+i*2,2+i*2,0x6e5a3d,1.4);line(7+i*2,1+i*2,24+i*2,1+i*2,0xdbc08f,.7);}line(8,2,12,8,0xbda16e,.8);
-  if(pen&&day-pen.cleanedDay>=3){for(let i=0;i<13;i++){const xx=-31+(i*19)%61,yy=-5+(i*7)%15;oval(xx,yy,3+i%3,1.8,0x665c40,.75);if(i%3===0)line(xx-2,yy-1,xx+2,yy+1,0xb3a074,.8);}rect(-33,-7,18,3,0x776345);}
+  if(pen&&day-pen.cleanedDay>=COOP_CLEAN_INTERVAL){for(let i=0;i<13;i++){const xx=-31+(i*19)%61,yy=-5+(i*7)%15;oval(xx,yy,3+i%3,1.8,0x665c40,.75);if(i%3===0)line(xx-2,yy-1,xx+2,yy+1,0xb3a074,.8);}rect(-33,-7,18,3,0x776345);}
  }else if(item==='feeder'){
   const filled=!!pen&&pen.feed>0,level=filled?fillProgress:0;
   oval(1,8,37,12,0x354a34,.24);for(const xx of [-11,11]){rect(xx-2,2,4,7,0x68563c);line(xx-1,3,xx-1,8,0xb59a66,.8);}

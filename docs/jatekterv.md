@@ -1756,7 +1756,7 @@ Ellenőrzés: Gabi farmjának elkülönített másolata, a próbahelyen levő ga
 
 ## Állattartás: első, tyúkos rendszer
 
-Elfogadott és a rendes játékba kért rendszer: [Tyúktartás](allattartas.md). Az új bolt a Kertitó Szaküzlet és a Műhelybolt közé kerül, ösvénnyel a tértől. Ólanként legfeljebb négy tyúk tartható, saját formára rajzolható és bővíthető kifutóban. Vásárlás előtt minden kötelező berendezést le kell helyezni; a Készletben lévő nem számít. Mara a másnapi fuvarral, ölben viszi be az állatokat. A 2026-11-23-án megerősített ritmus: napi egy adag eleség/tyúk, napi vízfeltöltés, háromnaponta óltakarítás, a harmadik napra látható szennyeződés. Két gondozott naponként egy tojás/tyúk, 12 gold/db eladási árral. Elmaradáskor nincs állatpusztulás. Az árlista és a teljes lehelyezési, gondozási, kiszállítási szabály a hivatkozott dokumentumban található.
+Elfogadott és a rendes játékba kért rendszer: [Tyúktartás](allattartas.md). Az új bolt a Kertitó Szaküzlet és a Műhelybolt közé kerül, ösvénnyel a tértől. Ólanként legfeljebb négy tyúk tartható, saját formára rajzolható és bővíthető kifutóban. Vásárlás előtt minden kötelező berendezést le kell helyezni; a Készletben lévő nem számít. Mara a másnapi fuvarral, ölben viszi be az állatokat. A 2026-11-24-én frissített ritmus: napi egy adag eleség/tyúk, napi vízfeltöltés, kétnaponta óltakarítás, a második napra látható szennyeződés. Két gondozott naponként egy tojás/tyúk, 12 gold/db eladási árral. Elmaradáskor nincs állatpusztulás. Az árlista és a teljes lehelyezési, gondozási, kiszállítási szabály a hivatkozott dokumentumban található.
 
 Az állatosbolt elfogadott neve **Gazdaudvar**, boltosának neve **Ruby**. A bolt felirata, menüje, helycímkéje és térképi neve ezt kövesse.
 

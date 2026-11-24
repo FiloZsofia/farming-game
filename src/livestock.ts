@@ -9,6 +9,7 @@ export const animalItemPrices:Record<AnimalItem,number>={coop:320,paddock:180,fe
 export const henVarieties=['chestnut','cream','speckled'] as const;
 export type HenVariety=typeof henVarieties[number];
 export const henVarietyNames:Record<HenVariety,string>={chestnut:'Vörös tyúk',cream:'Krémfehér tyúk',speckled:'Kendermagos tyúk'};
+export const COOP_CLEAN_INTERVAL=2;
 export const HEN_PRICE=95,FEED_PRICE=20,FEED_BAG=10,HEN_EGG_PRICE=12,HEN_CAPACITY=4;
 export type AnimalPen={id:number;name:string;coop:AnimalPoint;boundary:AnimalPoint[];gate:number;gateOffset?:number;coopWall?:number;fixtures:Partial<Record<AnimalFixture,AnimalPoint>>;rotations?:Partial<Record<AnimalFixture,0|1>>;feed:number;emptyFeedDay?:number|null;dryDays?:number;wateredDay:number|null;cleanedDay:number;eggs:number};
 export const coopFenceAnchors=(p:AnimalPoint):AnimalPoint[]=>[{x:p.x-36,y:p.y+4},{x:p.x+36,y:p.y+4}];
@@ -39,7 +40,7 @@ export function deliverHen(source:Snapshot,orderId:number):Snapshot|null{
 }
 export function advanceLivestock(source:Livestock,day:number):Livestock{
  const s=structuredClone(source);if(day<=s.lastDay)return s;
- for(let d=s.lastDay+1;d<=day;d++)for(const pen of s.pens){const residents=penResidents(s,pen.id).filter(h=>h.arrivedDay<d),watered=pen.wateredDay===d-1,clean=d-1-pen.cleanedDay<3,ready=!penMissing(pen).length;
+ for(let d=s.lastDay+1;d<=day;d++)for(const pen of s.pens){const residents=penResidents(s,pen.id).filter(h=>h.arrivedDay<d),watered=pen.wateredDay===d-1,clean=d-1-pen.cleanedDay<COOP_CLEAN_INTERVAL,ready=!penMissing(pen).length;
   pen.dryDays=watered||!residents.length?0:Math.min(3,(pen.dryDays??0)+1);
   if(residents.length&&pen.feed===0)pen.emptyFeedDay??=d;
   for(const hen of residents){const fed=pen.feed>0;if(fed){pen.feed--;if(pen.feed===0)pen.emptyFeedDay=d;}const foodReady=fed||d<=(pen.emptyFeedDay??-1);if(foodReady&&pen.dryDays<3&&clean&&ready){hen.careDays++;if(hen.careDays>=2){pen.eggs++;hen.lastLayDay=d;hen.careDays=0;}}}
