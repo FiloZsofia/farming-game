@@ -1168,7 +1168,7 @@ class Farm extends Phaser.Scene {
   showDialogue('Eladóláda','Tedd be, amit el szeretnél adni. Napzárásig visszaveheted.','ELADÓLÁDA');
   this.renderShipping();document.querySelector<HTMLElement>('#shipping-panel')!.hidden=false;
  }
- private selectTool(tool:FarmTool){this.livestock?.closeCare();this.livestock?.cancelPlacement();
+ private selectTool(tool:FarmTool){this.livestock?.closeCare(true);this.livestock?.cancelPlacement();
   this.pondBuilder?.cancel();
   if(this.microscopeDeliveryPlaying)return;
   if(this.gardenController&&(['hoe','water','harvest','crowbar','stick','mulch'].includes(tool)||tool in bedKinds))this.gardenController.setTool(tool as 'hoe');
