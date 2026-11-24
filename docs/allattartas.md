@@ -92,3 +92,8 @@ A zsák E/F-fel vagy kattintással felvehető. A tartalom csak ekkor kerül a K�
 ### Berendezések tényleges használata – 2026-11-23
 A nappali tevékenységváltást nem globális, 11 másodperces időzítő vezérli. A tyúk végigjárja az útvonalát, utána legalább 8 másodpercig eszik, iszik vagy porfürdőzik; az árnyékban 12 másodpercig pihen. Csak ezután választ új tevékenységet. Az éjszaka megszakíthatja a nappali feladatot: a tyúk az ülőrúdhoz megy, annak elforgatását is figyelembe véve. Szüneteltetett játéknál a séta és a tevékenység ideje is megáll. Üres etetőnél/itatónál nem játsszuk el az evést/ivást.
 Az evést csipegető fejmozdulat és morzsák, az ivást merítő/kortyoló fejmozdulat és vízcseppek, a porfürdőt hempergő mozgás és por jelzi. Teljes nappalos szimuláció ellenőrzi mind a négy berendezés használatát és az éjszakai megérkezést; hosszú séta közben nem szabad felülírni a célpontot.
+
+
+### Külön takarmányzsákok és közeli feltöltés – 2026-11-24
+Minden rendelt tízadagos csomag külön, egymástól elkülönített zsákban kerül a postaláda mellé. Mara csomagonként rakodik, és a következő zsáknak másik szabad, ösvényen kívüli helyet keres. Egy zsák felvétele nem veszi fel a többit. A régi, azonos helyre kézbesített csomagok is külön látszanak, a megmaradó zsák nem ugrik át másik helyre felvételkor. A Készletben a felvett takarmány továbbra is közös halom: két tízadagos zsák után 20 adag, a megszokott halmozási szabályokkal.
+A Készlet Etető feltöltése gombja csak feltölthető etető közvetlen, 42 játékbeli egységen belüli közelében jelenik meg. A megjelenítés és a tényleges művelet ugyanazt a közös közelségi ellenőrzést használja.

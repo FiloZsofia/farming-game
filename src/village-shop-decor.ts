@@ -2,7 +2,7 @@
 export const villageShopDecor={
  fishBarrel:{x:865,y:1095},
  workshopBasket:{x:727,y:1338},
- pots:[{x:660,y:1117},{x:754,y:1117}],
+ pots:[{x:660,y:1111},{x:754,y:1111}],
 };
 const barrel=villageShopDecor.fishBarrel,basket=villageShopDecor.workshopBasket;
 export const villageShopDecorBounds=[

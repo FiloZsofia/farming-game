@@ -52,7 +52,7 @@ export function drawVillage(scene:Phaser.Scene){
  drawAnimalShopFront(scene,g);
  const c=layout.craftShop;house(c.x,c.y,c.w,c.h,0x856449,0xc7b18a);label(660,1242,'MŰHELYBOLT',11);
  // Open workshop doors and detailed wares are painted in a separate detail layer.
- rect(647,1285,27,47,0x394b38);poly([647,1285,633,1290,633,1333,647,1332],0x947047);poly([674,1285,688,1290,688,1333,674,1332],0xa47d4e);line(635,1295,644,1292,0xd0ac73);line(678,1293,685,1296,0xd0ac73);flowers(736,1398);
+ rect(647,1285,27,47,0x394b38);poly([647,1285,633,1290,633,1333,647,1332],0x947047);poly([674,1285,688,1290,688,1333,674,1332],0xa47d4e);line(635,1295,644,1292,0xd0ac73);line(678,1293,685,1296,0xd0ac73);flowers(736,1442);
  const n=layout.nursery;house(n.x,n.y,n.w,n.h,0x657b52,0xd6c8a0);label(593,864,'FAISKOLA',10);
  // Broad long-side elevation: all walls and joinery stand upright.
  const f=layout.fishShop;

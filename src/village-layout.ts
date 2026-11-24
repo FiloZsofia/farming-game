@@ -27,17 +27,17 @@ export const villageLayout={
 export const nurseryDisplays=[{left:501,width:54,plants:villageLayout.nurserySaplings.slice(0,2)},{left:611,width:44,plants:villageLayout.nurserySaplings.slice(2)}];
 export const nurseryDisplayBounds=(d:typeof nurseryDisplays[number])=>({left:d.left,right:d.left+d.width+4,top:Math.min(...d.plants.map(p=>p.y))-53,bottom:Math.max(...d.plants.map(p=>p.y))+16});
 // Drawing and canopy clearance use the same full routes.
-export const SHOP_PATH_WIDTH=23;
+export const SHOP_PATH_WIDTH=32;
 export const villagePaths=[
  {width:32,points:[farmLayout.paths[0].points[0],[170,740]]},
  {width:20,points:[[170,930],[107,930]]},
  {width:28,points:[[474,1016],[586,978],[591,940]]},
  {width:SHOP_PATH_WIDTH,points:[[708,1145],[708,1100]]},
- {width:SHOP_PATH_WIDTH,points:[[493,1320],[493,1364],[660,1364],[660,1341]]},
+ {width:SHOP_PATH_WIDTH,points:[[493,1320],[493,1386],[660,1386],[660,1341]]},
  {width:20,points:[[107,930],[-100,930],...quadraticPath([-100,930],[-135,930],[-165,944],8).slice(1),...roundedPath([[-165,944],[-270,1000],[-450,995],[-570,962],[-660,978],[-780,984],[-940,1010]]).slice(1)]},
  {width:32,points:[[170,740],[170,860],[170,930],...quadraticPath([170,930],[265,945],[350,1000]).slice(1),[476,1060],[493,1320],[493,WORLD_HEIGHT-6]]},
- {width:SHOP_PATH_WIDTH,points:[[605,1145],[708,1145],[784,1206],[784,1323],[902,1323],[902,1299]]},
- {width:SHOP_PATH_WIDTH,points:[[784,1323],[784,1364],[660,1364],[660,1341]]},
+ {width:SHOP_PATH_WIDTH,points:[[605,1145],[708,1145],[796,1206],[796,1340],[926,1340],[926,1299]]},
+ {width:SHOP_PATH_WIDTH,points:[[796,1340],[796,1386],[660,1386],[660,1341]]},
 ];
 // The whole harvestable crown stays off paving, with a clear margin around its leaves.
 export const forageBushBounds=(b:{x:number;y:number})=>({left:b.x-20,right:b.x+20,top:b.y-22,bottom:b.y+8});

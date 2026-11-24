@@ -873,7 +873,7 @@ class Farm extends Phaser.Scene {
    if(group==='extra'&&id==='basket')addAction(card,'Elhelyezem',()=>{dialogue.close();this.selectTool('machine');this.placingCraft='basket';});
    if(group==='extra')card.dataset.extra=id;if(group==='material')card.dataset.material=id;
    if(group==='special'){card.dataset.birdhouse='true';addAction(card,'Elhelyezem',()=>{dialogue.close();this.selectTool('birdhouse');});}
-   if(group==='animalFeed')addAction(card,'Etető feltöltése',()=>{dialogue.close();this.livestock?.fillNearbyFeeder();});
+   if(group==='animalFeed'&&this.livestock?.nearbyFeedPen())addAction(card,'Etető feltöltése',()=>{dialogue.close();this.livestock?.fillNearbyFeeder();});
    if(group==='animal')addAction(card,'Elhelyezem',()=>{dialogue.close();this.livestock?.beginPlace(id as AnimalItem);});
    if(group==='packed')addAction(card,'Elhelyezem',()=>{dialogue.close();this.selectTool('chest');});grid.append(card);
   }

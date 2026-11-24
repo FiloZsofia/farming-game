@@ -4,11 +4,11 @@ import {createClock} from './clock';
 import {createGarden} from './gardening';
 import {enableHomestead} from './homestead-migration';
 import {debris} from './cleanup';
-import {orderFeed,deliverFeed,collectFeed,feedCareHelpPending,createLivestock,animalItems,fixtureKinds,penMissing,buyAnimalItem,orderHen,deliverHen,advanceLivestock,tendPen,packAnimalItem,validLivestock,renameHen,packEmptyPaddock} from './livestock';
+import {feedSackPosition,orderFeed,deliverFeed,collectFeed,feedCareHelpPending,createLivestock,animalItems,fixtureKinds,penMissing,buyAnimalItem,orderHen,deliverHen,advanceLivestock,tendPen,packAnimalItem,validLivestock,renameHen,packEmptyPaddock} from './livestock';
 import {farmAnimalWalk,placeCoop,placePaddock,placeAnimalFixture,penWalkRoute,gatePoint,animalApproach,canDrawPaddock,paddockPlacementIssue} from './livestock-geometry';
 import {farmProductPrice,farmProductAccount} from './farm-products';
 import {transferStand} from './farm-market';
-import {inventoryCounts,canCarryChange} from './chests';
+import {backpackStacks,inventoryCounts,canCarryChange} from './chests';
 const polygon=[{x:-320,y:-280},{x:-20,y:-280},{x:-20,y:-80},{x:-320,y:-80}];
 function fresh(){const s=enableHomestead(snapshot({x:-170,y:-50},createClock(1,()=>.5),createGarden()),true);s.economy.gold=10000;s.travel.livestock=createLivestock();for(const d of debris)s.clearing.removed[d.id]=1;return s;}
 function home(){let s=fresh();for(const item of animalItems)s=buyAnimalItem(s,item)!;s=placeCoop(s,{x:-200,y:-190})!;expect(s).not.toBeNull();s=placePaddock(s,1,polygon,2)!;expect(s).not.toBeNull();const positions={feeder:{x:-280,y:-190},drinker:{x:-70,y:-190},dustBath:{x:-270,y:-125},perch:{x:-195,y:-125},shade:{x:-75,y:-115}};for(const kind of fixtureKinds){s=placeAnimalFixture(s,1,kind,positions[kind])!;expect(s,kind).not.toBeNull();}return s;}
@@ -75,4 +75,8 @@ describe('Mara feed orders',()=>{
  it('charges at ordering, delivers next day once, and keeps sacks through save reload',()=>{let s=fresh();const gold=s.economy.gold;s=orderFeed(s)!;const order=s.travel.livestock!.feedOrders![0],p={x:82,y:504};expect(s.economy.gold).toBe(gold-20);expect(s.travel.livestock!.feed).toBe(0);expect(deliverFeed(s,[order.id],p)).toBeNull();s.clock=createClock(2,()=>.5);s=deliverFeed(s,[order.id],p)!;expect(s.economy.gold).toBe(gold-20);expect(deliverFeed(s,[order.id],p)).toBeNull();s=decodeSnapshot(s)!;expect(s).not.toBeNull();expect(s.travel.livestock!.feedOrders![0].drop).toEqual(p);s=collectFeed(s,p)!;expect(s.travel.livestock!.feed).toBe(10);expect(s.travel.livestock!.feedOrders).toEqual([]);expect(collectFeed(s,p)).toBeNull();});
  it('keeps a paid parcel on the ground when the inventory is full',()=>{let s=orderFeed(fresh())!;s.clock=createClock(2,()=>.5);s=deliverFeed(s,[s.travel.livestock!.feedOrders![0].id],{x:82,y:504})!;for(const k of Object.keys(s.seeds))s.seeds[k as keyof typeof s.seeds]=0;s.seeds.carrot=99*16;const candidate=collectFeed(s)!;expect(canCarryChange(s,candidate)).toBe(false);expect(s.travel.livestock!.feedOrders).toHaveLength(1);expect(s.travel.livestock!.feed).toBe(0);});
  it('rejects invalid parcel data and preserves old saves without optional fields',()=>{const s=fresh();expect(decodeSnapshot(s)).not.toBeNull();const n=orderFeed(s)!;n.travel.livestock!.feedOrders![0].count=-10;expect(decodeSnapshot(n)).toBeNull();n.travel.livestock!.feedOrders![0].count=10;n.travel.livestock!.feedOrders![0].id=0;expect(decodeSnapshot(n)).toBeNull();});
+});
+
+describe('separate feed sacks share the carried feed stack',()=>{
+ it('shows legacy coincident sacks separately and picks up only the selected package',()=>{let s=orderFeed(orderFeed(fresh())!)!;s.clock=createClock(2,()=>.5);const ids=s.travel.livestock!.feedOrders!.map(o=>o.id);s=deliverFeed(s,ids,{x:82,y:504})!;const orders=s.travel.livestock!.feedOrders!;expect(feedSackPosition(orders[0],orders)).not.toEqual(feedSackPosition(orders[1],orders));s=collectFeed(s,undefined,ids[0])!;expect(s.travel.livestock!.feed).toBe(10);expect(s.travel.livestock!.feedOrders).toHaveLength(1);expect(s.travel.livestock!.feedOrders![0].drop).toEqual(feedSackPosition(orders[1],orders));s=collectFeed(s,undefined,ids[1])!;expect(s.travel.livestock!.feed).toBe(20);expect(backpackStacks(s).filter(p=>p.key==='animalFeed:feed')).toEqual([{key:'animalFeed:feed',count:20}]);});
 });

@@ -1,4 +1,4 @@
-export const animalShopSite={x:810,y:1150,w:190,h:140,door:{x:902,y:1299},entrance:{x:886,y:1226,w:34,h:76}};
+export const animalShopSite={x:834,y:1150,w:190,h:140,door:{x:926,y:1299},entrance:{x:910,y:1226,w:34,h:76}};
 const right=animalShopSite.x+animalShopSite.w,bottom=animalShopSite.y+animalShopSite.h;
 // The shop's east and south walls close the L-shaped yard; only the outer edges are fenced.
 export const animalShopYard={boundary:[{x:right,y:bottom-66},{x:right+58,y:bottom-66},{x:right+58,y:bottom+70},{x:right-66,y:bottom+70},{x:right-66,y:bottom},{x:right,y:bottom}],gate:3,fenceEdges:[0,1,2,3]};
