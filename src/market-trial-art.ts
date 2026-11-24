@@ -1,3 +1,4 @@
+import type {IncomingMarketCargo} from './market-incoming-cargo';
 import {paintCabInterior} from './market-cab-interior';
 import Phaser from 'phaser';
 import {farmProducts,farmProductIcon,type FarmProduct} from './farm-products';
@@ -71,7 +72,7 @@ export class MarketStandArt{
 type Vertex={x:number;y:number;z:number};
 type Face={vertices:Vertex[];color:number;edge?:number;alpha?:number};
 export class MarketTruckArt{
- readonly root:Phaser.GameObjects.Container;private g:Phaser.GameObjects.Graphics;private front:Phaser.GameObjects.Graphics;private interior:Phaser.GameObjects.Graphics;private windowMask:Phaser.GameObjects.Graphics;private doorArt:Phaser.GameObjects.Graphics;private sway=0;private driver:Phaser.GameObjects.Graphics;private glass:Phaser.GameObjects.Graphics;private cargo:Phaser.GameObjects.Container;private crates:readonly {product:string;count:number}[]=[];
+ readonly root:Phaser.GameObjects.Container;private g:Phaser.GameObjects.Graphics;private front:Phaser.GameObjects.Graphics;private interior:Phaser.GameObjects.Graphics;private windowMask:Phaser.GameObjects.Graphics;private doorArt:Phaser.GameObjects.Graphics;private sway=0;private driver:Phaser.GameObjects.Graphics;private glass:Phaser.GameObjects.Graphics;private cargo:Phaser.GameObjects.Container;private crates:readonly {product:string;count:number}[]=[];private incoming:readonly IncomingMarketCargo[]=[];
  constructor(private scene:Phaser.Scene){this.root=scene.add.container(-700,695).setDepth(70);this.g=scene.add.graphics();this.cargo=scene.add.container(0,0);this.front=scene.add.graphics();this.interior=scene.add.graphics();this.doorArt=scene.add.graphics();this.windowMask=scene.add.graphics().setVisible(false);this.driver=scene.add.graphics();this.glass=scene.add.graphics();this.root.add([this.g,this.cargo,this.front,this.interior,this.driver,this.doorArt,this.glass]);const mask=this.windowMask.createGeometryMask();this.interior.setMask(mask);this.driver.setMask(mask);this.root.once('destroy',()=>{this.windowMask.destroy();mask.destroy();});this.paint(false,0);}
  paint(door:boolean,wheel:number,heading=0,moving=false,time=0,occupied=!door){
   const g=this.g,c=Math.cos(heading),s=Math.sin(heading),faces:Face[]=[],frontFaces:Face[]=[],driverFaces:Face[]=[],glassFaces:Face[]=[],doorFaces:Face[]=[];let cab=false,doorLayer=false;
@@ -98,6 +99,17 @@ export class MarketTruckArt{
   box(-126,-122,-35,35,31,55,0xb7b99b,0x76917e,0x6a8472);
   // Nine full-sized cargo crates sit in the bed, with the same visible produce.
   this.crates.forEach((_,i)=>{const x=-118+i%3*40,y=-30+Math.floor(i/3)*21;box(x,x+36,y,y+18,38,58,0xc7a36a,0xa27a46,0x89633c);box(x+3,x+33,y+2,y+16,58,59,0x715537,0x715537,0x715537);});
+  // Incoming sacks and closed transport baskets share the same projected flatbed slots.
+  this.incoming.slice(0,Math.max(0,9-this.crates.length)).forEach((item,j)=>{const i=this.crates.length+j,x=-118+i%3*40,y=-30+Math.floor(i/3)*21;
+   if(item.kind==='feed'){
+    const rings=[{z:38,rx:6,ry:4},{z:41,rx:11,ry:7},{z:49,rx:12,ry:8},{z:58,rx:10,ry:7},{z:64,rx:3.5,ry:2.5},{z:66,rx:3,ry:2},{z:72,rx:6,ry:3}],segments=12;
+    for(let row=0;row<rings.length-1;row++)for(let k=0;k<segments;k++){const a=k*Math.PI*2/segments,b=(k+1)*Math.PI*2/segments,r=rings[row],t=rings[row+1],point=(ring:typeof r,angle:number)=>({x:x+18+Math.cos(angle)*ring.rx,y:y+9+Math.sin(angle)*ring.ry,z:ring.z});face([point(r,a),point(r,b),point(t,b),point(t,a)],row===4?0x78613e:[0xa68e64,0xb9a177,0xcfb98f,0xc5ae82][k%4]);}
+    for(let k=0;k<3;k++){const xx=x+13+k*5;quad([[xx,y+16.5,44],[xx+.5,y+16.5,44],[xx+.3,y+15,58],[xx,y+15,58]],0xa18a5e);}box(x+14,x+23,y+17,y+17.3,49,57,0x718157,0x718157,0x718157);box(x+17,x+19,y+17.4,y+17.6,51,55,0xddbf77,0xddbf77,0xddbf77);
+
+   }else{
+    box(x+2,x+34,y+1,y+18,38,59,0xb79b68,0x997e50,0x806440);for(let z=42;z<58;z+=4)box(x+3,x+33,y+18,y+18.4,z,z+.7,0xd4b985,0xd4b985,0xd4b985);for(let k=0;k<6;k++)box(x+5+k*5,x+5.7+k*5,y+18.5,y+18.8,40,58,0x735c3e,0x735c3e,0x735c3e);box(x+3,x+33,y+2,y+17,59,62,0xc9ad78,0xb49360,0x9b7b4d);for(let k=0;k<4;k++)box(x+5+k*7,x+6+k*7,y+3,y+16,62,62.5,0x9c7c4e,0x9c7c4e,0x9c7c4e);box(x+14,x+22,y+7,y+12,62,66,0x70573d,0x70573d,0x70573d);
+   }
+  });
   // Sloped cab, cream roof, dark window seals, glass reflections and interior.
   cab=true;
   const side=c>=0?35:-35;
@@ -165,6 +177,7 @@ export class MarketTruckArt{
   }
   this.crates.forEach((_,i)=>{const p=project({x:-100+i%3*40,y:-21+Math.floor(i/3)*21,z:63});for(let j=0;j<3;j++)(this.cargo.list[i*3+j] as Phaser.GameObjects.Image).setPosition(p.x+(j-1)*9*c,p.y+(j-1)*9*s*.48);});
  }
+ setIncomingCargo(items:readonly IncomingMarketCargo[]){this.incoming=items;}
  setCargo(crates:readonly {product:string;count:number}[]){this.crates=[...crates];this.cargo.removeAll(true);for(const crate of crates)for(let j=0;j<3;j++)this.cargo.add(this.scene.add.image(0,0,`market-product-${crate.product}`).setDisplaySize(15,15));}
  destroy(){this.root.destroy(true);}
 }

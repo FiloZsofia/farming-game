@@ -9,12 +9,13 @@ type Host={read:()=>Snapshot;commit:(s:Snapshot)=>Promise<boolean>;notice:(text:
 export class AnimalDelivery{
  private orders:AnimalOrder[]=[];private route:P[]=[];private returnRoute:P[]=[];private inside:P[]=[];private phase:'walk'|'lower'|'release'|'return'='walk';private basket:Phaser.GameObjects.Container|null=null;private weave:Phaser.GameObjects.Graphics|null=null;private bird:Phaser.GameObjects.Graphics|null=null;private saving=false;private animation=0;private elapsed=0;private release=0;private previousOrder=0;
  constructor(private scene:Phaser.Scene,private host:Host){}
+ get unloadedOrderIds(){return this.orders.map(o=>o.id);}
  get carrying(){return this.orders.length>0&&(this.phase==='walk'||this.phase==='lower');}
  pending(){const s=this.host.read();return !!s.travel.livestock?.orders.some(o=>o.dueDay<=s.clock.day);}
  step(mara:MaraArt,dt:number):boolean{
   this.animation+=dt;if(this.saving)return false;
   if(!this.orders.length){const s=this.host.read(),order=s.travel.livestock?.orders.find(o=>o.dueDay<=s.clock.day);if(!order){this.clear();return true;}const pen=s.travel.livestock!.pens.find(p=>p.id===order.penId),gate=pen&&gatePoint(pen);if(!pen||!gate)return true;
-   const outside=farmAnimalWalk(s,{x:mara.root.x,y:mara.root.y},gate,(x,y)=>worldBlocked(x,y,s.travel.estate.pondExpansion)||(this.host.blocked?.({x,y})??false),pen),inside=penWalkRoute(pen,gate,animalApproach('coop',pen.coop));
+   const outside=farmAnimalWalk(s,{x:mara.root.x,y:mara.root.y},gate,(x,y)=>worldBlocked(x,y,s.travel.estate.pondExpansion)||(this.host.blocked?.({x,y})??false),pen),inside=penWalkRoute(pen,gate,animalApproach('coop',pen.coop),s.travel.estate.trees);
    if(!outside||!inside){if(this.previousOrder!==order.id){this.previousOrder=order.id;this.host.notice('Mara nem fér a kifutó kapujához. A megrendelt tyúk biztonságban vár a következő fuvarig.');}return true;}
    this.orders=s.travel.livestock!.orders.filter(o=>o.penId===order.penId&&o.dueDay<=s.clock.day);this.route=outside;this.returnRoute=[...outside].reverse();this.inside=inside;this.phase='walk';this.elapsed=0;this.release=0;this.previousOrder=order.id;
    this.basket=this.scene.add.container(0,-15);this.weave=this.scene.add.graphics();this.basket.add(this.weave);mara.root.add(this.basket);this.paintBasket(false);

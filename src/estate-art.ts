@@ -6,9 +6,9 @@ import {drawRipeMarker} from './crop-art';
 import Phaser from 'phaser';
 import {reedReady,type Estate} from './estate';
 export function drawEstate(scene:Phaser.Scene,estate:Estate,day:number){
- const g=scene.add.graphics().setDepth(2);
- for(const t of estate.trees){const growth=orchardGrowth(t.planted,day),grown=growth.mature,s=growth.scale,x=t.x,y=t.y;
-  g.fillStyle(0x345737,.25).fillEllipse(x+7,y+5,61*s,22*s);g.lineStyle(7*s,0x785738).lineBetween(x,y,x,y-49*s);g.lineStyle(3*s,0x96714b).lineBetween(x-1,y,x-1,y-48*s);
+ const g=scene.add.graphics().setDepth(2),ground=g,layers:Phaser.GameObjects.Graphics[]=[];g.once('destroy',()=>{for(const layer of layers)layer.destroy();});
+ for(const t of estate.trees){const g=scene.add.graphics().setDepth(300+t.y*.01);layers.push(g);const growth=orchardGrowth(t.planted,day),grown=growth.mature,s=growth.scale,x=t.x,y=t.y;
+  ground.fillStyle(0x345737,.25).fillEllipse(x+7,y+5,61*s,22*s);g.lineStyle(7*s,0x785738).lineBetween(x,y,x,y-49*s);g.lineStyle(3*s,0x96714b).lineBetween(x-1,y,x-1,y-48*s);
   if(growth.progress>=1/3){g.lineStyle(3*s,0x785738).lineBetween(x,y-25*s,x-13*s,y-43*s).lineBetween(x,y-32*s,x+12*s,y-49*s);}
   // One continuous crown replaces the three overlapping round canopy puffs.
   const matureCrown=growth.canopies===3;

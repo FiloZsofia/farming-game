@@ -63,7 +63,7 @@ export function packAnimalItem(source:Snapshot,penId:number,item:AnimalItem):Sna
 }
 export function packEmptyPaddock(source:Snapshot,penId:number):Snapshot|null{const next=structuredClone(source),s=next.travel.livestock,pen=s?.pens.find(p=>p.id===penId);if(!s||!pen||!pen.boundary.length||Object.keys(pen.fixtures).length||penResidents(s,pen.id).length||penReservations(s,pen.id).length)return null;pen.boundary=[];pen.gate=0;delete pen.coopWall;s.packed.paddock++;return next;}
 const count=(n:unknown,max=999999):n is number=>Number.isSafeInteger(n)&&(n as number)>=0&&(n as number)<=max;
-const point=(p:unknown):p is AnimalPoint=>!!p&&typeof p==='object'&&Number.isFinite((p as AnimalPoint).x)&&Number.isFinite((p as AnimalPoint).y)&&(p as AnimalPoint).x>=-380&&(p as AnimalPoint).x<=1180&&(p as AnimalPoint).y>=-340&&(p as AnimalPoint).y<=550;
+const point=(p:unknown):p is AnimalPoint=>!!p&&typeof p==='object'&&Number.isFinite((p as AnimalPoint).x)&&Number.isFinite((p as AnimalPoint).y)&&(p as AnimalPoint).x>=-380&&(p as AnimalPoint).x<=1180&&(p as AnimalPoint).y>=-340&&(p as AnimalPoint).y<=580;
 export function validLivestock(v:unknown,day:number):v is Livestock{
  if(!v||typeof v!=='object')return false;const s=v as Livestock;
  if(s.feedHelpSeen!==undefined&&typeof s.feedHelpSeen!=='boolean'||s.feedOrders!==undefined&&(!Array.isArray(s.feedOrders)||s.feedOrders.length>100))return false;

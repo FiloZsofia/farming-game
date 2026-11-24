@@ -11,6 +11,7 @@ type Host={read:()=>Snapshot;commit:(s:Snapshot)=>Promise<boolean>;notice:(text:
 export class FeedDelivery{
  private ids:number[]=[];private route:P[]=[];private back:P[]=[];private returning=false;private sack:Phaser.GameObjects.Graphics|null=null;private lowering=0;private saving=false;private drop:P|null=null;
  constructor(private scene:Phaser.Scene,private host:Host){}
+ get unloadedOrderIds(){return this.ids;}
  get carrying(){return !!this.sack&&!this.returning;}
  pending(){const s=this.host.read();return !!s.travel.livestock?.feedOrders?.some(o=>o.deliveredDay===undefined&&o.dueDay<=s.clock.day);}
  step(mara:MaraArt,dt:number){if(this.saving)return false;
